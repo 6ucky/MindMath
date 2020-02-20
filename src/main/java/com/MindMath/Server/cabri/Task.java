@@ -1,7 +1,9 @@
 package com.MindMath.Server.cabri;
 
+import java.util.List;
 import java.util.Map;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -18,11 +20,13 @@ public class Task {
 	private int VT_2_2;
 	private boolean VT_2_3;
 	private boolean VT_2_4;
+//	@ElementCollection
+//	private List<Log> log;
 	
 	protected Task() {}
 
     @JsonProperty("params")
-    private void unpackNested(Map<String,Object> params) {
+    private void unpackNestedparams(Map<String,Object> params) {
 		this.setVT_2_1((int) params.get("VT-2.1"));
 		this.setVT_2_2((int) params.get("VT-2.2"));
 		this.setVT_2_3((boolean) params.get("VT-2.3"));

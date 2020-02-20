@@ -1,5 +1,7 @@
 com\MindMath\Server\greeting\Greeting.class
 com\MindMath\Server\ServerApplication.class
+com\MindMath\Server\cabri\Log.class
 com\MindMath\Server\greeting\Greetingcontroller.class
 com\MindMath\Server\cabri\Taskcontroller.class
+com\MindMath\Server\cabri\Taskrepository.class
 com\MindMath\Server\cabri\Task.class

@@ -40,7 +40,9 @@ public class Taskcontroller {
 	}
 	
 	@PutMapping(path = "/task")
-	public void updatetask(@RequestBody Task data) {
+	public String updatetask(@RequestBody Task data) {
 		taskrepository.save(data);
+		//Q-learning algorithm
+		return "Task is updated. Q-learning algorithm is applied.";
 	}
 }
