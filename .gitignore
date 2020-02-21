@@ -24,6 +24,7 @@
 
 # Maven 
 target/
+!maven-wrapper.jar
 
 # Gradle
 .gradle/
