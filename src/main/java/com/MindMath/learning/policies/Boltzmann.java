@@ -33,7 +33,7 @@ public class Boltzmann implements IPolicy {
 	}
 
 	/**
-	 * @param temperature temperature à définir
+	 * @param temperature
 	 */
 	public void setTemperature(float temperature) {
 		this.temperature = temperature;

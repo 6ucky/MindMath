@@ -14,7 +14,7 @@ import com.MindMath.learning.utils.values.IValue;
  *
  */
 public class EpsilonGreedy extends Greedy implements IPolicy {
-	private double epsilon;
+	protected double epsilon;
 	private Random rand;
 
 	/**

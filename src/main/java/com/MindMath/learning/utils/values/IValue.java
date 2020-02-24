@@ -28,4 +28,11 @@ public interface IValue {
 	 * @return the value
 	 */
 	public double getValue();
+
+	/**
+	 * Set a new value
+	 *
+	 * @param value the new value
+	 */
+	public void setValue(double value);
 }
