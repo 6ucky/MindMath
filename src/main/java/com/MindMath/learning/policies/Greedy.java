@@ -9,14 +9,11 @@ import com.MindMath.learning.utils.actions.IAction;
 import com.MindMath.learning.utils.values.IValue;
 
 /**
- * @author tsimonfine
+ * @author Thibaut SIMON-FINE
  *
  */
 public class Greedy implements IPolicy {
 
-	/**
-	 *
-	 */
 	public Greedy() {
 	}
 

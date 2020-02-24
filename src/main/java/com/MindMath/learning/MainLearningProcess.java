@@ -4,7 +4,7 @@
 package com.MindMath.learning;
 
 /**
- * @author tsimonfine
+ * @author Thibaut SIMON-FINE
  *
  */
 public class MainLearningProcess {

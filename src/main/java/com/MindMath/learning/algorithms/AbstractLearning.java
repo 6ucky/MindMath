@@ -4,7 +4,7 @@
 package com.MindMath.learning.algorithms;
 
 /**
- * @author tsimonfine
+ * @author Thibaut SIMON-FINE
  *
  */
 public abstract class AbstractLearning implements ILearning {

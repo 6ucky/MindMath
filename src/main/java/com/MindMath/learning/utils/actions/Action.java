@@ -4,13 +4,16 @@
 package com.MindMath.learning.utils.actions;
 
 /**
- * @author tsimonfine
+ * @author Thibaut SIMON-FINE
  *
  */
 public class Action implements IAction {
 	private static int COUNT = 0;
 	private int id;
 
+	/**
+	 * Action with incremental ID
+	 */
 	public Action() {
 		this.id = ++COUNT;
 	}

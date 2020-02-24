@@ -10,7 +10,7 @@ import com.MindMath.learning.utils.actions.IAction;
 import com.MindMath.learning.utils.values.IValue;
 
 /**
- * @author tsimonfine
+ * @author Thibaut SIMON-FINE
  *
  */
 public class EpsilonGreedy extends Greedy implements IPolicy {
@@ -18,7 +18,9 @@ public class EpsilonGreedy extends Greedy implements IPolicy {
 	private Random rand;
 
 	/**
+	 * Create an epsilon greedy policy
 	 *
+	 * @param epsilon the epsilon
 	 */
 	public EpsilonGreedy(double epsilon) {
 		this.epsilon = epsilon;

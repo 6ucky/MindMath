@@ -6,7 +6,7 @@ package com.MindMath.learning.utils.values;
 import com.MindMath.learning.utils.actions.IAction;
 
 /**
- * @author tsimonfine
+ * @author Thibaut SIMON-FINE
  *
  */
 public class QValue implements IValue {
@@ -14,20 +14,24 @@ public class QValue implements IValue {
 	private double value;
 
 	/**
-	 *
+	 * Instantiate a QValue with no action associated and value set to 0
 	 */
 	public QValue() {
 		this(null, 0);
 	}
 
 	/**
-	 * @param a
+	 * QValue with action associated and value set to 0
+	 *
+	 * @param a an IAction associated with this Qvalue
 	 */
 	public QValue(IAction a) {
 		this(a, 0);
 	}
 
 	/**
+	 * QValue with action associated and value set to 0
+	 *
 	 * @param a
 	 * @param defaultValue
 	 */
