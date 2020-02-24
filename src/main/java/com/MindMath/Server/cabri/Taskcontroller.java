@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author	Yan Wang
+ * @since	21/02/2020
+ */
 
 @RestController
 public class Taskcontroller {
@@ -22,11 +28,6 @@ public class Taskcontroller {
 			taskrepository.save(data);
 			System.out.println("Saved!\n");
 		}
-		String message = "";
-		message += "id:" + data.getId() + "\n" + "task:" + data.getTask() + "\n" + "trigger:" + data.getTrigger() + "\n"
-				+ "VT-2.1:" + data.getVT_2_1() + "\n" + "VT-2.2:" + data.getVT_2_2() + "\n" + "VT-2.3:"
-				+ data.isVT_2_3() + "\n" + "VT-2.4:" + data.isVT_2_4() + "\n";
-		System.out.println(message);
 
 		// TODO call Q-learning algorithm
 
@@ -46,5 +47,10 @@ public class Taskcontroller {
 		taskrepository.save(data);
 
 		return "Task is updated. Q-learning algorithm is applied.";
+	}
+	
+	@DeleteMapping(path = "/task")
+	public void cleandatabase() {
+		taskrepository.deleteAll();
 	}
 }

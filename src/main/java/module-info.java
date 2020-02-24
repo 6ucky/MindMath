@@ -12,4 +12,7 @@ module mindmath {
 	requires spring.context;
 	requires spring.data.commons;
 	requires spring.web;
+	requires com.fasterxml.jackson.databind;
+	
+	opens com.MindMath.Server;
 }
