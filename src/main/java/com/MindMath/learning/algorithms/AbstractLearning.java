@@ -12,6 +12,10 @@ import com.MindMath.learning.policies.IPolicy;
 public abstract class AbstractLearning implements ILearning {
 	protected IPolicy policy;
 
+	public AbstractLearning(IPolicy policy) {
+		this.policy = policy;
+	}
+
 	/**
 	 * @return
 	 */

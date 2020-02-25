@@ -42,7 +42,7 @@ public class QValue implements IValue {
 
 	@Override
 	public IAction myAction() {
-		return this.myAction();
+		return this.action;
 	}
 
 	@Override
