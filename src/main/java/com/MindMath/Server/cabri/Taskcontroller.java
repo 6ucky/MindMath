@@ -21,11 +21,16 @@ public class Taskcontroller {
 
 	@Autowired
 	private Taskrepository taskrepository;
-
+	
+	/**
+	 * Handle POST request
+	 * @param data Received JSON file mapping to task class
+	 * @return feedback message
+	 */
 	@PostMapping(path = "/task", consumes = "application/json")
 	public String addtask(@RequestBody Task data) {
-		if (!taskrepository.existsById(data.getId())) {
-			taskrepository.save(data);
+		if (!getTaskrepository().existsById(data.getId())) {
+			getTaskrepository().save(data);
 			System.out.println("Saved!\n");
 		}
 
@@ -34,23 +39,43 @@ public class Taskcontroller {
 		return "JSON file received by the server.";
 	}
 
+	/**
+	 * Handle GET request
+	 * @return all the tasks in the repository
+	 */
 	@GetMapping("/task")
 	public List<Task> getALLtask() {
 		List<Task> tasks = new ArrayList<>();
-		taskrepository.findAll().forEach(tasks::add);
+		getTaskrepository().findAll().forEach(tasks::add);
 
 		return tasks;
 	}
 
+	/**
+	 * Handle PUT request, update task based on ID
+	 * @param data Received JSON file mapping to task class
+	 * @return feedback message
+	 */
 	@PutMapping(path = "/task")
 	public String updatetask(@RequestBody Task data) {
-		taskrepository.save(data);
+		getTaskrepository().save(data);
 
 		return "Task is updated. Q-learning algorithm is applied.";
 	}
 	
+	/**
+	 * Handle DELETE request
+	 */
 	@DeleteMapping(path = "/task")
 	public void cleandatabase() {
-		taskrepository.deleteAll();
+		getTaskrepository().deleteAll();
+	}
+
+	/**
+	 * get task repository
+	 * @return a repository interface that works with task entities
+	 */
+	public Taskrepository getTaskrepository() {
+		return taskrepository;
 	}
 }
