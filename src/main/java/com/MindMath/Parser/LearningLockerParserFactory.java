@@ -1,6 +1,6 @@
-package com.MindMath.LearningLocker.Parser;
+package com.MindMath.Parser;
 
-public interface LearningLockerParserFactory <T, ID> {
+public interface LearningLockerParserFactory <T, ID> extends ParserFactory {
 	
 	public String getid(ID id);
 	

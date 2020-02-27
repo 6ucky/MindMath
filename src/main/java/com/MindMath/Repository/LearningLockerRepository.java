@@ -1,8 +1,8 @@
-package com.MindMath.LearningLocker;
+package com.MindMath.Repository;
 
 import java.util.Optional;
 
-public interface LearningLockerRepository <T, ID> {
+public interface LearningLockerRepository <T, ID> extends XAPIRepository{
 
 	public boolean existsById(ID id);
 	

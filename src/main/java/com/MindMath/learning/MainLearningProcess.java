@@ -36,7 +36,7 @@ public class MainLearningProcess {
 		IPolicy policy = new EpsilonGreedy(0.7);
 		QLearning qLearning = new QLearning(policy, testEnv.getStates(), testEnv.getActions());
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 1000; i++) {
 			System.out.println("----------\nITERATION " + (i + 1) + "\n----------");
 
 			testEnv.reset();

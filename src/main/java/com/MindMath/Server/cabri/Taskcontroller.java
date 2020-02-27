@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.MindMath.Repository.Taskrepository;
+
 /**
  * @author	Yan Wang
  * @since	21/02/2020
@@ -50,7 +52,12 @@ public class Taskcontroller {
 
 		return tasks;
 	}
-
+	
+	@GetMapping("/")
+	public String home() {
+		return "The server is started.";
+	}
+	
 	/**
 	 * Handle PUT request, update task based on ID
 	 * @param data Received JSON file mapping to task class

@@ -1,5 +1,6 @@
 package com.MindMath.Server.cabri;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="tasks") 
-public class Task{
+public class Task implements Serializable{
+
+	private static final long serialVersionUID = 4790322015762458488L;
 
 	@Id
 	@JsonProperty("id")

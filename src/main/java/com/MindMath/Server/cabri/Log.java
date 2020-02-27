@@ -1,5 +1,7 @@
 package com.MindMath.Server.cabri;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,7 +15,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="logs") 
-public class Log {
+public class Log implements Serializable{
+
+	private static final long serialVersionUID = 6036741035696456506L;
 
 	@Id
 	@JsonProperty("time")
