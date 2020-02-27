@@ -1,5 +1,7 @@
 package com.MindMath.Server.cabri;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,7 +15,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="sensors") 
-public class Sensors {
+public class Sensors implements Serializable{
+
+	private static final long serialVersionUID = 7791961059918284422L;
 
 	@Id
 	@JsonProperty("capteur-bool-RF-CO2-1")
