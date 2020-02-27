@@ -13,7 +13,7 @@ import com.MindMath.learning.utils.values.IValue;
  * @author Thibaut SIMON-FINE
  *
  */
-public class EpsilonGreedy extends Greedy implements IPolicy {
+public class EpsilonGreedy extends Greedy {
 	protected double epsilon;
 	private Random rand;
 
