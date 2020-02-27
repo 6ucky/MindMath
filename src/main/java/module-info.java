@@ -1,10 +1,9 @@
-module mindmath {
-	exports com.MindMath.Server.cabri;
-	exports com.MindMath.Server;
+module com.mocah.mindmath {
+	exports com.mocah.mindmath.server.cabri;
+	exports com.mocah.mindmath.server;
 
-	exports com.MindMath.learning;
-
-	requires com.fasterxml.jackson.annotation;
+	exports com.mocah.mindmath.learning;
+	
 	requires java.persistence;
 	requires spring.beans;
 	requires spring.boot;
@@ -12,8 +11,7 @@ module mindmath {
 	requires spring.context;
 	requires spring.data.commons;
 	requires spring.web;
-	requires com.fasterxml.jackson.databind;
 	requires java.desktop;
 
-	opens com.MindMath.Server;
+	//opens com.mocah.mindmath.server;
 }
