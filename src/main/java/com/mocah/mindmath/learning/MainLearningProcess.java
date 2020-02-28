@@ -28,8 +28,8 @@ public class MainLearningProcess {
 	 */
 	public static void main(String[] args) {
 		// Comment to test
-//		if (true)
-//			return;
+		if (true)
+			return;
 
 		Grille testEnv = new Grille();
 //		IPolicy policy = new Boltzmann(0.5);

@@ -3,7 +3,7 @@ module com.mocah.mindmath {
 	exports com.mocah.mindmath.server;
 
 	exports com.mocah.mindmath.learning;
-	
+
 	requires java.persistence;
 	requires spring.beans;
 	requires spring.boot;
@@ -12,6 +12,7 @@ module com.mocah.mindmath {
 	requires spring.data.commons;
 	requires spring.web;
 	requires java.desktop;
+	requires org.hibernate.orm.core;
 
-	//opens com.mocah.mindmath.server;
+	opens com.mocah.mindmath.server;
 }
