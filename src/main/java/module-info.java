@@ -15,4 +15,5 @@ module com.mocah.mindmath {
 	requires org.hibernate.orm.core;
 
 	opens com.mocah.mindmath.server;
+	opens com.mocah.mindmath.server.cabri;
 }
