@@ -68,10 +68,13 @@ public class Taskcontroller {
 	 * Handle PUT request, update task based on ID
 	 * @param data Received JSON file mapping to task class
 	 * @return feedback message
+	 * @throws JsonParserException 
 	 */
 	@PutMapping(path = "/task")
-	public String updatetask(@RequestBody Task data) {
-		getTaskrepository().save(data);
+	public String updatetask(@RequestBody String data) throws JsonParserException {
+		ParserFactory<Task> jsonparser = new JsonParserFactory();
+		Task tasks = jsonparser.parse(data);
+		getTaskrepository().save(tasks);
 
 		return "Task is updated. Q-learning algorithm is applied.";
 	}
