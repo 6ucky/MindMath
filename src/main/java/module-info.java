@@ -13,6 +13,7 @@ module com.mocah.mindmath {
 	requires spring.web;
 	requires java.desktop;
 	requires org.hibernate.orm.core;
+	requires gson;
 
 	opens com.mocah.mindmath.server;
 	opens com.mocah.mindmath.server.cabri;

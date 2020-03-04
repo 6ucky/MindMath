@@ -1,15 +1,19 @@
-package com.mocah.mindmath.server.cabri;
+package com.mocah.mindmath.server.cabri.jsondata;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 /**
  * @author	Yan Wang
@@ -17,31 +21,50 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name="tasks") 
 public class Task implements Serializable{
 
 	private static final long serialVersionUID = 4790322015762458488L;
 
 	@Id
-	private String id;
-	
+    private String id;
+
 	private String task;
-	
+
 	private String trigger;
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	private Sensors sensors;
-	
-	@OneToOne(cascade=CascadeType.ALL)
+
+	@OneToOne(cascade = CascadeType.ALL)
 	private Params params;
-	
+
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Log> log = new ArrayList<>();
 	
-	protected Task() {}
+	public Task() {}
 
 	public String getId() {
 		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getTask() {
+		return task;
+	}
+
+	public void setTask(String task) {
+		this.task = task;
+	}
+
+	public String getTrigger() {
+		return trigger;
+	}
+
+	public void setTrigger(String trigger) {
+		this.trigger = trigger;
 	}
 
 	public Sensors getSensors() {

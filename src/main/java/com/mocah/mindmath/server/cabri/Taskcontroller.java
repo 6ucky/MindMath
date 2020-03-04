@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mocah.mindmath.learning.exceptions.JsonParserException;
+import com.mocah.mindmath.parser.ParserFactory;
+import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
+import com.mocah.mindmath.server.cabri.jsondata.Task;
+
 /**
  * @author	Yan Wang
  * @since	21/02/2020
@@ -26,11 +31,14 @@ public class Taskcontroller {
 	 * Handle POST request
 	 * @param data Received JSON file mapping to task class
 	 * @return feedback message
+	 * @throws JsonParserException 
 	 */
 	@PostMapping(path = "/task", consumes = "application/json")
-	public String addtask(@RequestBody Task data) {
-		if (!getTaskrepository().existsById(data.getId())) {
-			getTaskrepository().save(data);
+	public String addtask(@RequestBody String data) throws JsonParserException {
+		ParserFactory<Task> jsonparser = new JsonParserFactory();
+		Task tasks = jsonparser.parse(data);
+		if (!getTaskrepository().existsById(tasks.getId())) {
+			getTaskrepository().save(tasks);
 			System.out.println("Saved!\n");
 		}
 
