@@ -13,6 +13,14 @@ sudo ./gradlew jibDockerBuild --image=springio/gs-spring-boot-docker
 ```
 sudo docker run -p 8080:8080 -t springio/gs-spring-boot-docker
 ```
+## Run Docker Compose
+```
+sudo docker-compose up --build
+```
+## Stop Docker Compose
+```
+sudo docker-compose down
+```
 ## Infos
 
 - Class diagram build with [ObjectAid UML Explorer](https://www.objectaid.com/home)

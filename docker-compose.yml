@@ -1,0 +1,21 @@
+version: '2'
+services:
+    spring-server:
+        container_name: spring-server
+        build:
+            context: .
+        image: spring-server:latest
+        ports:
+            - 8080:8080
+        networks:
+            - spring-cloud-network
+        volumes:
+            - spring-cloud-config-repo:/var/lib/spring-cloud/config-repo
+        logging:
+            driver: json-file
+networks:
+    spring-cloud-network:
+        driver: bridge
+volumes:
+    spring-cloud-config-repo:
+        external: true

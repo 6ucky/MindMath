@@ -1,4 +1,4 @@
 FROM openjdk:11-jdk-stretch
-ARG JAR_FILE=target/MindMath-0.0.1-SNAPSHOT.war
-COPY ${JAR_FILE} MindMath-0.0.1-SNAPSHOT.war
-ENTRYPOINT ["java","-jar","/MindMath-0.0.1-SNAPSHOT.war"]
+VOLUME /var/lib/spring-cloud/config-repo
+COPY build/libs/MindMath-0.0.1-SNAPSHOT.war /opt/spring-cloud/lib/
+ENTRYPOINT ["java","-jar","/opt/spring-cloud/lib/MindMath-0.0.1-SNAPSHOT.war"]
