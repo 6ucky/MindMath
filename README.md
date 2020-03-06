@@ -4,6 +4,16 @@
 ```
 ./gradlew bootRun
 ```
+
+## Package jar file with Gradle
+```
+./gradlew bootJar
+```
+
+## Package war file with Gradle
+```
+./gradlew bootWar
+```
 ## Build Docker Image
 ```
 sudo docker build --build-arg JAR_FILE=build/libs/MindMath-0.0.1-SNAPSHOT.war -t springio/gs-spring-boot-docker .
