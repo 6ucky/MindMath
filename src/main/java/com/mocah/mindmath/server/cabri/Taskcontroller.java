@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mocah.mindmath.learning.exceptions.JsonParserException;
 import com.mocah.mindmath.parser.ParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 /**
@@ -58,10 +59,20 @@ public class Taskcontroller {
 
 		return tasks;
 	}
-	
+	/**
+	 * Default GET request
+	 * @return server started
+	 */
 	@GetMapping("/")
 	public String home() {
 		return "The server is started.";
+	}
+	
+	//test
+	@GetMapping("/ll")
+	public String ll() throws Exception {
+		LearningLockerRepository ll = new LearningLockerRepository();
+		return ll.getfromLearningLocker();
 	}
 	
 	/**
