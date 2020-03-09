@@ -23,6 +23,12 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 	private JsonObject rootObject;
 	private JsonArray logsObject;
 	
+	public JsonParserFactory(String data) {
+		JsonParser parser = new JsonParser();
+		this.rootObject = parser.parse(data).getAsJsonObject();
+		this.logsObject = rootObject.get(LOG).getAsJsonArray();
+	}
+	
 	public String getTaskId()
 	{
 		return rootObject.get(TASK_ID).getAsString();
@@ -120,11 +126,7 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 	
 	@Override
 	public Task parse(String data) throws JsonParserException
-	{
-		JsonParser parser = new JsonParser();
-		rootObject = parser.parse(data).getAsJsonObject();
-		logsObject = rootObject.get(LOG).getAsJsonArray();
-		
+	{	
 		Task tasks = new Task();
 		tasks.setId(getTaskId());
 		tasks.setTask(getTaskName());

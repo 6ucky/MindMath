@@ -3,12 +3,18 @@ package com.mocah.mindmath.server.cabri;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.auth.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mocah.mindmath.learning.exceptions.JsonParserException;
@@ -27,16 +33,23 @@ public class Taskcontroller {
 
 	@Autowired
 	private Taskrepository taskrepository;
+	private final String license_num = "mocah";
 	
 	/**
 	 * Handle POST request
-	 * @param data Received JSON file mapping to task class
+	 * @param version default version is 1.0
+	 * @param data Receive JSON file as string
 	 * @return feedback message
 	 * @throws JsonParserException 
 	 */
 	@PostMapping(path = "/task", consumes = "application/json")
-	public String addtask(@RequestBody String data) throws JsonParserException {
-		ParserFactory<Task> jsonparser = new JsonParserFactory();
+	public ResponseEntity<String> addtask(@RequestHeader("Version-LIP6") String version, @RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws JsonParserException {
+		if(!auth.contains(license_num))
+		{
+			return new ResponseEntity<String>("Unauthorized.", HttpStatus.UNAUTHORIZED);
+		}
+		ParserFactory<Task> jsonparser = new JsonParserFactory(data);
 		Task tasks = jsonparser.parse(data);
 		if (!getTaskrepository().existsById(tasks.getId())) {
 			getTaskrepository().save(tasks);
@@ -45,7 +58,7 @@ public class Taskcontroller {
 
 		// TODO call Q-learning algorithm
 
-		return "JSON file received by the server.";
+		return new ResponseEntity<String>("JSON file received by the server.", HttpStatus.CREATED);
 	}
 
 	/**
@@ -86,7 +99,7 @@ public class Taskcontroller {
 	 */
 	@PutMapping(path = "/task")
 	public String updatetask(@RequestBody String data) throws JsonParserException {
-		ParserFactory<Task> jsonparser = new JsonParserFactory();
+		ParserFactory<Task> jsonparser = new JsonParserFactory(data);
 		Task tasks = jsonparser.parse(data);
 		getTaskrepository().save(tasks);
 

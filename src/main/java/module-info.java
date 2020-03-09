@@ -16,6 +16,8 @@ module com.mocah.mindmath {
 	requires gson;
 	requires httpclient;
 	requires org.apache.httpcomponents.httpcore;
+	requires org.apache.tomcat.embed.core;
+	requires spring.webmvc;
 
 	opens com.mocah.mindmath.server;
 	opens com.mocah.mindmath.server.cabri;

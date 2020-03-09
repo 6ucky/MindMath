@@ -8,14 +8,14 @@ services:
         ports:
             - 8080:8080
         networks:
-            - spring-cloud-network
+            - mindmath-cloud-network
         volumes:
-            - spring-cloud-config-repo:/var/lib/spring-cloud/config-repo
+            - mindmath-cloud-config-repo:/var/lib/mindmath-cloud/config-repo
         logging:
             driver: json-file
 networks:
-    spring-cloud-network:
+    mindmath-cloud-network:
         driver: bridge
 volumes:
-    spring-cloud-config-repo:
+    mindmath-cloud-config-repo:
         external: true

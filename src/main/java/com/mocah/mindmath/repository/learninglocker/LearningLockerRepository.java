@@ -31,7 +31,7 @@ import com.mocah.mindmath.repository.XAPIRepository;
 public class LearningLockerRepository extends LearningLockerKeys implements XAPIRepository {
 	
 	private final RestTemplate restTemp;
-	private final HttpEntity header_entity;
+	private final HttpEntity<String> header_entity;
 	
 	public LearningLockerRepository()
 	{
@@ -75,7 +75,7 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	}
 	
 	// add basic authorization, version, content type to header
-	private static HttpEntity InitializeHeader()
+	private static HttpEntity<String> InitializeHeader()
 	{
 		HttpHeaders headers = new HttpHeaders();
 		// header as chart form
@@ -83,7 +83,7 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 		headers.add(BASIC_AUTHORIZATION, BASIC_AUTHORIZATION_VALUE);
 		headers.add(BASIC_VERSION, BASIC_VERSION_VALUE);
 		headers.add(BASIC_TYPE, BASIC_TYPE_VALUE);
-		HttpEntity temp = new HttpEntity(headers);
+		HttpEntity<String> temp = new HttpEntity<String>(headers);
 		return temp;
 	}
 	
