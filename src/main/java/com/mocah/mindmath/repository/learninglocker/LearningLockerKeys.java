@@ -1,5 +1,10 @@
 package com.mocah.mindmath.repository.learninglocker;
 
+/**
+ * @author	Yan Wang
+ * @since	09/03/2020
+ */
+
 public class LearningLockerKeys {
 
 	//URL query parameters

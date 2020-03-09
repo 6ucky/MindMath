@@ -1,6 +1,7 @@
 package com.mocah.mindmath.parser.jsonparser;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -13,6 +14,10 @@ import com.mocah.mindmath.server.cabri.jsondata.Params;
 import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
+/**
+ * @author	Yan Wang
+ * @since	09/03/2020
+ */
 public class JsonParserFactory extends JsonParserKeys implements ParserFactory <Task>{
 	
 	private JsonObject rootObject;

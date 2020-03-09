@@ -1,7 +1,12 @@
 package com.mocah.mindmath.parser.jsonparser;
 
+/**
+ * @author	Yan Wang
+ * @since	09/03/2020
+ */
 public class JsonParserKeys {
 	
+	//Task id is the main key for database
 	protected static String TASK_ID = "id";
 	protected static String TASK_NAME = "task";
 	protected static String TASK_TRIGGER = "trigger";

@@ -14,6 +14,8 @@ module com.mocah.mindmath {
 	requires java.desktop;
 	requires org.hibernate.orm.core;
 	requires gson;
+	requires httpclient;
+	requires org.apache.httpcomponents.httpcore;
 
 	opens com.mocah.mindmath.server;
 	opens com.mocah.mindmath.server.cabri;

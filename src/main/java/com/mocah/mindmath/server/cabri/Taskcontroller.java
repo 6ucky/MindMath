@@ -68,9 +68,12 @@ public class Taskcontroller {
 		return "The server is started.";
 	}
 	
-	//test
+	/**
+	 * Send get request to Learning Locker
+	 * @return the message from Learning Locker
+	 */
 	@GetMapping("/ll")
-	public String ll() throws Exception {
+	public String ll(){
 		LearningLockerRepository ll = new LearningLockerRepository();
 		return ll.getfromLearningLocker();
 	}
