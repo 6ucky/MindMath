@@ -31,6 +31,13 @@ sudo docker-compose up --build
 ```
 sudo docker-compose down
 ```
+## POST request
+```
+POST http://localhost:8080/task
+Content-Type: application/json
+Version-LIP6: 1.0
+Authorization: mocah
+```
 ## Infos
 
 - Class diagram build with [ObjectAid UML Explorer](https://www.objectaid.com/home)
