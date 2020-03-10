@@ -3,6 +3,9 @@
  */
 package com.mocah.mindmath.learning;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +20,14 @@ import com.mocah.mindmath.learning.ztest.Grille;
 import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
 
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.MalformedGoalException;
+import alice.tuprolog.NoMoreSolutionException;
+import alice.tuprolog.NoSolutionException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
+
 /**
  * @author Thibaut SIMON-FINE
  *
@@ -27,6 +38,45 @@ public class MainLearningProcess {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		try {
+			String trigger = "sally";
+			FileInputStream is = new FileInputStream("test.pl");
+			Theory tr = new Theory(is);
+			Prolog pg = new Prolog();
+			pg.setTheory(tr);
+
+//			SolveInfo info = pg.solve("frere_ou_soeur(sally, A).");
+//			SolveInfo info = pg.solve("pere(tom, " + trigger + ").");
+			SolveInfo info = pg.solve("equal(sally, " + trigger + ").");
+			while (info.isSuccess()) {
+				System.out.println("solution: " + info.getSolution() + " - bindings: " + info);
+				System.out.println(info.getSolution().getTerm());
+				if (pg.hasOpenAlternatives()) {
+					info = pg.solveNext();
+				} else {
+					break;
+				}
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (InvalidTheoryException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (MalformedGoalException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (NoSolutionException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (NoMoreSolutionException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+
 		// Comment to test
 		if (true)
 			return;
@@ -92,6 +142,20 @@ public class MainLearningProcess {
 
 		System.out.println(str);
 		System.out.println(reward);
+	}
+
+	/**
+	 * Init the learning process based on data given
+	 *
+	 * <ul>
+	 * <li>Should get an existing learning (or at least learned values)
+	 * <li>Instantiate a learning
+	 * <li>Populate with default data (for empty ones) -> ie compute states from
+	 * decision tree
+	 * </ul>
+	 */
+	public void initLearning() {
+
 	}
 
 }

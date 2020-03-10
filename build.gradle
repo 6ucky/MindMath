@@ -36,9 +36,11 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
-	compile 'org.apache.httpcomponents:httpclient:4.5.1'
+	implementation 'com.google.code.gson:gson:2.7'
+	implementation 'org.apache.httpcomponents:httpclient:4.5.1'
 	runtimeOnly 'org.apache.derby:derby'
+	
+	implementation 'it.unibo.alice.tuprolog:tuprolog:3.3.0'
 	
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	

@@ -18,6 +18,7 @@ module com.mocah.mindmath {
 	requires org.apache.httpcomponents.httpcore;
 	requires org.apache.tomcat.embed.core;
 	requires spring.webmvc;
+	requires tuprolog;
 
 	opens com.mocah.mindmath.server;
 	opens com.mocah.mindmath.server.cabri;
