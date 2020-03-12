@@ -3,12 +3,14 @@
  */
 package com.mocah.mindmath.learning;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.mocah.mindmath.decisiontree.Tree;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.policies.EpsilonGreedy;
 import com.mocah.mindmath.learning.policies.Greedy;
@@ -20,14 +22,6 @@ import com.mocah.mindmath.learning.ztest.Grille;
 import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
 
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.MalformedGoalException;
-import alice.tuprolog.NoMoreSolutionException;
-import alice.tuprolog.NoSolutionException;
-import alice.tuprolog.Prolog;
-import alice.tuprolog.SolveInfo;
-import alice.tuprolog.Theory;
-
 /**
  * @author Thibaut SIMON-FINE
  *
@@ -38,44 +32,57 @@ public class MainLearningProcess {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		try {
-			String trigger = "sally";
-			FileInputStream is = new FileInputStream("test.pl");
-			Theory tr = new Theory(is);
-			Prolog pg = new Prolog();
-			pg.setTheory(tr);
+		Gson gson = new Gson();
+		try (Reader reader = new FileReader("test.json")) {
 
-//			SolveInfo info = pg.solve("frere_ou_soeur(sally, A).");
-//			SolveInfo info = pg.solve("pere(tom, " + trigger + ").");
-			SolveInfo info = pg.solve("equal(sally, " + trigger + ").");
-			while (info.isSuccess()) {
-				System.out.println("solution: " + info.getSolution() + " - bindings: " + info);
-				System.out.println(info.getSolution().getTerm());
-				if (pg.hasOpenAlternatives()) {
-					info = pg.solveNext();
-				} else {
-					break;
-				}
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
+			// Convert JSON File to Java Object
+			Tree tree = gson.fromJson(reader, Tree.class);
+
+			// print tree
+			System.out.println(tree);
+
 		} catch (IOException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		} catch (InvalidTheoryException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		} catch (MalformedGoalException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		} catch (NoSolutionException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		} catch (NoMoreSolutionException e) {
-			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
+
+//		try {
+//			String trigger = "sally";
+//			FileInputStream is = new FileInputStream("test.pl");
+//			Theory tr = new Theory(is);
+//			Prolog pg = new Prolog();
+//			pg.setTheory(tr);
+//
+////			SolveInfo info = pg.solve("frere_ou_soeur(sally, A).");
+////			SolveInfo info = pg.solve("pere(tom, " + trigger + ").");
+//			SolveInfo info = pg.solve("equal(sally, " + trigger + ").");
+//			while (info.isSuccess()) {
+//				System.out.println("solution: " + info.getSolution() + " - bindings: " + info);
+//				System.out.println(info.getSolution().getTerm());
+//				if (pg.hasOpenAlternatives()) {
+//					info = pg.solveNext();
+//				} else {
+//					break;
+//				}
+//			}
+//		} catch (FileNotFoundException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		} catch (InvalidTheoryException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		} catch (MalformedGoalException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		} catch (NoSolutionException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		} catch (NoMoreSolutionException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		}
 
 		// Comment to test
 		if (true)
@@ -155,7 +162,6 @@ public class MainLearningProcess {
 	 * </ul>
 	 */
 	public void initLearning() {
-
+		// TODO
 	}
-
 }

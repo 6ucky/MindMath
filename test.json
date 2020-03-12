@@ -1,0 +1,134 @@
+{
+  "root": "déclencheur_FB",
+  "nodes": [
+    {
+      "nodeid": "déclencheur_FB",
+      "nodetype": "state",
+      "valuetype": "string",
+      "childs": [
+        {
+          "edge": {
+            "value": "valider",
+            "query": "equal(__VAR__,'valider')"
+          },
+          "nodeid": "réponse_juste"
+        },
+        {
+          "edge": {
+            "value": "aide",
+            "query": "equal(__VAR__,'aide')"
+          },
+          "nodeid": "mode_activité_3"
+        },
+        {
+          "edge": {
+            "value": "inactivité",
+            "query": "equal(__VAR__,'inactivité')"
+          },
+          "nodeid": "mode_activité_3"
+        }
+      ]
+    },
+    {
+      "nodeid": "réponse_juste",
+      "nodetype": "state",
+      "valuetype": "boolean",
+      "childs": [
+        {
+          "edge": {
+            "value": true,
+            "query": "__VAR__."
+          },
+          "nodeid": "plusieurs_tentatives_de_résolution"
+        },
+        {
+          "edge": {
+            "value": false,
+            "query": "not(__VAR__)"
+          },
+          "nodeid": "erreur_type_identifié"
+        }
+      ]
+    },
+    {
+      "nodeid": "plusieurs_tentatives_de_résolution",
+      "nodetype": "state",
+      "valuetype": "integer",
+      "childs": [
+        {
+          "edge": {
+            "value": ">1",
+            "query": "strictsup(__VAR__,1)"
+          },
+          "nodeid": "mode_activité_1"
+        },
+        {
+          "edge":  {
+            "value": "=1",
+            "query": "equal(__VAR__,1)"
+          },
+          "nodeid": "decision_3"
+        }
+      ]
+    },
+    {
+      "nodeid": "mode_activité_1",
+      "nodetype": "state",
+      "valuetype": "integer",
+      "childs": [
+        {
+          "edge": {
+            "value": "<2",
+            "query": "inf(__VAR__,2)"
+          },
+          "nodeid": "decision_1"
+        },
+        {
+          "edge": {
+            "value": "=2",
+            "query": "equal(__VAR__,2)"
+          },
+          "nodeid": "decision_2"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_1",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_renforcer_technique"
+        },
+        {
+          "edge":{
+            "value": 0.2
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        }
+      ]
+    },
+    {
+      "nodeid": "feedback_renforcer_technique",
+      "nodetype": "feedback",
+      "feedback_id": 1
+    },
+    {
+      "nodeid": "feedback_renforcer_technologie",
+      "nodetype": "feedback",
+      "feedback_id": 2
+    },
+    {
+      "nodeid": "feedback_informer_technologie",
+      "nodetype": "feedback",
+      "feedback_id": 3
+    },
+    {
+      "nodeid": "feedback_aide_erreur_type_technique",
+      "nodetype": "feedback",
+      "feedback_id": 4
+    }
+  ]
+}
