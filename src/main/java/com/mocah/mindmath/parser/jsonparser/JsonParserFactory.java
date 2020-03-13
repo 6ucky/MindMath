@@ -24,8 +24,7 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 	private JsonArray logsObject;
 	
 	public JsonParserFactory(String data) {
-		JsonParser parser = new JsonParser();
-		this.rootObject = parser.parse(data).getAsJsonObject();
+		this.rootObject = JsonParser.parseString(data).getAsJsonObject();
 		this.logsObject = rootObject.get(LOG).getAsJsonArray();
 	}
 	
