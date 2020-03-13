@@ -42,33 +42,15 @@ import alice.tuprolog.Theory;
  */
 public class MainLearningProcess {
 
-	private static void tree(Tree tree) {
+	private static void decisionTreeDFS(Tree tree) {
 		DeepFirstSearch dfs = new DeepFirstSearch(tree);
 
 		List<List<Node>> branches = new ArrayList<>();
 
 		Node node = tree.getRoot();
-		if (node != null) {
-			dfs.visitNode(node);
+		goDeep(dfs, node, branches, new ArrayList<>());
 
-			List<Node> branch = new ArrayList<>();
-			branch.add(node);
-
-			Deque<Node> opened = dfs.open(node);
-
-			if (opened.isEmpty()) {
-				branches.add(branch);
-			} else {
-				while (!opened.isEmpty()) {
-					Node child = opened.pollFirst();
-
-					List<Node> extbranch = new ArrayList<>(branch);
-
-					goDeep(dfs, child, branches, extbranch);
-				}
-			}
-		}
-
+		// TODO for test purpose
 		System.out.println("Visit order: " + dfs.getVisitedNodes());
 		System.out.println("Computed branches : " + branches);
 	}
@@ -114,7 +96,7 @@ public class MainLearningProcess {
 		}
 
 		if (tree != null) {
-			tree(tree);
+			decisionTreeDFS(tree);
 		}
 
 		try {
