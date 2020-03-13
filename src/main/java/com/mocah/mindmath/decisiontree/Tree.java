@@ -4,8 +4,8 @@
 package com.mocah.mindmath.decisiontree;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import com.google.gson.JsonPrimitive;
@@ -23,6 +23,13 @@ public class Tree {
 	 */
 	public String getRootId() {
 		return this.root;
+	}
+
+	/**
+	 * @return
+	 */
+	public Node getRoot() {
+		return getNodeById(this.root);
 	}
 
 	/**
@@ -57,7 +64,7 @@ public class Tree {
 		sb.append(root.getId());
 		sb.append(" <" + root.getType() + " / " + root.getValueType() + ">");
 
-		Iterator<Child> it = root.getChildren().iterator();
+		ListIterator<Child> it = root.getChildren().listIterator();
 		while (it.hasNext()) {
 			Child myChild = it.next();
 
@@ -126,7 +133,7 @@ public class Tree {
 			String paddingForAll = paddingBuilder.toString();
 
 			if (node != null && node.hasChild()) {
-				Iterator<Child> it = node.getChildren().iterator();
+				ListIterator<Child> it = node.getChildren().listIterator();
 				while (it.hasNext()) {
 					Child myChild = it.next();
 

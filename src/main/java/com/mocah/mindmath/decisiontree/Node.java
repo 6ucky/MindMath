@@ -34,4 +34,9 @@ public class Node {
 	public ValueType getValueType() {
 		return this.valuetype;
 	}
+
+	@Override
+	public String toString() {
+		return this.nodeid;
+	}
 }
