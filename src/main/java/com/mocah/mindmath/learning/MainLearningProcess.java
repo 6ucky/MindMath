@@ -3,14 +3,20 @@
  */
 package com.mocah.mindmath.learning;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.Tree;
+import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.policies.EpsilonGreedy;
 import com.mocah.mindmath.learning.policies.Greedy;
@@ -22,21 +28,83 @@ import com.mocah.mindmath.learning.ztest.Grille;
 import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
 
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.MalformedGoalException;
+import alice.tuprolog.NoMoreSolutionException;
+import alice.tuprolog.NoSolutionException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
+
 /**
  * @author Thibaut SIMON-FINE
  *
  */
 public class MainLearningProcess {
 
+	private static void tree(Tree tree) {
+		DeepFirstSearch dfs = new DeepFirstSearch(tree);
+
+		List<List<Node>> branches = new ArrayList<>();
+
+		Node node = tree.getRoot();
+		if (node != null) {
+			dfs.visitNode(node);
+
+			List<Node> branch = new ArrayList<>();
+			branch.add(node);
+
+			Deque<Node> opened = dfs.open(node);
+
+			if (opened.isEmpty()) {
+				branches.add(branch);
+			} else {
+				while (!opened.isEmpty()) {
+					Node child = opened.pollFirst();
+
+					List<Node> extbranch = new ArrayList<>(branch);
+
+					goDeep(dfs, child, branches, extbranch);
+				}
+			}
+		}
+
+		System.out.println("Visit order: " + dfs.getVisitedNodes());
+		System.out.println("Computed branches : " + branches);
+	}
+
+	private static void goDeep(DeepFirstSearch dfs, Node node, List<List<Node>> branches, List<Node> currentBranch) {
+		if (node != null) {
+			dfs.visitNode(node);
+			currentBranch.add(node);
+
+			Deque<Node> opened = dfs.open(node);
+
+			if (opened.isEmpty()) {
+				branches.add(currentBranch);
+			} else {
+
+				while (!opened.isEmpty()) {
+					Node child = opened.pollFirst();
+
+					List<Node> extbranch = new ArrayList<>(currentBranch);
+
+					goDeep(dfs, child, branches, extbranch);
+				}
+			}
+		}
+	}
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Tree tree = null;
 		Gson gson = new Gson();
 		try (Reader reader = new FileReader("test.json")) {
 
 			// Convert JSON File to Java Object
-			Tree tree = gson.fromJson(reader, Tree.class);
+			tree = gson.fromJson(reader, Tree.class);
 
 			// print tree
 			System.out.println(tree);
@@ -45,46 +113,50 @@ public class MainLearningProcess {
 			e.printStackTrace();
 		}
 
-//		try {
-//			String trigger = "sally";
-//			FileInputStream is = new FileInputStream("test.pl");
-//			Theory tr = new Theory(is);
-//			Prolog pg = new Prolog();
-//			pg.setTheory(tr);
-//
-////			SolveInfo info = pg.solve("frere_ou_soeur(sally, A).");
-////			SolveInfo info = pg.solve("pere(tom, " + trigger + ").");
-//			SolveInfo info = pg.solve("equal(sally, " + trigger + ").");
-//			while (info.isSuccess()) {
-//				System.out.println("solution: " + info.getSolution() + " - bindings: " + info);
-//				System.out.println(info.getSolution().getTerm());
-//				if (pg.hasOpenAlternatives()) {
-//					info = pg.solveNext();
-//				} else {
-//					break;
-//				}
-//			}
-//		} catch (FileNotFoundException e) {
-//			// TODO Bloc catch généré automatiquement
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Bloc catch généré automatiquement
-//			e.printStackTrace();
-//		} catch (InvalidTheoryException e) {
-//			// TODO Bloc catch généré automatiquement
-//			e.printStackTrace();
-//		} catch (MalformedGoalException e) {
-//			// TODO Bloc catch généré automatiquement
-//			e.printStackTrace();
-//		} catch (NoSolutionException e) {
-//			// TODO Bloc catch généré automatiquement
-//			e.printStackTrace();
-//		} catch (NoMoreSolutionException e) {
-//			// TODO Bloc catch généré automatiquement
-//			e.printStackTrace();
-//		}
+		if (tree != null) {
+			tree(tree);
+		}
 
-		// Comment to test
+		try {
+			String trigger = "sally";
+			FileInputStream is = new FileInputStream("test.pl");
+			Theory tr = new Theory(is);
+			Prolog pg = new Prolog();
+			pg.setTheory(tr);
+
+//			SolveInfo info = pg.solve("frere_ou_soeur(sally, A).");
+//			SolveInfo info = pg.solve("pere(tom, " + trigger + ").");
+			SolveInfo info = pg.solve("equal(sally, " + trigger + ").");
+			while (info.isSuccess()) {
+				System.out.println("solution: " + info.getSolution() + " - bindings: " + info);
+				System.out.println(info.getSolution().getTerm());
+				if (pg.hasOpenAlternatives()) {
+					info = pg.solveNext();
+				} else {
+					break;
+				}
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (InvalidTheoryException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (MalformedGoalException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (NoSolutionException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (NoMoreSolutionException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+
+		// Comment to test qlearning on simple env
 		if (true)
 			return;
 
