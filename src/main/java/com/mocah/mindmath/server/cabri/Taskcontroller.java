@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.mocah.mindmath.learning.exceptions.JsonParserException;
 import com.mocah.mindmath.parser.ParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
@@ -47,18 +48,20 @@ public class Taskcontroller {
 			@RequestBody String data) throws JsonParserException {
 		if(!auth.contains(license_num))
 		{
-			return new ResponseEntity<String>("Unauthorized.", HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<String>("Unauthorized connection.", HttpStatus.UNAUTHORIZED);
 		}
-		ParserFactory<Task> jsonparser = new JsonParserFactory(data);
-		Task tasks = jsonparser.parse(data);
+		
+		Task tasks = JsonParserFactory.parseCabri(data);
+		
 		if (!getTaskrepository().existsById(tasks.getId())) {
 			getTaskrepository().save(tasks);
-			System.out.println("Saved!\n");
+			
+			// TODO call Q-learning algorithm
+			
+			return new ResponseEntity<String>("JSON file is saved in the server.", HttpStatus.CREATED);
 		}
 
-		// TODO call Q-learning algorithm
-
-		return new ResponseEntity<String>("JSON file received by the server.", HttpStatus.CREATED);
+		return new ResponseEntity<String>("Duplicated JSON file found in the server.", HttpStatus.CONFLICT);
 	}
 
 	/**
@@ -66,19 +69,21 @@ public class Taskcontroller {
 	 * @return all the tasks in the repository
 	 */
 	@GetMapping("/task")
-	public List<Task> getALLtask() {
+	public ResponseEntity<String> getALLtask() {
 		List<Task> tasks = new ArrayList<>();
 		getTaskrepository().findAll().forEach(tasks::add);
-
-		return tasks;
+		if(tasks.size() == 0)
+			return new ResponseEntity<String>("Database is empty.", HttpStatus.NOT_FOUND);
+		Gson gson = new Gson();
+		return new ResponseEntity<String>(gson.toJson(tasks), HttpStatus.FOUND);
 	}
 	/**
 	 * Default GET request
 	 * @return server started
 	 */
 	@GetMapping("/")
-	public String home() {
-		return "The server is started.";
+	public ResponseEntity<String> home() {
+		return new ResponseEntity<String>("Server is started.", HttpStatus.ACCEPTED);
 	}
 	
 	/**
@@ -86,12 +91,13 @@ public class Taskcontroller {
 	 * @return the message from Learning Locker
 	 */
 	@GetMapping("/ll")
-	public String ll(){
+	public ResponseEntity<String> ll(){
 		LearningLockerRepository ll = new LearningLockerRepository();
-		return ll.getfromLearningLocker();
+		return new ResponseEntity<String>(ll.getfromLearningLocker(), HttpStatus.ACCEPTED);
 	}
 	
 	/**
+	 * @deprecated use post to update JSON file
 	 * Handle PUT request, update task based on ID
 	 * @param data Received JSON file mapping to task class
 	 * @return feedback message
@@ -108,10 +114,12 @@ public class Taskcontroller {
 	
 	/**
 	 * Handle DELETE request
+	 * @return 
 	 */
 	@DeleteMapping(path = "/task")
-	public void cleandatabase() {
+	public ResponseEntity<String> cleandatabase() {
 		getTaskrepository().deleteAll();
+		return new ResponseEntity<String>("Database is empty.", HttpStatus.NOT_FOUND);
 	}
 
 	/**

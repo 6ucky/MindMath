@@ -26,69 +26,61 @@ public class Task implements Serializable{
 	private static final long serialVersionUID = 4790322015762458488L;
 
 	@Id
-    private String id;
+    private final String id;
 
-	private String task;
+	private final String task;
 
-	private String trigger;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private Sensors sensors;
+	private final String trigger;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private Params params;
+	private final Sensors sensors;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	private final Params params;
 
 	@OneToMany(cascade=CascadeType.ALL)
-	private List<Log> log = new ArrayList<>();
+	private final List<Log> log;
 	
-	public Task() {}
+	public Task() {
+		this.log = null;
+		this.params = new Params();
+		this.trigger = "";
+		this.task = "";
+		this.sensors = new Sensors();
+		this.id = "";
+	}
+	
+	public Task(String id, String task, String trigger, Sensors sensors, Params params, List<Log> log) {
+		this.id = id;
+		this.task = task;
+		this.trigger = trigger;
+		this.sensors = sensors;
+		this.params = params;
+		this.log = log;
+	}
 
 	public String getId() {
 		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getTask() {
 		return task;
 	}
 
-	public void setTask(String task) {
-		this.task = task;
-	}
-
 	public String getTrigger() {
 		return trigger;
-	}
-
-	public void setTrigger(String trigger) {
-		this.trigger = trigger;
 	}
 
 	public Sensors getSensors() {
 		return sensors;
 	}
 
-	public void setSensors(Sensors sensors) {
-		this.sensors = sensors;
-	}
-
 	public Params getParams() {
 		return params;
 	}
 
-	public void setParams(Params params) {
-		this.params = params;
-	}
-
 	public List<Log> getLog() {
 		return log;
-	}
-
-	public void setLog(List<Log> log) {
-		this.log = log;
 	}
 
 }

@@ -20,11 +20,15 @@ import com.mocah.mindmath.server.cabri.jsondata.Task;
  */
 public class JsonParserFactory extends JsonParserKeys implements ParserFactory <Task>{
 	
-	private JsonObject rootObject;
-	private JsonArray logsObject;
+	private final JsonObject rootObject;
+	private final JsonObject paramsObject;
+	private final JsonObject sensorsObject;
+	private final JsonArray logsObject;
 	
 	public JsonParserFactory(String data) {
 		this.rootObject = JsonParser.parseString(data).getAsJsonObject();
+		this.paramsObject = rootObject.get(PARAMS).getAsJsonObject();
+		this.sensorsObject = rootObject.get(SENSOR).getAsJsonObject();
 		this.logsObject = rootObject.get(LOG).getAsJsonArray();
 	}
 	
@@ -45,65 +49,65 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 	
 	public long getVT_2_1()
 	{
-		return rootObject.get(PARAMS).getAsJsonObject().get(PARAMS_VT_2_1).getAsLong();
+		return paramsObject.get(PARAMS_VT_2_1).getAsLong();
 	}
 	
 	public long getVT_2_2()
 	{
-		return rootObject.get(PARAMS).getAsJsonObject().get(PARAMS_VT_2_2).getAsLong();
+		return paramsObject.get(PARAMS_VT_2_2).getAsLong();
 	}
 	
 	public boolean getVT_2_3()
 	{
-		return rootObject.get(PARAMS).getAsJsonObject().get(PARAMS_VT_2_3).getAsBoolean();
+		return paramsObject.get(PARAMS_VT_2_3).getAsBoolean();
 	}
 	
 	public boolean getVT_2_4()
 	{
-		return rootObject.get(PARAMS).getAsJsonObject().get(PARAMS_VT_2_4).getAsBoolean();
+		return paramsObject.get(PARAMS_VT_2_4).getAsBoolean();
 	}
 	
 	public boolean getBOOL_RF_CO2_1()
 	{
-		return rootObject.get(SENSOR).getAsJsonObject().get(SENSOR_CAPTEUR_BOOL_RF_CO2_1).getAsBoolean();
+		return sensorsObject.get(SENSOR_CAPTEUR_BOOL_RF_CO2_1).getAsBoolean();
 	}
 	
 	public boolean getBOOL_RF_CO2_2()
 	{
-		return rootObject.get(SENSOR).getAsJsonObject().get(SENSOR_CAPTEUR_BOOL_RF_CO2_2).getAsBoolean();
+		return sensorsObject.get(SENSOR_CAPTEUR_BOOL_RF_CO2_2).getAsBoolean();
 	}
 	
 	public boolean getBOOL_RF_CO2_3()
 	{
-		return rootObject.get(SENSOR).getAsJsonObject().get(SENSOR_CAPTEUR_BOOL_RF_CO2_3).getAsBoolean();
+		return sensorsObject.get(SENSOR_CAPTEUR_BOOL_RF_CO2_3).getAsBoolean();
 	}
 	
 	public boolean getBOOL_RJ()
 	{
-		return rootObject.get(SENSOR).getAsJsonObject().get(SENSOR_CAPTEUR_BOOL_RJ).getAsBoolean();
+		return sensorsObject.get(SENSOR_CAPTEUR_BOOL_RJ).getAsBoolean();
 	}
 	
 	public long getNB_TEMPS()
 	{
-		return rootObject.get(SENSOR).getAsJsonObject().get(SENSOR_CAPTEUR_NB_TEMPS).getAsLong();
+		return sensorsObject.get(SENSOR_CAPTEUR_NB_TEMPS).getAsLong();
 	}
 	
 	public long getNB_VALIDER()
 	{
-		return rootObject.get(SENSOR).getAsJsonObject().get(SENSOR_CAPTEUR_NB_VALIDER).getAsLong();
+		return sensorsObject.get(SENSOR_CAPTEUR_NB_VALIDER).getAsLong();
 	}
 	
 	public long getNB_EFFACER()
 	{
-		return rootObject.get(SENSOR).getAsJsonObject().get(SENSOR_CAPTEUR_NB_EFFACER).getAsLong();
+		return sensorsObject.get(SENSOR_CAPTEUR_NB_EFFACER).getAsLong();
 	}
 	
 	public String getNB_AIDE()
 	{
-		if(rootObject.get(SENSOR).getAsJsonObject().get(SENSOR_CAPTEUR_NB_AIDE).isJsonNull())
+		if(sensorsObject.get(SENSOR_CAPTEUR_NB_AIDE).isJsonNull())
 			return "null";
 		else
-			return rootObject.get(SENSOR).getAsJsonObject().get(SENSOR_CAPTEUR_NB_AIDE).getAsString();
+			return sensorsObject.get(SENSOR_CAPTEUR_NB_AIDE).getAsString();
 	}
 	
 	public List<Log> getLogs()
@@ -111,50 +115,80 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 		List<Log> logs = new ArrayList<Log>();
 		for(int i = 0; i < logsObject.size(); i++)
 		{
-			Log temp = new Log();
-			temp.setId(getTaskId() + "-" + i);
-			temp.setTime(logsObject.get(i).getAsJsonObject().get(LOG_TIME).getAsLong());
-			temp.setType(logsObject.get(i).getAsJsonObject().get(LOG_TYPE).getAsString());
-			temp.setName(logsObject.get(i).getAsJsonObject().get(LOG_NAME).getAsString());
-			temp.setAction(logsObject.get(i).getAsJsonObject().get(LOG_ACTION).getAsString());
+			JsonObject tempObject = logsObject.get(i).getAsJsonObject();
+			Log temp = new Log(getTaskId() + "-" + i, 
+					tempObject.get(LOG_TIME).getAsLong(),
+					tempObject.get(LOG_TYPE).getAsString(),
+					tempObject.get(LOG_NAME).getAsString(),
+					tempObject.get(LOG_ACTION).getAsString());
 			logs.add(temp);
 		}
 		
 		return logs;
 	}
 	
-	@Override
-	public Task parse(String data) throws JsonParserException
-	{	
-		Task tasks = new Task();
-		tasks.setId(getTaskId());
-		tasks.setTask(getTaskName());
-		tasks.setTrigger(getTrigger());
+	// parse JSON file into Derby database
+	public static Task parseCabri(String data) throws JsonParserException
+	{		
+		JsonObject root = JsonParser.parseString(data).getAsJsonObject();
+		JsonObject params = root.get(PARAMS).getAsJsonObject();
+		JsonObject sensors = root.get(SENSOR).getAsJsonObject();
+		JsonArray logs = root.get(LOG).getAsJsonArray();
+		String taskId = root.get(TASK_ID).getAsString();
+		String nb_aide = null;
+		if(!sensors.get(SENSOR_CAPTEUR_NB_AIDE).isJsonNull())
+			nb_aide = sensors.get(SENSOR_CAPTEUR_NB_AIDE).getAsString();
 		
-		Params params = new Params();
-		params.setId(getTaskId());
-		params.setVT_2_1(getVT_2_1());
-		params.setVT_2_2(getVT_2_2());
-		params.setVT_2_3(getVT_2_3());
-		params.setVT_2_4(getVT_2_4());
-		tasks.setParams(params);
+		Params paramsClass = new Params(taskId, 
+				params.get(PARAMS_VT_2_1).getAsLong(), 
+				params.get(PARAMS_VT_2_2).getAsLong(), 
+				params.get(PARAMS_VT_2_3).getAsBoolean(), 
+				params.get(PARAMS_VT_2_4).getAsBoolean());
 		
-		Sensors sensors = new Sensors();
-		sensors.setId(getTaskId());
-		sensors.setCapteur_bool_RF_CO2_1(getBOOL_RF_CO2_1());
-		sensors.setCapteur_bool_RF_CO2_2(getBOOL_RF_CO2_2());
-		sensors.setCapteur_bool_RF_CO2_3(getBOOL_RF_CO2_3());
-		sensors.setCapteur_bool_RJ(getBOOL_RJ());
-		sensors.setCapteur_nb_temps(getNB_TEMPS());
-		sensors.setCapteur_nb_valider(getNB_VALIDER());
-		sensors.setCapteur_nb_effacer(getNB_EFFACER());
-		sensors.setCapteur_nb_aide(getNB_AIDE());
-		tasks.setSensors(sensors);
+		Sensors sensorsClass = new Sensors(taskId,
+				sensors.get(SENSOR_CAPTEUR_BOOL_RF_CO2_1).getAsBoolean(), 
+				sensors.get(SENSOR_CAPTEUR_BOOL_RF_CO2_2).getAsBoolean(),
+				sensors.get(SENSOR_CAPTEUR_BOOL_RF_CO2_3).getAsBoolean(), 
+				sensors.get(SENSOR_CAPTEUR_BOOL_RJ).getAsBoolean(), 
+				sensors.get(SENSOR_CAPTEUR_NB_TEMPS).getAsLong(), 
+				sensors.get(SENSOR_CAPTEUR_NB_VALIDER).getAsLong(), 
+				sensors.get(SENSOR_CAPTEUR_NB_EFFACER).getAsLong(), 
+				nb_aide);
 		
-		if(logsObject.size() > 0)
+		List<Log> logsList = new ArrayList<Log>();
+		for(int i = 0; i < logs.size(); i++)
 		{
-			tasks.setLog(getLogs());
+			JsonObject tempObject = logs.get(i).getAsJsonObject();
+			Log temp = new Log(taskId + "-" + i, 
+					tempObject.get(LOG_TIME).getAsLong(),
+					tempObject.get(LOG_TYPE).getAsString(),
+					tempObject.get(LOG_NAME).getAsString(),
+					tempObject.get(LOG_ACTION).getAsString());
+			logsList.add(temp);
 		}
+		
+		Task tasks = new Task(taskId, 
+				root.get(TASK_NAME).getAsString(), 
+				root.get(TASK_TRIGGER).getAsString(), 
+				sensorsClass, 
+				paramsClass, 
+				logsList);
+		
+		return tasks;
+	}
+
+	/**
+	 * @deprecated use static method parseCabri 
+	 */
+	@Override
+	public Task parse(String data) throws JsonParserException {
+		
+		Params params = new Params(getTaskId(), getVT_2_1(), getVT_2_2(), getVT_2_3(), getVT_2_4());
+		
+		Sensors sensors = new Sensors(getTaskId(), getBOOL_RF_CO2_1(), getBOOL_RF_CO2_2(),
+				getBOOL_RF_CO2_3(), getBOOL_RJ(), getNB_TEMPS(), getNB_VALIDER(), getNB_EFFACER(), getNB_AIDE());
+		
+		Task tasks = new Task(getTaskId(), getTaskName(), getTrigger(), sensors, params, getLogs());
 		
 		return tasks;
 	}

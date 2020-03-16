@@ -16,54 +16,50 @@ public class Log implements Serializable{
 	private static final long serialVersionUID = 6036741035696456506L;
 
 	@Id
-	private String id;
+	private final String id;
 	
-	private long time;
+	private final long time;
 	
-	private String type;
+	private final String type;
 	
-	private String name;
+	private final String name;
 	
-	private String action;
+	private final String action;
+	
+	public Log() {
+		this.time = 0;
+		this.name = "";
+		this.action = "";
+		this.id = "";
+		this.type = "";
+	}
+	
+	public Log(String id, long time, String type, String name, String action) {
+		this.id = id;
+		this.time = time;
+		this.type = type;
+		this.name = name;
+		this.action = action;
+	}
 
 	public String getId() {
 		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public long getTime() {
 		return time;
 	}
 
-	public void setTime(long time) {
-		this.time = time;
-	}
-
 	public String getType() {
 		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getAction() {
 		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
 	}
 
 }
