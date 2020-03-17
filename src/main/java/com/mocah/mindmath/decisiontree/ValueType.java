@@ -12,6 +12,6 @@ import com.google.gson.annotations.SerializedName;
 public enum ValueType {
 	@SerializedName("string")
 	STRING, @SerializedName("boolean")
-	BOOLEAN, @SerializedName("integer")
-	INTEGER
+	BOOLEAN, @SerializedName("number")
+	NUMBER
 }
