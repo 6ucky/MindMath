@@ -81,52 +81,60 @@
     </display>  
   </class>  
   <association id="10">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="11" name="edge">        
-        <position height="0" width="0" x="141" y="25"/>      
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="11" name="tree">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="12" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="13">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="14" name="edge">        
+        <position height="0" width="0" x="141" y="25"/>      
+      </attribute>      
+      <multiplicity id="15" minimum="0" maximum="1">        
         <position height="0" width="0" x="141" y="25"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="13">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="14" name="tree"/>      
-      <multiplicity id="15" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="1" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <association id="16">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="17" name="nodetype">        
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="17" name="nodes">        
         <position height="0" width="0" x="141" y="25"/>      
       </attribute>      
-      <multiplicity id="18" minimum="0" maximum="1">        
+      <multiplicity id="18" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="141" y="25"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="19">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="20" name="opened"/>      
-      <multiplicity id="21" minimum="0" maximum="2147483647"/>    
+      <attribute id="20" name="opened">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="21" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="22">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="23" name="nodes">        
-        <position height="0" width="0" x="141" y="25"/>      
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="23" name="visited">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="24" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="141" y="25"/>      
+        <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
@@ -134,40 +142,44 @@
   </association>  
   <association id="25">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="26" name="childs">        
+      <attribute id="26" name="nodetype">        
         <position height="0" width="0" x="141" y="25"/>      
       </attribute>      
-      <multiplicity id="27" minimum="0" maximum="2147483647">        
+      <multiplicity id="27" minimum="0" maximum="1">        
+        <position height="0" width="0" x="141" y="25"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="28">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="29" name="childs">        
+        <position height="0" width="0" x="141" y="25"/>      
+      </attribute>      
+      <multiplicity id="30" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="141" y="25"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="28">    
-    <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="29" name="visited"/>      
-      <multiplicity id="30" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="31">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="9"/>  
-  </generalization>  
-  <association id="32">    
+  <association id="31">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="33" name="valuetype">        
+      <attribute id="32" name="valuetype">        
         <position height="0" width="0" x="141" y="25"/>      
       </attribute>      
-      <multiplicity id="34" minimum="0" maximum="1">        
+      <multiplicity id="33" minimum="0" maximum="1">        
         <position height="0" width="0" x="141" y="25"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <generalization id="34">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

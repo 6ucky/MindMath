@@ -132,7 +132,7 @@ public class Tree {
 
 			String paddingForAll = paddingBuilder.toString();
 
-			if (node != null && node.hasChild()) {
+			if (node != null && node.hasChilds()) {
 				ListIterator<Child> it = node.getChildren().listIterator();
 				while (it.hasNext()) {
 					Child myChild = it.next();

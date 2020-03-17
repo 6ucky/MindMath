@@ -111,6 +111,48 @@
       ]
     },
     {
+      "nodeid": "decision_2",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.2
+          },
+          "nodeid": "feedback_renforcer_technique"
+        },
+        {
+          "edge":{
+            "value": 0.8
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_3",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
       "nodeid": "feedback_renforcer_technique",
       "nodetype": "feedback",
       "feedback_id": 1

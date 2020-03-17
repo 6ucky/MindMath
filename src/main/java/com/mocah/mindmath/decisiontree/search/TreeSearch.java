@@ -52,6 +52,14 @@ public abstract class TreeSearch {
 	}
 
 	/**
+	 * @param node
+	 * @return
+	 */
+	public boolean wasVisited(Node node) {
+		return this.visited.contains(node);
+	}
+
+	/**
 	 * @return
 	 */
 	public Tree getTree() {

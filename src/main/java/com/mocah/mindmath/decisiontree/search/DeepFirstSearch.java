@@ -25,13 +25,13 @@ public class DeepFirstSearch extends TreeSearch {
 	public Deque<Node> open(Node node) {
 		Deque<Node> open = new ArrayDeque<>();
 
-		if (node.hasChild()) {
+		if (node.hasChilds()) {
 			ListIterator<Child> it = node.getChildren().listIterator();
 			while (it.hasNext()) {
 				Child child = it.next();
 				Node n = this.tree.getNodeById(child.getId());
 
-				if (n != null && !this.visited.contains(n)) {
+				if (n != null) {
 					open.offerLast(n);
 					this.opened.offerFirst(n);
 				}
