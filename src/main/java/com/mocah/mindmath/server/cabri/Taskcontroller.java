@@ -92,14 +92,6 @@ public class Taskcontroller {
 		Gson gson = new Gson();
 		return new ResponseEntity<String>(gson.toJson(tasks), HttpStatus.FOUND);
 	}
-	/**
-	 * Default GET request
-	 * @return server started
-	 */
-	@GetMapping("/")
-	public ResponseEntity<String> home() {
-		return new ResponseEntity<String>("Server is started.", HttpStatus.ACCEPTED);
-	}
 	
 	/**
 	 * Send get request to Learning Locker
