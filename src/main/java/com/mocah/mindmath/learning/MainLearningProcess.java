@@ -10,20 +10,26 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.mocah.mindmath.decisiontree.Branch;
 import com.mocah.mindmath.decisiontree.Node;
+import com.mocah.mindmath.decisiontree.NodeType;
 import com.mocah.mindmath.decisiontree.Tree;
 import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.policies.EpsilonGreedy;
 import com.mocah.mindmath.learning.policies.Greedy;
 import com.mocah.mindmath.learning.policies.IPolicy;
+import com.mocah.mindmath.learning.utils.actions.Action;
 import com.mocah.mindmath.learning.utils.actions.IAction;
 import com.mocah.mindmath.learning.utils.states.IState;
+import com.mocah.mindmath.learning.utils.states.State;
 import com.mocah.mindmath.learning.utils.values.IValue;
+import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.learning.ztest.Grille;
 import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
@@ -45,36 +51,106 @@ public class MainLearningProcess {
 	private static void decisionTreeDFS(Tree tree) {
 		DeepFirstSearch dfs = new DeepFirstSearch(tree);
 
-		List<List<Node>> branches = new ArrayList<>();
+		List<Branch> branches = new ArrayList<>();
 
 		Node node = tree.getRoot();
-		goDeep(dfs, node, branches, new ArrayList<>());
+		goDeep(dfs, node, branches, new Branch());
 
 		// TODO for test purpose
 		System.out.println("Visit order: " + dfs.getVisitedNodes());
 		System.out.println("Computed branches : " + branches);
+
+		computeBranches(branches);
 	}
 
-	private static void goDeep(DeepFirstSearch dfs, Node node, List<List<Node>> branches, List<Node> currentBranch) {
+	private static void goDeep(DeepFirstSearch dfs, Node node, List<Branch> branches, Branch currentBranch) {
 		if (node != null) {
 			dfs.visitNode(node);
-			currentBranch.add(node);
+
+			switch (node.getType()) {
+			case STATE:
+				currentBranch.addStateNode(node);
+				break;
+			case DECISION:
+				// We reach a decision node put de branch in list
+				currentBranch.setDecisionNode(node);
+				branches.add(currentBranch);
+				break;
+			case FEEDBACK:
+				currentBranch.addFeedbackNode(node);
+				break;
+			default:
+				// TODO Unknown node
+				break;
+			}
 
 			Deque<Node> opened = dfs.open(node);
 
 			if (opened.isEmpty()) {
-				branches.add(currentBranch);
+				//
 			} else {
-
 				while (!opened.isEmpty()) {
 					Node child = opened.pollFirst();
 
-					List<Node> extbranch = new ArrayList<>(currentBranch);
+					Branch extbranch = currentBranch;
+					if (node.getType() == NodeType.STATE) {
+						extbranch = new Branch(currentBranch);
+					}
 
 					goDeep(dfs, child, branches, extbranch);
 				}
 			}
 		}
+	}
+
+	private static void computeBranches(List<Branch> branches) {
+		Map<IState, List<IValue>> qValues = new HashMap<>();
+
+		for (Branch branch : branches) {
+			computeBranch(qValues, branch);
+		}
+
+		System.out.println(qValues);
+
+		String res = "\n";
+
+		for (IState state : qValues.keySet()) {
+			String line = state + ";";
+
+			for (IValue value : qValues.get(state)) {
+				line += value.myAction() + "→" + value.getValue() + ";";
+			}
+
+			res += "\n" + line;
+		}
+
+		System.out.println(res);
+	}
+
+	private static void computeBranch(Map<IState, List<IValue>> qValues, Branch branch) {
+		List<Node> state = branch.getStateNodes();
+		Node decision = branch.getDecisionNode();
+		List<Node> feedbacks = branch.getFeedbackNodes();
+
+		State s = new State();
+
+		state.add(decision);
+		for (int i = 0; i < state.size() - 1; i++) {
+			Node node = state.get(i);
+			Node child = state.get(i + 1);
+
+			s.putParam(node.getId(), node.getChild(child).getEdge().getValue());
+		}
+
+		List<IValue> values = new ArrayList<>();
+		for (Node node : feedbacks) {
+			IAction action = new Action(node.getFeedbackId());
+			IValue qvalue = new QValue(action, decision.getChild(node).getEdge().getValue().getAsDouble());
+
+			values.add(qvalue);
+		}
+
+		qValues.put(s, values);
 	}
 
 	/**
