@@ -59,4 +59,9 @@ public class QValue implements IValue {
 	public void setValue(double value) {
 		this.value = value;
 	}
+
+	@Override
+	public String toString() {
+		return action + "→" + value + ";";
+	}
 }

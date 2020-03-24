@@ -15,7 +15,14 @@ public class Action implements IAction {
 	 * Action with incremental ID
 	 */
 	public Action() {
-		this.id = ++COUNT;
+		this(++COUNT);
+	}
+
+	/**
+	 * Action with custom ID
+	 */
+	public Action(int id) {
+		this.id = id;
 	}
 
 	@Override
@@ -43,5 +50,10 @@ public class Action implements IAction {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "feedback_" + id;
 	}
 }
