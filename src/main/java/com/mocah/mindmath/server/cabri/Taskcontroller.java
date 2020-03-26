@@ -25,6 +25,7 @@ import com.mocah.mindmath.parser.ParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.repository.Matrixrepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
+import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 /**
@@ -38,6 +39,7 @@ public class Taskcontroller {
 	@Autowired
 	private Taskrepository taskrepository;
 	private static final String license_num = "mocah";
+	private static final String test_url = "mindmath.lip6.fr/videos/ResolutionEquation.mp4";
 	
 	/**
 	 * check the post request based on authorization
@@ -73,10 +75,13 @@ public class Taskcontroller {
 			
 			// TODO call Q-learning algorithm
 			
-			return new ResponseEntity<String>("JSON file is saved in the server.", HttpStatus.CREATED);
+//			return new ResponseEntity<String>("JSON file is saved in the server.", HttpStatus.CREATED);
 		}
 
-		return new ResponseEntity<String>("Duplicated JSON file found in the server.", HttpStatus.CONFLICT);
+//		return new ResponseEntity<String>("Duplicated JSON file found in the server.", HttpStatus.CONFLICT);
+		Feedbackjson responsejson = new Feedbackjson(tasks.getId(), test_url);
+		Gson gson = new Gson();
+		return new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.FOUND);
 	}
 
 	/**
