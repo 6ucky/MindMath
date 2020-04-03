@@ -36,6 +36,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.apache.jena:jena-core:3.14.0'
 	implementation 'com.google.code.gson:gson:2.8.6'
 	implementation 'org.apache.httpcomponents:httpcore:4.4.13'
 	implementation 'org.apache.httpcomponents:httpclient:4.5.12'

@@ -1,7 +1,8 @@
 package com.mocah.mindmath.server.cabri;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,14 @@ import com.google.gson.Gson;
 import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.Tree;
 import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
-import com.mocah.mindmath.decisiontree.search.TreeSearch;
 import com.mocah.mindmath.learning.exceptions.JsonParserException;
 import com.mocah.mindmath.parser.ParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
+import com.mocah.mindmath.parser.owlparser.OWLAPIparser;
 import com.mocah.mindmath.repository.Matrixrepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
+import com.mocah.mindmath.server.cabri.jsondata.OWLfrompost;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 /**
@@ -109,6 +111,17 @@ public class Taskcontroller {
 	}
 	
 	/**
+	 * Send owl file
+	 * @return 
+	 */
+	@PostMapping("/ontology")
+	public ResponseEntity<String> getresourceontology(@RequestBody String data){
+		OWLfrompost.owldata = data;
+		Gson gson = new Gson();
+		return new ResponseEntity<String>(gson.toJson(OWLAPIparser.listallresources()), HttpStatus.ACCEPTED);
+	}
+	
+	/**	
 	 * receive JSON and update the decision tree class
 	 * @param version default version is 1.0
 	 * @param auth authorization headers

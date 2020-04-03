@@ -19,6 +19,7 @@ module com.mocah.mindmath {
 	requires tuprolog;
 	requires org.apache.httpcomponents.httpclient;
 	requires com.google.gson;
+	requires org.apache.jena.core;
 
 	opens com.mocah.mindmath.server;
 	opens com.mocah.mindmath.server.cabri;
