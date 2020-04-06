@@ -214,6 +214,66 @@ public class MainLearningProcess {
 			e.printStackTrace();
 		}
 
+		// Comment to test state equals
+		if (true)
+			return;
+
+		State s1 = new State();
+		s1.putParam("A", "a0");
+		s1.putParam("B", "b0");
+
+		State s2 = new State();
+		s2.putParam("A", "a0");
+		s2.putParam("B", "b1");
+
+		State s3 = new State();
+		s3.putParam("A", "a1");
+		s3.putParam("C", "c0");
+
+		State s4 = new State();
+		s4.putParam("A", "a1");
+		s4.putParam("C", "c1");
+
+		State stest1 = new State();
+		stest1.putParam("A", "a0");
+		stest1.putParam("B", "b0");
+		stest1.putParam("C", "c0");
+
+		State stest2 = new State();
+		stest2.putParam("A", "a0");
+		stest2.putParam("B", "b0");
+		stest2.putParam("C", "c1");
+
+		State stest3 = new State();
+		stest3.putParam("A", "a1");
+		stest3.putParam("B", "b0");
+		stest3.putParam("C", "c0");
+
+		State stest4 = new State();
+		stest4.putParam("A", "a1");
+		stest4.putParam("B", "b1");
+		stest4.putParam("C", "c0");
+
+		System.out.println(stest1.equals(s1));
+		System.out.println(stest1.equals(s2));
+		System.out.println(stest1.equals(s3));
+		System.out.println(stest1.equals(s4));
+		System.out.println("");
+		System.out.println(stest2.equals(s1));
+		System.out.println(stest2.equals(s2));
+		System.out.println(stest2.equals(s3));
+		System.out.println(stest2.equals(s4));
+		System.out.println("");
+		System.out.println(stest3.equals(s1));
+		System.out.println(stest3.equals(s2));
+		System.out.println(stest3.equals(s3));
+		System.out.println(stest3.equals(s4));
+		System.out.println("");
+		System.out.println(stest4.equals(s1));
+		System.out.println(stest4.equals(s2));
+		System.out.println(stest4.equals(s3));
+		System.out.println(stest4.equals(s4));
+
 		// Comment to test qlearning on simple env
 		if (true)
 			return;
