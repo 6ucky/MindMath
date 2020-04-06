@@ -1,29 +1,193 @@
 package com.mocah.mindmath.parser.owlparser;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.NodeIterator;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 
-import com.mocah.mindmath.server.cabri.jsondata.OWLfrompost;
+import com.mocah.mindmath.parser.ParserFactory;
 
-public class OWLAPIparser {
+/**
+ * @author	Yan Wang
+ * @since	06/04/2020
+ */
+
+public class OWLAPIparser implements ParserFactory <OWLparserRepo> {
 	
-	public static List<String> listallresources(){
-		Model model = ModelFactory.createDefaultModel() ;
-		model.read(OWLfrompost.getInputStream(), "");
+	private Model model;
+	
+	//basic parser constructor
+	public OWLAPIparser() {
+		this.model = ModelFactory.createDefaultModel();
+		this.model.read(getInputStream(), "");
+	}
+	
+	//initialize OWL API parser, only used at first when we need the input of OWL file from POST.
+	public OWLAPIparser(String data) {
+		OWLparserRepo.owldata = data;
+		this.model = ModelFactory.createDefaultModel();
+		this.model.read(getInputStream(), "");
+	}
+	
+	//transform into InputStream for the input of Jena parser
+	private static InputStream getInputStream()
+	{
+		return new ByteArrayInputStream(OWLparserRepo.owldata.getBytes());
+	}
+	
+	/**
+	 * read the owl file based on object and identify resource and literal
+	 * @return the list of node information
+	 * @deprecated use listall method instead
+	 */
+	public List<String> listallObject(){
 		List<String> results = new ArrayList<String>();
-		ResIterator iter = model.listSubjects();
-		Resource r = iter.nextResource();
+		NodeIterator iter = model.listObjects();
 		while(iter.hasNext())
 		{
-			results.add(r.toString());
-			r = iter.nextResource();
+			RDFNode n = iter.nextNode();
+			String message = "";
+			if(n.isAnon())
+				message += " Anon";
+			else if(n.isLiteral())
+				message += n.asLiteral().getString() + " Literal";
+			else if(n.isResource())
+				message += n.asResource().getLocalName() + " Resource";
+			else if(n.isURIResource())
+				message += " URI";
+			results.add(message);
 		}
 		return results;
+	}
+	
+	/**
+	 * list all the statements including resource, property and RDFNode
+	 * @return the list of statement information
+	 */
+	public List<String> listall(){
+		List<String> results = new ArrayList<String>();
+		// list the statements in the Model
+		StmtIterator iter = model.listStatements();
+
+		// print out the predicate, subject and object of each statement
+		while (iter.hasNext()) {
+			String message = "";
+		    Statement stmt      = iter.nextStatement();  // get next statement
+		    Resource  subject   = stmt.getSubject();     // get the subject
+		    Property  predicate = stmt.getPredicate();   // get the predicate
+		    RDFNode   object    = stmt.getObject();      // get the object
+
+		    message += subject.getLocalName();
+		    message += " " + predicate.getLocalName() + " ";
+		    if(object.isAnon())
+				message += " " + " -Anon";
+			else if(object.isLiteral())
+				message += " " + object.asLiteral().getString() + " -Literal";
+			else if(object.isResource())
+				message += " " + object.asResource().getLocalName() + " -Resource";
+		    results.add(message);
+		}
+		return results;
+	}
+	
+	/**
+	 * find statement based on name
+	 * @param name the name of the resource
+	 * @return one statement
+	 */
+	public Statement getStatementbyName(String name) {
+		StmtIterator iter = model.listStatements();
+		while(iter.hasNext())
+		{
+			Statement stmt      = iter.nextStatement();  // get next statement
+			Resource  subject   = stmt.getSubject();     // get the subject
+			if(subject.getLocalName().equals(name))
+				return stmt;
+		}
+		return null;
+	}
+	
+	/**
+	 * find statement based on resource
+	 * @param r the target resource
+	 * @return one statement
+	 */
+	public Statement getStatementbyResource(Resource r) {
+		StmtIterator iter = model.listStatements();
+		while(iter.hasNext())
+		{
+			Statement stmt      = iter.nextStatement();  // get next statement
+			Resource  subject   = stmt.getSubject();     // get the subject
+			if(subject.equals(r))
+				return stmt;
+		}
+		return null;
+	}
+	
+	/**
+	 * @param s the target statement
+	 * @return the resource in this statement
+	 */
+	public Resource getResource(Statement s) {
+		return s.getSubject();
+	}
+	
+	/**
+	 * @param s the target statement
+	 * @return the property in this statement
+	 */
+	public Property getProperty(Statement s) {
+		return s.getPredicate();
+	}
+	
+	/**
+	 * @param s the target statement
+	 * @return the RDF node in this statement
+	 */
+	public RDFNode getNode(Statement s) {
+		return s.getObject();
+	}
+	
+	/**
+	 * @param node the target RDF node
+	 * @return the resource in this RDF node
+	 */
+	public Resource getResourcebyNode(RDFNode node) {
+		if(node.isResource())
+			return node.asResource();
+		else
+			return null;
+	}
+	
+	/**
+	 * @param node the target RDF node
+	 * @return the literal in this RDF node
+	 */
+	public Literal getLiteralbyNode(RDFNode node) {
+		if(node.isLiteral())
+			return node.asLiteral();
+		else
+			return null;
+	}
+
+	/**
+	 * Update or overwrite the data of owl file
+	 */
+	@Override
+	public OWLparserRepo parse(String data) {
+		OWLparserRepo.owldata = data;
+		model.read(getInputStream(), "");
+		return null;
 	}
 
 }

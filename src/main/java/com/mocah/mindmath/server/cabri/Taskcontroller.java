@@ -1,7 +1,5 @@
 package com.mocah.mindmath.server.cabri;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,6 @@ import com.mocah.mindmath.parser.owlparser.OWLAPIparser;
 import com.mocah.mindmath.repository.Matrixrepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
-import com.mocah.mindmath.server.cabri.jsondata.OWLfrompost;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 /**
@@ -111,14 +108,15 @@ public class Taskcontroller {
 	}
 	
 	/**
-	 * Send owl file
-	 * @return 
+	 * Send OWL file
+	 * @return the full list of statement information including resource, property and RDF node.
 	 */
 	@PostMapping("/ontology")
 	public ResponseEntity<String> getresourceontology(@RequestBody String data){
-		OWLfrompost.owldata = data;
 		Gson gson = new Gson();
-		return new ResponseEntity<String>(gson.toJson(OWLAPIparser.listallresources()), HttpStatus.ACCEPTED);
+		OWLAPIparser owlparser = new OWLAPIparser(data);
+		System.out.println();
+		return new ResponseEntity<String>(gson.toJson(owlparser.listall()), HttpStatus.ACCEPTED);
 	}
 	
 	/**	
