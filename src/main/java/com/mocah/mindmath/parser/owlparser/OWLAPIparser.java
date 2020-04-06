@@ -105,7 +105,7 @@ public class OWLAPIparser implements ParserFactory <OWLparserRepo> {
 	 * @param name the name of the resource
 	 * @return one statement
 	 */
-	public Statement getStatementbyName(String name) {
+	public Statement getStatement(String name) {
 		StmtIterator iter = model.listStatements();
 		while(iter.hasNext())
 		{
@@ -122,7 +122,7 @@ public class OWLAPIparser implements ParserFactory <OWLparserRepo> {
 	 * @param r the target resource
 	 * @return one statement
 	 */
-	public Statement getStatementbyResource(Resource r) {
+	public Statement getStatement(Resource r) {
 		StmtIterator iter = model.listStatements();
 		while(iter.hasNext())
 		{
@@ -160,22 +160,13 @@ public class OWLAPIparser implements ParserFactory <OWLparserRepo> {
 	
 	/**
 	 * @param node the target RDF node
-	 * @return the resource in this RDF node
+	 * @return the resource or the literal in this RDF node
 	 */
-	public Resource getResourcebyNode(RDFNode node) {
-		if(node.isResource())
-			return node.asResource();
-		else
-			return null;
-	}
-	
-	/**
-	 * @param node the target RDF node
-	 * @return the literal in this RDF node
-	 */
-	public Literal getLiteralbyNode(RDFNode node) {
+	public <T> T getfromNode(RDFNode node) {
 		if(node.isLiteral())
-			return node.asLiteral();
+			return (T) node.asLiteral();
+		else if(node.isResource())
+			return (T) node.asResource();
 		else
 			return null;
 	}

@@ -3,6 +3,8 @@ package com.mocah.mindmath.server.cabri;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -115,7 +117,6 @@ public class Taskcontroller {
 	public ResponseEntity<String> getresourceontology(@RequestBody String data){
 		Gson gson = new Gson();
 		OWLAPIparser owlparser = new OWLAPIparser(data);
-		System.out.println();
 		return new ResponseEntity<String>(gson.toJson(owlparser.listall()), HttpStatus.ACCEPTED);
 	}
 	
