@@ -7,7 +7,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -33,6 +37,8 @@ import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.learning.ztest.Grille;
 import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
+import com.mocah.mindmath.parser.owlparser.OWLparserRepo;
+import com.mocah.mindmath.repository.LocalRouteRepository;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
@@ -159,8 +165,32 @@ public class MainLearningProcess {
 	public static void main(String[] args) {
 		Tree tree = null;
 		Gson gson = new Gson();
-		try (Reader reader = new FileReader("test.json")) {
+		
+		//initialize ontology file
+		try{
 
+			URL url = new URL(LocalRouteRepository.OntologyRoute);
+			URLConnection connection = url.openConnection();
+			InputStream input = connection.getInputStream();
+			Reader reader = new InputStreamReader(input);
+			StringBuilder textBuilder = new StringBuilder();
+		    int i = 0;
+		    while ((i = reader.read()) != -1) {
+		        textBuilder.append((char) i);
+		    }
+		    OWLparserRepo.owldata = textBuilder.toString();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try{
+
+			URL url = new URL(LocalRouteRepository.DecisionTreeRoute);
+			URLConnection connection = url.openConnection();
+			InputStream input = connection.getInputStream();
+			Reader reader = new InputStreamReader(input);
+			
 			// Convert JSON File to Java Object
 			tree = gson.fromJson(reader, Tree.class);
 
@@ -170,6 +200,17 @@ public class MainLearningProcess {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+//		try (Reader reader = new FileReader("test.json")) {
+//
+//			// Convert JSON File to Java Object
+//			tree = gson.fromJson(reader, Tree.class);
+//
+//			// print tree
+//			System.out.println(tree);
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
 		if (tree != null) {
 			decisionTreeDFS(tree);
@@ -177,8 +218,11 @@ public class MainLearningProcess {
 
 		try {
 			String trigger = "sally";
-			FileInputStream is = new FileInputStream("test.pl");
-			Theory tr = new Theory(is);
+//			FileInputStream is = new FileInputStream("test.pl");
+			URL url = new URL(LocalRouteRepository.PrologTestRoute);
+			URLConnection connection = url.openConnection();
+			InputStream input = connection.getInputStream();
+			Theory tr = new Theory(input);
 			Prolog pg = new Prolog();
 			pg.setTheory(tr);
 
