@@ -91,7 +91,17 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	 * send get request to Learning Locker
 	 * @return message from Learning Locker
 	 */
-	public String getfromLearningLocker()
+	public String getAboutfromLearningLocker()
+	{
+		ResponseEntity<String> response = this.restTemp.exchange(
+				BASIC_ABOUT_URL, 
+				HttpMethod.GET, 
+				header_entity, 
+				String.class);
+		return response.getBody();
+	}
+	
+	public String getdatafromLearningLocker()
 	{
 		ResponseEntity<String> response = this.restTemp.exchange(
 				BASIC_URL, 

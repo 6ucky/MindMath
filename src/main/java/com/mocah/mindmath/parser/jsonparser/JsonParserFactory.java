@@ -34,6 +34,17 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 		this.logsObject = rootObject.has(LOG) ? rootObject.get(LOG).getAsJsonArray() : emptyarray;
 	}
 	
+	public Sensors getSensor() {
+		Sensors sensorsClass = new Sensors();
+		if(rootObject.has(SENSOR))
+		{
+			sensorsClass = new Sensors(getTaskId(), getBOOL_RF_CO2_1(), getBOOL_RF_CO2_2(),
+					getBOOL_RF_CO2_3(), getBOOL_RJ(), getNB_TEMPS(), getNB_VALIDER(), getNB_EFFACER(), getNB_AIDE(),
+					getDOMAIN(), getGENERATOR(), getTASKFAMILY(), getCORRECTANSWER(), getCODEERROR());
+		}
+		return sensorsClass;
+	}
+	
 	public String getTaskId()
 	{
 		return rootObject.has(TASK_ID) ? rootObject.get(TASK_ID).getAsString() : null;
