@@ -26,12 +26,13 @@ public class Log implements Serializable{
 	
 	private final String action;
 	
+	// empty object
 	public Log() {
-		this.time = 0;
-		this.name = "";
-		this.action = "";
+		this.time = -1;
+		this.name = null;
+		this.action = null;
 		this.id = "";
-		this.type = "";
+		this.type = null;
 	}
 	
 	public Log(String id, long time, String type, String name, String action) {

@@ -28,6 +28,11 @@ public class JsonParserKeys {
 	protected static String SENSOR_CAPTEUR_NB_VALIDER = "capteur-nb-valider";
 	protected static String SENSOR_CAPTEUR_NB_EFFACER = "capteur-nb-effacer";
 	protected static String SENSOR_CAPTEUR_NB_AIDE = "capteur-nb-aide";
+	protected static String SENSOR_DOMAIN = "domain";
+	protected static String SENSOR_GENERATOR = "generator";
+	protected static String SENSOR_TASKFAMILY = "taskFamily";
+	protected static String SENSOR_CORRECTANSWER = "correctAnswer";
+	protected static String SENSOR_CODEERROR = "codeError";
 	
 	//Log object
 	protected static String LOG = "log";

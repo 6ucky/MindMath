@@ -28,12 +28,13 @@ public class Params implements Serializable{
 	
 	private final boolean VT_2_4;
 	
+	// empty object
 	public Params() {
 		this.VT_2_4 = false;
-		this.VT_2_2 = 0;
+		this.VT_2_2 = -1;
 		this.id = "";
 		this.VT_2_3 = false;
-		this.VT_2_1 = 0;
+		this.VT_2_1 = -1;
 	}
 	
 	public Params(String id, long VT_2_1, long VT_2_2, boolean VT_2_3, boolean VT_2_4) {

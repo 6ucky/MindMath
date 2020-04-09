@@ -34,20 +34,37 @@ public class Sensors implements Serializable{
 	
 	private final String capteur_nb_aide;
 	
+	private final String domain;
+	
+	private final String generator;
+	
+	private final String taskFamily;
+	
+	private final boolean correctAnswer;
+	
+	private final String codeError;
+	
+	// empty object
 	public Sensors() {
-		this.capteur_nb_valider = 0;
+		this.capteur_nb_valider = -1;
 		this.id = "";
 		this.capteur_bool_RF_CO2_2 = false;
 		this.capteur_bool_RF_CO2_1 = false;
-		this.capteur_nb_effacer = 0;
-		this.capteur_nb_temps = 0;
+		this.capteur_nb_effacer = -1;
+		this.capteur_nb_temps = -1;
 		this.capteur_bool_RF_CO2_3 = false;
-		this.capteur_nb_aide = "";
+		this.capteur_nb_aide = null;
 		this.capteur_bool_RJ = false;
+		this.domain = null;
+		this.generator = null;
+		this.taskFamily = null;
+		this.correctAnswer = false;
+		this.codeError = null;
 	}
 	
 	public Sensors(String id, boolean capteur_bool_RF_CO2_1, boolean capteur_bool_RF_CO2_2, boolean capteur_bool_RF_CO2_3,
-			boolean capteur_bool_RJ, long capteur_nb_temps, long capteur_nb_valider, long capteur_nb_effacer, String capteur_nb_aide) {
+			boolean capteur_bool_RJ, long capteur_nb_temps, long capteur_nb_valider, long capteur_nb_effacer, String capteur_nb_aide,
+			String domain, String generator, String taskFamily, boolean correctAnswer, String codeError) {
 		this.id = id;
 		this.capteur_bool_RF_CO2_1 = capteur_bool_RF_CO2_1;
 		this.capteur_bool_RF_CO2_2 = capteur_bool_RF_CO2_2;
@@ -57,6 +74,11 @@ public class Sensors implements Serializable{
 		this.capteur_nb_valider = capteur_nb_valider;
 		this.capteur_nb_effacer = capteur_nb_effacer;
 		this.capteur_nb_aide = capteur_nb_aide;
+		this.domain = domain;
+		this.generator = generator;
+		this.taskFamily = taskFamily;
+		this.correctAnswer = correctAnswer;
+		this.codeError = codeError;
 	}
 
 	public boolean isCapteur_bool_RF_CO2_1() {
@@ -93,5 +115,25 @@ public class Sensors implements Serializable{
 
 	public String getId() {
 		return id;
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public String getGenerator() {
+		return generator;
+	}
+
+	public String getTaskFamily() {
+		return taskFamily;
+	}
+
+	public boolean isCorrectAnswer() {
+		return correctAnswer;
+	}
+
+	public String getCodeError() {
+		return codeError;
 	}
 }

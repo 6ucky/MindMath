@@ -41,11 +41,13 @@ public class Task implements Serializable{
 	@OneToMany(cascade=CascadeType.ALL)
 	private final List<Log> log;
 	
+	// empty object
 	public Task() {
-		this.log = null;
+		List<Log> emptylist = new ArrayList<Log>();
+		this.log = emptylist;
 		this.params = new Params();
-		this.trigger = "";
-		this.task = "";
+		this.trigger = null;
+		this.task = null;
 		this.sensors = new Sensors();
 		this.id = "";
 	}

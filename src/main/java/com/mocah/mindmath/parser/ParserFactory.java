@@ -1,6 +1,6 @@
 package com.mocah.mindmath.parser;
 
-import com.mocah.mindmath.learning.exceptions.JsonParserException;
+import com.mocah.mindmath.parser.jsonparser.JsonParserException;
 
 public interface ParserFactory <Object>{
 
