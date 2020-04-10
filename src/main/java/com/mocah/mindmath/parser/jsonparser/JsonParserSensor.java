@@ -3,6 +3,11 @@ package com.mocah.mindmath.parser.jsonparser;
 import com.google.gson.JsonObject;
 import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 
+/**
+ * @author	Yan Wang
+ * @since	10/04/2020
+ */
+
 public class JsonParserSensor extends JsonParserFactory{
 
 	private final JsonObject sensorsObject;
@@ -11,7 +16,6 @@ public class JsonParserSensor extends JsonParserFactory{
 		super(data);
 		JsonObject emptyobject = new JsonObject();
 		this.sensorsObject = rootObject.has(SENSOR) ? rootObject.get(SENSOR).getAsJsonObject() : emptyobject;
-		// TODO Auto-generated constructor stub
 	}
 
 	public Sensors getSensor() {

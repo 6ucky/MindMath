@@ -4,6 +4,8 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.util.List;
+
 import javax.net.ssl.SSLContext;
 
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -20,9 +22,13 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLRS;
 import com.mocah.mindmath.parser.jsonparser.LRSType;
 import com.mocah.mindmath.repository.XAPIRepository;
+import com.mocah.mindmath.server.cabri.jsondata.Log;
+import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 
 /**
  * Use Spring Rest Template to connect to Learning Locker
@@ -33,8 +39,8 @@ import com.mocah.mindmath.repository.XAPIRepository;
 public class LearningLockerRepository extends LearningLockerKeys implements XAPIRepository {
 	
 	private final RestTemplate restTemp;
-	private final HttpEntity<String> header_entity;
-	private final FeedbackforLRS fbLRS;
+	private final HttpHeaders header_entity;
+	private FeedbackforLRS fbLRS;
 	
 	public LearningLockerRepository()
 	{
@@ -45,8 +51,7 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	
 	public LearningLockerRepository(FeedbackforLRS fbLRS)
 	{
-		this.restTemp = InitializeResetTemplate();
-		this.header_entity = InitializeHeader();
+		this();
 		this.fbLRS = fbLRS;
 	}
 	
@@ -86,47 +91,78 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	}
 	
 	// add basic authorization, version, content type to header
-	private static HttpEntity<String> InitializeHeader()
+	private static HttpHeaders InitializeHeader()
 	{
 		HttpHeaders headers = new HttpHeaders();
 		// header as chart form
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add(BASIC_AUTHORIZATION, BASIC_AUTHORIZATION_VALUE);
 		headers.add(BASIC_VERSION, BASIC_VERSION_VALUE);
-		headers.add(BASIC_TYPE, BASIC_TYPE_VALUE);
-		HttpEntity<String> temp = new HttpEntity<String>(headers);
-		return temp;
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		return headers;
 	}
 	
 	/**
-	 * send get request to Learning Locker
+	 * get about of LRS
 	 * @return message from Learning Locker
 	 */
 	public String getAboutfromLearningLocker()
 	{
+		HttpEntity<String> entity = new HttpEntity<String>(header_entity);
 		ResponseEntity<String> response = this.restTemp.exchange(
 				ABOUT_URL, 
 				HttpMethod.GET, 
-				header_entity, 
+				entity, 
 				String.class);
 		return response.getBody();
 	}
 	
+	/**
+	 * get all the statements from LRS
+	 * @return list of statements
+	 */
 	public String getAllStatementfromLearningLocker()
 	{
+		HttpEntity<String> entity = new HttpEntity<String>(header_entity);
 		ResponseEntity<String> response = this.restTemp.exchange(
 				STATEMENT_URL, 
 				HttpMethod.GET, 
-				header_entity, 
+				entity, 
 				String.class);
 		JsonParserLRS parser = new JsonParserLRS(response.getBody(),LRSType.RESPONSE);
 		return parser.getStatement();
 	}
 	
-	public String posttoLearningLocker()
-	{
-		// TODO 
-		return "Post to Learning Locker finished.";
+	public String postStatementTEST (String id, Sensors sensors, List<Log> log) {
+		// TODO design statement and put fb inside
+		FeedbackforLRS fbLRS = new FeedbackforLRS(id, sensors, log);
+		Gson gson = new Gson();
+		String test_text = "{\r\n" + 
+				"  \"id\": \"dfb7218c-0fc9-4dfc-9524-d497097de027\",\r\n" + 
+				"  \"actor\": { \"mbox\": \"mailto:test1@example.org\" },\r\n" + 
+				"  \"verb\": { \"id\": \"http://www.example.org/verb\" },\r\n" + 
+				"  \"object\": { \"id\": \"http://www.example.org/activity\" }\r\n" + 
+				"}";
+		
+		// post test text to LRS and return its id
+		HttpEntity<String> entity = new HttpEntity<>(test_text, header_entity);
+		ResponseEntity<String> response1 = this.restTemp.exchange(
+				STATEMENT_URL, 
+				HttpMethod.POST, 
+				entity, 
+				String.class);
+		// the id of the current statement
+		String response1_id = JsonParser.parseString(response1.getBody()).getAsString();
+		
+		// return statement based on id
+		ResponseEntity<String> response2 = this.restTemp.exchange(
+				STATEMENT_URL + "?statementId=" + response1_id + "&format=exact&attachments=false", 
+				HttpMethod.GET, 
+				entity, 
+				String.class);
+		JsonParserLRS parser = new JsonParserLRS(response2.getBody(),LRSType.POST);
+		return parser.getStatement();
 	}
 	
 }

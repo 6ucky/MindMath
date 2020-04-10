@@ -7,6 +7,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 
+/**
+ * @author	Yan Wang
+ * @since	10/04/2020
+ */
+
 public class JsonParserLogs extends JsonParserFactory{
 
 	private final JsonArray logsObject;

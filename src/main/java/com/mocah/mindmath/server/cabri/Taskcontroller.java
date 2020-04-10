@@ -23,6 +23,8 @@ import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
 import com.mocah.mindmath.parser.ParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
+import com.mocah.mindmath.parser.jsonparser.JsonParserLogs;
+import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.parser.owlparser.OWLAPIparser;
 import com.mocah.mindmath.repository.Matrixrepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
@@ -107,6 +109,18 @@ public class Taskcontroller {
 	public ResponseEntity<String> getAboutLearningLocker(){
 		LearningLockerRepository ll = new LearningLockerRepository();
 		return new ResponseEntity<String>(ll.getAllStatementfromLearningLocker(), HttpStatus.ACCEPTED);
+	}
+	
+	/**
+	 * Test of post for LRS
+	 * @return the added statement
+	 */
+	@PostMapping("/lltest")
+	public ResponseEntity<String> testLearningLocker(@RequestBody String data){
+		LearningLockerRepository ll = new LearningLockerRepository();
+		JsonParserLogs parserLog = new JsonParserLogs(data);
+		JsonParserSensor parserSensor = new JsonParserSensor(data);
+		return new ResponseEntity<String>(ll.postStatementTEST(parserSensor.getTaskId(), parserSensor.getSensor(), parserLog.getLogs()), HttpStatus.ACCEPTED);
 	}
 	
 	/**

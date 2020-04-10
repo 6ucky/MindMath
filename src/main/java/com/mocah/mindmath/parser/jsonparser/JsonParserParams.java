@@ -3,6 +3,11 @@ package com.mocah.mindmath.parser.jsonparser;
 import com.google.gson.JsonObject;
 import com.mocah.mindmath.server.cabri.jsondata.Params;
 
+/**
+ * @author	Yan Wang
+ * @since	10/04/2020
+ */
+
 public class JsonParserParams extends JsonParserFactory {
 
 	private final JsonObject paramsObject;

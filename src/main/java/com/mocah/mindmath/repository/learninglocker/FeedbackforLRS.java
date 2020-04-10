@@ -7,37 +7,47 @@ import java.util.List;
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 
+/**
+ * @author	Yan Wang
+ * @since	10/04/2020
+ */
+
 public class FeedbackforLRS implements Serializable{
 
 	private static final long serialVersionUID = -7894086246416787110L;
 
-	private final String id;
+	private String task_id;
 	
-	private final Sensors sensors;
+	private Sensors sensors;
 
-	private final List<Log> log;
+	private List<Log> log;
 	
-	private String motivationalElement;
+	private final String motivationalElement;
 	
-	private String solutionModel;
+	private final String solutionModel;
 	
-	private String glossary;
+	private final String glossary;
 	
+	// TODO set test values for the last three variables for test
 	public FeedbackforLRS() {
 		List<Log> emptylist = new ArrayList<Log>();
 		this.log = emptylist;
 		this.sensors = new Sensors();
-		this.id = "";
+		this.task_id = "";
+		this.motivationalElement = "Bravo!";
+		this.solutionModel = "url";
+		this.glossary = "hypertext";
 	}
 	
 	public FeedbackforLRS(String id, Sensors sensors, List<Log> log) {
-		this.id = id;
+		this();
+		this.task_id = id;
 		this.sensors = sensors;
 		this.log = log;
 	}
 
 	public String getId() {
-		return id;
+		return task_id;
 	}
 
 	public Sensors getSensors() {
@@ -52,23 +62,12 @@ public class FeedbackforLRS implements Serializable{
 		return motivationalElement;
 	}
 
-	public void setMotivationalElement(String motivationalElement) {
-		this.motivationalElement = motivationalElement;
-	}
-
 	public String getSolutionModel() {
 		return solutionModel;
-	}
-
-	public void setSolutionModel(String solutionModel) {
-		this.solutionModel = solutionModel;
 	}
 
 	public String getGlossary() {
 		return glossary;
 	}
 
-	public void setGlossary(String glossary) {
-		this.glossary = glossary;
-	}
 }
