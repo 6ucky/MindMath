@@ -106,7 +106,7 @@ public class Taskcontroller {
 	@GetMapping("/ll")
 	public ResponseEntity<String> getAboutLearningLocker(){
 		LearningLockerRepository ll = new LearningLockerRepository();
-		return new ResponseEntity<String>(ll.getdatafromLearningLocker(), HttpStatus.ACCEPTED);
+		return new ResponseEntity<String>(ll.getAllStatementfromLearningLocker(), HttpStatus.ACCEPTED);
 	}
 	
 	/**

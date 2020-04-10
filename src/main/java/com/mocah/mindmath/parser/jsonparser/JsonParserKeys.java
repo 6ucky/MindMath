@@ -41,5 +41,6 @@ public class JsonParserKeys {
 	protected static String LOG_NAME = "name";
 	protected static String LOG_ACTION = "action";
 	
-
+	//LRS object
+	protected static String LRS_STATEMENT = "statements";
 }

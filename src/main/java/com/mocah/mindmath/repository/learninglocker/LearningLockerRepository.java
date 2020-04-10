@@ -20,6 +20,8 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.mocah.mindmath.parser.jsonparser.JsonParserLRS;
+import com.mocah.mindmath.parser.jsonparser.LRSType;
 import com.mocah.mindmath.repository.XAPIRepository;
 
 /**
@@ -32,11 +34,20 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	
 	private final RestTemplate restTemp;
 	private final HttpEntity<String> header_entity;
+	private final FeedbackforLRS fbLRS;
 	
 	public LearningLockerRepository()
 	{
 		this.restTemp = InitializeResetTemplate();
 		this.header_entity = InitializeHeader();
+		this.fbLRS = new FeedbackforLRS();
+	}
+	
+	public LearningLockerRepository(FeedbackforLRS fbLRS)
+	{
+		this.restTemp = InitializeResetTemplate();
+		this.header_entity = InitializeHeader();
+		this.fbLRS = fbLRS;
 	}
 	
 	//skip SSL certificate verification while using Spring Rest Template
@@ -94,21 +105,22 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	public String getAboutfromLearningLocker()
 	{
 		ResponseEntity<String> response = this.restTemp.exchange(
-				BASIC_ABOUT_URL, 
+				ABOUT_URL, 
 				HttpMethod.GET, 
 				header_entity, 
 				String.class);
 		return response.getBody();
 	}
 	
-	public String getdatafromLearningLocker()
+	public String getAllStatementfromLearningLocker()
 	{
 		ResponseEntity<String> response = this.restTemp.exchange(
-				BASIC_URL, 
+				STATEMENT_URL, 
 				HttpMethod.GET, 
 				header_entity, 
 				String.class);
-		return response.getBody();
+		JsonParserLRS parser = new JsonParserLRS(response.getBody(),LRSType.RESPONSE);
+		return parser.getStatement();
 	}
 	
 	public String posttoLearningLocker()

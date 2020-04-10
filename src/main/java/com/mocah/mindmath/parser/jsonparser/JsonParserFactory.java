@@ -19,31 +19,13 @@ import com.mocah.mindmath.server.cabri.jsondata.Task;
  */
 public class JsonParserFactory extends JsonParserKeys implements ParserFactory <Task>{
 	
-	private final JsonObject rootObject;
-	private final JsonObject paramsObject;
-	private final JsonObject sensorsObject;
-	private final JsonArray logsObject;
+	protected final JsonObject rootObject;
 	
 	//constructor of jsonparser
 	public JsonParserFactory(String data) {
-		JsonObject emptyobject = new JsonObject();
-		JsonArray emptyarray = new JsonArray();
 		this.rootObject = JsonParser.parseString(data).getAsJsonObject();
-		this.paramsObject = rootObject.has(PARAMS) ? rootObject.get(PARAMS).getAsJsonObject() : emptyobject;
-		this.sensorsObject = rootObject.has(SENSOR) ? rootObject.get(SENSOR).getAsJsonObject() : emptyobject;
-		this.logsObject = rootObject.has(LOG) ? rootObject.get(LOG).getAsJsonArray() : emptyarray;
 	}
 	
-	public Sensors getSensor() {
-		Sensors sensorsClass = new Sensors();
-		if(rootObject.has(SENSOR))
-		{
-			sensorsClass = new Sensors(getTaskId(), getBOOL_RF_CO2_1(), getBOOL_RF_CO2_2(),
-					getBOOL_RF_CO2_3(), getBOOL_RJ(), getNB_TEMPS(), getNB_VALIDER(), getNB_EFFACER(), getNB_AIDE(),
-					getDOMAIN(), getGENERATOR(), getTASKFAMILY(), getCORRECTANSWER(), getCODEERROR());
-		}
-		return sensorsClass;
-	}
 	
 	public String getTaskId()
 	{
@@ -58,109 +40,6 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 	public String getTrigger()
 	{
 		return rootObject.has(TASK_TRIGGER) ? rootObject.get(TASK_TRIGGER).getAsString() : null;
-	}
-	
-	public long getVT_2_1()
-	{
-		return paramsObject.has(PARAMS_VT_2_1) ? paramsObject.get(PARAMS_VT_2_1).getAsLong() : -1;
-	}
-	
-	public long getVT_2_2()
-	{
-		return paramsObject.has(PARAMS_VT_2_2) ? paramsObject.get(PARAMS_VT_2_2).getAsLong() : -1;
-	}
-	
-	public boolean getVT_2_3()
-	{
-		return paramsObject.has(PARAMS_VT_2_3) ? paramsObject.get(PARAMS_VT_2_3).getAsBoolean() : false;
-	}
-	
-	public boolean getVT_2_4()
-	{
-		return paramsObject.has(PARAMS_VT_2_4) ? paramsObject.get(PARAMS_VT_2_4).getAsBoolean() : false;
-	}
-	
-	public boolean getBOOL_RF_CO2_1()
-	{
-		return sensorsObject.has(SENSOR_CAPTEUR_BOOL_RF_CO2_1) ? sensorsObject.get(SENSOR_CAPTEUR_BOOL_RF_CO2_1).getAsBoolean() : false;
-	}
-	
-	public boolean getBOOL_RF_CO2_2()
-	{
-		return sensorsObject.has(SENSOR_CAPTEUR_BOOL_RF_CO2_2) ? sensorsObject.get(SENSOR_CAPTEUR_BOOL_RF_CO2_2).getAsBoolean() : false;
-	}
-	
-	public boolean getBOOL_RF_CO2_3()
-	{
-		return sensorsObject.has(SENSOR_CAPTEUR_BOOL_RF_CO2_3) ? sensorsObject.get(SENSOR_CAPTEUR_BOOL_RF_CO2_3).getAsBoolean() : false;
-	}
-	
-	public boolean getBOOL_RJ()
-	{
-		return sensorsObject.has(SENSOR_CAPTEUR_BOOL_RJ) ? sensorsObject.get(SENSOR_CAPTEUR_BOOL_RJ).getAsBoolean() : false;
-	}
-	
-	public long getNB_TEMPS()
-	{
-		return sensorsObject.has(SENSOR_CAPTEUR_NB_TEMPS) ? sensorsObject.get(SENSOR_CAPTEUR_NB_TEMPS).getAsLong() : -1;
-	}
-	
-	public long getNB_VALIDER()
-	{
-		return sensorsObject.has(SENSOR_CAPTEUR_NB_VALIDER) ? sensorsObject.get(SENSOR_CAPTEUR_NB_VALIDER).getAsLong() : -1;
-	}
-	
-	public long getNB_EFFACER()
-	{
-		return sensorsObject.has(SENSOR_CAPTEUR_NB_EFFACER)? sensorsObject.get(SENSOR_CAPTEUR_NB_EFFACER).getAsLong() : -1;
-	}
-	
-	public String getNB_AIDE()
-	{
-		return sensorsObject.has(SENSOR_CAPTEUR_NB_AIDE) ? 
-				(sensorsObject.get(SENSOR_CAPTEUR_NB_AIDE).isJsonNull() ? 
-						null : sensorsObject.get(SENSOR_CAPTEUR_NB_AIDE).getAsString()) : null;
-	}
-	public String getDOMAIN()
-	{
-		return sensorsObject.has(SENSOR_DOMAIN)? sensorsObject.get(SENSOR_DOMAIN).getAsString() : null;
-	}
-	
-	public String getGENERATOR()
-	{
-		return sensorsObject.has(SENSOR_GENERATOR)? sensorsObject.get(SENSOR_GENERATOR).getAsString() : null;
-	}
-	
-	public String getTASKFAMILY()
-	{
-		return sensorsObject.has(SENSOR_TASKFAMILY)? sensorsObject.get(SENSOR_TASKFAMILY).getAsString() : null;
-	}
-	
-	public boolean getCORRECTANSWER()
-	{
-		return sensorsObject.has(SENSOR_CORRECTANSWER)? sensorsObject.get(SENSOR_CORRECTANSWER).getAsBoolean() : false;
-	}
-	
-	public String getCODEERROR()
-	{
-		return sensorsObject.has(SENSOR_CODEERROR)? sensorsObject.get(SENSOR_CODEERROR).getAsString() : null;
-	}
-	
-	public List<Log> getLogs()
-	{
-		List<Log> logs = new ArrayList<Log>();
-		for(int i = 0; i < logsObject.size(); i++)
-		{
-			JsonObject tempObject = logsObject.get(i).getAsJsonObject();
-			Log temp = new Log(getTaskId() + "-" + i, 
-					tempObject.has(LOG_TIME) ? tempObject.get(LOG_TIME).getAsLong() : -1,
-					tempObject.has(LOG_TYPE) ? tempObject.get(LOG_TYPE).getAsString() : null,
-					tempObject.has(LOG_NAME) ? tempObject.get(LOG_NAME).getAsString() : null,
-					tempObject.has(LOG_ACTION) ? tempObject.get(LOG_ACTION).getAsString() : null);
-			logs.add(temp);
-		}
-		
-		return logs;
 	}
 	
 	// parse JSON file into Derby database
@@ -246,15 +125,7 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 	@Override
 	public Task parse(String data) throws JsonParserException {
 		
-		Params params = new Params(getTaskId(), getVT_2_1(), getVT_2_2(), getVT_2_3(), getVT_2_4());
-		
-		Sensors sensors = new Sensors(getTaskId(), getBOOL_RF_CO2_1(), getBOOL_RF_CO2_2(),
-				getBOOL_RF_CO2_3(), getBOOL_RJ(), getNB_TEMPS(), getNB_VALIDER(), getNB_EFFACER(), getNB_AIDE(),
-				getDOMAIN(), getGENERATOR(), getTASKFAMILY(), getCORRECTANSWER(), getCODEERROR());
-		
-		Task tasks = new Task(getTaskId(), getTaskName(), getTrigger(), sensors, params, getLogs());
-		
-		return tasks;
+		return parseCabri(data);
 	}
 	
 }
