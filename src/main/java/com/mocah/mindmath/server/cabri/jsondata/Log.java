@@ -16,9 +16,9 @@ public class Log implements Serializable{
 	private static final long serialVersionUID = 6036741035696456506L;
 
 	@Id
-	private final String id;
+	private String id;
 	
-	private final long time;
+	private final String time;
 	
 	private final String type;
 	
@@ -28,14 +28,19 @@ public class Log implements Serializable{
 	
 	// empty object
 	public Log() {
-		this.time = -1;
+		this.id = null;
+		this.time = null;
 		this.name = null;
 		this.action = null;
-		this.id = "";
 		this.type = null;
 	}
 	
-	public Log(String id, long time, String type, String name, String action) {
+	public Log(String id) {
+		this();
+		this.id = id;
+	}
+	
+	public Log(String id, String time, String type, String name, String action) {
 		this.id = id;
 		this.time = time;
 		this.type = type;
@@ -47,7 +52,7 @@ public class Log implements Serializable{
 		return id;
 	}
 
-	public long getTime() {
+	public String getTime() {
 		return time;
 	}
 

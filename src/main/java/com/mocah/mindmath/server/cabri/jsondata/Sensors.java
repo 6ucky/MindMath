@@ -16,21 +16,21 @@ public class Sensors implements Serializable{
 	private static final long serialVersionUID = 7791961059918284422L;
 
 	@Id
-	private final String id;
+	private String id;
 	
-	private final boolean capteur_bool_RF_CO2_1;
+	private final String capteur_bool_RF_CO2_1;
 	
-	private final boolean capteur_bool_RF_CO2_2;
+	private final String capteur_bool_RF_CO2_2;
 	
-	private final boolean capteur_bool_RF_CO2_3;
+	private final String capteur_bool_RF_CO2_3;
 	
-	private final boolean capteur_bool_RJ;
+	private final String capteur_bool_RJ;
 	
-	private final long capteur_nb_temps;
+	private final String capteur_nb_temps;
 	
-	private final long capteur_nb_valider;
+	private final String capteur_nb_valider;
 	
-	private final long capteur_nb_effacer;
+	private final String capteur_nb_effacer;
 	
 	private final String capteur_nb_aide;
 	
@@ -40,31 +40,36 @@ public class Sensors implements Serializable{
 	
 	private final String taskFamily;
 	
-	private final boolean correctAnswer;
+	private final String correctAnswer;
 	
 	private final String codeError;
 	
 	// empty object
 	public Sensors() {
-		this.capteur_nb_valider = -1;
-		this.id = "";
-		this.capteur_bool_RF_CO2_2 = false;
-		this.capteur_bool_RF_CO2_1 = false;
-		this.capteur_nb_effacer = -1;
-		this.capteur_nb_temps = -1;
-		this.capteur_bool_RF_CO2_3 = false;
+		this.id = null;
+		this.capteur_bool_RF_CO2_2 = null;
+		this.capteur_bool_RF_CO2_1 = null;
+		this.capteur_nb_effacer = null;
+		this.capteur_nb_temps = null;
+		this.capteur_bool_RF_CO2_3 = null;
 		this.capteur_nb_aide = null;
-		this.capteur_bool_RJ = false;
+		this.capteur_bool_RJ = null;
 		this.domain = null;
 		this.generator = null;
 		this.taskFamily = null;
-		this.correctAnswer = false;
+		this.correctAnswer = null;
 		this.codeError = null;
+		this.capteur_nb_valider = null;
 	}
 	
-	public Sensors(String id, boolean capteur_bool_RF_CO2_1, boolean capteur_bool_RF_CO2_2, boolean capteur_bool_RF_CO2_3,
-			boolean capteur_bool_RJ, long capteur_nb_temps, long capteur_nb_valider, long capteur_nb_effacer, String capteur_nb_aide,
-			String domain, String generator, String taskFamily, boolean correctAnswer, String codeError) {
+	public Sensors(String id) {
+		this();
+		this.id = id;
+	}
+	
+	public Sensors(String id, String capteur_bool_RF_CO2_1, String capteur_bool_RF_CO2_2, String capteur_bool_RF_CO2_3,
+			String capteur_bool_RJ, String capteur_nb_temps, String capteur_nb_valider, String capteur_nb_effacer, String capteur_nb_aide,
+			String domain, String generator, String taskFamily, String correctAnswer, String codeError) {
 		this.id = id;
 		this.capteur_bool_RF_CO2_1 = capteur_bool_RF_CO2_1;
 		this.capteur_bool_RF_CO2_2 = capteur_bool_RF_CO2_2;
@@ -81,31 +86,31 @@ public class Sensors implements Serializable{
 		this.codeError = codeError;
 	}
 
-	public boolean isCapteur_bool_RF_CO2_1() {
+	public String isCapteur_bool_RF_CO2_1() {
 		return capteur_bool_RF_CO2_1;
 	}
 
-	public boolean isCapteur_bool_RF_CO2_2() {
+	public String isCapteur_bool_RF_CO2_2() {
 		return capteur_bool_RF_CO2_2;
 	}
 
-	public boolean isCapteur_bool_RF_CO2_3() {
+	public String isCapteur_bool_RF_CO2_3() {
 		return capteur_bool_RF_CO2_3;
 	}
 
-	public boolean isCapteur_bool_RJ() {
+	public String isCapteur_bool_RJ() {
 		return capteur_bool_RJ;
 	}
 
-	public long getCapteur_nb_temps() {
+	public String getCapteur_nb_temps() {
 		return capteur_nb_temps;
 	}
 
-	public long getCapteur_nb_valider() {
+	public String getCapteur_nb_valider() {
 		return capteur_nb_valider;
 	}
 
-	public long getCapteur_nb_effacer() {
+	public String getCapteur_nb_effacer() {
 		return capteur_nb_effacer;
 	}
 
@@ -129,7 +134,7 @@ public class Sensors implements Serializable{
 		return taskFamily;
 	}
 
-	public boolean isCorrectAnswer() {
+	public String isCorrectAnswer() {
 		return correctAnswer;
 	}
 

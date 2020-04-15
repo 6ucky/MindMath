@@ -23,6 +23,7 @@ import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
 import com.mocah.mindmath.parser.ParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
+import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLogs;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.parser.owlparser.OWLAPIparser;
@@ -70,8 +71,8 @@ public class Taskcontroller {
 		{
 			return new ResponseEntity<String>("Unauthorized connection.", HttpStatus.UNAUTHORIZED);
 		}
-		
-		Task tasks = JsonParserFactory.parseCabri(data);
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		Task tasks = jsonparser.parse(data);
 		
 		if (!getTaskrepository().existsById(tasks.getId())) {
 			getTaskrepository().save(tasks);
@@ -120,7 +121,8 @@ public class Taskcontroller {
 		LearningLockerRepository ll = new LearningLockerRepository();
 		JsonParserLogs parserLog = new JsonParserLogs(data);
 		JsonParserSensor parserSensor = new JsonParserSensor(data);
-		return new ResponseEntity<String>(ll.postStatementTEST(parserSensor.getTaskId(), parserSensor.getSensor(), parserLog.getLogs()), HttpStatus.ACCEPTED);
+		JsonParserFactory parserRoot = new JsonParserFactory(data);
+		return new ResponseEntity<String>(ll.postStatementTEST(parserRoot.getValueAsString(parserRoot.getObject(), JsonParserKeys.getTASK_ID()), parserSensor.getSensor(), parserLog.getLogs()), HttpStatus.ACCEPTED);
 	}
 	
 	/**

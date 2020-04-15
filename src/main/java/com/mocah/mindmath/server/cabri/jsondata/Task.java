@@ -45,10 +45,10 @@ public class Task implements Serializable{
 	public Task() {
 		List<Log> emptylist = new ArrayList<Log>();
 		this.log = emptylist;
-		this.params = new Params();
+		this.params = new Params("");
 		this.trigger = null;
 		this.task = null;
-		this.sensors = new Sensors();
+		this.sensors = new Sensors("");
 		this.id = "";
 	}
 	

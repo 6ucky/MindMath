@@ -87,14 +87,14 @@ public class OWLAPIparser implements ParserFactory <OWLparserRepo> {
 		    Property  predicate = stmt.getPredicate();   // get the predicate
 		    RDFNode   object    = stmt.getObject();      // get the object
 
-		    message += subject.getLocalName();
-		    message += " " + predicate.getLocalName() + " ";
+		    message += "Resource:" + subject.getLocalName();
+		    message += " Property:" + predicate.getLocalName() + " ";
 		    if(object.isAnon())
-				message += " " + " -Anon";
+				message += " Node:" + " -Anon";
 			else if(object.isLiteral())
-				message += " " + object.asLiteral().getString() + " -Literal";
+				message += " Node-Literal:" + object.asLiteral().getString();
 			else if(object.isResource())
-				message += " " + object.asResource().getLocalName() + " -Resource";
+				message += " Node-Resource:" + object.asResource().getLocalName();
 		    results.add(message);
 		}
 		return results;

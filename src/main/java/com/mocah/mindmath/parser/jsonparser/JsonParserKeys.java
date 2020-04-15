@@ -43,4 +43,8 @@ public class JsonParserKeys {
 	
 	//LRS object
 	protected static String LRS_STATEMENT = "statements";
+
+	public static String getTASK_ID() {
+		return TASK_ID;
+	}
 }

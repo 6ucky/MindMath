@@ -17,39 +17,23 @@ public class JsonParserParams extends JsonParserFactory {
 		JsonObject emptyobject = new JsonObject();
 		this.paramsObject = rootObject.has(PARAMS) ? rootObject.get(PARAMS).getAsJsonObject() : emptyobject;
 	}
+	
+	@Override
+	public JsonObject getObject() {
+		return this.paramsObject;
+	}
 
 	public Params getParams() {
-		Params paramsClass = new Params();
+		Params paramsClass = new Params(getValueAsString(super.getObject(),getTASK_ID()));
 		if(rootObject.has(PARAMS))
 		{
-			JsonObject params = rootObject.get(PARAMS).getAsJsonObject();
-			paramsClass = new Params(getTaskId(), 
-				params.has(PARAMS_VT_2_1) ? params.get(PARAMS_VT_2_1).getAsLong() : -1, 
-				params.has(PARAMS_VT_2_2) ? params.get(PARAMS_VT_2_2).getAsLong() : -1, 
-				params.has(PARAMS_VT_2_3) ? params.get(PARAMS_VT_2_3).getAsBoolean() : false, 
-				params.has(PARAMS_VT_2_4) ? params.get(PARAMS_VT_2_4).getAsBoolean() : false
+			paramsClass = new Params(getValueAsString(super.getObject(),getTASK_ID()), 
+				getValueAsString(paramsObject,PARAMS_VT_2_1),
+				getValueAsString(paramsObject,PARAMS_VT_2_2),
+				getValueAsString(paramsObject,PARAMS_VT_2_3),
+				getValueAsString(paramsObject,PARAMS_VT_2_4)
 			);
 		}
 		return paramsClass;
-	}
-	
-	public long getVT_2_1()
-	{
-		return paramsObject.has(PARAMS_VT_2_1) ? paramsObject.get(PARAMS_VT_2_1).getAsLong() : -1;
-	}
-	
-	public long getVT_2_2()
-	{
-		return paramsObject.has(PARAMS_VT_2_2) ? paramsObject.get(PARAMS_VT_2_2).getAsLong() : -1;
-	}
-	
-	public boolean getVT_2_3()
-	{
-		return paramsObject.has(PARAMS_VT_2_3) ? paramsObject.get(PARAMS_VT_2_3).getAsBoolean() : false;
-	}
-	
-	public boolean getVT_2_4()
-	{
-		return paramsObject.has(PARAMS_VT_2_4) ? paramsObject.get(PARAMS_VT_2_4).getAsBoolean() : false;
 	}
 }

@@ -28,11 +28,11 @@ public class JsonParserLogs extends JsonParserFactory{
 		for(int i = 0; i < logsObject.size(); i++)
 		{
 			JsonObject tempObject = logsObject.get(i).getAsJsonObject();
-			Log temp = new Log(getTaskId() + "-" + i, 
-					tempObject.has(LOG_TIME) ? tempObject.get(LOG_TIME).getAsLong() : -1,
-					tempObject.has(LOG_TYPE) ? tempObject.get(LOG_TYPE).getAsString() : null,
-					tempObject.has(LOG_NAME) ? tempObject.get(LOG_NAME).getAsString() : null,
-					tempObject.has(LOG_ACTION) ? tempObject.get(LOG_ACTION).getAsString() : null);
+			Log temp = new Log(getValueAsString(super.getObject(),getTASK_ID()) + "-" + i, 
+					getValueAsString(tempObject,LOG_TIME),
+					getValueAsString(tempObject,LOG_TYPE),
+					getValueAsString(tempObject,LOG_NAME),
+					getValueAsString(tempObject,LOG_ACTION));
 			logs.add(temp);
 		}
 		

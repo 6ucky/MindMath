@@ -139,10 +139,10 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 		FeedbackforLRS fbLRS = new FeedbackforLRS(id, sensors, log);
 		Gson gson = new Gson();
 		String test_text = "{\r\n" + 
-				"  \"id\": \"dfb7218c-0fc9-4dfc-9524-d497097de027\",\r\n" + 
-				"  \"actor\": { \"mbox\": \"mailto:test1@example.org\" },\r\n" + 
-				"  \"verb\": { \"id\": \"http://www.example.org/verb\" },\r\n" + 
-				"  \"object\": { \"id\": \"http://www.example.org/activity\" }\r\n" + 
+				"  \"id\": \"18bac5d4-f6f0-4d9b-9888-ef98891cb117\",\r\n" + 
+				"  \"actor\": { \"mbox\": \"mailto:test1@lrsmocah.lip6.fr\" },\r\n" + 
+				"  \"verb\": { \"id\": \"http://lrsmocah.lip6.fr/verb\" },\r\n" + 
+				"  \"object\": { \"id\": \"http://lrsmocah.lip6.fr/activity\" }\r\n" + 
 				"}";
 		
 		// post test text to LRS and return its id
