@@ -21,7 +21,7 @@ import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.Tree;
 import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
 import com.mocah.mindmath.parser.ParserFactory;
-import com.mocah.mindmath.parser.jsonparser.JsonParserException;
+import com.mocah.mindmath.parser.jsonparser.JsonParseCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLogs;
@@ -62,17 +62,18 @@ public class Taskcontroller {
 	 * @param data Receive JSON file as string
 	 * @param auth authorization headers
 	 * @return feedback message
-	 * @throws JsonParserException 
+	 * @throws JsonParseCustomException 
 	 */
 	@PostMapping(path = "/task", consumes = "application/json")
 	public ResponseEntity<String> addtask(@RequestHeader("Version-LIP6") String version, @RequestHeader("Authorization") String auth,
-			@RequestBody String data) throws JsonParserException {
+			@RequestBody String data) throws JsonParseCustomException {
 		if(!checkauth(auth))
 		{
 			return new ResponseEntity<String>("Unauthorized connection.", HttpStatus.UNAUTHORIZED);
 		}
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task tasks = jsonparser.parse(data);
+		
 		
 		if (!getTaskrepository().existsById(tasks.getId())) {
 			getTaskrepository().save(tasks);
@@ -115,9 +116,10 @@ public class Taskcontroller {
 	/**
 	 * Test of post for LRS
 	 * @return the added statement
+	 * @throws JsonParseCustomException 
 	 */
 	@PostMapping("/lltest")
-	public ResponseEntity<String> testLearningLocker(@RequestBody String data){
+	public ResponseEntity<String> testLearningLocker(@RequestBody String data) throws JsonParseCustomException{
 		LearningLockerRepository ll = new LearningLockerRepository();
 		JsonParserLogs parserLog = new JsonParserLogs(data);
 		JsonParserSensor parserSensor = new JsonParserSensor(data);
@@ -164,10 +166,10 @@ public class Taskcontroller {
 	 * Handle PUT request, update task based on ID
 	 * @param data Received JSON file mapping to task class
 	 * @return feedback message
-	 * @throws JsonParserException 
+	 * @throws JsonParseCustomException 
 	 */
 	@PutMapping(path = "/task")
-	public String updatetask(@RequestBody String data) throws JsonParserException {
+	public String updatetask(@RequestBody String data) throws JsonParseCustomException {
 		ParserFactory<Task> jsonparser = new JsonParserFactory(data);
 		Task tasks = jsonparser.parse(data);
 		getTaskrepository().save(tasks);

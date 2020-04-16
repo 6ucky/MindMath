@@ -24,23 +24,23 @@ public class JsonParserSensor extends JsonParserFactory{
 	}
 
 	public Sensors getSensor() {
-		Sensors sensorsClass = new Sensors(getValueAsString(super.getObject(),getTASK_ID()));
+		Sensors sensorsClass = new Sensors(getValueforDB(super.getObject(),getTASK_ID()));
 		if(rootObject.has(SENSOR))
 		{
-			sensorsClass = new Sensors(getValueAsString(super.getObject(),getTASK_ID()),
-				getValueAsString(sensorsObject,SENSOR_CAPTEUR_BOOL_RF_CO2_1),
-				getValueAsString(sensorsObject,SENSOR_CAPTEUR_BOOL_RF_CO2_2),
-				getValueAsString(sensorsObject,SENSOR_CAPTEUR_BOOL_RF_CO2_3),
-				getValueAsString(sensorsObject,SENSOR_CAPTEUR_BOOL_RJ),
-				getValueAsString(sensorsObject,SENSOR_CAPTEUR_NB_TEMPS),
-				getValueAsString(sensorsObject,SENSOR_CAPTEUR_NB_VALIDER),
-				getValueAsString(sensorsObject,SENSOR_CAPTEUR_NB_EFFACER),
-				getValueAsString(sensorsObject,SENSOR_CAPTEUR_NB_AIDE),
-				getValueAsString(sensorsObject,SENSOR_DOMAIN),
-				getValueAsString(sensorsObject,SENSOR_GENERATOR),
-				getValueAsString(sensorsObject,SENSOR_TASKFAMILY),
-				getValueAsString(sensorsObject,SENSOR_CORRECTANSWER),
-				getValueAsString(sensorsObject,SENSOR_CODEERROR)
+			sensorsClass = new Sensors(getValueforDB(super.getObject(),getTASK_ID()),
+					getValueforDB(sensorsObject,SENSOR_CAPTEUR_BOOL_RF_CO2_1),
+					getValueforDB(sensorsObject,SENSOR_CAPTEUR_BOOL_RF_CO2_2),
+					getValueforDB(sensorsObject,SENSOR_CAPTEUR_BOOL_RF_CO2_3),
+					getValueforDB(sensorsObject,SENSOR_CAPTEUR_BOOL_RJ),
+					getValueforDB(sensorsObject,SENSOR_CAPTEUR_NB_TEMPS),
+					getValueforDB(sensorsObject,SENSOR_CAPTEUR_NB_VALIDER),
+					getValueforDB(sensorsObject,SENSOR_CAPTEUR_NB_EFFACER),
+					getValueforDB(sensorsObject,SENSOR_CAPTEUR_NB_AIDE),
+					getValueforDB(sensorsObject,SENSOR_DOMAIN),
+					getValueforDB(sensorsObject,SENSOR_GENERATOR),
+					getValueforDB(sensorsObject,SENSOR_TASKFAMILY),
+					getValueforDB(sensorsObject,SENSOR_CORRECTANSWER),
+					getValueforDB(sensorsObject,SENSOR_CODEERROR)
 			);
 		}
 		return sensorsClass;

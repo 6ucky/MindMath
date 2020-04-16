@@ -24,14 +24,14 @@ public class JsonParserParams extends JsonParserFactory {
 	}
 
 	public Params getParams() {
-		Params paramsClass = new Params(getValueAsString(super.getObject(),getTASK_ID()));
+		Params paramsClass = new Params(getValueforDB(super.getObject(),getTASK_ID()));
 		if(rootObject.has(PARAMS))
 		{
-			paramsClass = new Params(getValueAsString(super.getObject(),getTASK_ID()), 
-				getValueAsString(paramsObject,PARAMS_VT_2_1),
-				getValueAsString(paramsObject,PARAMS_VT_2_2),
-				getValueAsString(paramsObject,PARAMS_VT_2_3),
-				getValueAsString(paramsObject,PARAMS_VT_2_4)
+			paramsClass = new Params(getValueforDB(super.getObject(),getTASK_ID()), 
+					getValueforDB(paramsObject,PARAMS_VT_2_1),
+					getValueforDB(paramsObject,PARAMS_VT_2_2),
+					getValueforDB(paramsObject,PARAMS_VT_2_3),
+					getValueforDB(paramsObject,PARAMS_VT_2_4)
 			);
 		}
 		return paramsClass;
