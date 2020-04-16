@@ -72,6 +72,7 @@ public class Taskcontroller {
 			return new ResponseEntity<String>("Unauthorized connection.", HttpStatus.UNAUTHORIZED);
 		}
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		jsonparser.getValueAsLong(jsonparser.getObject(), JsonParserKeys.getTASK_ID());
 		Task tasks = jsonparser.parse(data);
 		
 		
@@ -84,7 +85,7 @@ public class Taskcontroller {
 		}
 
 //		return new ResponseEntity<String>("Duplicated JSON file found in the server.", HttpStatus.CONFLICT);
-		Feedbackjson responsejson = new Feedbackjson(tasks.getId(), test_url);
+		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.getTASK_ID()), test_url);
 		Gson gson = new Gson();
 		return new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.FOUND);
 	}
