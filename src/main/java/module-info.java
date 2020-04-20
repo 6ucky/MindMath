@@ -1,8 +1,10 @@
 module com.mocah.mindmath {
 	exports com.mocah.mindmath.server;
 	exports com.mocah.mindmath.server.cabri;
+	exports com.mocah.mindmath.server.cabri.jsondata;
 
 	exports com.mocah.mindmath.learning;
+	exports com.mocah.mindmath.decisiontree;
 
 	requires java.persistence;
 	requires spring.beans;
@@ -18,7 +20,7 @@ module com.mocah.mindmath {
 	requires spring.webmvc;
 	requires tuprolog;
 	requires org.apache.httpcomponents.httpclient;
-	requires com.google.gson;
+	requires transitive com.google.gson;
 	requires org.apache.jena.core;
 
 	opens com.mocah.mindmath.server;
