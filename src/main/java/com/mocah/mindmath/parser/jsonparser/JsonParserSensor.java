@@ -24,10 +24,10 @@ public class JsonParserSensor extends JsonParserFactory{
 	}
 
 	public Sensors getSensor() {
-		Sensors sensorsClass = new Sensors(getValueforDB(super.getObject(),getTASK_ID()));
+		Sensors sensorsClass = new Sensors(getValueforDB(super.getObject(),TASK_ID));
 		if(rootObject.has(SENSOR))
 		{
-			sensorsClass = new Sensors(getValueforDB(super.getObject(),getTASK_ID()),
+			sensorsClass = new Sensors(getValueforDB(super.getObject(),TASK_ID),
 					getValueforDB(sensorsObject,SENSOR_CAPTEUR_BOOL_RF_CO2_1),
 					getValueforDB(sensorsObject,SENSOR_CAPTEUR_BOOL_RF_CO2_2),
 					getValueforDB(sensorsObject,SENSOR_CAPTEUR_BOOL_RF_CO2_3),

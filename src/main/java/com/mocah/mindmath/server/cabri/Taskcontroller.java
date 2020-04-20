@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.Tree;
 import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
@@ -29,6 +32,8 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.parser.owlparser.OWLAPIparser;
 import com.mocah.mindmath.repository.Matrixrepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
+import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
+import com.mocah.mindmath.repository.learninglocker.XAPItype;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
@@ -72,7 +77,7 @@ public class Taskcontroller {
 			return new ResponseEntity<String>("Unauthorized connection.", HttpStatus.UNAUTHORIZED);
 		}
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		jsonparser.getValueAsLong(jsonparser.getObject(), JsonParserKeys.getTASK_ID());
+		jsonparser.getValueAsLong(jsonparser.getObject(), JsonParserKeys.TASK_ID);
 		Task tasks = jsonparser.parse(data);
 		
 		
@@ -85,7 +90,7 @@ public class Taskcontroller {
 		}
 
 //		return new ResponseEntity<String>("Duplicated JSON file found in the server.", HttpStatus.CONFLICT);
-		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.getTASK_ID()), test_url);
+		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID), test_url);
 		Gson gson = new Gson();
 		return new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.FOUND);
 	}
@@ -125,7 +130,37 @@ public class Taskcontroller {
 		JsonParserLogs parserLog = new JsonParserLogs(data);
 		JsonParserSensor parserSensor = new JsonParserSensor(data);
 		JsonParserFactory parserRoot = new JsonParserFactory(data);
-		return new ResponseEntity<String>(ll.postStatementTEST(parserRoot.getValueAsString(parserRoot.getObject(), JsonParserKeys.getTASK_ID()), parserSensor.getSensor(), parserLog.getLogs()), HttpStatus.ACCEPTED);
+		
+		JsonObject response = new JsonObject();
+		response.add("Response from LRS", JsonParser.parseString(ll.postStatementTEST(parserRoot.getValueAsString(parserRoot.getObject(), JsonParserKeys.TASK_ID), parserSensor.getSensor(), parserLog.getLogs())).getAsJsonObject());
+		
+		JsonArray statementArray = new JsonArray();
+		XAPIgenerator xapi = new XAPIgenerator();
+		String student_id = parserRoot.getValueAsString(parserRoot.getObject(), JsonParserKeys.TASK_ID);
+		xapi.setActor("student-" + student_id + "@lip6.fr", "student-" + student_id);
+		xapi.setVerb();
+		
+		xapi.setObject(JsonParserKeys.SENSOR_DOMAIN, parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_DOMAIN));
+		xapi.setContext(XAPItype.SENSORS);
+		statementArray.add(xapi.generateStatement());
+		
+		xapi.setObject(JsonParserKeys.SENSOR_GENERATOR, parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_GENERATOR));
+		xapi.setContext(XAPItype.SENSORS);
+		statementArray.add(xapi.generateStatement());
+		
+		for(int i = 0; i < parserLog.getArray().size(); i++)
+		{
+			xapi = new XAPIgenerator();
+			xapi.setActor("student-" + student_id + "@lip6.fr", "student-" + student_id);
+			xapi.setVerb();
+			xapi.setObject(i, parserLog.getValueAsString(parserLog.getArray().get(i).getAsJsonObject(), JsonParserKeys.LOG_ACTION), parserLog.getValueAsString(parserLog.getArray().get(i).getAsJsonObject(), JsonParserKeys.LOG_NAME));
+			xapi.setContext(XAPItype.LOGS);
+			statementArray.add(xapi.generateStatement());
+		}
+		
+		response.add("Statements Drafts", statementArray);
+		
+		return new ResponseEntity<String>(response.toString(), HttpStatus.ACCEPTED);
 	}
 	
 	/**

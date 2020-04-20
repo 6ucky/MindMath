@@ -21,6 +21,10 @@ public class JsonParserLogs extends JsonParserFactory{
 		JsonArray emptyarray = new JsonArray();
 		this.logsObject = rootObject.has(LOG) ? rootObject.get(LOG).getAsJsonArray() : emptyarray;
 	}
+	
+	public JsonArray getArray() {
+		return this.logsObject;
+	}
 
 	public List<Log> getLogs()
 	{
@@ -28,7 +32,7 @@ public class JsonParserLogs extends JsonParserFactory{
 		for(int i = 0; i < logsObject.size(); i++)
 		{
 			JsonObject tempObject = logsObject.get(i).getAsJsonObject();
-			Log temp = new Log(getValueforDB(super.getObject(),getTASK_ID()) + "-" + i, 
+			Log temp = new Log(getValueforDB(super.getObject(),TASK_ID) + "-" + i, 
 					getValueforDB(tempObject,LOG_TIME),
 					getValueforDB(tempObject,LOG_TYPE),
 					getValueforDB(tempObject,LOG_NAME),

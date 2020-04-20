@@ -104,12 +104,12 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 	public Task parse(String data) throws JsonParseCustomException {
 		
 		Task tasks = new Task();
-		if(rootObject.has(getTASK_ID()))
+		if(rootObject.has(TASK_ID))
 		{
 			JsonParserSensor sensorparser = new JsonParserSensor(data);
 			JsonParserParams paramsparser = new JsonParserParams(data);
 			JsonParserLogs logsparser = new JsonParserLogs(data);
-			tasks = new Task(getValueforDB(rootObject,getTASK_ID()), 
+			tasks = new Task(getValueforDB(rootObject,TASK_ID), 
 					getValueforDB(rootObject,TASK_NAME),
 					getValueforDB(rootObject,TASK_TRIGGER),
 					sensorparser.getSensor(), 
