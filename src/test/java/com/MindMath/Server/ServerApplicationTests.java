@@ -1,18 +1,23 @@
 package com.MindMath.Server;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 
 import com.mocah.mindmath.server.ServerApplication;
+import com.mocah.mindmath.server.cabri.Taskcontroller;
 
+@SpringBootTest(classes=ServerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) 
+public class ServerApplicationTests {
 
-@SpringBootTest
-@ContextConfiguration(classes =ServerApplication.class)
-class ServerApplicationTests {
+	@Autowired
+	public Taskcontroller controller;
 
 	@Test
-	void contextLoads() {
+	public void contexLoads() throws Exception {
+		assertThat(controller).isNotNull();
 	}
 
 }

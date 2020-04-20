@@ -1,6 +1,8 @@
 module com.mocah.mindmath {
+	
 	exports com.mocah.mindmath.server;
 	exports com.mocah.mindmath.server.cabri;
+	exports com.mocah.mindmath.server.cabri.jsondata;
 
 	exports com.mocah.mindmath.learning;
 
