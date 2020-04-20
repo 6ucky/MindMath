@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -55,7 +56,7 @@ public class Taskcontroller {
 	 * @param auth the authorization parameter from headers
 	 * @return authorized or unauthorized
 	 */
-	public static boolean checkauth(String auth) {
+	private static boolean checkauth(String auth) {
 		if(auth.equals(license_num))
 			return true;
 		return false;
@@ -74,7 +75,7 @@ public class Taskcontroller {
 			@RequestBody String data) throws JsonParseCustomException {
 		if(!checkauth(auth))
 		{
-			return new ResponseEntity<String>("Unauthorized connection.", HttpStatus.UNAUTHORIZED);
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		}
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		jsonparser.getValueAsLong(jsonparser.getObject(), JsonParserKeys.TASK_ID);
@@ -104,7 +105,7 @@ public class Taskcontroller {
 		List<Task> tasks = new ArrayList<>();
 		getTaskrepository().findAll().forEach(tasks::add);
 		if(tasks.size() == 0)
-			return new ResponseEntity<String>("Database is empty.", HttpStatus.NOT_FOUND);
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
 		Gson gson = new Gson();
 		return new ResponseEntity<String>(gson.toJson(tasks), HttpStatus.FOUND);
 	}
@@ -168,7 +169,12 @@ public class Taskcontroller {
 	 * @return the full list of statement information including resource, property and RDF node.
 	 */
 	@PostMapping("/ontology")
-	public ResponseEntity<String> getresourceontology(@RequestBody String data){
+	public ResponseEntity<String> getresourceontology(@RequestHeader("Version-LIP6") String version, @RequestHeader("Authorization") String auth,
+			@RequestBody String data){
+		if(!checkauth(auth))
+		{
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		}
 		Gson gson = new Gson();
 		OWLAPIparser owlparser = new OWLAPIparser(data);
 		return new ResponseEntity<String>(gson.toJson(owlparser.listall()), HttpStatus.ACCEPTED);
@@ -186,7 +192,7 @@ public class Taskcontroller {
 			@RequestBody String data) {
 		if(!checkauth(auth))
 		{
-			return new ResponseEntity<String>("Unauthorized connection.", HttpStatus.UNAUTHORIZED);
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		}
 		Gson gson = new Gson();
 		Tree tree = gson.fromJson(data, Tree.class);
@@ -220,7 +226,7 @@ public class Taskcontroller {
 	@DeleteMapping(path = "/task")
 	public ResponseEntity<String> cleandatabase() {
 		getTaskrepository().deleteAll();
-		return new ResponseEntity<String>("Database is empty.", HttpStatus.NOT_FOUND);
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
 	}
 
 	/**
