@@ -49,7 +49,6 @@ public class Taskcontroller {
 	@Autowired
 	private Taskrepository taskrepository;
 	private static final String license_num = "mocah";
-	private static final String test_url = "mindmath.lip6.fr/videos/ResolutionEquation.mp4";
 	
 	/**
 	 * check the post request based on authorization
@@ -78,7 +77,7 @@ public class Taskcontroller {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		}
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		jsonparser.getValueAsLong(jsonparser.getObject(), JsonParserKeys.TASK_ID);
+		jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
 		Task tasks = jsonparser.parse(data);
 		
 		
@@ -91,7 +90,7 @@ public class Taskcontroller {
 		}
 
 //		return new ResponseEntity<String>("Duplicated JSON file found in the server.", HttpStatus.CONFLICT);
-		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID), test_url);
+		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID));
 		Gson gson = new Gson();
 		return new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.FOUND);
 	}

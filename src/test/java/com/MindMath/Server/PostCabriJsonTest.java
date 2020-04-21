@@ -24,7 +24,7 @@ public class PostCabriJsonTest {
 	private TestRestTemplate restTemplate;
 	
 	private static String jsonfile = "{\r\n" + 
-			"    \"id\": 100,\r\n" + 
+			"    \"id\": \"F1.1\",\r\n" + 
 			"    \"sensors\": {\r\n" + 
 			"        \"domain\": \"algebre\",\r\n" + 
 			"        \"generator\": \"resoudreEquationPremierDegre\",\r\n" + 
@@ -72,6 +72,6 @@ public class PostCabriJsonTest {
 				entity, 
 				String.class);
 		
-		assertThat(response1.getBody()).contains("{\"id\":\"100\",\"url\":\"mindmath.lip6.fr/videos/ResolutionEquation.mp4\"}");
+		assertThat(response1.getBody()).contains("{\"id\":\"F1.1\",\"url\":\"mindmath.lip6.fr/videos/ResolutionEquation.mp4\",\"motivationalElement\":\"Bravo!\",\"solutionModel\":\"url\",\"glossary\":\"hypertext\"}");
 	}
 }
