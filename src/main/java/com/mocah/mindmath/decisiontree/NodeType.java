@@ -12,8 +12,10 @@ import com.google.gson.annotations.SerializedName;
 public enum NodeType {
 	@SerializedName("state")
 	STATE,
+
 	@SerializedName("decision")
 	DECISION,
+
 	@SerializedName("feedback")
 	FEEDBACK
 }

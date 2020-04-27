@@ -9,21 +9,39 @@
         {
           "edge": {
             "value": "valider",
-            "query": "equal(__VAR__,'valider')"
+            "query": "equal('__VAR__','valider').",
+            "vars": [
+              {
+                "source": "Task",
+                "key": "trigger"
+              }
+            ]
           },
           "nodeid": "réponse_juste"
         },
         {
           "edge": {
             "value": "aide",
-            "query": "equal(__VAR__,'aide')"
+            "query": "equal('__VAR__','aide').",
+            "vars": [
+              {
+                "source": "Task",
+                "key": "trigger"
+              }
+            ]
           },
           "nodeid": "mode_activité_3"
         },
         {
           "edge": {
             "value": "inactivité",
-            "query": "equal(__VAR__,'inactivité')"
+            "query": "equal('__VAR__','inactivité').",
+            "vars": [
+              {
+                "source": "Task",
+                "key": "trigger"
+              }
+            ]
           },
           "nodeid": "mode_activité_3"
         }
@@ -44,7 +62,7 @@
         {
           "edge": {
             "value": false,
-            "query": "not(__VAR__)"
+            "query": "not(__VAR__)."
           },
           "nodeid": "erreur_type_identifié"
         }
@@ -130,6 +148,235 @@
     },
     {
       "nodeid": "decision_3",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "erreur_type_identifié",
+      "nodetype": "state",
+      "valuetype": "boolean",
+      "childs": [
+        {
+          "edge": {
+            "value": true,
+            "query": "__VAR__."
+          },
+          "nodeid": "mode_activité_2"
+        },
+        {
+          "edge": {
+            "value": false,
+            "query": "not(__VAR__)."
+          },
+          "nodeid": "mode_activité_3"
+        }
+      ]
+    },
+    {
+      "nodeid": "mode_activité_2",
+      "nodetype": "state",
+      "valuetype": "number",
+      "childs": [
+        {
+          "edge": {
+            "value": "=1",
+            "query": "equal(__VAR__,1)"
+          },
+          "nodeid": "stab_erreur_1"
+        },
+        {
+          "edge": {
+            "value": "=0",
+            "query": "equal(__VAR__,0)"
+          },
+          "nodeid": "stab_erreur_2"
+        },
+        {
+          "edge": {
+            "value": "=2",
+            "query": "equal(__VAR__,2)"
+          },
+          "nodeid": "stab_erreur_3"
+        }
+      ]
+    },
+    {
+      "nodeid": "stab_erreur_1",
+      "nodetype": "state",
+      "valuetype": "?",
+      "childs": [
+        {
+          "edge": {
+            "value": "peu stable",
+            "query": "?"
+          },
+          "nodeid": "decision_6"
+        },
+        {
+          "edge": {
+            "value": "stable",
+            "query": "?"
+          },
+          "nodeid": "decision_5"
+        },
+        {
+          "edge": {
+            "value": "très stable",
+            "query": "?"
+          },
+          "nodeid": "decision_4"
+        }
+      ]
+    },
+    {
+      "nodeid": "stab_erreur_2",
+      "nodetype": "state",
+      "valuetype": "?",
+      "childs": [
+        {
+          "edge": {
+            "value": "stable",
+            "query": "?"
+          },
+          "nodeid": "decision_4"
+        },
+        {
+          "edge": {
+            "value": "peu stable",
+            "query": "?"
+          },
+          "nodeid": "decision_5"
+        }
+      ]
+    },
+    {
+      "nodeid": "stab_erreur_3",
+      "nodetype": "state",
+      "valuetype": "?",
+      "childs": [
+        {
+          "edge": {
+            "value": "très stable",
+            "query": "?"
+          },
+          "nodeid": "decision_4"
+        },
+        {
+          "edge": {
+            "value": "stable",
+            "query": "?"
+          },
+          "nodeid": "decision_5"
+        },
+        {
+          "edge": {
+            "value": "peu stable",
+            "query": "?"
+          },
+          "nodeid": "decision_6"
+        },
+        {
+          "edge": {
+            "value": "pas stable",
+            "query": "?"
+          },
+          "nodeid": "decision_7"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_4",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_5",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_6",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_7",
       "nodetype": "decision",
       "childs": [
         {
