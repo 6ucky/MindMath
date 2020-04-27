@@ -86,10 +86,7 @@ public class Taskcontroller {
 			
 			// TODO call Q-learning algorithm
 			
-//			return new ResponseEntity<String>("JSON file is saved in the server.", HttpStatus.CREATED);
 		}
-
-//		return new ResponseEntity<String>("Duplicated JSON file found in the server.", HttpStatus.CONFLICT);
 		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID));
 		Gson gson = new Gson();
 		return new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.FOUND);
@@ -100,7 +97,11 @@ public class Taskcontroller {
 	 * @return all the tasks in the repository
 	 */
 	@GetMapping("/task")
-	public ResponseEntity<String> getALLtask() {
+	public ResponseEntity<String> getALLtask(@RequestHeader("Authorization") String auth) {
+		if(!auth.equals("test"))
+		{
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		}
 		List<Task> tasks = new ArrayList<>();
 		getTaskrepository().findAll().forEach(tasks::add);
 		if(tasks.size() == 0)
@@ -125,7 +126,11 @@ public class Taskcontroller {
 	 * @throws JsonParseCustomException 
 	 */
 	@PostMapping("/lltest")
-	public ResponseEntity<String> testLearningLocker(@RequestBody String data) throws JsonParseCustomException{
+	public ResponseEntity<String> testLearningLocker(@RequestBody String data, @RequestHeader("Authorization") String auth) throws JsonParseCustomException{
+		if(!auth.equals("test"))
+		{
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		}
 		LearningLockerRepository ll = new LearningLockerRepository();
 		JsonParserLogs parserLog = new JsonParserLogs(data);
 		JsonParserSensor parserSensor = new JsonParserSensor(data);
@@ -203,27 +208,15 @@ public class Taskcontroller {
 	}
 	
 	/**
-	 * @deprecated use post to update JSON file
-	 * Handle PUT request, update task based on ID
-	 * @param data Received JSON file mapping to task class
-	 * @return feedback message
-	 * @throws JsonParseCustomException 
-	 */
-	@PutMapping(path = "/task")
-	public String updatetask(@RequestBody String data) throws JsonParseCustomException {
-		ParserFactory<Task> jsonparser = new JsonParserFactory(data);
-		Task tasks = jsonparser.parse(data);
-		getTaskrepository().save(tasks);
-
-		return "Task is updated. Q-learning algorithm is applied.";
-	}
-	
-	/**
 	 * Handle DELETE request
 	 * @return 
 	 */
 	@DeleteMapping(path = "/task")
-	public ResponseEntity<String> cleandatabase() {
+	public ResponseEntity<String> cleandatabase(@RequestHeader("Authorization") String auth) {
+		if(!auth.equals("test"))
+		{
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		}
 		getTaskrepository().deleteAll();
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
 	}

@@ -88,12 +88,24 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 	
 	// handle json parser exceptions
 	private String throwjsonexception(JsonObject object, String key, Exception e, String type) throws JsonParseCustomException {
+		JsonObject root = new JsonObject();
+		root.addProperty("id", "JsonParser");
+		root.addProperty("key", key);
 		if(!object.has(key))
-			throw new JsonParseCustomException(key, " does not exist.", e);
+		{
+			root.addProperty("error", "NOT_FOUND IN TYPE OF " + type);
+			throw new JsonParseCustomException(root, e);
+		}
 		else if(object.get(key).isJsonNull())
-			throw new JsonParseCustomException(key, " is null.", e);
+		{
+			root.addProperty("error", "NULL IN TYPE OF " + type);
+			throw new JsonParseCustomException(root, e);
+		}
 		else
-			throw new JsonParseCustomException(key, " cannot be parsed as " + type + ".", e);
+		{
+			root.addProperty("error", "NOT_ACCEPTABLE IN TYPE OF " + type);
+			throw new JsonParseCustomException(root, e);
+		}
 	}
 	
 	public JsonObject getObject() {
