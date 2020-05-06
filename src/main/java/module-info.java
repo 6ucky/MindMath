@@ -1,4 +1,4 @@
-module com.mocah.mindmath {
+open module com.mocah.mindmath {
 	
 	exports com.mocah.mindmath.server;
 	exports com.mocah.mindmath.server.cabri;
@@ -23,7 +23,9 @@ module com.mocah.mindmath {
 	requires org.apache.httpcomponents.httpclient;
 	requires transitive com.google.gson;
 	requires org.apache.jena.core;
-
-	opens com.mocah.mindmath.server;
-	opens com.mocah.mindmath.server.cabri;
+	
+	//test requirements
+	requires spring.boot.test;
+	requires org.junit.jupiter.api;
+	requires org.assertj.core;
 }

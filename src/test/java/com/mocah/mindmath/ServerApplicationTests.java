@@ -1,4 +1,4 @@
-package com.MindMath.Server;
+package com.mocah.mindmath;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
