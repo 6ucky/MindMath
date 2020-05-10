@@ -28,4 +28,8 @@ open module com.mocah.mindmath {
 	requires spring.boot.test;
 	requires org.junit.jupiter.api;
 	requires org.assertj.core;
+	requires spring.boot.test.autoconfigure;
+	requires spring.test;
+	requires org.hamcrest;
+	requires org.mockito;
 }
