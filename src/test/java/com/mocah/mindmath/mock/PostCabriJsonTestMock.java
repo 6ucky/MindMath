@@ -2,6 +2,7 @@ package com.mocah.mindmath.mock;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -23,18 +24,20 @@ import com.mocah.mindmath.PostCabriJsonTest;
 import com.mocah.mindmath.server.ServerApplication;
 import com.mocah.mindmath.server.cabri.Taskcontroller;
 
-//mockito test
+//Mockito test inherited from spring boot test
 @WebMvcTest(PostCabriJsonTest.class)
 @ContextConfiguration(classes={ServerApplication.class})
 public class PostCabriJsonTestMock {
 	
+	//inject a bean from the context
 	@Autowired
 	private MockMvc mockMvc;
 
-	//mockbean test
+	//add or replace mockbean in the Spring MVC context
 	@MockBean
 	private Taskcontroller service;
 	
+	//JSON file from Cabri
 	private static String jsonfile = "{\r\n" + 
 			"    \"id\": \"100\",\r\n" + 
 			"    \"sensors\": {\r\n" + 
@@ -66,11 +69,17 @@ public class PostCabriJsonTestMock {
 			"    ]\r\n" + 
 			"}";
 	
+	//Expected response feedback
 	private static String responsejson = "{\"id\":\"100\",\"idF\":\"F1.1\",\"motivationalElement\":\"Bravo!\",\"solutionModel\":\"mindmath.lip6.fr/videos/ResolutionEquation.mp4\",\"glossary\":\"hypertext\"}";
 	
 	@Test
 	public void postCabriShouldReturnFeedbackMessage() throws Exception {
+		//check methods were called with given arguments
+		service.addtask("1.0", "mocah", jsonfile);
+		verify(service).addtask("1.0", "mocah", jsonfile);
+		
 		Gson gson = new Gson();
+		//specify how a mock should behave and stub method calls
 		when(service.addtask("1.0", "mocah", jsonfile)).thenReturn(new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.FOUND));
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -78,7 +87,9 @@ public class PostCabriJsonTestMock {
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.add("Authorization", "mocah");
 		headers.add("Version-LIP6", "1.0");
-		this.mockMvc.perform(post("/task").headers(headers).contentType(MediaType.APPLICATION_JSON).content(jsonfile)).andDo(print()).andExpect(status().isFound())
-				.andExpect(content().string(containsString(gson.toJson(responsejson))));
+		this.mockMvc.perform(post("/task").headers(headers).contentType(MediaType.APPLICATION_JSON).content(jsonfile))
+			.andDo(print())
+			.andExpect(status().isFound())
+			.andExpect(content().string(containsString(gson.toJson(responsejson))));
 	}
 }

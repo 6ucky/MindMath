@@ -15,11 +15,14 @@ import org.springframework.http.ResponseEntity;
 
 import com.mocah.mindmath.server.ServerApplication;
 
+//Spring Boot Test for a post json file from Cabri
 @SpringBootTest(classes=ServerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) 
 public class PostCabriJsonTest {
+	
 	@LocalServerPort
 	private int port;
 
+	//inject restTemplate bean
 	@Autowired
 	private TestRestTemplate restTemplate;
 	
@@ -53,8 +56,10 @@ public class PostCabriJsonTest {
 			"        }\r\n" + 
 			"    ]\r\n" + 
 			"}";
+
+	//Expected response feedback
+	private static String responsejson = "{\"id\":\"100\",\"idF\":\"F1.1\",\"motivationalElement\":\"Bravo!\",\"solutionModel\":\"mindmath.lip6.fr/videos/ResolutionEquation.mp4\",\"glossary\":\"hypertext\"}";	
 	
-	// a post test for json file from Cabri
 	@Test
 	public void greetingShouldReturnDefaultMessage() throws Exception {
 		HttpHeaders headers = new HttpHeaders();
@@ -72,6 +77,6 @@ public class PostCabriJsonTest {
 				entity, 
 				String.class);
 		
-		assertThat(response1.getBody()).contains("{\"id\":\"100\",\"idF\":\"F1.1\",\"motivationalElement\":\"Bravo!\",\"solutionModel\":\"mindmath.lip6.fr/videos/ResolutionEquation.mp4\",\"glossary\":\"hypertext\"}");
+		assertThat(response1.getBody()).contains(responsejson);
 	}
 }
