@@ -130,7 +130,7 @@ eclipse {
 		containers 'org.eclipse.buildship.core.gradleclasspathcontainer'
 		file {
 			whenMerged {
-				entries.findAll { it.properties.kind.equals('lib') && !it.properties.path.contains("junit") }.each {
+				entries.findAll { it.properties.kind.equals('lib') || it.properties.path.contains("junit") }.each {
 					it.entryAttributes['module'] = 'true'
 				}
 				entries.findAll { it.properties.path.startsWith('org.eclipse.jdt.launching.JRE_CONTAINER') }.each {
