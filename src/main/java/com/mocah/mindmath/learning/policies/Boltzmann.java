@@ -44,7 +44,7 @@ public class Boltzmann implements IPolicy {
 		int actionsCount = values.size();
 		double[] actionSoftMax = softMax(values);
 
-		// System.out.println(Arrays.toString(actionSoftMax));
+//		System.out.println(Arrays.toString(actionSoftMax));
 
 		// Begin discrete prob
 		double d = rand.nextDouble();
