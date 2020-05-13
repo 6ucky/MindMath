@@ -80,7 +80,7 @@ public class PostCabriJsonTestMock {
 		
 		Gson gson = new Gson();
 		//specify how a mock should behave and stub method calls
-		when(service.addtask("1.0", "mocah", jsonfile)).thenReturn(new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.FOUND));
+		when(service.addtask("1.0", "mocah", jsonfile)).thenReturn(new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.OK));
 		
 		HttpHeaders headers = new HttpHeaders();
 		// header as chart form
@@ -89,7 +89,7 @@ public class PostCabriJsonTestMock {
 		headers.add("Version-LIP6", "1.0");
 		this.mockMvc.perform(post("/task").headers(headers).contentType(MediaType.APPLICATION_JSON).content(jsonfile))
 			.andDo(print())
-			.andExpect(status().isFound())
+			.andExpect(status().isOk())
 			.andExpect(content().string(containsString(gson.toJson(responsejson))));
 	}
 }
