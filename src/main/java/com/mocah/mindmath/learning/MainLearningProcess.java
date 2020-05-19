@@ -34,6 +34,7 @@ import com.mocah.mindmath.learning.ztest.Grille;
 import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
 import com.mocah.mindmath.parser.owlparser.OWLparserRepo;
+import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
 
 import alice.tuprolog.InvalidTheoryException;
@@ -163,23 +164,14 @@ public class MainLearningProcess {
 		Gson gson = new Gson();
 		
 		//initialize ontology file
-		try{
-
-			InputStream input = MainLearningProcess.class.getClassLoader().getResourceAsStream(LocalRouteRepository.OntologyRoute);
-			Reader reader = new InputStreamReader(input);
-			StringBuilder textBuilder = new StringBuilder();
-		    int i = 0;
-		    while ((i = reader.read()) != -1) {
-		        textBuilder.append((char) i);
-		    }
-		    OWLparserRepo.owldata = textBuilder.toString();
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		try {
+		    OWLparserRepo.owldata = LocalRouteRepository.readFileasString(LocalRoute.OntologyRoute);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		
-		InputStream input = MainLearningProcess.class.getClassLoader().getResourceAsStream(LocalRouteRepository.DecisionTreeRoute);
-		Reader reader = new InputStreamReader(input);
+		Reader reader = LocalRouteRepository.readFileasReader(LocalRoute.DecisionTreeRoute);
 		
 		// Convert JSON File to Java Object
 		tree = gson.fromJson(reader, Tree.class);
@@ -194,7 +186,7 @@ public class MainLearningProcess {
 		try {
 			String trigger = "sally";
 //			FileInputStream is = new FileInputStream("test.pl");
-			input = MainLearningProcess.class.getClassLoader().getResourceAsStream(LocalRouteRepository.PrologTestRoute);
+			InputStream input = LocalRouteRepository.readFileasInputStream(LocalRoute.PrologTestRoute);
 			Theory tr = new Theory(input);
 			Prolog pg = new Prolog();
 			pg.setTheory(tr);

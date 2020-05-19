@@ -61,7 +61,8 @@ public class PostCabriJsonTest {
 	private static String responsejson = "{\"id\":\"100\",\"idF\":\"F1.1\",\"motivationalElement\":\"Bravo!\",\"solutionModel\":\"mindmath.lip6.fr/videos/ResolutionEquation.mp4\",\"glossary\":\"hypertext\"}";	
 	
 	@Test
-	public void greetingShouldReturnDefaultMessage() throws Exception {
+	public void POSTjsonfilefromCabrishouldreturnFeedback() throws Exception {
+		
 		HttpHeaders headers = new HttpHeaders();
 		// header as chart form
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
