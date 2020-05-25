@@ -155,32 +155,49 @@ public class MainLearningProcess {
 		qValues.put(s, values);
 	}
 
+	private static void decisionTreeBFS(Tree tree) {
+		DeepFirstSearch dfs = new DeepFirstSearch(tree);
+
+		List<Branch> branches = new ArrayList<>();
+
+		Node node = tree.getRoot();
+		goDeep(dfs, node, branches, new Branch());
+
+		// TODO for test purpose
+		System.out.println("Visit order: " + dfs.getVisitedNodes());
+		System.out.println("Computed branches : " + branches);
+
+		computeBranches(branches);
+	}
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		Tree tree = null;
 		Gson gson = new Gson();
-		
-		//initialize ontology file
-		try{
 
-			InputStream input = MainLearningProcess.class.getClassLoader().getResourceAsStream(LocalRouteRepository.OntologyRoute);
+		// initialize ontology file
+		try {
+
+			InputStream input = MainLearningProcess.class.getClassLoader()
+					.getResourceAsStream(LocalRouteRepository.OntologyRoute);
 			Reader reader = new InputStreamReader(input);
 			StringBuilder textBuilder = new StringBuilder();
-		    int i = 0;
-		    while ((i = reader.read()) != -1) {
-		        textBuilder.append((char) i);
-		    }
-		    OWLparserRepo.owldata = textBuilder.toString();
+			int i = 0;
+			while ((i = reader.read()) != -1) {
+				textBuilder.append((char) i);
+			}
+			OWLparserRepo.owldata = textBuilder.toString();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		InputStream input = MainLearningProcess.class.getClassLoader().getResourceAsStream(LocalRouteRepository.DecisionTreeRoute);
+
+		InputStream input = MainLearningProcess.class.getClassLoader()
+				.getResourceAsStream(LocalRouteRepository.DecisionTreeRoute);
 		Reader reader = new InputStreamReader(input);
-		
+
 		// Convert JSON File to Java Object
 		tree = gson.fromJson(reader, Tree.class);
 
@@ -192,9 +209,11 @@ public class MainLearningProcess {
 		}
 
 		try {
+
 			String trigger = "sally";
 //			FileInputStream is = new FileInputStream("test.pl");
-			input = MainLearningProcess.class.getClassLoader().getResourceAsStream(LocalRouteRepository.PrologTestRoute);
+			input = MainLearningProcess.class.getClassLoader()
+					.getResourceAsStream(LocalRouteRepository.PrologTestRoute);
 			Theory tr = new Theory(input);
 			Prolog pg = new Prolog();
 			pg.setTheory(tr);
@@ -307,7 +326,10 @@ public class MainLearningProcess {
 			IState state = testEnv.getCurrentState();
 			int step = 0;
 			while (/* step <= Grille.nbMaxActions && */ testEnv.getCurrentState().getType() != TypeEtat.Goal) {
+				// 1er demande Fdbck (et suivantes)
 				IAction action = qLearning.step(state);
+
+				// 2eme demande
 				double reward = testEnv.step((GrilleAction) action);
 
 				IState newState = testEnv.getCurrentState();
