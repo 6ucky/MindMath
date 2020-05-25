@@ -34,6 +34,7 @@ import com.mocah.mindmath.learning.ztest.Grille;
 import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
 import com.mocah.mindmath.parser.owlparser.OWLparserRepo;
+import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
 
 import alice.tuprolog.InvalidTheoryException;
@@ -176,28 +177,17 @@ public class MainLearningProcess {
 	public static void main(String[] args) {
 		Tree tree = null;
 		Gson gson = new Gson();
-
+		
 		// initialize ontology file
 		try {
-
-			InputStream input = MainLearningProcess.class.getClassLoader()
-					.getResourceAsStream(LocalRouteRepository.OntologyRoute);
-			Reader reader = new InputStreamReader(input);
-			StringBuilder textBuilder = new StringBuilder();
-			int i = 0;
-			while ((i = reader.read()) != -1) {
-				textBuilder.append((char) i);
-			}
-			OWLparserRepo.owldata = textBuilder.toString();
-
-		} catch (IOException e) {
-			e.printStackTrace();
+		    OWLparserRepo.owldata = LocalRouteRepository.readFileasString(LocalRoute.OntologyRoute);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-
-		InputStream input = MainLearningProcess.class.getClassLoader()
-				.getResourceAsStream(LocalRouteRepository.DecisionTreeRoute);
-		Reader reader = new InputStreamReader(input);
-
+		
+		Reader reader = LocalRouteRepository.readFileasReader(LocalRoute.DecisionTreeRoute);
+		
 		// Convert JSON File to Java Object
 		tree = gson.fromJson(reader, Tree.class);
 
@@ -209,11 +199,9 @@ public class MainLearningProcess {
 		}
 
 		try {
-
 			String trigger = "sally";
 //			FileInputStream is = new FileInputStream("test.pl");
-			input = MainLearningProcess.class.getClassLoader()
-					.getResourceAsStream(LocalRouteRepository.PrologTestRoute);
+			InputStream input = LocalRouteRepository.readFileasInputStream(LocalRoute.PrologTestRoute);
 			Theory tr = new Theory(input);
 			Prolog pg = new Prolog();
 			pg.setTheory(tr);
@@ -329,7 +317,7 @@ public class MainLearningProcess {
 				// 1er demande Fdbck (et suivantes)
 				IAction action = qLearning.step(state);
 
-				// 2eme demande
+				// 2eme demande				
 				double reward = testEnv.step((GrilleAction) action);
 
 				IState newState = testEnv.getCurrentState();
