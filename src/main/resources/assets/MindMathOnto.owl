@@ -21,17 +21,6 @@
     
 
 
-    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#aPourObjet -->
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#aPourObjet">
-        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenerateurTypesTaches"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#Theme"/>
-        <rdfs:comment>Un generateur = verbe + theme (objet)</rdfs:comment>
-    </owl:ObjectProperty>
-    
-
-
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#aPourValeurVT -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#aPourValeurVT">
@@ -49,12 +38,30 @@
     
 
 
-    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#aPourVerbe -->
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#appartientDomaine -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#aPourVerbe">
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#appartientDomaine">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#Theme"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#Domaine"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#appartientGenre -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#appartientGenre">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenerateurTypesTaches"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbesGenerateurs"/>
-        <rdfs:comment>Un generateur = verbe +  theme (objet)</rdfs:comment>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreTaches"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#correspondA_Generateur -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#correspondA_Generateur">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#CodeErreur"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenerateurTypesTaches"/>
     </owl:ObjectProperty>
     
 
@@ -64,6 +71,16 @@
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#correspondA_MA">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#CodeErreur"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ModeActivite"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#correspondA_TechnoErr -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#correspondA_TechnoErr">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#CodeErreur"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#TechnologieErronee"/>
     </owl:ObjectProperty>
     
 
@@ -92,11 +109,11 @@
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#FamilleTaches"/>
                     <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#TechniqueValide"/>
                     <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#TechnologieValide"/>
                     <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#Theorie"/>
-                    <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#TypeTaches"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VariableTaches"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VariableTypesTaches"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:domain>
@@ -189,6 +206,46 @@
     
 
 
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#generateur_aPourObjet -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#generateur_aPourObjet">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenerateurTypesTaches"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ObjetGenerateurs"/>
+        <rdfs:comment>Un generateur = verbe generateur + objet generateur</rdfs:comment>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#generateur_aPourVerbe -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#generateur_aPourVerbe">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenerateurTypesTaches"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenerateurs"/>
+        <rdfs:comment>Un generateur = verbe +  theme (objet)</rdfs:comment>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#genre_aPourObjet -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#genre_aPourObjet">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreTaches"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#Theme"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#genre_aPourVerbe -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#genre_aPourVerbe">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreTaches"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenreTaches"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#instancie -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#instancie">
@@ -219,7 +276,7 @@
                     <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ElementsJustification"/>
                     <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ElementsRealisation"/>
                     <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#FamilleTaches"/>
-                    <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreDeTaches"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreTaches"/>
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
@@ -233,6 +290,16 @@
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#mobilise">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ElementsRealisation"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ElementsJustification"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#precedeInstitution -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#precedeInstitution">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ElementsInstitutionnels"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ElementsInstitutionnels"/>
     </owl:ObjectProperty>
     
 
@@ -270,6 +337,16 @@
         <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#TechnologieErronee"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#TechnologieValide"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#requiert -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#requiert">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topObjectProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenerateurTypesTaches"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenerateurTypesTaches"/>
     </owl:ObjectProperty>
     
 
@@ -435,9 +512,9 @@
     
 
 
-    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreDeTaches -->
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreTaches -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreDeTaches"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreTaches"/>
     
 
 
@@ -488,6 +565,12 @@
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VariableTypesTaches"/>
     </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ObjetGenerateurs -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ObjetGenerateurs"/>
     
 
 
@@ -581,9 +664,15 @@
     
 
 
-    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbesGenerateurs -->
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenerateurs -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbesGenerateurs"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenerateurs"/>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenreTaches -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenreTaches"/>
     
 
 
@@ -609,7 +698,17 @@
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#calculer -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#calculer">
-        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreDeTaches"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenreTaches"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#calculerEquation -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#calculerEquation">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreTaches"/>
+        <genre_aPourObjet rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#equation"/>
+        <genre_aPourVerbe rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#calculer"/>
     </owl:NamedIndividual>
     
 
@@ -707,7 +806,7 @@
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#developper -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#developper">
-        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbesGenerateurs"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenerateurs"/>
     </owl:NamedIndividual>
     
 
@@ -724,6 +823,7 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#equation">
         <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#Theme"/>
+        <appartientDomaine rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#algebre"/>
     </owl:NamedIndividual>
     
 
@@ -731,7 +831,7 @@
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#equationPremierDegre -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#equationPremierDegre">
-        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#Theme"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ObjetGenerateurs"/>
         <rdfs:comment>P(x)=Q(x)</rdfs:comment>
     </owl:NamedIndividual>
     
@@ -740,7 +840,7 @@
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#expressionAlgebrique -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#expressionAlgebrique">
-        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#Theme"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ObjetGenerateurs"/>
     </owl:NamedIndividual>
     
 
@@ -771,6 +871,90 @@
     
 
 
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft3.2.1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft3.2.1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#FamilleTaches"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#cr_formeCanonique"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ni_x"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#sol_Q-D"/>
+        <instancie rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#tt3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft3.2.2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft3.2.2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#FamilleTaches"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#cr_developpement_reduction"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ni_x"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#sol_Q-D"/>
+        <instancie rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#tt3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft3.2.3 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft3.2.3">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#FamilleTaches"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#cr_developpement_reduction"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ni_x"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#sol_Q-D"/>
+        <instancie rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#tt3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft6.1.1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft6.1.1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#FamilleTaches"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#cr_reduction"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ni_x"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#sol_Q-D"/>
+        <instancie rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#tt6"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft6.1.2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft6.1.2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#FamilleTaches"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#cr_reduction"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ni_x"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#sol_Q-D"/>
+        <instancie rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#tt6"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft6.1.3 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft6.1.3">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#FamilleTaches"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#cr_reduction"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ni_autre"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#sol_Q-D"/>
+        <instancie rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#tt6"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft6.2.1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ft6.2.1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#FamilleTaches"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#cr_developpement_reduction"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ni_x"/>
+        <aPourValeurVT rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#sol_Q-D"/>
+        <instancie rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#tt6"/>
+    </owl:NamedIndividual>
+    
+
+
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#geometrie -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#geometrie">
@@ -791,6 +975,7 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#inst_4eme">
         <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ElementsInstitutionnels"/>
+        <precedeInstitution rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#inst_3eme"/>
     </owl:NamedIndividual>
     
 
@@ -799,6 +984,7 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#inst_5eme">
         <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#ElementsInstitutionnels"/>
+        <precedeInstitution rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#inst_4eme"/>
     </owl:NamedIndividual>
     
 
@@ -830,7 +1016,7 @@
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#modeliser_produire -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#modeliser_produire">
-        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreDeTaches"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenreTaches"/>
     </owl:NamedIndividual>
     
 
@@ -995,6 +1181,14 @@
     
 
 
+    <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#numerique -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#numerique">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#Domaine"/>
+    </owl:NamedIndividual>
+    
+
+
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#origineP_egal_0 -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#origineP_egal_0">
@@ -1088,7 +1282,7 @@
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#prouver -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#prouver">
-        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenreDeTaches"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenreTaches"/>
     </owl:NamedIndividual>
     
 
@@ -1096,7 +1290,7 @@
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#representer -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#representer">
-        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbesGenerateurs"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenerateurs"/>
     </owl:NamedIndividual>
     
 
@@ -1104,7 +1298,7 @@
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#resoudre -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#resoudre">
-        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbesGenerateurs"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenerateurs"/>
     </owl:NamedIndividual>
     
 
@@ -1113,8 +1307,9 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#resoudreEquationPremierDegre">
         <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#GenerateurTypesTaches"/>
-        <aPourObjet rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#equationPremierDegre"/>
-        <aPourVerbe rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#resoudre"/>
+        <appartientGenre rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#calculerEquation"/>
+        <generateur_aPourObjet rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#equationPremierDegre"/>
+        <generateur_aPourVerbe rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#resoudre"/>
     </owl:NamedIndividual>
     
 
@@ -1202,7 +1397,7 @@
     <!-- http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#substituer -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#substituer">
-        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbesGenerateurs"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/mindmath/ontologies/2019/9/MindMathOnto_01#VerbeGenerateurs"/>
     </owl:NamedIndividual>
     
 
