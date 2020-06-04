@@ -6,7 +6,6 @@ package com.mocah.mindmath.learning;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -177,17 +176,17 @@ public class MainLearningProcess {
 	public static void main(String[] args) {
 		Tree tree = null;
 		Gson gson = new Gson();
-		
+
 		// initialize ontology file
 		try {
-		    OWLparserRepo.owldata = LocalRouteRepository.readFileasString(LocalRoute.OntologyRoute);
+			OWLparserRepo.owldata = LocalRouteRepository.readFileasString(LocalRoute.OntologyRoute);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		Reader reader = LocalRouteRepository.readFileasReader(LocalRoute.DecisionTreeRoute);
-		
+
 		// Convert JSON File to Java Object
 		tree = gson.fromJson(reader, Tree.class);
 
@@ -317,7 +316,7 @@ public class MainLearningProcess {
 				// 1er demande Fdbck (et suivantes)
 				IAction action = qLearning.step(state);
 
-				// 2eme demande				
+				// 2eme demande
 				double reward = testEnv.step((GrilleAction) action);
 
 				IState newState = testEnv.getCurrentState();

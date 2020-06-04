@@ -33,6 +33,17 @@ public class QLearning extends AbstractLearning {
 		generateMatrix(states, actions);
 	}
 
+	public QLearning(IPolicy policy, Map<IState, List<IValue>> qValues) {
+		this(policy, qValues, 0.9, 0.75);
+	}
+
+	public QLearning(IPolicy policy, Map<IState, List<IValue>> qValues, double alpha, double gamma) {
+		super(policy);
+		this.qValues = qValues;
+		this.alpha = alpha;
+		this.gamma = gamma;
+	}
+
 	private void generateMatrix(List<? extends IState> states, List<? extends IAction> actions) {
 		this.qValues = new HashMap<>();
 
