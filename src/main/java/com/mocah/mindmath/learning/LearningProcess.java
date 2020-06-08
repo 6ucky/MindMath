@@ -30,14 +30,23 @@ import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
+import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
 public class LearningProcess {
+	/**
+	 *
+	 */
+	// TODO other way of storage -> due to an idea of using multiple Qlearning
+	// instances (ie one for each domain/generator/familly...)
 	private static ILearning learning;
 
+	/**
+	 *
+	 */
 	public static void initLearningProcess() {
 		// 1 Check/restore existing values
 		// TODO after export/import system done
@@ -76,6 +85,48 @@ public class LearningProcess {
 		}
 	}
 
+	/**
+	 * Same as calling <code>makeDecision(task, null, null)</code>
+	 * 
+	 * @param task
+	 */
+	public static void makeDecision(Task task) {
+		makeDecision(task, null, null);
+	}
+
+	/**
+	 * @param task
+	 * @param previousTask
+	 * @param previousAction
+	 * @return
+	 */
+	public static IAction makeDecision(Task task, Task previousTask, IAction previousAction) {
+		// 1 generate current state
+		IState newState = null;
+		// TODO
+
+		// 2 calc reward
+		if (previousTask != null) {
+			// generate previous task
+			IState oldState = null;
+			// TODO
+			// calc reward
+			double reward = 0;
+			// TODO
+			// learn
+			learning.learn(oldState, previousAction, reward, newState);
+		}
+
+		// 3 choose action
+		IAction action = learning.step(newState);
+
+		return action;
+	}
+
+	/**
+	 * @param tree
+	 * @return
+	 */
 	private static List<Branch> decisionTreeDFS(Tree tree) {
 		DeepFirstSearch dfs = new DeepFirstSearch(tree);
 
@@ -87,6 +138,12 @@ public class LearningProcess {
 		return branches;
 	}
 
+	/**
+	 * @param dfs
+	 * @param node
+	 * @param branches
+	 * @param currentBranch
+	 */
 	private static void goDeep(DeepFirstSearch dfs, Node node, List<Branch> branches, Branch currentBranch) {
 		if (node != null) {
 			dfs.visitNode(node);
@@ -123,6 +180,10 @@ public class LearningProcess {
 		}
 	}
 
+	/**
+	 * @param branches
+	 * @return
+	 */
 	private static Map<IState, List<IValue>> computeBranches(List<Branch> branches) {
 		Map<IState, List<IValue>> qValues = new HashMap<>();
 
@@ -133,6 +194,10 @@ public class LearningProcess {
 		return qValues;
 	}
 
+	/**
+	 * @param qValues
+	 * @param branch
+	 */
 	private static void computeBranch(Map<IState, List<IValue>> qValues, Branch branch) {
 		List<Node> state = branch.getStateNodes();
 		Node decision = branch.getDecisionNode();
