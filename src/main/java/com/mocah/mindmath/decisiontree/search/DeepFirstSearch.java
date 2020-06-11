@@ -12,7 +12,7 @@ import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.Tree;
 
 /**
- * @author tsimonfine
+ * @author Thibaut SIMON-FINE
  *
  */
 public class DeepFirstSearch extends TreeSearch {

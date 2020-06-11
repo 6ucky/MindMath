@@ -12,7 +12,7 @@ import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.Tree;
 
 /**
- * @author tsimonfine
+ * @author Thibaut SIMON-FINE
  *
  */
 public class BreadthFirstSearch extends TreeSearch {
@@ -33,7 +33,7 @@ public class BreadthFirstSearch extends TreeSearch {
 
 				if (n != null) {
 					open.offerLast(n);
-					this.opened.offerFirst(n);
+					this.opened.offerLast(n);
 				}
 			}
 		}
