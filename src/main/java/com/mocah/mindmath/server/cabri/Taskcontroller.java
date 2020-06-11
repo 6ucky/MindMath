@@ -1,22 +1,24 @@
 package com.mocah.mindmath.server.cabri;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -24,8 +26,7 @@ import com.google.gson.JsonParser;
 import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.Tree;
 import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
-import com.mocah.mindmath.parser.ParserFactory;
-import com.mocah.mindmath.parser.jsonparser.JsonParseCustomException;
+import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLogs;
@@ -36,6 +37,7 @@ import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
+import com.mocah.mindmath.server.cabri.feedback.GeneralHTML;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 /**
@@ -67,11 +69,12 @@ public class Taskcontroller {
 	 * @param data Receive JSON file as string
 	 * @param auth authorization headers
 	 * @return feedback message
+	 * @throws IOException 
 	 * @throws JsonParseCustomException 
 	 */
 	@PostMapping(path = "/task", consumes = "application/json")
 	public ResponseEntity<String> addtask(@RequestHeader("Version-LIP6") String version, @RequestHeader("Authorization") String auth,
-			@RequestBody String data) throws JsonParseCustomException {
+			@RequestBody String data) throws JsonParserCustomException, IOException {
 		if(!checkauth(auth))
 		{
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
@@ -87,6 +90,7 @@ public class Taskcontroller {
 			// TODO call Q-learning algorithm
 			
 		}
+		
 		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID));
 		Gson gson = new Gson();
 		return new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.OK);
@@ -126,7 +130,7 @@ public class Taskcontroller {
 	 * @throws JsonParseCustomException 
 	 */
 	@PostMapping("/lltest")
-	public ResponseEntity<String> testLearningLocker(@RequestBody String data, @RequestHeader("Authorization") String auth) throws JsonParseCustomException{
+	public ResponseEntity<String> testLearningLocker(@RequestBody String data, @RequestHeader("Authorization") String auth) throws JsonParserCustomException{
 		if(!auth.equals("test"))
 		{
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");

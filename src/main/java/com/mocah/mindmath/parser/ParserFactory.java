@@ -1,9 +1,9 @@
 package com.mocah.mindmath.parser;
 
-import com.mocah.mindmath.parser.jsonparser.JsonParseCustomException;
+import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 
 public interface ParserFactory <Object>{
 
-	public Object parse(String data) throws JsonParseCustomException;
+	public Object parse(String data) throws JsonParserCustomException;
 
 }

@@ -23,14 +23,14 @@ public class LearningTest {
 		//create mock
 		feedback = mock(Feedbackjson.class);
 		
-		feedback.getId();
+		feedback.getIdFbCabri();
 		//verify getId method was called
-		verify(feedback).getId();
+		verify(feedback).getIdFbCabri();
 		
 		// define return value for method
-		when(feedback.getId()).thenReturn("100");
-		assertEquals(feedback.getId(), "100");// Junit
+		when(feedback.getIdFbCabri()).thenReturn("100");
+		assertEquals(feedback.getIdFbCabri(), "100");// Junit
 //		assertThat(feedback.getId(), equalTo("100"));// Hamcrest
-		assertThat(feedback.getId()).as("check feedback id.").isEqualTo("100").isNotEmpty().isNotEqualTo("200"); // AssertJ
+		assertThat(feedback.getIdFbCabri()).as("check feedback id.").isEqualTo("100").isNotEmpty().isNotEqualTo("200"); // AssertJ
 	}
 }

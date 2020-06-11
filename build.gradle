@@ -48,6 +48,8 @@ dependencies {
 	
 	implementation 'it.unibo.alice.tuprolog:tuprolog:3.3.0'
 	
+	implementation 'com.github.spullara.mustache.java:compiler:0.9.6'
+	
 	springAutoConfig 'org.springframework.boot:spring-boot-autoconfigure'
 	
 	//implementation('org.springframework.boot:spring-boot-starter-test') {
