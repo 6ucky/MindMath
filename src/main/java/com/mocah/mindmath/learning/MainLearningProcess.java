@@ -18,6 +18,7 @@ import com.mocah.mindmath.decisiontree.Branch;
 import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.NodeType;
 import com.mocah.mindmath.decisiontree.Tree;
+import com.mocah.mindmath.decisiontree.search.BreadthFirstSearch;
 import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.policies.EpsilonGreedy;
@@ -35,6 +36,7 @@ import com.mocah.mindmath.learning.ztest.TypeEtat;
 import com.mocah.mindmath.parser.owlparser.OWLparserRepo;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
+import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
@@ -56,7 +58,7 @@ public class MainLearningProcess {
 		List<Branch> branches = new ArrayList<>();
 
 		Node node = tree.getRoot();
-		goDeep(dfs, node, branches, new Branch());
+		goDeepDFS(dfs, node, branches, new Branch());
 
 		// TODO for test purpose
 		System.out.println("Visit order: " + dfs.getVisitedNodes());
@@ -65,7 +67,7 @@ public class MainLearningProcess {
 		computeBranches(branches);
 	}
 
-	private static void goDeep(DeepFirstSearch dfs, Node node, List<Branch> branches, Branch currentBranch) {
+	private static void goDeepDFS(DeepFirstSearch dfs, Node node, List<Branch> branches, Branch currentBranch) {
 		if (node != null) {
 			dfs.visitNode(node);
 
@@ -99,7 +101,7 @@ public class MainLearningProcess {
 						extbranch = new Branch(currentBranch);
 					}
 
-					goDeep(dfs, child, branches, extbranch);
+					goDeepDFS(dfs, child, branches, extbranch);
 				}
 			}
 		}
@@ -155,19 +157,54 @@ public class MainLearningProcess {
 		qValues.put(s, values);
 	}
 
-	private static void decisionTreeBFS(Tree tree) {
-		DeepFirstSearch dfs = new DeepFirstSearch(tree);
-
-		List<Branch> branches = new ArrayList<>();
+	private static void decisionTreeBFS(Tree tree) throws IOException, InvalidTheoryException {
+		BreadthFirstSearch bfs = new BreadthFirstSearch(tree);
 
 		Node node = tree.getRoot();
-		goDeep(dfs, node, branches, new Branch());
+		IState state = new State();
 
-		// TODO for test purpose
-		System.out.println("Visit order: " + dfs.getVisitedNodes());
-		System.out.println("Computed branches : " + branches);
+		InputStream input = LocalRouteRepository.readFileasInputStream(LocalRoute.PrologTestRoute);
+		Theory tr = new Theory(input);
+		Prolog pg = new Prolog();
+		pg.setTheory(tr);
 
-		computeBranches(branches);
+		stateInterprete(bfs, node, state, pg);
+	}
+
+	private static void stateInterprete(BreadthFirstSearch bfs, Node node, IState state, Prolog pg) {
+		if (node != null) {
+			bfs.visitNode(node);
+			Deque<Node> opened = bfs.open(node);
+
+			switch (node.getType()) {
+			case STATE:
+				if (opened.isEmpty()) {
+					//
+				} else {
+					while (!opened.isEmpty()) {
+						Node child = opened.pollFirst();
+
+//						Branch extbranch = currentBranch;
+//						if (node.getType() == NodeType.STATE) {
+//							extbranch = new Branch(currentBranch);
+//						}
+//
+//						goDeepDFS(dfs, child, branches, extbranch);
+					}
+				}
+				break;
+
+			case DECISION:
+			case FEEDBACK:
+				// TODO
+				break;
+
+			default:
+				// TODO Unknown node
+				break;
+			}
+
+		}
 	}
 
 	/**
@@ -233,6 +270,16 @@ public class MainLearningProcess {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		} catch (NoMoreSolutionException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+
+		Task t = new Task("1", null, null, null, null, null);
+		try {
+			System.out.println(t.getFieldValue("id"));
+			System.out.println(t.getFieldValue("task"));
+			System.out.println(t.getFieldValue("none"));
+		} catch (NoSuchFieldException | SecurityException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
