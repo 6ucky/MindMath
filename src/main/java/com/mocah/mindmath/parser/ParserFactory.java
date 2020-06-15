@@ -4,6 +4,6 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 
 public interface ParserFactory <Object>{
 
-	public Object parse(String data) throws JsonParserCustomException;
+	public Object parse(String data, String version) throws JsonParserCustomException;
 
 }

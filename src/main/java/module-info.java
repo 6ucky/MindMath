@@ -23,6 +23,8 @@ open module com.mocah.mindmath {
 	requires org.apache.httpcomponents.httpclient;
 	requires transitive com.google.gson;
 	requires org.apache.jena.core;
+	requires com.github.mustachejava;
+	
 	
 	//test requirements
 	requires spring.boot.test;
@@ -32,5 +34,4 @@ open module com.mocah.mindmath {
 	requires spring.test;
 	requires org.hamcrest;
 	requires org.mockito;
-	requires com.github.mustachejava;
 }

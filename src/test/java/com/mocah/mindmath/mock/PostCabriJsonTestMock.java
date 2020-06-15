@@ -75,12 +75,12 @@ public class PostCabriJsonTestMock {
 	@Test
 	public void postCabriShouldReturnFeedbackMessage() throws Exception {
 		//check methods were called with given arguments
-		service.addtask("1.0", "mocah", jsonfile);
-		verify(service).addtask("1.0", "mocah", jsonfile);
+		service.addtask("mocah", jsonfile);
+		verify(service).addtask("mocah", jsonfile);
 		
 		Gson gson = new Gson();
 		//specify how a mock should behave and stub method calls
-		when(service.addtask("1.0", "mocah", jsonfile)).thenReturn(new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.OK));
+		when(service.addtask("mocah", jsonfile)).thenReturn(new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.OK));
 		
 		HttpHeaders headers = new HttpHeaders();
 		// header as chart form
