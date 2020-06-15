@@ -1,7 +1,6 @@
 package com.mocah.mindmath.server.cabri.jsondata;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import javax.persistence.OneToOne;
  */
 
 @Entity
-public class Task implements Serializable {
+public class Task extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = 4790322015762458488L;
 
@@ -39,6 +38,7 @@ public class Task implements Serializable {
 
 	// empty object
 	public Task() {
+		super();
 		List<Log> emptylist = new ArrayList<>();
 		this.log = emptylist;
 		this.params = new Params("");
@@ -49,6 +49,7 @@ public class Task implements Serializable {
 	}
 
 	public Task(String id, String task, String trigger, Sensors sensors, Params params, List<Log> log) {
+		super();
 		this.id = id;
 		this.task = task;
 		this.trigger = trigger;
@@ -80,53 +81,4 @@ public class Task implements Serializable {
 	public List<Log> getLog() {
 		return log;
 	}
-
-	/**
-	 * Get a field value from this Task object
-	 *
-	 * @param fieldName the name of the field
-	 * @return the {@code Object} value for the specified field
-	 * @throws NoSuchFieldException if a field with the specified name is not found.
-	 * @throws NullPointerException If {@code fieldName} is {@code null}
-	 * @throws SecurityException    If a security manager, <i>s</i>, is present and
-	 *                              any of the following conditions is met:
-	 *
-	 *                              <ul>
-	 *
-	 *                              <li>the caller's class loader is not the same as
-	 *                              the class loader of this class and invocation of
-	 *                              {@link SecurityManager#checkPermission
-	 *                              s.checkPermission} method with
-	 *                              {@code RuntimePermission("accessDeclaredMembers")}
-	 *                              denies access to the declared field
-	 *
-	 *                              <li>the caller's class loader is not the same as
-	 *                              or an ancestor of the class loader for the
-	 *                              current class and invocation of
-	 *                              {@link SecurityManager#checkPackageAccess
-	 *                              s.checkPackageAccess()} denies access to the
-	 *                              package of this class
-	 *
-	 *                              </ul>
-	 */
-	public Object getFieldValue(String fieldName) throws NoSuchFieldException, SecurityException {
-		Class<?> c = getClass();
-
-		Field f = c.getDeclaredField(fieldName);
-//		f.setAccessible(true);
-
-		String value = null;
-		try {
-			value = (String) f.get(this);
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			// TODO Bloc catch généré automatiquement
-			// Note:
-			// IllegalArgumentException & IllegalAccessException shouldn't be thrown since
-			// we always access to an existing class and fieldn owned by the class itself
-			e.printStackTrace();
-		}
-
-		return value;
-	}
-
 }

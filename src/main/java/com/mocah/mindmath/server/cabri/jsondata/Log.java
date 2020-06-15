@@ -6,41 +6,43 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * @author	Yan Wang
- * @since	21/02/2020
+ * @author Yan Wang
+ * @since 21/02/2020
  */
 
 @Entity
-public class Log implements Serializable{
+public class Log extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = 6036741035696456506L;
 
 	@Id
 	private String id;
-	
+
 	private final String time;
-	
+
 	private final String type;
-	
+
 	private final String name;
-	
+
 	private final String action;
-	
+
 	// empty object
 	public Log() {
+		super();
 		this.id = null;
 		this.time = null;
 		this.name = null;
 		this.action = null;
 		this.type = null;
 	}
-	
+
 	public Log(String id) {
 		this();
 		this.id = id;
 	}
-	
+
 	public Log(String id, String time, String type, String name, String action) {
+		super();
 		this.id = id;
 		this.time = time;
 		this.type = type;

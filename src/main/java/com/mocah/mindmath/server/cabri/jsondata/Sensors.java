@@ -6,46 +6,47 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * @author	Yan Wang
- * @since	21/02/2020
+ * @author Yan Wang
+ * @since 21/02/2020
  */
 
 @Entity
-public class Sensors implements Serializable{
+public class Sensors extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = 7791961059918284422L;
 
 	@Id
 	private String id;
-	
+
 	private final String capteur_bool_RF_CO2_1;
-	
+
 	private final String capteur_bool_RF_CO2_2;
-	
+
 	private final String capteur_bool_RF_CO2_3;
-	
+
 	private final String capteur_bool_RJ;
-	
+
 	private final String capteur_nb_temps;
-	
+
 	private final String capteur_nb_valider;
-	
+
 	private final String capteur_nb_effacer;
-	
+
 	private final String capteur_nb_aide;
-	
+
 	private final String domain;
-	
+
 	private final String generator;
-	
+
 	private final String taskFamily;
-	
+
 	private final String correctAnswer;
-	
+
 	private final String codeError;
-	
+
 	// empty object
 	public Sensors() {
+		super();
 		this.id = null;
 		this.capteur_bool_RF_CO2_2 = null;
 		this.capteur_bool_RF_CO2_1 = null;
@@ -61,15 +62,17 @@ public class Sensors implements Serializable{
 		this.codeError = null;
 		this.capteur_nb_valider = null;
 	}
-	
+
 	public Sensors(String id) {
 		this();
 		this.id = id;
 	}
-	
+
 	public Sensors(String id, String capteur_bool_RF_CO2_1, String capteur_bool_RF_CO2_2, String capteur_bool_RF_CO2_3,
-			String capteur_bool_RJ, String capteur_nb_temps, String capteur_nb_valider, String capteur_nb_effacer, String capteur_nb_aide,
-			String domain, String generator, String taskFamily, String correctAnswer, String codeError) {
+			String capteur_bool_RJ, String capteur_nb_temps, String capteur_nb_valider, String capteur_nb_effacer,
+			String capteur_nb_aide, String domain, String generator, String taskFamily, String correctAnswer,
+			String codeError) {
+		super();
 		this.id = id;
 		this.capteur_bool_RF_CO2_1 = capteur_bool_RF_CO2_1;
 		this.capteur_bool_RF_CO2_2 = capteur_bool_RF_CO2_2;

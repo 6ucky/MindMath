@@ -4,45 +4,45 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
-
 
 /**
- * @author	Yan Wang
- * @since	21/02/2020
+ * @author Yan Wang
+ * @since 21/02/2020
  */
 
 @Entity
-public class Params implements Serializable{
+public class Params extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = -6192516976316035400L;
 
 	@Id
 	private String id;
-	
+
 	private final String VT_2_1;
-	
+
 	private final String VT_2_2;
-	
+
 	private final String VT_2_3;
-	
+
 	private final String VT_2_4;
-	
+
 	// empty object
 	public Params() {
+		super();
 		this.id = null;
 		this.VT_2_4 = null;
 		this.VT_2_2 = null;
 		this.VT_2_3 = null;
 		this.VT_2_1 = null;
 	}
-	
+
 	public Params(String id) {
 		this();
 		this.id = id;
 	}
-	
+
 	public Params(String id, String VT_2_1, String VT_2_2, String VT_2_3, String VT_2_4) {
+		super();
 		this.id = id;
 		this.VT_2_1 = VT_2_1;
 		this.VT_2_2 = VT_2_2;
