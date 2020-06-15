@@ -1,9 +1,8 @@
 package com.mocah.mindmath.parser.jsonparser;
 
-import java.util.ArrayList;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.ParserFactory;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
@@ -113,9 +112,14 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 	}
 
 	@Override
-	public Task parse(String data) throws JsonParserCustomException {
+	public Task parse(String data, String version) throws JsonParserCustomException {
 		
 		Task tasks = new Task();
+		
+		//there is only one version currently
+		if(!version.equals("v1.0"))
+			return tasks;
+		
 		if(rootObject.has(TASK_ID))
 		{
 			JsonParserSensor sensorparser = new JsonParserSensor(data);
