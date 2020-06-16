@@ -43,6 +43,8 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	private final String correctAnswer;
 
 	private final String codeError;
+	
+	private final String activityMode;
 
 	// empty object
 	public Sensors() {
@@ -61,6 +63,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		this.correctAnswer = null;
 		this.codeError = null;
 		this.capteur_nb_valider = null;
+		this.activityMode = null;
 	}
 
 	public Sensors(String id) {
@@ -71,7 +74,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	public Sensors(String id, String capteur_bool_RF_CO2_1, String capteur_bool_RF_CO2_2, String capteur_bool_RF_CO2_3,
 			String capteur_bool_RJ, String capteur_nb_temps, String capteur_nb_valider, String capteur_nb_effacer,
 			String capteur_nb_aide, String domain, String generator, String taskFamily, String correctAnswer,
-			String codeError) {
+			String codeError, String activityMode) {
 		super();
 		this.id = id;
 		this.capteur_bool_RF_CO2_1 = capteur_bool_RF_CO2_1;
@@ -87,6 +90,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		this.taskFamily = taskFamily;
 		this.correctAnswer = correctAnswer;
 		this.codeError = codeError;
+		this.activityMode = activityMode;
 	}
 
 	public String isCapteur_bool_RF_CO2_1() {
@@ -143,5 +147,9 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	public String getCodeError() {
 		return codeError;
+	}
+
+	public String getActivityMode() {
+		return activityMode;
 	}
 }
