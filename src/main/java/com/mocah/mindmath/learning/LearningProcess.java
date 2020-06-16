@@ -47,7 +47,7 @@ public class LearningProcess {
 	/**
 	 *
 	 */
-	public static void initLearningProcess() {
+	public static ILearning initLearningProcess() {
 		// 1 Check/restore existing values
 		// TODO after export/import system done
 
@@ -83,11 +83,13 @@ public class LearningProcess {
 				// TODO error
 			}
 		}
+
+		return learning;
 	}
 
 	/**
 	 * Same as calling <code>makeDecision(task, null, null)</code>
-	 * 
+	 *
 	 * @param task
 	 */
 	public static void makeDecision(Task task) {
@@ -109,7 +111,7 @@ public class LearningProcess {
 		if (previousTask != null) {
 			// generate previous task
 			IState oldState = null;
-			// TODO
+			// TODO same as 1
 			// calc reward
 			double reward = 0;
 			// TODO

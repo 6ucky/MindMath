@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -15,11 +16,15 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.mocah.mindmath.decisiontree.Branch;
+import com.mocah.mindmath.decisiontree.Child;
+import com.mocah.mindmath.decisiontree.Edge;
 import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.NodeType;
 import com.mocah.mindmath.decisiontree.Tree;
+import com.mocah.mindmath.decisiontree.Vars;
 import com.mocah.mindmath.decisiontree.search.BreadthFirstSearch;
 import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
+import com.mocah.mindmath.learning.algorithms.ILearning;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.policies.EpsilonGreedy;
 import com.mocah.mindmath.learning.policies.Greedy;
@@ -33,9 +38,15 @@ import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.learning.ztest.Grille;
 import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
+import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
+import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
+import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.owlparser.OWLparserRepo;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
+import com.mocah.mindmath.server.cabri.jsondata.Log;
+import com.mocah.mindmath.server.cabri.jsondata.Params;
+import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 import alice.tuprolog.InvalidTheoryException;
@@ -157,39 +168,90 @@ public class MainLearningProcess {
 		qValues.put(s, values);
 	}
 
-	private static void decisionTreeBFS(Tree tree) throws IOException, InvalidTheoryException {
+	private static IState decisionTreeBFS(Tree tree, Task task) throws IOException, InvalidTheoryException,
+			MalformedGoalException, NoSuchFieldException, SecurityException, NoSolutionException, NoSuchMethodException,
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException, NullPointerException {
 		BreadthFirstSearch bfs = new BreadthFirstSearch(tree);
 
 		Node node = tree.getRoot();
-		IState state = new State();
+		State state = new State();
 
 		InputStream input = LocalRouteRepository.readFileasInputStream(LocalRoute.PrologTestRoute);
 		Theory tr = new Theory(input);
 		Prolog pg = new Prolog();
 		pg.setTheory(tr);
 
-		stateInterprete(bfs, node, state, pg);
+		stateInterprete(bfs, node, task, state, pg);
+
+		return state;
 	}
 
-	private static void stateInterprete(BreadthFirstSearch bfs, Node node, IState state, Prolog pg) {
+	private static void stateInterprete(BreadthFirstSearch bfs, Node node, Task task, State state, Prolog pg)
+			throws MalformedGoalException, NoSuchFieldException, SecurityException, NoSolutionException,
+			NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NullPointerException {
 		if (node != null) {
 			bfs.visitNode(node);
-			Deque<Node> opened = bfs.open(node);
 
 			switch (node.getType()) {
 			case STATE:
+				Deque<Node> opened = bfs.open(node);
+
 				if (opened.isEmpty()) {
 					//
 				} else {
 					while (!opened.isEmpty()) {
 						Node child = opened.pollFirst();
+						System.out.println("TEST edge to " + child.getId());
 
-//						Branch extbranch = currentBranch;
-//						if (node.getType() == NodeType.STATE) {
-//							extbranch = new Branch(currentBranch);
+//						if (child.getType() == NodeType.STATE) {
+						Child c = node.getChild(child);
+						Edge e = c.getEdge();
+
+						String query = e.getQuery();
+						for (Vars var : e.getVars()) {
+							String replacement = "ERROR";
+
+							switch (var.getSource()) {
+							case LOG:
+								List<Log> logs = task.getLog();
+								break;
+							case PARAM:
+								Params params = task.getParams();
+								replacement = Extractor.getFromParams(params, var.getKey());
+								break;
+							case SENSOR:
+								Sensors sensors = task.getSensors();
+								replacement = Extractor.getFromSensors(sensors, var.getKey());
+								break;
+							case TASK:
+								replacement = Extractor.getFromTask(task, var.getKey());
+								break;
+							case CUSTOM_METHOD:
+								replacement = Extractor.getFromMethod(task, var.getKey());
+								break;
+							default:
+								break;
+							}
+
+							query = query.replaceFirst("_VAR_", replacement);
+						}
+
+						System.out.println(query);
+						SolveInfo info = pg.solve(query);
+						if (info.isSuccess()) {
+							System.out.println("solution: " + info.getSolution() + " - bindings: " + info);
+							System.out.println(info.getSolution().getTerm());
+
+							state.putParam(node.getId(), e.getValue());
+
+							stateInterprete(bfs, child, task, state, pg);
+
+							break;
+						}
+//						} else {
+//							//
 //						}
-//
-//						goDeepDFS(dfs, child, branches, extbranch);
 					}
 				}
 				break;
@@ -217,9 +279,9 @@ public class MainLearningProcess {
 		// initialize ontology file
 		try {
 			OWLparserRepo.owldata = LocalRouteRepository.readFileasString(LocalRoute.OntologyRoute);
-		} catch (IOException e1) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
 
 		Reader reader = LocalRouteRepository.readFileasReader(LocalRoute.DecisionTreeRoute);
@@ -283,6 +345,40 @@ public class MainLearningProcess {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
+
+		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":true,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"codeError\":\"ce_err5\",\"ActivityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
+//		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":false,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"codeError\":\"ce_err5\",\"ActivityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
+//		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":false,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"ActivityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
+
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+
+		IState readedState = null;
+		try {
+			jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
+			Task task = jsonparser.parse(data, "v1.0");
+			readedState = decisionTreeBFS(tree, task);
+
+		} catch (JsonParserCustomException | InvalidTheoryException | MalformedGoalException | NoSuchFieldException
+				| SecurityException | IOException | NoSolutionException | NoSuchMethodException | IllegalAccessException
+				| IllegalArgumentException | InvocationTargetException | NullPointerException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+
+		System.out.println(readedState);
+		System.out.println("done\n");
+
+		ILearning learning = LearningProcess.initLearningProcess();
+		Map<IState, List<IValue>> qstates = ((QLearning) learning).getQValues();
+		for (IState s : qstates.keySet()) {
+			if (s.equals(readedState) && readedState.equals(s)) {
+				System.out.println(readedState + " equals " + s);
+				System.out.println(readedState.hashCode() + " equals " + s.hashCode());
+				System.out.println(qstates.get(readedState));
+			}
+		}
+		IAction actionTest = learning.step(readedState);
+		System.out.println("\nACTION choosen: " + actionTest);
 
 		// Comment to test state equals
 		if (true)
