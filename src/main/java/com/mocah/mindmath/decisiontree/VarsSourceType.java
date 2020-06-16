@@ -10,15 +10,18 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 public enum VarsSourceType {
-	@SerializedName("Task")
+	@SerializedName(value = "Task", alternate = { "task" })
 	TASK,
 
-	@SerializedName("Sensor")
+	@SerializedName(value = "Sensor", alternate = { "sensor" })
 	SENSOR,
 
-	@SerializedName("Param")
+	@SerializedName(value = "Param", alternate = { "param" })
 	PARAM,
 
-	@SerializedName("Log")
-	LOG
+	@SerializedName(value = "Log", alternate = { "log" })
+	LOG,
+
+	@SerializedName(value = "Method", alternate = { "method" })
+	CUSTOM_METHOD
 }

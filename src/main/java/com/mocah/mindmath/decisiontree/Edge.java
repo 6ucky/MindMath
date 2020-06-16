@@ -3,6 +3,7 @@
  */
 package com.mocah.mindmath.decisiontree;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonPrimitive;
@@ -25,6 +26,9 @@ public class Edge {
 	}
 
 	public List<Vars> getVars() {
-		return vars;
+		if (vars != null)
+			return vars;
+		else
+			return new ArrayList<>();
 	}
 }

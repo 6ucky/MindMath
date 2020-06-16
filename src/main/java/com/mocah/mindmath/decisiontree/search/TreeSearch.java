@@ -12,7 +12,7 @@ import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.Tree;
 
 /**
- * @author tsimonfine
+ * @author Thibaut SIMON-FINE
  *
  */
 public abstract class TreeSearch {
@@ -33,7 +33,7 @@ public abstract class TreeSearch {
 	 * Add neighbors to the opened nodes
 	 *
 	 * @param node, the node to open
-	 * @return
+	 * @return the nodes opened
 	 */
 	protected abstract Queue<Node> open(Node node);
 
