@@ -11,7 +11,7 @@ public class StateParam<T> {
 	private T value;
 
 	/**
-	 * Instantiate with a value for the parameter
+	 * Instantiate with a value for this parameter
 	 *
 	 * @param val
 	 */
@@ -29,7 +29,7 @@ public class StateParam<T> {
 	}
 
 	/**
-	 * Get the value of the parameter
+	 * Get the value of this parameter
 	 *
 	 * @return
 	 */

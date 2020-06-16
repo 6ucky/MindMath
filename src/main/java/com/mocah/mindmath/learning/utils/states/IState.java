@@ -7,6 +7,8 @@ package com.mocah.mindmath.learning.utils.states;
 public interface IState {
 
 	@Override
-	public boolean equals(Object obj);
+	public int hashCode();
 
+	@Override
+	public boolean equals(Object obj);
 }

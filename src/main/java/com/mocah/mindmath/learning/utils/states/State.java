@@ -45,14 +45,17 @@ public class State implements IState {
 		params.put(key, new StateParam<>(val));
 	}
 
-	@Deprecated
-	public <T> T get(String key) {
-		return (T) params.get(key);
-	}
-
 	@Override
 	public String toString() {
 		return params.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((params == null) ? 0 : params.hashCode());
+		return result;
 	}
 
 	@Override
