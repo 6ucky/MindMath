@@ -1,110 +1,166 @@
 {
-  "root": "déclencheur_FB",
+  "root": "declencheur_FB",
   "nodes": [
     {
-      "nodeid": "déclencheur_FB",
+      "nodeid": "declencheur_FB",
       "nodetype": "state",
       "valuetype": "string",
       "childs": [
         {
           "edge": {
             "value": "valider",
-            "query": "equal('__VAR__','valider').",
+            "query": "equal('_VAR_','bouton-valider').",
             "vars": [
               {
-                "source": "Task",
-                "key": "trigger"
+                "source": "Method",
+                "key": "getTrigger"
               }
             ]
           },
-          "nodeid": "réponse_juste"
+          "nodeid": "reponse_juste"
         },
         {
           "edge": {
             "value": "aide",
-            "query": "equal('__VAR__','aide').",
+            "query": "equal('_VAR_','bouton-aide').",
             "vars": [
               {
-                "source": "Task",
-                "key": "trigger"
+                "source": "Method",
+                "key": "getTrigger"
               }
             ]
           },
-          "nodeid": "mode_activité_3"
-        },
-        {
-          "edge": {
-            "value": "inactivité",
-            "query": "equal('__VAR__','inactivité').",
-            "vars": [
-              {
-                "source": "Task",
-                "key": "trigger"
-              }
-            ]
-          },
-          "nodeid": "mode_activité_3"
+          "nodeid": "avant_premiere_validation"
         }
       ]
     },
     {
-      "nodeid": "réponse_juste",
+      "nodeid": "avant_premiere_validation",
+      "nodetype": "state",
+      "valuetype": "number",
+      "childs": [
+        {
+          "edge": {
+            "value": ">0",
+            "query": "strictsup(_VAR_,0).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getNbSolveTry"
+              }
+            ]
+          },
+          "nodeid": "une_erreur_type_stab"
+        },
+        {
+          "edge":  {
+            "value": "=0",
+            "query": "equal(_VAR_,0).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getNbSolveTry"
+              }
+            ]
+          },
+          "nodeid": "decision_11"
+        }
+      ]
+    },
+    {
+      "nodeid": "reponse_juste",
       "nodetype": "state",
       "valuetype": "boolean",
       "childs": [
         {
           "edge": {
             "value": true,
-            "query": "__VAR__."
+            "query": "_VAR_.",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "correctAnswer"
+              }
+            ]
           },
-          "nodeid": "plusieurs_tentatives_de_résolution"
+          "nodeid": "plusieurs_tentatives_de_resolution"
         },
         {
           "edge": {
             "value": false,
-            "query": "not(__VAR__)."
+            "query": "not(_VAR_).",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "correctAnswer"
+              }
+            ]
           },
-          "nodeid": "erreur_type_identifié"
+          "nodeid": "erreur_type_identifie"
         }
       ]
     },
     {
-      "nodeid": "plusieurs_tentatives_de_résolution",
+      "nodeid": "plusieurs_tentatives_de_resolution",
       "nodetype": "state",
       "valuetype": "number",
       "childs": [
         {
           "edge": {
             "value": ">1",
-            "query": "strictsup(__VAR__,1)"
+            "query": "strictsup(_VAR_,1).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getNbSolveTry"
+              }
+            ]
           },
-          "nodeid": "mode_activité_1"
+          "nodeid": "mode_activite_1"
         },
         {
           "edge":  {
             "value": "=1",
-            "query": "equal(__VAR__,1)"
+            "query": "equal(_VAR_,1).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getNbSolveTry"
+              }
+            ]
           },
           "nodeid": "decision_3"
         }
       ]
     },
     {
-      "nodeid": "mode_activité_1",
+      "nodeid": "mode_activite_1",
       "nodetype": "state",
       "valuetype": "number",
       "childs": [
         {
           "edge": {
             "value": "<2",
-            "query": "inf(__VAR__,2)"
+            "query": "inf(_VAR_,2).",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
           },
           "nodeid": "decision_1"
         },
         {
           "edge": {
             "value": "=2",
-            "query": "equal(__VAR__,2)"
+            "query": "equal(_VAR_,2).",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
           },
           "nodeid": "decision_2"
         }
@@ -171,49 +227,79 @@
       ]
     },
     {
-      "nodeid": "erreur_type_identifié",
+      "nodeid": "erreur_type_identifie",
       "nodetype": "state",
       "valuetype": "boolean",
       "childs": [
         {
           "edge": {
             "value": true,
-            "query": "__VAR__."
+            "query": "_VAR_.",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "isErrorIdentified"
+              }
+            ]
           },
-          "nodeid": "mode_activité_2"
+          "nodeid": "mode_activite_2"
         },
         {
           "edge": {
             "value": false,
-            "query": "not(__VAR__)."
+            "query": "not(_VAR_).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "isErrorIdentified"
+              }
+            ]
           },
-          "nodeid": "mode_activité_3"
+          "nodeid": "mode_activite_3"
         }
       ]
     },
     {
-      "nodeid": "mode_activité_2",
+      "nodeid": "mode_activite_2",
       "nodetype": "state",
       "valuetype": "number",
       "childs": [
         {
           "edge": {
             "value": "=1",
-            "query": "equal(__VAR__,1)"
+            "query": "equal(_VAR_,1)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
           },
           "nodeid": "stab_erreur_1"
         },
         {
           "edge": {
             "value": "=0",
-            "query": "equal(__VAR__,0)"
+            "query": "equal(_VAR_,0)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
           },
           "nodeid": "stab_erreur_2"
         },
         {
           "edge": {
             "value": "=2",
-            "query": "equal(__VAR__,2)"
+            "query": "equal(_VAR_,2)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
           },
           "nodeid": "stab_erreur_3"
         }
@@ -229,21 +315,21 @@
             "value": "peu stable",
             "query": "?"
           },
-          "nodeid": "decision_6"
+          "nodeid": "decision_5"
         },
         {
           "edge": {
             "value": "stable",
             "query": "?"
           },
-          "nodeid": "decision_5"
+          "nodeid": "decision_6"
         },
         {
           "edge": {
             "value": "très stable",
             "query": "?"
           },
-          "nodeid": "decision_4"
+          "nodeid": "decision_7"
         }
       ]
     },
@@ -257,14 +343,14 @@
             "value": "stable",
             "query": "?"
           },
-          "nodeid": "decision_4"
+          "nodeid": "decision_7"
         },
         {
           "edge": {
             "value": "peu stable",
             "query": "?"
           },
-          "nodeid": "decision_5"
+          "nodeid": "decision_6"
         }
       ]
     },
@@ -278,28 +364,28 @@
             "value": "très stable",
             "query": "?"
           },
-          "nodeid": "decision_4"
+          "nodeid": "decision_7"
         },
         {
           "edge": {
             "value": "stable",
             "query": "?"
           },
-          "nodeid": "decision_5"
+          "nodeid": "decision_6"
         },
         {
           "edge": {
             "value": "peu stable",
             "query": "?"
           },
-          "nodeid": "decision_6"
+          "nodeid": "decision_5"
         },
         {
           "edge": {
             "value": "pas stable",
             "query": "?"
           },
-          "nodeid": "decision_7"
+          "nodeid": "decision_4"
         }
       ]
     },
@@ -377,6 +463,156 @@
     },
     {
       "nodeid": "decision_7",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "mode_activite_3",
+      "nodetype": "state",
+      "valuetype": "number",
+      "childs": [
+        {
+          "edge": {
+            "value": "<2",
+            "query": "strictinf(_VAR_,2)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
+          },
+          "nodeid": "une_erreur_type_stab"
+        },
+        {
+          "edge": {
+            "value": "=2",
+            "query": "equal(_VAR_,2)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
+          },
+          "nodeid": "decision_10"
+        }
+      ]
+    },
+    {
+      "nodeid": "une_erreur_type_stab",
+      "nodetype": "state",
+      "valuetype": "?",
+      "childs": [
+        {
+          "edge": {
+            "value": "peu stable",
+            "query": "?"
+          },
+          "nodeid": "decision_8"
+        },
+        {
+          "edge": {
+            "value": "stable",
+            "query": "?"
+          },
+          "nodeid": "decision_9"
+        }
+      ]
+    },
+{
+      "nodeid": "decision_8",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_9",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_10",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_11",
       "nodetype": "decision",
       "childs": [
         {
