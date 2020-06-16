@@ -37,7 +37,7 @@ public class Matrixcontroller {
 	}
 	
 	//receive JSON and update the decision tree class in default version 1.0
-	@PostMapping("/")
+	@PostMapping("")
 	public ResponseEntity<String> addmatrix(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) {
 		return addmatrixv1_0(auth, data);

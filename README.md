@@ -38,6 +38,10 @@ Content-Type: application/json
 Version-LIP6: 1.0
 Authorization: mocah
 ```
+## Swagger Documentation
+```
+http://localhost:8080/swagger-ui.html
+```
 ## Infos
 
 - Class diagram build with [ObjectAid UML Explorer](https://www.objectaid.com/home)

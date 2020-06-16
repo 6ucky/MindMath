@@ -51,7 +51,7 @@ public class Taskcontroller {
 	/**
 	 * Handle POST request default version is 1.0
 	 */
-	@PostMapping(path = "/", consumes = "application/json")
+	@PostMapping(path = "", consumes = "application/json")
 	public ResponseEntity<String> addtask(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) throws JsonParserCustomException, IOException {
 		return addtaskv1_0(auth, data);
@@ -93,7 +93,7 @@ public class Taskcontroller {
 	 * Handle GET request
 	 * @return all the tasks in the repository
 	 */
-	@GetMapping("/")
+	@GetMapping("")
 	public ResponseEntity<String> getALLtask(@RequestHeader("Authorization") String auth) {
 		if(!auth.equals("test"))
 		{
@@ -107,11 +107,17 @@ public class Taskcontroller {
 		return new ResponseEntity<String>(gson.toJson(tasks), HttpStatus.FOUND);
 	}
 	
+	// the default get
+	@GetMapping("/v1.0")
+	public ResponseEntity<String> getALLtaskv1_0(@RequestHeader("Authorization") String auth) {
+		return getALLtask(auth);
+	}
+	
 	/**
 	 * Handle DELETE request
 	 * @return 
 	 */
-	@DeleteMapping(path = "/")
+	@DeleteMapping(path = "")
 	public ResponseEntity<String> cleandatabase(@RequestHeader("Authorization") String auth) {
 		if(!auth.equals("test"))
 		{
@@ -119,6 +125,12 @@ public class Taskcontroller {
 		}
 		getTaskrepository().deleteAll();
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
+	}
+	
+	// the default delete
+	@DeleteMapping(path = "/v1.0")
+	public ResponseEntity<String> cleandatabasev1_0(@RequestHeader("Authorization") String auth) {
+		return cleandatabase(auth);
 	}
 
 	/**

@@ -25,7 +25,6 @@ open module com.mocah.mindmath {
 	requires org.apache.jena.core;
 	requires com.github.mustachejava;
 	
-	
 	//test requirements
 	requires spring.boot.test;
 	requires org.junit.jupiter.api;
@@ -34,4 +33,9 @@ open module com.mocah.mindmath {
 	requires spring.test;
 	requires org.hamcrest;
 	requires org.mockito;
+	requires com.fasterxml.classmate;
+	requires springfox.assembly;
+	requires springfox.spring.web;
+	requires spring.core;
+	requires springfox.swagger2;
 }

@@ -34,7 +34,7 @@ public class Ontologycontroller {
 	}
 	
 	// Send OWL file in default version 1.0
-	@PostMapping("/")
+	@PostMapping("")
 	public ResponseEntity<String> getresourceontology(@RequestHeader("Authorization") String auth,
 			@RequestBody String data){
 		return getresourceontologyv1_0(auth, data);
