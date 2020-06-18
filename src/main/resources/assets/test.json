@@ -313,21 +313,39 @@
         {
           "edge": {
             "value": "peu stable",
-            "query": "?"
+            "query": "inf(_VAR_,0.33).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
           },
           "nodeid": "decision_5"
         },
         {
           "edge": {
             "value": "stable",
-            "query": "?"
+            "query": "strictbetween(_VAR_, 0.33, 0.66).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
           },
           "nodeid": "decision_6"
         },
         {
           "edge": {
             "value": "très stable",
-            "query": "?"
+            "query": "sup(_VAR_,0.66).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
           },
           "nodeid": "decision_7"
         }
@@ -336,19 +354,31 @@
     {
       "nodeid": "stab_erreur_2",
       "nodetype": "state",
-      "valuetype": "?",
+      "valuetype": "string",
       "childs": [
         {
           "edge": {
             "value": "stable",
-            "query": "?"
+            "query": "sup(_VAR_,0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
           },
           "nodeid": "decision_7"
         },
         {
           "edge": {
             "value": "peu stable",
-            "query": "?"
+            "query": "strictinf(_VAR_,0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
           },
           "nodeid": "decision_6"
         }
@@ -357,33 +387,57 @@
     {
       "nodeid": "stab_erreur_3",
       "nodetype": "state",
-      "valuetype": "?",
+      "valuetype": "string",
       "childs": [
         {
           "edge": {
             "value": "très stable",
-            "query": "?"
+            "query": "strictsup(_VAR_, 0.75);.",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
           },
           "nodeid": "decision_7"
         },
         {
           "edge": {
             "value": "stable",
-            "query": "?"
+            "query": "between(_VAR_, 0.5, 0.75).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
           },
           "nodeid": "decision_6"
         },
         {
           "edge": {
             "value": "peu stable",
-            "query": "?"
+            "query": "between(_VAR_, 0.25, 0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
           },
           "nodeid": "decision_5"
         },
         {
           "edge": {
             "value": "pas stable",
-            "query": "?"
+            "query": "strictinf(_VAR_,0.25).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
           },
           "nodeid": "decision_4"
         }
@@ -521,19 +575,31 @@
     {
       "nodeid": "une_erreur_type_stab",
       "nodetype": "state",
-      "valuetype": "?",
+      "valuetype": "string",
       "childs": [
         {
           "edge": {
             "value": "peu stable",
-            "query": "?"
+            "query": "strictinf(_VAR_,0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
           },
           "nodeid": "decision_8"
         },
         {
           "edge": {
             "value": "stable",
-            "query": "?"
+            "query": "sup(_VAR_,0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
           },
           "nodeid": "decision_9"
         }
