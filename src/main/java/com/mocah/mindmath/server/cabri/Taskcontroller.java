@@ -75,14 +75,10 @@ public class Taskcontroller {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
 		Task tasks = jsonparser.parse(data, "v1.0");
-		
-		
-		if (!getTaskrepository().existsById(tasks.getId())) {
-			getTaskrepository().save(tasks);
 			
-			// TODO call Q-learning algorithm
+		getTaskrepository().save(tasks);
 			
-		}
+		// TODO call Q-learning algorithm
 		
 		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID));
 		Gson gson = new Gson();
@@ -139,5 +135,24 @@ public class Taskcontroller {
 	 */
 	public Taskrepository getTaskrepository() {
 		return taskrepository;
+	}
+	
+	/**
+	 * get the previousTask from database
+	 * @return previousTask
+	 */
+	public Task getPreviousTask() {
+		List<Task> tasks = new ArrayList<>();
+		getTaskrepository().findAll().forEach(tasks::add);
+		if(tasks.size() == 0)
+			return new Task();
+		Task previoustask = new Task(0);
+		for(int i = 0; i < tasks.size(); i++)
+		{
+			if(tasks.get(i).getId() > previoustask.getId())
+				previoustask = tasks.get(i);
+		}
+		return previoustask;
+		
 	}
 }

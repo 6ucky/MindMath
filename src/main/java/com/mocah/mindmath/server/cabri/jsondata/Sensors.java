@@ -3,7 +3,10 @@ package com.mocah.mindmath.server.cabri.jsondata;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * @author Yan Wang
@@ -16,7 +19,9 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	private static final long serialVersionUID = 7791961059918284422L;
 
 	@Id
-	private String id;
+	@GeneratedValue(strategy =GenerationType.SEQUENCE,generator="sensors_id")  
+	@SequenceGenerator(name="sensors_id", sequenceName="sensors", initialValue = 1, allocationSize = 1)
+	private long id;
 
 	private final String capteur_bool_RF_CO2_1;
 
@@ -49,7 +54,6 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	// empty object
 	public Sensors() {
 		super();
-		this.id = null;
 		this.capteur_bool_RF_CO2_2 = null;
 		this.capteur_bool_RF_CO2_1 = null;
 		this.capteur_nb_effacer = null;
@@ -66,17 +70,11 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		this.activityMode = null;
 	}
 
-	public Sensors(String id) {
-		this();
-		this.id = id;
-	}
-
-	public Sensors(String id, String capteur_bool_RF_CO2_1, String capteur_bool_RF_CO2_2, String capteur_bool_RF_CO2_3,
+	public Sensors(String capteur_bool_RF_CO2_1, String capteur_bool_RF_CO2_2, String capteur_bool_RF_CO2_3,
 			String capteur_bool_RJ, String capteur_nb_temps, String capteur_nb_valider, String capteur_nb_effacer,
 			String capteur_nb_aide, String domain, String generator, String taskFamily, String correctAnswer,
 			String codeError, String activityMode) {
 		super();
-		this.id = id;
 		this.capteur_bool_RF_CO2_1 = capteur_bool_RF_CO2_1;
 		this.capteur_bool_RF_CO2_2 = capteur_bool_RF_CO2_2;
 		this.capteur_bool_RF_CO2_3 = capteur_bool_RF_CO2_3;
@@ -125,7 +123,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		return capteur_nb_aide;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 

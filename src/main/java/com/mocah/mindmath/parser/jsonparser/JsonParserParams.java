@@ -24,10 +24,10 @@ public class JsonParserParams extends JsonParserFactory {
 	}
 
 	public Params getParams() {
-		Params paramsClass = new Params(getValueforDB(super.getObject(),TASK_ID));
+		Params paramsClass = new Params();
 		if(rootObject.has(PARAMS))
 		{
-			paramsClass = new Params(getValueforDB(super.getObject(),TASK_ID), 
+			paramsClass = new Params(
 					getValueforDB(paramsObject,PARAMS_VT_2_1),
 					getValueforDB(paramsObject,PARAMS_VT_2_2),
 					getValueforDB(paramsObject,PARAMS_VT_2_3),

@@ -3,7 +3,10 @@ package com.mocah.mindmath.server.cabri.jsondata;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * @author Yan Wang
@@ -16,7 +19,9 @@ public class Params extends AbstractJsonData implements Serializable {
 	private static final long serialVersionUID = -6192516976316035400L;
 
 	@Id
-	private String id;
+	@GeneratedValue(strategy =GenerationType.SEQUENCE,generator="params_id")  
+	@SequenceGenerator(name="params_id", sequenceName="params", initialValue = 1, allocationSize = 1)
+	private long id;
 
 	private final String VT_2_1;
 
@@ -29,21 +34,14 @@ public class Params extends AbstractJsonData implements Serializable {
 	// empty object
 	public Params() {
 		super();
-		this.id = null;
 		this.VT_2_4 = null;
 		this.VT_2_2 = null;
 		this.VT_2_3 = null;
 		this.VT_2_1 = null;
 	}
 
-	public Params(String id) {
-		this();
-		this.id = id;
-	}
-
-	public Params(String id, String VT_2_1, String VT_2_2, String VT_2_3, String VT_2_4) {
+	public Params(String VT_2_1, String VT_2_2, String VT_2_3, String VT_2_4) {
 		super();
-		this.id = id;
 		this.VT_2_1 = VT_2_1;
 		this.VT_2_2 = VT_2_2;
 		this.VT_2_3 = VT_2_3;
@@ -66,7 +64,7 @@ public class Params extends AbstractJsonData implements Serializable {
 		return VT_2_4;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 

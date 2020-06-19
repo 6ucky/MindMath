@@ -3,7 +3,10 @@ package com.mocah.mindmath.server.cabri.jsondata;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * @author Yan Wang
@@ -16,7 +19,9 @@ public class Log extends AbstractJsonData implements Serializable {
 	private static final long serialVersionUID = 6036741035696456506L;
 
 	@Id
-	private String id;
+	@GeneratedValue(strategy =GenerationType.SEQUENCE,generator="logs_id")  
+	@SequenceGenerator(name="logs_id", sequenceName="logs", initialValue = 1, allocationSize = 1)
+	private long id;
 
 	private final String time;
 
@@ -29,28 +34,21 @@ public class Log extends AbstractJsonData implements Serializable {
 	// empty object
 	public Log() {
 		super();
-		this.id = null;
 		this.time = null;
 		this.name = null;
 		this.action = null;
 		this.type = null;
 	}
 
-	public Log(String id) {
-		this();
-		this.id = id;
-	}
-
-	public Log(String id, String time, String type, String name, String action) {
+	public Log(String time, String type, String name, String action) {
 		super();
-		this.id = id;
 		this.time = time;
 		this.type = type;
 		this.name = name;
 		this.action = action;
 	}
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 

@@ -32,7 +32,7 @@ public class JsonParserLogs extends JsonParserFactory{
 		for(int i = 0; i < logsObject.size(); i++)
 		{
 			JsonObject tempObject = logsObject.get(i).getAsJsonObject();
-			Log temp = new Log(getValueforDB(super.getObject(),TASK_ID) + "-" + i, 
+			Log temp = new Log( 
 					getValueforDB(tempObject,LOG_TIME),
 					getValueforDB(tempObject,LOG_TYPE),
 					getValueforDB(tempObject,LOG_NAME),
