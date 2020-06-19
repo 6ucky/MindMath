@@ -92,8 +92,8 @@ public class LearningProcess {
 	 *
 	 * @param task
 	 */
-	public static void makeDecision(Task task) {
-		makeDecision(task, null, null);
+	public static IAction makeDecision(Task task) {
+		return makeDecision(task, null, null);
 	}
 
 	/**

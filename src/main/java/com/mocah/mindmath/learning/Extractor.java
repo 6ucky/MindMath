@@ -14,9 +14,7 @@ import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 /**
- * @author tsimo
- *
- *         https://www.baeldung.com/java-method-reflection
+ * @author Thibaut SIMON-FINE
  *
  */
 public class Extractor {
@@ -121,7 +119,7 @@ public class Extractor {
 	 * @return
 	 */
 	protected static String getNbSolveTry(Task task) {
-		// TODO
+		// TODO check from LRS
 
 		return "2";
 	}
@@ -137,14 +135,37 @@ public class Extractor {
 
 		if (codeError != null && !codeError.equalsIgnoreCase("null"))
 			return "true";
-		else {
-			// TODO check LRS
-			// Si par contre, le champs codeErreur est null, on regardera les données reçues
-			// des autres élèves (sur la même famille de tâches) pour extraire l'erreur la
-			// plus fréquente
-		}
 
 		return "false";
+	}
+
+	/**
+	 * Return the actual learner error frequency for the current task <br>
+	 * Note: only for errors of the same task familly of object {@code Task}
+	 *
+	 * @param task
+	 * @return
+	 */
+	protected static String errorStabilityForLearner(Task task) {
+		// TODO
+
+		// "Stabilité de l'erreur-type élève: (Nbre de l'erreur-type) / (Nbre exercices
+		// réalisés par l'élève où l'erreur-type pouvait apparaitre)"
+
+		return "0.5";
+	}
+
+	/**
+	 * Return the error's highest frequency for all learner <br>
+	 * Note: only for errors of the same task familly of object {@code Task}
+	 *
+	 * @param task
+	 * @return
+	 */
+	protected static String mostStabErrorForLearners(Task task) {
+		// TODO
+
+		return "0.5";
 	}
 
 }
