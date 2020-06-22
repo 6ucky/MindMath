@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
+import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
 
@@ -80,7 +81,9 @@ public class Taskcontroller {
 			
 		// TODO call Q-learning algorithm
 		
-		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID));
+		JsonParserSensor sensorobject = new JsonParserSensor(data);
+		boolean correctness = jsonparser.getValueAsBoolean(sensorobject.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER);
+		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID), correctness);
 		Gson gson = new Gson();
 		return new ResponseEntity<String>(gson.toJson(responsejson), HttpStatus.OK);
 	}

@@ -24,6 +24,9 @@ open module com.mocah.mindmath {
 	requires transitive com.google.gson;
 	requires org.apache.jena.core;
 	requires com.github.mustachejava;
+	requires springfox.spring.web;
+	requires spring.core;
+	requires springfox.swagger2;
 	
 	//test requirements
 	requires spring.boot.test;
@@ -33,9 +36,4 @@ open module com.mocah.mindmath {
 	requires spring.test;
 	requires org.hamcrest;
 	requires org.mockito;
-	requires com.fasterxml.classmate;
-	requires springfox.assembly;
-	requires springfox.spring.web;
-	requires spring.core;
-	requires springfox.swagger2;
 }

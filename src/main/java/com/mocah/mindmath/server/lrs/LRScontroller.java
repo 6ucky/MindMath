@@ -1,5 +1,10 @@
 package com.mocah.mindmath.server.lrs;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +23,7 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLogs;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerKeys;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
@@ -100,4 +106,32 @@ public class LRScontroller {
 		
 		return new ResponseEntity<String>(response.toString(), HttpStatus.ACCEPTED);
 	}
+	
+//	@PostMapping("/testJXAPI")
+//	public ResponseEntity<String> testJXAPI(@RequestBody String data, @RequestHeader("Authorization") String auth) throws IOException{
+//		StatementClient client = new StatementClient(LearningLockerKeys.LRS_URI, LearningLockerKeys.USERNAME, LearningLockerKeys.PASSWORD);
+//		Statement statement = new Statement();
+//		Agent agent = new Agent();
+//		Verb verb = Verbs.experienced();
+//		agent.setMbox("mailto:test@example.com");
+//		agent.setName("Tester McTesterson");
+//		statement.setActor(agent);
+//		statement.setId(UUID.randomUUID().toString());
+//		statement.setVerb(verb);
+//		Activity a = new Activity();
+//		a.setId("http://example.com");
+//		statement.setObject(a);
+//		ActivityDefinition ad = new ActivityDefinition();
+//		ad.setChoices(new ArrayList<InteractionComponent>());
+//		InteractionComponent ic = new InteractionComponent();
+//		ic.setId("http://example.com");
+//		ic.setDescription(new HashMap<String, String>());
+//		ic.getDescription().put("en-US", "test");
+//		ad.getChoices().add(ic);
+//		ad.setInteractionType("choice");
+//		ad.setMoreInfo("http://example.com");
+//		a.setDefinition(ad);
+//		String publishedId = client.postStatement(statement);
+//		return new ResponseEntity<String>(publishedId, HttpStatus.ACCEPTED);
+//	}
 }
