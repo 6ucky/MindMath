@@ -21,7 +21,7 @@ import springfox.documentation.builders.PathSelectors;
 public class ServerApplication extends SpringBootServletInitializer  {
 	
 	private Contact yan = new Contact("Yan Wang", "https://sites.google.com/view/yanwang/introduction", "yan.wang@lip6.fr");
-	private Contact thibaut = new Contact("Thibaut SIMON-FINE", "", "");
+	private Contact thibaut = new Contact("Thibaut SIMON-FINE", "https://github.com/ThibautSF", "tsimonfine@gmail.com");
 	private Contact amel = new Contact("Amel Yessad", "https://www.lip6.fr/actualite/personnes-fiche.php?ident=P763", "amel.yessad@lip6.fr");
 	
 	@Override
