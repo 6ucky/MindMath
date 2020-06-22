@@ -1,5 +1,7 @@
 package com.mocah.mindmath.server;
 
+import java.util.Collections;
+
 import org.springframework.boot.SpringApplication;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +25,7 @@ public class ServerApplication extends SpringBootServletInitializer  {
 	private Contact yan = new Contact("Yan Wang", "https://sites.google.com/view/yanwang/introduction", "yan.wang@lip6.fr");
 	private Contact thibaut = new Contact("Thibaut SIMON-FINE", "https://github.com/ThibautSF", "tsimonfine@gmail.com");
 	private Contact amel = new Contact("Amel Yessad", "https://www.lip6.fr/actualite/personnes-fiche.php?ident=P763", "amel.yessad@lip6.fr");
+	private String hostbase = "mindmath.lip6.fr";
 	
 	@Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -39,6 +42,8 @@ public class ServerApplication extends SpringBootServletInitializer  {
 	public Docket swaggerTaskApi1_0(){
 		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2)
 				.groupName("task-api-1.0")
+				.protocols(Collections.singleton("https"))
+				.host(hostbase)
 				.select()
 					.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.cabri"))
 					.paths(PathSelectors.regex("/task/v1.0.*"))
@@ -56,6 +61,8 @@ public class ServerApplication extends SpringBootServletInitializer  {
 	public Docket swaggerMatrixApi1_0(){
 		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2)
 				.groupName("matrix-api-1.0")
+				.protocols(Collections.singleton("https"))
+				.host(hostbase)
 				.select()
 					.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.config"))
 					.paths(PathSelectors.regex("/matrix/v1.0.*"))
@@ -73,6 +80,8 @@ public class ServerApplication extends SpringBootServletInitializer  {
 	public Docket swaggerOntologyApi1_0(){
 		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2)
 				.groupName("ontology-api-1.0")
+				.protocols(Collections.singleton("https"))
+				.host(hostbase)
 				.select()
 					.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.config"))
 					.paths(PathSelectors.regex("/ontology/v1.0.*"))
@@ -90,6 +99,8 @@ public class ServerApplication extends SpringBootServletInitializer  {
 	public Docket swaggerLRSApi1_0(){
 		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2)
 				.groupName("lrs-api-1.0")
+				.protocols(Collections.singleton("https"))
+				.host(hostbase)
 				.select()
 					.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.lrs"))
 					.paths(PathSelectors.any())
