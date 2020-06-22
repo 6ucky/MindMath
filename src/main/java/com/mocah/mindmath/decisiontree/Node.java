@@ -14,7 +14,7 @@ public class Node {
 	private NodeType nodetype;
 	private ValueType valuetype;
 	private List<Child> childs;
-	private int feedback_id;
+	private String feedback_id;
 
 	/**
 	 * @return
@@ -81,14 +81,14 @@ public class Node {
 	}
 
 	/**
-	 * @return the id of the feedback, {@code -1} if call on a non feedback node or
-	 *         id not found
+	 * @return the id of the feedback, {@code null} if call on a non feedback node
+	 *         or id not found
 	 */
-	public int getFeedbackId() {
+	public String getFeedbackId() {
 		if (this.nodetype == NodeType.FEEDBACK)
 			return feedback_id;
 
-		return -1;
+		return null;
 	}
 
 	@Override

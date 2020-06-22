@@ -8,25 +8,17 @@ package com.mocah.mindmath.learning.utils.actions;
  *
  */
 public class Action implements IAction {
-	private static int COUNT = 0;
-	private int id;
-
-	/**
-	 * Action with incremental ID
-	 */
-	public Action() {
-		this(++COUNT);
-	}
+	private String id;
 
 	/**
 	 * Action with custom ID
 	 */
-	public Action(int id) {
+	public Action(String id) {
 		this.id = id;
 	}
 
 	@Override
-	public int getId() {
+	public String getId() {
 		return this.id;
 	}
 
@@ -34,7 +26,7 @@ public class Action implements IAction {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
 		return result;
 	}
 

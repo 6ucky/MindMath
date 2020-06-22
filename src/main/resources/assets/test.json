@@ -704,22 +704,22 @@
     {
       "nodeid": "feedback_renforcer_technique",
       "nodetype": "feedback",
-      "feedback_id": 1
+      "feedback_id": "1"
     },
     {
       "nodeid": "feedback_renforcer_technologie",
       "nodetype": "feedback",
-      "feedback_id": 2
+      "feedback_id": "2"
     },
     {
       "nodeid": "feedback_informer_technologie",
       "nodetype": "feedback",
-      "feedback_id": 3
+      "feedback_id": "3"
     },
     {
       "nodeid": "feedback_aide_erreur_type_technique",
       "nodetype": "feedback",
-      "feedback_id": 4
+      "feedback_id": "4"
     }
   ]
 }

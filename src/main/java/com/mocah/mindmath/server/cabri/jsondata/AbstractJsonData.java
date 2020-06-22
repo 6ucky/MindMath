@@ -46,7 +46,10 @@ public abstract class AbstractJsonData {
 
 		String value = null;
 		try {
-			value = (String) f.get(this);
+			Object o = f.get(this);
+			if (o != null) {
+				value = o.toString();
+			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Bloc catch généré automatiquement
 			// Note:

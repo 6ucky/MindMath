@@ -4,7 +4,7 @@ import com.mocah.mindmath.learning.utils.actions.IAction;
 
 public class GrilleAction implements IAction {
 	private static int COUNT = 0;
-	private int id;
+	private String id;
 
 	private TypeAction type;
 
@@ -12,12 +12,12 @@ public class GrilleAction implements IAction {
 	 * Action with incremental ID
 	 */
 	public GrilleAction(TypeAction t) {
-		this.id = ++COUNT;
+		this.id = "" + ++COUNT;
 		this.type = t;
 	}
 
 	@Override
-	public int getId() {
+	public String getId() {
 		return this.id;
 	}
 
