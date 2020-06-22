@@ -11,5 +11,5 @@ public interface IAction {
 	 *
 	 * @return an id
 	 */
-	public int getId();
+	public String getId();
 }
