@@ -27,6 +27,7 @@ open module com.mocah.mindmath {
 	requires springfox.spring.web;
 	requires spring.core;
 	requires springfox.swagger2;
+	requires springfox.assembly;
 	
 	//test requirements
 	requires spring.boot.test;
