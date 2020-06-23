@@ -37,4 +37,5 @@ open module com.mocah.mindmath {
 	requires spring.test;
 	requires org.hamcrest;
 	requires org.mockito;
+	requires bcprov.jdk16;
 }
