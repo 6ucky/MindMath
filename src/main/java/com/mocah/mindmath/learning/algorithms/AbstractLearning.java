@@ -10,6 +10,10 @@ import com.mocah.mindmath.learning.policies.IPolicy;
  *
  */
 public abstract class AbstractLearning implements ILearning {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 7120091210326629179L;
 	protected IPolicy policy;
 
 	public AbstractLearning(IPolicy policy) {

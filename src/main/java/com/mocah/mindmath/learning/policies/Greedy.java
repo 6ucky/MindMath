@@ -13,6 +13,10 @@ import com.mocah.mindmath.learning.utils.values.IValue;
  *
  */
 public class Greedy implements IPolicy {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -7467762828767906208L;
 
 	public Greedy() {
 	}

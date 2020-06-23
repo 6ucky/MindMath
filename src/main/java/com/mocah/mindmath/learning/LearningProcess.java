@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonPrimitive;
 import com.mocah.mindmath.decisiontree.Branch;
 import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.NodeType;
@@ -59,7 +60,7 @@ public class LearningProcess {
 		// get branches from decision tree
 		List<Branch> branches = decisionTreeDFS(tree);
 		// compute branches to qvalues
-		Map<IState, List<IValue>> qvalues = computeBranches(branches);
+		Map<IState, ArrayList<IValue>> qvalues = computeBranches(branches);
 
 		// 3 Compute
 		if (learning == null) {
@@ -71,7 +72,7 @@ public class LearningProcess {
 		} else {
 			// Add missing states to learning class
 			if (learning instanceof QLearning) {
-				Map<IState, List<IValue>> trainedValues = ((QLearning) learning).getQValues();
+				Map<IState, ArrayList<IValue>> trainedValues = ((QLearning) learning).getQValues();
 
 				Set<IState> newStates = new HashSet<>(qvalues.keySet());
 				newStates.removeIf(trainedValues.keySet()::contains);
@@ -186,8 +187,8 @@ public class LearningProcess {
 	 * @param branches
 	 * @return
 	 */
-	private static Map<IState, List<IValue>> computeBranches(List<Branch> branches) {
-		Map<IState, List<IValue>> qValues = new HashMap<>();
+	private static Map<IState, ArrayList<IValue>> computeBranches(List<Branch> branches) {
+		Map<IState, ArrayList<IValue>> qValues = new HashMap<>();
 
 		for (Branch branch : branches) {
 			computeBranch(qValues, branch);
@@ -200,7 +201,7 @@ public class LearningProcess {
 	 * @param qValues
 	 * @param branch
 	 */
-	private static void computeBranch(Map<IState, List<IValue>> qValues, Branch branch) {
+	private static void computeBranch(Map<IState, ArrayList<IValue>> qValues, Branch branch) {
 		List<Node> state = branch.getStateNodes();
 		Node decision = branch.getDecisionNode();
 		List<Node> feedbacks = branch.getFeedbackNodes();
@@ -212,10 +213,17 @@ public class LearningProcess {
 			Node node = state.get(i);
 			Node child = state.get(i + 1);
 
-			s.putParam(node.getId(), node.getChild(child).getEdge().getValue());
+			JsonPrimitive val = node.getChild(child).getEdge().getValue();
+			if (val.isNumber()) {
+				s.putParam(node.getId(), val.getAsNumber());
+			} else if (val.isBoolean()) {
+				s.putParam(node.getId(), val.getAsBoolean());
+			} else {
+				s.putParam(node.getId(), val.getAsString());
+			}
 		}
 
-		List<IValue> values = new ArrayList<>();
+		ArrayList<IValue> values = new ArrayList<>();
 		for (Node node : feedbacks) {
 			IAction action = new Action(node.getFeedbackId());
 			IValue qvalue = new QValue(action, decision.getChild(node).getEdge().getValue().getAsDouble());

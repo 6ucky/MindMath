@@ -14,6 +14,11 @@ import com.mocah.mindmath.learning.utils.values.IValue;
  *
  */
 public class EpsilonGreedy extends Greedy {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -2578033939328725041L;
+
 	protected double epsilon;
 	private Random rand;
 

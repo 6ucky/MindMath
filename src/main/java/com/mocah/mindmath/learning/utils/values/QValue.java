@@ -10,6 +10,11 @@ import com.mocah.mindmath.learning.utils.actions.IAction;
  *
  */
 public class QValue implements IValue {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 2706852718980606287L;
+
 	private IAction action;
 	private double value;
 

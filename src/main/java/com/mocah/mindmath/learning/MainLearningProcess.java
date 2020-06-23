@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonPrimitive;
 import com.mocah.mindmath.decisiontree.Branch;
 import com.mocah.mindmath.decisiontree.Child;
 import com.mocah.mindmath.decisiontree.Edge;
@@ -154,7 +155,14 @@ public class MainLearningProcess {
 			Node node = state.get(i);
 			Node child = state.get(i + 1);
 
-			s.putParam(node.getId(), node.getChild(child).getEdge().getValue());
+			JsonPrimitive val = node.getChild(child).getEdge().getValue();
+			if (val.isNumber()) {
+				s.putParam(node.getId(), val.getAsNumber());
+			} else if (val.isBoolean()) {
+				s.putParam(node.getId(), val.getAsBoolean());
+			} else {
+				s.putParam(node.getId(), val.getAsString());
+			}
 		}
 
 		List<IValue> values = new ArrayList<>();
@@ -243,7 +251,14 @@ public class MainLearningProcess {
 							System.out.println("solution: " + info.getSolution() + " - bindings: " + info);
 							System.out.println(info.getSolution().getTerm());
 
-							state.putParam(node.getId(), e.getValue());
+							JsonPrimitive val = e.getValue();
+							if (val.isNumber()) {
+								state.putParam(node.getId(), val.getAsNumber());
+							} else if (val.isBoolean()) {
+								state.putParam(node.getId(), val.getAsBoolean());
+							} else {
+								state.putParam(node.getId(), val.getAsString());
+							}
 
 							stateInterprete(bfs, child, task, state, pg);
 
@@ -369,7 +384,7 @@ public class MainLearningProcess {
 		System.out.println("done\n");
 
 		ILearning learning = LearningProcess.initLearningProcess();
-		Map<IState, List<IValue>> qstates = ((QLearning) learning).getQValues();
+		Map<IState, ArrayList<IValue>> qstates = ((QLearning) learning).getQValues();
 		for (IState s : qstates.keySet()) {
 			if (s.equals(readedState) && readedState.equals(s)) {
 				System.out.println(readedState + " equals " + s);
@@ -474,7 +489,7 @@ public class MainLearningProcess {
 			}
 		}
 
-		Map<IState, List<IValue>> qValues = qLearning.getQValues();
+		Map<IState, ArrayList<IValue>> qValues = qLearning.getQValues();
 		String res = "";
 
 		for (IState state : testEnv.getStates()) {

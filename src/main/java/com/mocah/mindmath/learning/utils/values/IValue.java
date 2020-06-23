@@ -1,12 +1,14 @@
 package com.mocah.mindmath.learning.utils.values;
 
+import java.io.Serializable;
+
 import com.mocah.mindmath.learning.utils.actions.IAction;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
-public interface IValue {
+public interface IValue extends Serializable {
 
 	/**
 	 * Get the action associated with the value

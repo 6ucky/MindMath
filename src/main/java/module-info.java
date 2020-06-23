@@ -1,11 +1,11 @@
 open module com.mocah.mindmath {
-	
+
 	exports com.mocah.mindmath.server;
 	exports com.mocah.mindmath.server.cabri;
 	exports com.mocah.mindmath.server.cabri.jsondata;
 
-	exports com.mocah.mindmath.learning;
 	exports com.mocah.mindmath.decisiontree;
+	exports com.mocah.mindmath.learning;
 
 	requires java.persistence;
 	requires spring.beans;
@@ -28,8 +28,8 @@ open module com.mocah.mindmath {
 	requires spring.core;
 	requires springfox.swagger2;
 	requires springfox.assembly;
-	
-	//test requirements
+
+	// test requirements
 	requires spring.boot.test;
 	requires org.junit.jupiter.api;
 	requires org.assertj.core;

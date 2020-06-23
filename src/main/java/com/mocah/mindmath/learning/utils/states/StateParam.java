@@ -1,5 +1,7 @@
 package com.mocah.mindmath.learning.utils.states;
 
+import java.io.Serializable;
+
 /**
  * Implement parameters
  *
@@ -7,7 +9,12 @@ package com.mocah.mindmath.learning.utils.states;
  *
  * @param <T> the type of the parameter
  */
-public class StateParam<T> {
+public class StateParam<T extends Serializable> implements Serializable {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -6221358004680246207L;
+
 	private T value;
 
 	/**

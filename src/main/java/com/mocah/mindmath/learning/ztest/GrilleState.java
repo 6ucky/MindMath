@@ -5,6 +5,11 @@ import java.awt.Point;
 import com.mocah.mindmath.learning.utils.states.IState;
 
 public class GrilleState implements IState {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 9002561241744974000L;
+
 	private TypeEtat type;
 	private Point pt;
 	private boolean isAccessible;

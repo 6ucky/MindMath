@@ -8,6 +8,11 @@ package com.mocah.mindmath.learning.utils.actions;
  *
  */
 public class Action implements IAction {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -4240823337990480436L;
+
 	private String id;
 
 	/**

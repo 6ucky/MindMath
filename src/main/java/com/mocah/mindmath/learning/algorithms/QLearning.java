@@ -12,7 +12,12 @@ import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.learning.utils.values.QValue;
 
 public class QLearning extends AbstractLearning {
-	private Map<IState, List<IValue>> qValues;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 6844041665004157495L;
+
+	private HashMap<IState, ArrayList<IValue>> qValues;
 
 	// learning rate
 	private double alpha;
@@ -30,25 +35,28 @@ public class QLearning extends AbstractLearning {
 		this.alpha = alpha;
 		this.gamma = gamma;
 
-		generateMatrix(states, actions);
+		ArrayList<? extends IState> a = new ArrayList<>(states);
+		ArrayList<? extends IAction> b = new ArrayList<>(actions);
+
+		generateMatrix(a, b);
 	}
 
-	public QLearning(IPolicy policy, Map<IState, List<IValue>> qValues) {
+	public QLearning(IPolicy policy, Map<IState, ArrayList<IValue>> qValues) {
 		this(policy, qValues, 0.9, 0.75);
 	}
 
-	public QLearning(IPolicy policy, Map<IState, List<IValue>> qValues, double alpha, double gamma) {
+	public QLearning(IPolicy policy, Map<IState, ArrayList<IValue>> qValues, double alpha, double gamma) {
 		super(policy);
-		this.qValues = qValues;
+		this.qValues = new HashMap<>(qValues);
 		this.alpha = alpha;
 		this.gamma = gamma;
 	}
 
-	private void generateMatrix(List<? extends IState> states, List<? extends IAction> actions) {
+	private void generateMatrix(ArrayList<? extends IState> states, ArrayList<? extends IAction> actions) {
 		this.qValues = new HashMap<>();
 
 		for (IState state : states) {
-			List<IValue> stateValues = new ArrayList<>();
+			ArrayList<IValue> stateValues = new ArrayList<>();
 
 			for (IAction action : actions) {
 				IValue val = new QValue(action);
@@ -130,7 +138,7 @@ public class QLearning extends AbstractLearning {
 
 	}
 
-	public Map<IState, List<IValue>> getQValues() {
+	public Map<IState, ArrayList<IValue>> getQValues() {
 		return this.qValues;
 	}
 

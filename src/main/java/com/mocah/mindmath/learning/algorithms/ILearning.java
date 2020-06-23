@@ -3,6 +3,8 @@
  */
 package com.mocah.mindmath.learning.algorithms;
 
+import java.io.Serializable;
+
 import com.mocah.mindmath.learning.utils.actions.IAction;
 import com.mocah.mindmath.learning.utils.states.IState;
 
@@ -10,7 +12,7 @@ import com.mocah.mindmath.learning.utils.states.IState;
  * @author Thibaut SIMON-FINE
  *
  */
-public interface ILearning {
+public interface ILearning extends Serializable {
 
 	/**
 	 * Make a choice for the next action

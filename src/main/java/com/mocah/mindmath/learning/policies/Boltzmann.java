@@ -14,6 +14,11 @@ import com.mocah.mindmath.learning.utils.values.IValue;
  *
  */
 public class Boltzmann implements IPolicy {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -7572804215475987609L;
+
 	protected double temperature;
 	protected Random rand;
 

@@ -13,6 +13,11 @@ import com.mocah.mindmath.learning.utils.values.IValue;
  *
  */
 public class DecayingEpsilonGreedy extends EpsilonGreedy {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -4818259861645709856L;
+
 	protected double decayRate;
 	protected DecayType operator;
 	protected double maxEpsilon;

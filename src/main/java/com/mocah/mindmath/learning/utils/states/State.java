@@ -3,9 +3,9 @@
  */
 package com.mocah.mindmath.learning.utils.states;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,7 +16,12 @@ import java.util.Set;
  *
  */
 public class State implements IState {
-	private Map<String, StateParam<?>> params;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -4248467308854317569L;
+
+	private HashMap<String, StateParam<?>> params;
 
 	/**
 	 * Instantiate a State which should be filled with <code>putParam</code> method
@@ -30,7 +35,7 @@ public class State implements IState {
 	 *
 	 * @return
 	 */
-	public Map<String, StateParam<?>> getParams() {
+	public HashMap<String, StateParam<?>> getParams() {
 		return params;
 	}
 
@@ -41,7 +46,7 @@ public class State implements IState {
 	 * @param key a string key
 	 * @param val the value of custom type
 	 */
-	public <T> void putParam(String key, T val) {
+	public <T extends Serializable> void putParam(String key, T val) {
 		params.put(key, new StateParam<>(val));
 	}
 

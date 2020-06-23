@@ -3,6 +3,11 @@ package com.mocah.mindmath.learning.ztest;
 import com.mocah.mindmath.learning.utils.actions.IAction;
 
 public class GrilleAction implements IAction {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 6690600593051084876L;
+
 	private static int COUNT = 0;
 	private String id;
 
