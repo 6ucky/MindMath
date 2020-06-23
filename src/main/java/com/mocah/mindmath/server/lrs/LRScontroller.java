@@ -1,6 +1,7 @@
 package com.mocah.mindmath.server.lrs;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -15,18 +16,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLogs;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
-import com.mocah.mindmath.repository.learninglocker.LearningLockerKeys;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
+import com.mocah.mindmath.repository.learninglocker.jxapi.Activity;
+import com.mocah.mindmath.repository.learninglocker.jxapi.ActivityDefinition;
+import com.mocah.mindmath.repository.learninglocker.jxapi.Agent;
+import com.mocah.mindmath.repository.learninglocker.jxapi.Attachment;
+import com.mocah.mindmath.repository.learninglocker.jxapi.Context;
+import com.mocah.mindmath.repository.learninglocker.jxapi.ContextActivities;
+import com.mocah.mindmath.repository.learninglocker.jxapi.InteractionComponent;
+import com.mocah.mindmath.repository.learninglocker.jxapi.Statement;
+import com.mocah.mindmath.repository.learninglocker.jxapi.Verb;
+import com.mocah.mindmath.repository.learninglocker.jxapi.Verbs;
 
 /**
  * @author	Yan Wang
@@ -107,31 +120,104 @@ public class LRScontroller {
 		return new ResponseEntity<String>(response.toString(), HttpStatus.ACCEPTED);
 	}
 	
-//	@PostMapping("/testJXAPI")
-//	public ResponseEntity<String> testJXAPI(@RequestBody String data, @RequestHeader("Authorization") String auth) throws IOException{
-//		StatementClient client = new StatementClient(LearningLockerKeys.LRS_URI, LearningLockerKeys.USERNAME, LearningLockerKeys.PASSWORD);
-//		Statement statement = new Statement();
-//		Agent agent = new Agent();
-//		Verb verb = Verbs.experienced();
-//		agent.setMbox("mailto:test@example.com");
-//		agent.setName("Tester McTesterson");
-//		statement.setActor(agent);
-//		statement.setId(UUID.randomUUID().toString());
-//		statement.setVerb(verb);
-//		Activity a = new Activity();
-//		a.setId("http://example.com");
-//		statement.setObject(a);
-//		ActivityDefinition ad = new ActivityDefinition();
-//		ad.setChoices(new ArrayList<InteractionComponent>());
-//		InteractionComponent ic = new InteractionComponent();
-//		ic.setId("http://example.com");
-//		ic.setDescription(new HashMap<String, String>());
-//		ic.getDescription().put("en-US", "test");
-//		ad.getChoices().add(ic);
-//		ad.setInteractionType("choice");
-//		ad.setMoreInfo("http://example.com");
-//		a.setDefinition(ad);
-//		String publishedId = client.postStatement(statement);
-//		return new ResponseEntity<String>(publishedId, HttpStatus.ACCEPTED);
-//	}
+	@PostMapping("/testJXAPI")
+	public ResponseEntity<String> testJXAPI(@RequestBody String data, @RequestHeader("Authorization") String auth) throws IOException, NoSuchAlgorithmException{
+		//Statement
+		Statement statement = new Statement();
+
+		statement.setId(UUID.randomUUID().toString());
+		
+		//Agent
+		Agent agent = new Agent();
+		agent.setMbox("mailto:test@example.com");
+		agent.setName("Tester McTesterson");
+		statement.setActor(agent);
+		
+		//Verb
+		Verb verb = Verbs.experienced();
+		statement.setVerb(verb);
+		
+		//Activity
+		Activity a = new Activity();
+		a.setId("http://example.com");
+		statement.setObject(a);
+		
+		//ActivityDefinition
+		String key = "en-US";
+		String name = "Unit Testing";
+		String description = "Unit testing activity definitions.";
+		HashMap<String, String> nameMap = new HashMap<String, String>();
+		HashMap<String, String> descriptionMap = new HashMap<String, String>();
+		nameMap.put(key, name);
+		descriptionMap.put(key, description);
+		ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
+		String moreInfo = "More unit testing information.";
+		activityDefinition.setMoreInfo(moreInfo);
+		String type = "http://example.com/activities/unittest";
+		activityDefinition.setType(type);
+		HashMap<String, JsonElement> extensions = new HashMap<String, JsonElement>();
+		key = "http://example.com/testJSONprimitive";
+		extensions.put(key, new JsonPrimitive(44));
+		JsonObject jo = new JsonObject();
+		jo.addProperty("http://example.com/unitTest", "unit test");
+		key = "http://example.com/testJSONobject";
+		extensions.put(key, jo);
+		activityDefinition.setExtensions(extensions);
+		String interactionType = "performance";
+		activityDefinition.setInteractionType(interactionType);
+		ArrayList<String> correctResponsesPattern = new ArrayList<String>();
+		correctResponsesPattern.add("true");
+		correctResponsesPattern.add("foo");
+		activityDefinition.setCorrectResponsesPattern(correctResponsesPattern);
+		ArrayList<InteractionComponent> choices = new ArrayList<InteractionComponent>();
+		InteractionComponent e = new InteractionComponent();
+		String id = "true";
+		e.setId(id);
+		HashMap<String, String> desc = new HashMap<String, String>();
+		desc.put("en-US", "test example.");
+		e.setDescription(desc);
+		choices.add(e);
+		activityDefinition.setChoices(choices);
+		ArrayList<InteractionComponent> scale = new ArrayList<InteractionComponent>();
+		scale.add(e);
+		activityDefinition.setScale(scale);
+		ArrayList<InteractionComponent> source = new ArrayList<InteractionComponent>();
+		source.add(e);
+		activityDefinition.setSource(source);
+		ArrayList<InteractionComponent> target = new ArrayList<InteractionComponent>();
+		target.add(e);
+		activityDefinition.setTarget(target);
+		ArrayList<InteractionComponent> steps = new ArrayList<InteractionComponent>();
+		steps.add(e);
+		activityDefinition.setSteps(steps);
+		a.setDefinition(activityDefinition);
+		
+		//Context
+		ContextActivities ca = new ContextActivities();
+		ArrayList<Activity> category = new ArrayList<Activity>();
+		Activity act = new Activity("http://example.com/" + UUID.randomUUID().toString());
+		category.add(act);
+		ca.setCategory(category);
+		Context c = new Context();
+		c.setContextActivities(ca);
+		statement.setContext(c);
+		
+		//Attachment
+		String att = "This is a text/plain test.";
+		String contentType = "text/plain";
+		Attachment attachment = new Attachment();
+		attachment.addAttachment(att, contentType);
+		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+		attachments.add(attachment);
+		att = "../mindmath2/src/main/resources/static/videos/ResolutionEquation.mp4";
+		contentType = "video/mp4";
+		attachment = new Attachment();
+		attachment.addAttachment(att, contentType);
+		attachments.add(attachment);
+		statement.setAttachments(attachments);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(statement);
+		return new ResponseEntity<String>(json, HttpStatus.ACCEPTED);
+	}
 }

@@ -64,6 +64,9 @@ dependencies {
 		exclude group: 'io.springfox', module:'springfox-spi'
 	}
 	
+	//Cryptographic API
+	implementation 'bouncycastle:bcprov-jdk16:140'
+	
 	springAutoConfig 'org.springframework.boot:spring-boot-autoconfigure'
 	
 	//implementation('org.springframework.boot:spring-boot-starter-test') {
