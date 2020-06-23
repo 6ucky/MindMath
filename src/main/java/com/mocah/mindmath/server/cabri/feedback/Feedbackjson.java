@@ -12,6 +12,7 @@ public class Feedbackjson implements Serializable{
 
 	private static final long serialVersionUID = -9041203134380944632L;
 	
+	private final String idLearner;
 	private final String idFbCabri;
 	private final String idFb;
 	private final String motivationalElementFb;
@@ -20,7 +21,8 @@ public class Feedbackjson implements Serializable{
 	
 	//Test Feedback response
 	public Feedbackjson(String id) throws IOException {
-		this.idFbCabri = id;
+		this.idLearner = id;
+		this.idFbCabri = "";
 		this.idFb = "F1.1";
 		this.motivationalElementFb = String2GeneralHTML("Bravo!");
 		this.contentFb = String2ContentFBHTML("","https://mindmath.lip6.fr/videos/ResolutionEquation.mp4","");
@@ -28,7 +30,8 @@ public class Feedbackjson implements Serializable{
 	}
 	
 	public Feedbackjson(String id, boolean correctness) {
-		this.idFbCabri = id;
+		this.idLearner = id;
+		this.idFbCabri = "";
 		this.contentFb = "";
 		this.glossaryFb = "";
 		if(correctness)
@@ -43,10 +46,11 @@ public class Feedbackjson implements Serializable{
 		}
 	}
 	
-	public Feedbackjson(String id, String idF, String url, String motivationalElement, String default_img_url, 
+	public Feedbackjson(String idLearner, String idFbCabri, String idFb, String url, String motivationalElement, String default_img_url, 
 			String video_url, String video_srt_url, String content_propriete, String content_preservation) throws IOException {
-		this.idFbCabri = id;
-		this.idFb = idF;
+		this.idLearner = idLearner;
+		this.idFbCabri = idFbCabri;
+		this.idFb = idFb;
 		this.motivationalElementFb = String2GeneralHTML(motivationalElement);
 		this.contentFb = String2ContentFBHTML(default_img_url, video_url, video_srt_url);
 		this.glossaryFb = String2GlossaryFBHTML(content_propriete, content_preservation);
@@ -103,6 +107,10 @@ public class Feedbackjson implements Serializable{
 
 	public String getIdFb() {
 		return idFb;
+	}
+
+	public String getIdLearner() {
+		return idLearner;
 	}
 
 }

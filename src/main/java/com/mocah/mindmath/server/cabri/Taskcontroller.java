@@ -81,6 +81,7 @@ public class Taskcontroller {
 			
 		// TODO call Q-learning algorithm
 		
+		//generate feedback
 		JsonParserSensor sensorobject = new JsonParserSensor(data);
 		boolean correctness = jsonparser.getValueAsBoolean(sensorobject.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER);
 		Feedbackjson responsejson = new Feedbackjson(jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID), correctness);
