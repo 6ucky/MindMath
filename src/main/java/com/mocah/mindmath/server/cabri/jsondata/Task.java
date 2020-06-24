@@ -24,10 +24,10 @@ public class Task extends AbstractJsonData implements Serializable {
 	private static final long serialVersionUID = 4790322015762458488L;
 
 	@Id
-	@GeneratedValue(strategy =GenerationType.SEQUENCE,generator="task_id")  
-	@SequenceGenerator(name="task_id", sequenceName="task", initialValue = 1, allocationSize = 1) 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_id")
+	@SequenceGenerator(name = "task_id", sequenceName = "task", initialValue = 1, allocationSize = 1)
 	private long id;
-	
+
 	private final String id_learner;
 
 	private final String task;
@@ -43,6 +43,8 @@ public class Task extends AbstractJsonData implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL)
 	private final List<Log> log;
 
+	private String feedback_id;
+
 	// empty object
 	public Task() {
 		super();
@@ -54,7 +56,7 @@ public class Task extends AbstractJsonData implements Serializable {
 		this.sensors = new Sensors();
 		this.id_learner = "";
 	}
-	
+
 	public Task(long id) {
 		this();
 		this.id = id;
@@ -68,6 +70,10 @@ public class Task extends AbstractJsonData implements Serializable {
 		this.sensors = sensors;
 		this.params = params;
 		this.log = log;
+	}
+
+	public void setFeedback(String feedback_id) {
+		this.feedback_id = feedback_id;
 	}
 
 	public String getId_learner() {
@@ -96,5 +102,9 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	public long getId() {
 		return id;
+	}
+
+	public String getFeedback() {
+		return feedback_id;
 	}
 }
