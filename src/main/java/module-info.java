@@ -28,6 +28,7 @@ open module com.mocah.mindmath {
 	requires spring.core;
 	requires springfox.swagger2;
 	requires springfox.assembly;
+	requires bcprov.jdk16;
 
 	// test requirements
 	requires spring.boot.test;
@@ -37,5 +38,4 @@ open module com.mocah.mindmath {
 	requires spring.test;
 	requires org.hamcrest;
 	requires org.mockito;
-	requires bcprov.jdk16;
 }
