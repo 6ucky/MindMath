@@ -30,6 +30,7 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
+import com.mocah.mindmath.repository.learninglocker.jxapi.Account;
 import com.mocah.mindmath.repository.learninglocker.jxapi.Activity;
 import com.mocah.mindmath.repository.learninglocker.jxapi.ActivityDefinition;
 import com.mocah.mindmath.repository.learninglocker.jxapi.Agent;
@@ -129,8 +130,12 @@ public class LRScontroller {
 		
 		//Agent
 		Agent agent = new Agent();
-		agent.setMbox("mailto:test@example.com");
-		agent.setName("Tester McTesterson");
+//		agent.setMbox("mailto:test@example.com");
+//		agent.setName("Tester McTesterson");
+		String name_account = "Test Name";
+		String homepage_account = "http://test.com";
+		Account account = new Account(name_account, homepage_account);
+		agent.setAccount(account);
 		statement.setActor(agent);
 		
 		//Verb
