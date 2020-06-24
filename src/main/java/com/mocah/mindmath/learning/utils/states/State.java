@@ -6,6 +6,7 @@ package com.mocah.mindmath.learning.utils.states;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Set;
 
 /**
@@ -21,13 +22,13 @@ public class State implements IState {
 	 */
 	private static final long serialVersionUID = -4248467308854317569L;
 
-	private HashMap<String, StateParam<?>> params;
+	private LinkedHashMap<String, StateParam<?>> params;
 
 	/**
 	 * Instantiate a State which should be filled with <code>putParam</code> method
 	 */
 	public State() {
-		this.params = new HashMap<>();
+		this.params = new LinkedHashMap<>();
 	}
 
 	/**
