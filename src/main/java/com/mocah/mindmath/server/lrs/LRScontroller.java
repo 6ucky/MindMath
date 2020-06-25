@@ -43,7 +43,7 @@ import com.mocah.mindmath.repository.learninglocker.jxapi.Verb;
 import com.mocah.mindmath.repository.learninglocker.jxapi.Verbs;
 
 /**
- * @author	Yan Wang
+ * @author Yan Wang
  */
 
 @RestController
@@ -51,84 +51,94 @@ import com.mocah.mindmath.repository.learninglocker.jxapi.Verbs;
 public class LRScontroller {
 
 	private static final String license_num = "mocah";
-	
+
 	/**
 	 * check the post request based on authorization
+	 * 
 	 * @param auth the authorization parameter from headers
 	 * @return authorized or unauthorized
 	 */
 	private static boolean checkauth(String auth) {
-		if(auth.equals(license_num))
+		if (auth.equals(license_num))
 			return true;
 		return false;
 	}
-	
+
 	/**
 	 * Send get request to Learning Locker
+	 * 
 	 * @return the message from Learning Locker
 	 */
 	@GetMapping("/all")
-	public ResponseEntity<String> getAboutLearningLocker(){
+	public ResponseEntity<String> getAboutLearningLocker() {
 		LearningLockerRepository ll = new LearningLockerRepository();
-		return new ResponseEntity<String>(ll.getAllStatementfromLearningLocker(), HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(ll.getAllStatementsfromLearningLockerAsString(), HttpStatus.ACCEPTED);
 	}
-	
+
 	/**
 	 * Test of post for LRS
+	 * 
 	 * @return the added statement
-	 * @throws JsonParseCustomException 
+	 * @throws JsonParseCustomException
 	 */
 	@PostMapping("/test")
-	public ResponseEntity<String> testLearningLocker(@RequestBody String data, @RequestHeader("Authorization") String auth) throws JsonParserCustomException{
-		if(checkauth(auth))
-		{
+	public ResponseEntity<String> testLearningLocker(@RequestBody String data,
+			@RequestHeader("Authorization") String auth) throws JsonParserCustomException {
+		if (checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
-		}
 		LearningLockerRepository ll = new LearningLockerRepository();
 		JsonParserLogs parserLog = new JsonParserLogs(data);
 		JsonParserSensor parserSensor = new JsonParserSensor(data);
 		JsonParserFactory parserRoot = new JsonParserFactory(data);
-		
+
 		JsonObject response = new JsonObject();
-		response.add("Response from LRS", JsonParser.parseString(ll.postStatementTEST(parserRoot.getValueAsString(parserRoot.getObject(), JsonParserKeys.TASK_ID), parserSensor.getSensor(), parserLog.getLogs())).getAsJsonObject());
-		
+		response.add("Response from LRS",
+				JsonParser.parseString(ll.postStatementTEST(
+						parserRoot.getValueAsString(parserRoot.getObject(), JsonParserKeys.TASK_ID),
+						parserSensor.getSensor(), parserLog.getLogs())).getAsJsonObject());
+
 		JsonArray statementArray = new JsonArray();
 		XAPIgenerator xapi = new XAPIgenerator();
 		String student_id = parserRoot.getValueAsString(parserRoot.getObject(), JsonParserKeys.TASK_ID);
 		xapi.setActor("student-" + student_id + "@lip6.fr", "student-" + student_id);
 		xapi.setVerb();
-		
-		xapi.setObject(JsonParserKeys.SENSOR_DOMAIN, parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_DOMAIN));
+
+		xapi.setObject(JsonParserKeys.SENSOR_DOMAIN,
+				parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_DOMAIN));
 		xapi.setContext(XAPItype.SENSORS);
 		statementArray.add(xapi.generateStatement());
-		
-		xapi.setObject(JsonParserKeys.SENSOR_GENERATOR, parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_GENERATOR));
+
+		xapi.setObject(JsonParserKeys.SENSOR_GENERATOR,
+				parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_GENERATOR));
 		xapi.setContext(XAPItype.SENSORS);
 		statementArray.add(xapi.generateStatement());
-		
-		for(int i = 0; i < parserLog.getArray().size(); i++)
-		{
+
+		for (int i = 0; i < parserLog.getArray().size(); i++) {
 			xapi = new XAPIgenerator();
 			xapi.setActor("student-" + student_id + "@lip6.fr", "student-" + student_id);
 			xapi.setVerb();
-			xapi.setObject(i, parserLog.getValueAsString(parserLog.getArray().get(i).getAsJsonObject(), JsonParserKeys.LOG_ACTION), parserLog.getValueAsString(parserLog.getArray().get(i).getAsJsonObject(), JsonParserKeys.LOG_NAME));
+			xapi.setObject(i,
+					parserLog.getValueAsString(parserLog.getArray().get(i).getAsJsonObject(),
+							JsonParserKeys.LOG_ACTION),
+					parserLog.getValueAsString(parserLog.getArray().get(i).getAsJsonObject(), JsonParserKeys.LOG_NAME));
 			xapi.setContext(XAPItype.LOGS);
 			statementArray.add(xapi.generateStatement());
 		}
-		
+
 		response.add("Statements Drafts", statementArray);
-		
-		return new ResponseEntity<String>(response.toString(), HttpStatus.ACCEPTED);
+
+		return new ResponseEntity<>(response.toString(), HttpStatus.ACCEPTED);
 	}
-	
+
 	@PostMapping("/testJXAPI")
-	public ResponseEntity<String> testJXAPI(@RequestBody String data, @RequestHeader("Authorization") String auth) throws IOException, NoSuchAlgorithmException{
-		//Statement
+	public ResponseEntity<String> testJXAPI(@RequestBody String data, @RequestHeader("Authorization") String auth)
+			throws IOException, NoSuchAlgorithmException {
+		// Statement
 		Statement statement = new Statement();
 
 		statement.setId(UUID.randomUUID().toString());
-		
-		//Agent
+
+		// Agent
 		Agent agent = new Agent();
 //		agent.setMbox("mailto:test@example.com");
 //		agent.setName("Tester McTesterson");
@@ -137,22 +147,22 @@ public class LRScontroller {
 		Account account = new Account(name_account, homepage_account);
 		agent.setAccount(account);
 		statement.setActor(agent);
-		
-		//Verb
+
+		// Verb
 		Verb verb = Verbs.experienced();
 		statement.setVerb(verb);
-		
-		//Activity
+
+		// Activity
 		Activity a = new Activity();
 		a.setId("http://example.com");
 		statement.setObject(a);
-		
-		//ActivityDefinition
+
+		// ActivityDefinition
 		String key = "en-US";
 		String name = "Unit Testing";
 		String description = "Unit testing activity definitions.";
-		HashMap<String, String> nameMap = new HashMap<String, String>();
-		HashMap<String, String> descriptionMap = new HashMap<String, String>();
+		HashMap<String, String> nameMap = new HashMap<>();
+		HashMap<String, String> descriptionMap = new HashMap<>();
 		nameMap.put(key, name);
 		descriptionMap.put(key, description);
 		ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
@@ -160,7 +170,7 @@ public class LRScontroller {
 		activityDefinition.setMoreInfo(moreInfo);
 		String type = "http://example.com/activities/unittest";
 		activityDefinition.setType(type);
-		HashMap<String, JsonElement> extensions = new HashMap<String, JsonElement>();
+		HashMap<String, JsonElement> extensions = new HashMap<>();
 		key = "http://example.com/testJSONprimitive";
 		extensions.put(key, new JsonPrimitive(44));
 		JsonObject jo = new JsonObject();
@@ -170,49 +180,49 @@ public class LRScontroller {
 		activityDefinition.setExtensions(extensions);
 		String interactionType = "performance";
 		activityDefinition.setInteractionType(interactionType);
-		ArrayList<String> correctResponsesPattern = new ArrayList<String>();
+		ArrayList<String> correctResponsesPattern = new ArrayList<>();
 		correctResponsesPattern.add("true");
 		correctResponsesPattern.add("foo");
 		activityDefinition.setCorrectResponsesPattern(correctResponsesPattern);
-		ArrayList<InteractionComponent> choices = new ArrayList<InteractionComponent>();
+		ArrayList<InteractionComponent> choices = new ArrayList<>();
 		InteractionComponent e = new InteractionComponent();
 		String id = "true";
 		e.setId(id);
-		HashMap<String, String> desc = new HashMap<String, String>();
+		HashMap<String, String> desc = new HashMap<>();
 		desc.put("en-US", "test example.");
 		e.setDescription(desc);
 		choices.add(e);
 		activityDefinition.setChoices(choices);
-		ArrayList<InteractionComponent> scale = new ArrayList<InteractionComponent>();
+		ArrayList<InteractionComponent> scale = new ArrayList<>();
 		scale.add(e);
 		activityDefinition.setScale(scale);
-		ArrayList<InteractionComponent> source = new ArrayList<InteractionComponent>();
+		ArrayList<InteractionComponent> source = new ArrayList<>();
 		source.add(e);
 		activityDefinition.setSource(source);
-		ArrayList<InteractionComponent> target = new ArrayList<InteractionComponent>();
+		ArrayList<InteractionComponent> target = new ArrayList<>();
 		target.add(e);
 		activityDefinition.setTarget(target);
-		ArrayList<InteractionComponent> steps = new ArrayList<InteractionComponent>();
+		ArrayList<InteractionComponent> steps = new ArrayList<>();
 		steps.add(e);
 		activityDefinition.setSteps(steps);
 		a.setDefinition(activityDefinition);
-		
-		//Context
+
+		// Context
 		ContextActivities ca = new ContextActivities();
-		ArrayList<Activity> category = new ArrayList<Activity>();
+		ArrayList<Activity> category = new ArrayList<>();
 		Activity act = new Activity("http://example.com/" + UUID.randomUUID().toString());
 		category.add(act);
 		ca.setCategory(category);
 		Context c = new Context();
 		c.setContextActivities(ca);
 		statement.setContext(c);
-		
-		//Attachment
+
+		// Attachment
 		String att = "This is a text/plain test.";
 		String contentType = "text/plain";
 		Attachment attachment = new Attachment();
 		attachment.addAttachment(att, contentType);
-		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+		ArrayList<Attachment> attachments = new ArrayList<>();
 		attachments.add(attachment);
 		att = "../mindmath2/src/main/resources/static/videos/ResolutionEquation.mp4";
 		contentType = "video/mp4";
@@ -220,9 +230,9 @@ public class LRScontroller {
 		attachment.addAttachment(att, contentType);
 		attachments.add(attachment);
 		statement.setAttachments(attachments);
-		
+
 		Gson gson = new Gson();
 		String json = gson.toJson(statement);
-		return new ResponseEntity<String>(json, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(json, HttpStatus.ACCEPTED);
 	}
 }
