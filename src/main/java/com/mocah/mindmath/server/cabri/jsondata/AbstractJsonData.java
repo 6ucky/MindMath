@@ -38,24 +38,27 @@ public abstract class AbstractJsonData {
 	 *
 	 *                              </ul>
 	 */
-	public Object getFieldValue(String fieldName) throws NoSuchFieldException, SecurityException {
+	public Object getFieldValue(String fieldName) throws NoSuchFieldException {
 		Class<?> c = getClass();
-
-		Field f = c.getDeclaredField(fieldName);
-		f.setAccessible(true);
 
 		String value = null;
 		try {
+			Field f = c.getDeclaredField(fieldName);
+			f.setAccessible(true);
+
 			Object o = f.get(this);
 			if (o != null) {
 				value = o.toString();
 			}
-		} catch (IllegalArgumentException | IllegalAccessException e) {
+		} catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
 			// TODO Bloc catch généré automatiquement
 			// Note:
-			// IllegalArgumentException & IllegalAccessException shouldn't be thrown since
-			// we always access to an existing class and fieldn owned by the class itself
+			// IllegalArgumentException & IllegalAccessException & SecurityException
+			// shouldn't be thrown since we always access to an existing class and field
+			// owned by the class itself
 			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			throw new NoSuchFieldException("Try to read inexisting filed '" + fieldName + "' from class '" + c + "'");
 		}
 
 		return value;

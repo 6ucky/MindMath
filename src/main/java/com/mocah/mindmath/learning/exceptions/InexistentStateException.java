@@ -53,5 +53,4 @@ public class InexistentStateException extends Exception {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Stub du constructeur généré automatiquement
 	}
-
 }

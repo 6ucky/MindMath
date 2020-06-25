@@ -3,7 +3,10 @@
  */
 package com.mocah.mindmath.learning;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -15,9 +18,13 @@ import java.util.Set;
 import com.google.gson.Gson;
 import com.google.gson.JsonPrimitive;
 import com.mocah.mindmath.decisiontree.Branch;
+import com.mocah.mindmath.decisiontree.Child;
+import com.mocah.mindmath.decisiontree.Edge;
 import com.mocah.mindmath.decisiontree.Node;
 import com.mocah.mindmath.decisiontree.NodeType;
 import com.mocah.mindmath.decisiontree.Tree;
+import com.mocah.mindmath.decisiontree.Vars;
+import com.mocah.mindmath.decisiontree.search.BreadthFirstSearch;
 import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
 import com.mocah.mindmath.learning.algorithms.ILearning;
 import com.mocah.mindmath.learning.algorithms.QLearning;
@@ -31,7 +38,16 @@ import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
+import com.mocah.mindmath.server.cabri.jsondata.Log;
+import com.mocah.mindmath.server.cabri.jsondata.Params;
+import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
+
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.MalformedGoalException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -44,6 +60,7 @@ public class LearningProcess {
 	// TODO other way of storage -> due to an idea of using multiple Qlearning
 	// instances (ie one for each domain/generator/familly...)
 	private static ILearning learning;
+	private static Tree tree;
 
 	/**
 	 *
@@ -56,7 +73,7 @@ public class LearningProcess {
 		Reader reader = LocalRouteRepository.readFileasReader(LocalRoute.DecisionTreeRoute);
 		// convert JSON File to Java Object
 		Gson gson = new Gson();
-		Tree tree = gson.fromJson(reader, Tree.class);
+		tree = gson.fromJson(reader, Tree.class);
 		// get branches from decision tree
 		List<Branch> branches = decisionTreeDFS(tree);
 		// compute branches to qvalues
@@ -89,11 +106,18 @@ public class LearningProcess {
 	}
 
 	/**
-	 * Same as calling <code>makeDecision(task, null, null)</code>
+	 * Same as calling {@code makeDecision(task, null, null)}
 	 *
 	 * @param task
+	 * @throws IOException
+	 * @throws MalformedGoalException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws NoSuchFieldException
+	 * @throws InvalidTheoryException
 	 */
-	public static IAction makeDecision(Task task) {
+	public static IAction makeDecision(Task task) throws InvalidTheoryException, NoSuchFieldException,
+			NoSuchMethodException, InvocationTargetException, MalformedGoalException, IOException {
 		return makeDecision(task, null, null);
 	}
 
@@ -102,10 +126,20 @@ public class LearningProcess {
 	 * @param previousTask
 	 * @param previousAction
 	 * @return
+	 * @throws IOException
+	 * @throws MalformedGoalException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws NoSuchFieldException
+	 * @throws InvalidTheoryException
 	 */
-	public static IAction makeDecision(Task task, Task previousTask, IAction previousAction) {
+	public static IAction makeDecision(Task task, Task previousTask, IAction previousAction)
+			throws InvalidTheoryException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException,
+			MalformedGoalException, IOException {
 		// 1 generate current state
 		IState newState = null;
+		newState = decisionTreeBFS(tree, task);
+
 		// TODO
 
 		// 2 calc reward
@@ -232,5 +266,114 @@ public class LearningProcess {
 		}
 
 		qValues.put(s, values);
+	}
+
+	private static IState decisionTreeBFS(Tree tree, Task task) throws IOException, InvalidTheoryException,
+			NoSuchFieldException, NoSuchMethodException, InvocationTargetException, MalformedGoalException {
+		BreadthFirstSearch bfs = new BreadthFirstSearch(tree);
+
+		Node node = tree.getRoot();
+		State state = new State();
+
+		InputStream input = LocalRouteRepository.readFileasInputStream(LocalRoute.PrologTestRoute);
+
+		Prolog pg;
+		try {
+			Theory tr = new Theory(input);
+			pg = new Prolog();
+			pg.setTheory(tr);
+		} catch (IOException e) {
+			throw new IOException("Missing Prolog file; file path should be '" + LocalRoute.PrologTestRoute
+					+ "'. Read access to file could be missing to.", e);
+//			e.printStackTrace();
+		}
+
+		if (pg != null) {
+			stateInterprete(bfs, node, task, state, pg);
+		}
+
+		return state;
+	}
+
+	private static void stateInterprete(BreadthFirstSearch bfs, Node node, Task task, State state, Prolog pg)
+			throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, MalformedGoalException {
+		if (node != null) {
+			bfs.visitNode(node);
+
+			switch (node.getType()) {
+			case STATE:
+				Deque<Node> opened = bfs.open(node);
+
+				if (opened.isEmpty()) {
+					//
+				} else {
+					while (!opened.isEmpty()) {
+						Node child = opened.pollFirst();
+						System.out.println("TEST edge to " + child.getId());
+
+						Child c = node.getChild(child);
+						Edge e = c.getEdge();
+
+						String query = e.getQuery();
+						for (Vars var : e.getVars()) {
+							String replacement = "ERROR";
+
+							switch (var.getSource()) {
+							case LOG:
+								List<Log> logs = task.getLog();
+								break;
+							case PARAM:
+								Params params = task.getParams();
+								replacement = Extractor.getFromParams(params, var.getKey());
+								break;
+							case SENSOR:
+								Sensors sensors = task.getSensors();
+								replacement = Extractor.getFromSensors(sensors, var.getKey());
+								break;
+							case TASK:
+								replacement = Extractor.getFromTask(task, var.getKey());
+								break;
+							case CUSTOM_METHOD:
+								replacement = Extractor.getFromMethod(task, var.getKey());
+								break;
+							default:
+								break;
+							}
+
+							query = query.replaceFirst("_VAR_", replacement);
+						}
+
+						System.out.println(query);
+						SolveInfo info = pg.solve(query);
+
+						if (info.isSuccess()) {
+							JsonPrimitive val = e.getValue();
+							if (val.isNumber()) {
+								state.putParam(node.getId(), val.getAsNumber());
+							} else if (val.isBoolean()) {
+								state.putParam(node.getId(), val.getAsBoolean());
+							} else {
+								state.putParam(node.getId(), val.getAsString());
+							}
+
+							stateInterprete(bfs, child, task, state, pg);
+
+							break;
+						}
+					}
+				}
+				break;
+
+			case DECISION:
+			case FEEDBACK:
+				// TODO
+				break;
+
+			default:
+				// TODO Unknown node
+				break;
+			}
+
+		}
 	}
 }

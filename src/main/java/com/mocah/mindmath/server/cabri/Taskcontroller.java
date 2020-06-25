@@ -1,6 +1,7 @@
 package com.mocah.mindmath.server.cabri;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,9 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
+
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.MalformedGoalException;
 
 /**
  * @author Yan Wang
@@ -88,11 +92,39 @@ public class Taskcontroller {
 		Task prevTask = getPreviousTask(task);
 
 		IAction action = null;
-		if (prevTask != null) {
-			IAction prevAction = new Action(prevTask.getFeedback());
-			action = LearningProcess.makeDecision(task, prevTask, action);
-		} else {
-			action = LearningProcess.makeDecision(task);
+		try {
+			if (prevTask != null) {
+				IAction prevAction = new Action(prevTask.getFeedback());
+
+				action = LearningProcess.makeDecision(task, prevTask, prevAction);
+
+			} else {
+				action = LearningProcess.makeDecision(task);
+			}
+		} catch (InvalidTheoryException e) {
+			// TODO Bloc catch généré automatiquement
+			// Thus mean here that content of pl file isn't valid
+			e.printStackTrace();
+		} catch (NoSuchFieldException | NoSuchMethodException | MalformedGoalException e) {
+			// TODO Bloc catch généré automatiquement
+			// Thus mean here that there should be an error with a node in json tree
+
+			// NoSuchFieldException -> in case of Task/Sensor/Param source type when the
+			// field name doesn't exist (ie typo error)
+
+			// NoSuchMethodException -> in case of Method source type when method wasn't
+			// declared in com.mocah.mindmath.learning.Extractor
+
+			// MalformedGoalException -> the query contains an error
+
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Bloc catch généré automatiquement
+
+			// Thus mean that a method called in com.mocah.mindmath.learning.Extractor
+			// thrown an error -> method should be updated
+
+			e.printStackTrace();
 		}
 
 		// Here 'action' should contains the feedback_id to send back

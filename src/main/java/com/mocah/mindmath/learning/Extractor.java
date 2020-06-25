@@ -26,7 +26,7 @@ public class Extractor {
 	 * @throws NoSuchFieldException
 	 * @throws SecurityException
 	 */
-	public static String getFromTask(Task task, String fieldName) throws NoSuchFieldException, SecurityException {
+	public static String getFromTask(Task task, String fieldName) throws NoSuchFieldException {
 		String r = null;
 
 		r = (String) task.getFieldValue(fieldName);
@@ -41,8 +41,7 @@ public class Extractor {
 	 * @throws NoSuchFieldException
 	 * @throws SecurityException
 	 */
-	public static String getFromSensors(Sensors sensors, String fieldName)
-			throws NoSuchFieldException, SecurityException {
+	public static String getFromSensors(Sensors sensors, String fieldName) throws NoSuchFieldException {
 		String r = null;
 
 		r = (String) sensors.getFieldValue(fieldName);
@@ -57,7 +56,7 @@ public class Extractor {
 	 * @throws NoSuchFieldException
 	 * @throws SecurityException
 	 */
-	public static String getFromParams(Params params, String fieldName) throws NoSuchFieldException, SecurityException {
+	public static String getFromParams(Params params, String fieldName) throws NoSuchFieldException {
 		String r = null;
 
 		r = (String) params.getFieldValue(fieldName);
@@ -82,11 +81,28 @@ public class Extractor {
 //		return r;
 //	}
 
-	public static String getFromMethod(Task task, String name) throws NoSuchMethodException, SecurityException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Method method = Extractor.class.getDeclaredMethod(name, Task.class);
+	public static String getFromMethod(Task task, String methodName)
+			throws NoSuchMethodException, InvocationTargetException {
+		Object result = null;
 
-		Object result = method.invoke(null, task);
+		try {
+			Method method = Extractor.class.getDeclaredMethod(methodName, Task.class);
+			result = method.invoke(null, task);
+		} catch (NoSuchMethodException e) {
+			throw new NoSuchMethodException("Try to execute inexisting method '" + methodName + "' in class '"
+					+ Extractor.class
+					+ "'. Please write the method and also note that method require to use have Task object as parameter.");
+		} catch (InvocationTargetException e) {
+			throw new InvocationTargetException(e.getCause(),
+					"Error in execution of method '" + methodName + "' in class '" + Extractor.class + "'.");
+		} catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
+			// TODO Bloc catch généré automatiquement
+			// Note:
+			// IllegalArgumentException & IllegalAccessException & SecurityException
+			// shouldn't be thrown since we always access to an existing class and field
+			// owned by the class itself
+			e.printStackTrace();
+		}
 
 		return result.toString();
 	}
