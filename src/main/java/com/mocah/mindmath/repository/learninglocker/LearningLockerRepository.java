@@ -33,9 +33,10 @@ import com.google.gson.reflect.TypeToken;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLRS;
 import com.mocah.mindmath.parser.jsonparser.LRSType;
 import com.mocah.mindmath.repository.XAPIRepository;
-import com.mocah.mindmath.repository.learninglocker.jxapi.Actor;
-import com.mocah.mindmath.repository.learninglocker.jxapi.Statement;
-import com.mocah.mindmath.repository.learninglocker.jxapi.Verb;
+import com.mocah.mindmath.repository.jxapi.Actor;
+import com.mocah.mindmath.repository.jxapi.Statement;
+import com.mocah.mindmath.repository.jxapi.StatementResult;
+import com.mocah.mindmath.repository.jxapi.Verb;
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 
@@ -52,7 +53,7 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	private final HttpHeaders header_entity;
 	private FeedbackforLRS fbLRS;
 
-	private HashMap<String, String> filters;
+	private HashMap<String, String> filters = null;
 	private Gson gson = new Gson();
 
 	public LearningLockerRepository() {
@@ -107,6 +108,22 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 
 		return headers;
 	}
+	
+	// add quary parameters in URL
+	private StringBuilder InitializeQuaryURL() {
+		StringBuilder query = new StringBuilder();
+		if (this.filters != null && !this.filters.isEmpty()) {
+			query.append("?");
+			for (Entry<String, String> item : this.filters.entrySet()) {
+				query.append(item.getKey());
+				query.append("=");
+				query.append(item.getValue());
+				query.append("&");
+			}
+			query.deleteCharAt(query.length() - 1);
+		}
+		return query;
+	}	
 
 	/**
 	 * get about of LRS
@@ -131,34 +148,18 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	}
 
 	@Override
-	public List<Statement> getAllStatementsfromLearningLocker() {
-		String json = getAllStatementsfromLearningLockerAsString();
+	public StatementResult getAllStatementsfromLearningLocker() {
+		HttpEntity<String> entity = new HttpEntity<>(header_entity);
 
-		Type listType = new TypeToken<List<Statement>>() {
-		}.getType();
-
-		List<Statement> statements = gson.fromJson(json, listType);
-
-		return statements;
+		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL, HttpMethod.GET, entity, String.class);
+		return gson.fromJson(response.getBody(), StatementResult.class);
 	}
-
+	
 	@Override
 	public String getFilteredStatementsAsString() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
-
-		StringBuilder query = new StringBuilder();
-		if (this.filters != null && !this.filters.isEmpty()) {
-			query.append("?");
-			for (Entry<String, String> item : this.filters.entrySet()) {
-				query.append(item.getKey());
-				query.append("=");
-				query.append(item.getValue());
-				query.append("&");
-			}
-			query.deleteCharAt(query.length() - 1);
-		}
-
-		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL + query.toString(), HttpMethod.GET,
+		
+		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL + InitializeQuaryURL().toString(), HttpMethod.GET,
 				entity, String.class);
 
 		JsonParserLRS parser = new JsonParserLRS(response.getBody(), LRSType.RESPONSE);
@@ -167,18 +168,14 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	}
 
 	@Override
-	public List<Statement> getFilteredStatements() {
-		String json = getFilteredStatementsAsString();
-
-		Type listType = new TypeToken<List<Statement>>() {
-		}.getType();
-
-		List<Statement> statements = gson.fromJson(json, listType);
-
-		return statements;
+	public StatementResult getFilteredStatements() {
+		HttpEntity<String> entity = new HttpEntity<>(header_entity);
+		
+		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL + InitializeQuaryURL().toString(), HttpMethod.GET,
+				entity, String.class);
+		return gson.fromJson(response.getBody(), StatementResult.class);
 	}
 
-	@Override
 	public String postStatementTEST(String id, Sensors sensors, List<Log> log) {
 		// TODO design statement and put fb inside
 		String test_text = "{\r\n" + "  \"id\": \"18bac5d4-f6f0-4d9b-9888-ef98891cb117\",\r\n"
@@ -331,5 +328,15 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 		} else {
 			addFilter("ascending", "false");
 		}
+	}
+
+	@Override
+	public String postStatement(Statement statement) {
+		//post statement
+		HttpEntity<String> entity = new HttpEntity<>(gson.toJson(statement), header_entity);
+		ResponseEntity<String> response1 = this.restTemp.exchange(STATEMENT_URL, HttpMethod.POST, entity, String.class);
+		// the id of the current statement
+		String response1_id = JsonParser.parseString(response1.getBody()).getAsString();
+		return response1_id;
 	}
 }

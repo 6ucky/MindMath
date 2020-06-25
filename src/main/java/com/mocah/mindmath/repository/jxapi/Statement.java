@@ -1,4 +1,4 @@
-package com.mocah.mindmath.repository.learninglocker.jxapi;
+package com.mocah.mindmath.repository.jxapi;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -7,11 +7,6 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.UUID;
 
-/**
- * jxapi - Experience API Java library
- * @author https://github.com/adlnet/jxapi
- *
- */
 public class Statement {
 	private String id;
 	private String timestamp;

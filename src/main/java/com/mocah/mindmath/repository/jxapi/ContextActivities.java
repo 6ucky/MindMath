@@ -1,4 +1,4 @@
-package com.mocah.mindmath.repository.learninglocker.jxapi;
+package com.mocah.mindmath.repository.jxapi;
 
 import java.util.ArrayList;
 import com.google.gson.*;

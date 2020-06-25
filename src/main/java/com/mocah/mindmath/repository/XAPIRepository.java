@@ -1,10 +1,7 @@
 package com.mocah.mindmath.repository;
 
-import java.util.List;
-
-import com.mocah.mindmath.repository.learninglocker.jxapi.Statement;
-import com.mocah.mindmath.server.cabri.jsondata.Log;
-import com.mocah.mindmath.server.cabri.jsondata.Sensors;
+import com.mocah.mindmath.repository.jxapi.Statement;
+import com.mocah.mindmath.repository.jxapi.StatementResult;
 
 public interface XAPIRepository {
 
@@ -22,7 +19,7 @@ public interface XAPIRepository {
 	 *
 	 * @return list of statements as list of Statement object
 	 */
-	public List<Statement> getAllStatementsfromLearningLocker();
+	public StatementResult getAllStatementsfromLearningLocker();
 
 	/**
 	 * Get statements from LRS in json format (with filter, if no filter then is
@@ -38,7 +35,12 @@ public interface XAPIRepository {
 	 *
 	 * @return list of statements as list of Statement object
 	 */
-	public List<Statement> getFilteredStatements();
+	public StatementResult getFilteredStatements();
 
-	public String postStatementTEST(String id, Sensors sensors, List<Log> log);
+	/**
+	 * POST statement to LRS
+	 * @param statement
+	 * @return the id of statement
+	 */
+	public String postStatement(Statement statement);
 }

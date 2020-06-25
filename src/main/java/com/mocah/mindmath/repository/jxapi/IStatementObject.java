@@ -1,4 +1,4 @@
-package com.mocah.mindmath.repository.learninglocker.jxapi;
+package com.mocah.mindmath.repository.jxapi;
 import com.google.gson.*;
 
 public interface IStatementObject {
