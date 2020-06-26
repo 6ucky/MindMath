@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.BooleanUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonPrimitive;
 import com.mocah.mindmath.decisiontree.Branch;
@@ -60,6 +62,7 @@ public class LearningProcess {
 	// TODO other way of storage -> due to an idea of using multiple Qlearning
 	// instances (ie one for each domain/generator/familly...)
 	private static ILearning learning;
+
 	private static Tree tree;
 
 	/**
@@ -140,16 +143,19 @@ public class LearningProcess {
 		IState newState = null;
 		newState = decisionTreeBFS(tree, task);
 
-		// TODO
+		// TODO check if newState exist in Qtable else try to get the most similar state
 
 		// 2 calc reward
 		if (previousTask != null) {
 			// generate previous task
 			IState oldState = null;
-			// TODO same as 1
+			oldState = decisionTreeBFS(tree, previousTask);
+
+			// TODO check if oldState exist in Qtable else try to get the most similar state
+
 			// calc reward
-			double reward = 0;
-			// TODO
+			double reward = calcReward(task);
+
 			// learn
 			learning.learn(oldState, previousAction, reward, newState);
 		}
@@ -375,5 +381,93 @@ public class LearningProcess {
 			}
 
 		}
+	}
+
+	/**
+	 * @param task
+	 * @return
+	 */
+	private static double calcReward(Task task) {
+		double reward = 0;
+		double baseReward = 100;
+
+		String answer = task.getSensors().isCorrectAnswer();
+		Boolean b = BooleanUtils.toBooleanObject(answer);
+
+		if (b == null)
+			// No answer -> ask help case
+			return reward;
+
+		reward = baseReward * (1 / feedbackInfo(task)); // TODO check case feedbackInfo return 0
+
+		if (!b) {
+			// Answer was false -> negative reward
+			reward = -(baseReward - reward);
+		} else {
+			// Answer was true -> positive reward
+		}
+
+		// Keep reward between -baseReward and baseReward
+		if (reward > baseReward) {
+			reward = baseReward;
+		}
+		if (reward < -baseReward) {
+			reward = -baseReward;
+		}
+
+		return reward;
+	}
+
+	/**
+	 * Calc (sum_infos_send/feedback_number)
+	 *
+	 * @param task
+	 * @return
+	 */
+	private static double feedbackInfo(Task task) {
+		double feedbackInfo = 0;
+
+		List<String> feedbacks = getFeedbacks(task);
+
+		double sum = 0;
+		for (String feedbackId : feedbacks) {
+			sum += getWeightInfo(feedbackId);
+		}
+
+		// TODO check for case divide by 0 -> shouldn't occurs, but for security purpose
+		feedbackInfo = sum / feedbacks.size();
+
+		return feedbackInfo;
+	}
+
+	/**
+	 * Get all the feedbacks sended to a learner (got from Task object) for a same
+	 * family task.
+	 *
+	 * @param task
+	 * @return
+	 */
+	private static List<String> getFeedbacks(Task task) {
+		List<String> feedbacks = new ArrayList<>();
+
+		// TODO ask LRS and add all feedbackID for statements of same learner and family
+		// task to feedbacks List
+
+		// temp
+		feedbacks.add("0.0.0.0");
+
+		return feedbacks;
+	}
+
+	/**
+	 * Get or calc the weight of information a feedback give to a learner
+	 *
+	 * @param feedbackId
+	 * @return
+	 */
+	private static double getWeightInfo(String feedbackId) {
+		// TODO get the weight of informations given by the feedback from Benjamin DB
+
+		return 1;
 	}
 }
