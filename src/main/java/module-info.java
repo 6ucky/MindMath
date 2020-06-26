@@ -23,6 +23,7 @@ open module com.mocah.mindmath {
 	requires org.apache.httpcomponents.httpclient;
 	requires transitive com.google.gson;
 	requires org.apache.jena.core;
+	requires org.apache.commons.lang3;
 	requires com.github.mustachejava;
 	requires springfox.spring.web;
 	requires spring.core;
