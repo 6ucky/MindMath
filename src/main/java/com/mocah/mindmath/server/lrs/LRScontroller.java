@@ -1,5 +1,8 @@
 package com.mocah.mindmath.server.lrs;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,6 +37,8 @@ import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
+import com.mocah.mindmath.repository.LocalRoute;
+import com.mocah.mindmath.repository.LocalRouteRepository;
 import com.mocah.mindmath.repository.jxapi.Account;
 import com.mocah.mindmath.repository.jxapi.Activity;
 import com.mocah.mindmath.repository.jxapi.ActivityDefinition;
@@ -56,6 +61,8 @@ import com.mocah.mindmath.repository.jxapi.Verbs;
 public class LRScontroller {
 
 	private static final String license_num = "mocah";
+	
+	private Activity a = new Activity();
 
 	/**
 	 * check the post request based on authorization
@@ -159,7 +166,7 @@ public class LRScontroller {
 		statement.setVerb(verb);
 
 		// Activity
-		Activity a = new Activity();
+		a = new Activity();
 		a.setId("http://example.com");
 		statement.setObject(a);
 
@@ -262,7 +269,7 @@ public class LRScontroller {
 		Verb verb = Verbs.experienced();
 		statement.setVerb(verb);
 		
-		Activity a = new Activity();
+		a = new Activity();
 		a.setId("https://mindmath.lip6.fr");
 		statement.setObject(a);
 		
@@ -330,9 +337,9 @@ public class LRScontroller {
 		Verb verb = Verbs.experienced();
 		statement.setVerb(verb);
 		
-		Activity a = new Activity();
-		a.setId("https://mindmath.lip6.fr");
-		statement.setObject(a);
+		Activity a_FB = new Activity();
+		a_FB.setId("https://mindmath.lip6.fr");
+		statement.setObject(a_FB);
 		
 		String key = "en-US";
 		String name = "Feedback";
@@ -351,19 +358,41 @@ public class LRScontroller {
 		key = "https://mindmath.lip6.fr/feedback";
 		extensions.put(key, jo);
 		activityDefinition.setExtensions(extensions);
-		a.setDefinition(activityDefinition);
+		a_FB.setDefinition(activityDefinition);
 		
-//		Attachment attachment = new Attachment();
-//		attachment.addAttachment("A video", "text/plain");
-//		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
-//		URI expected_type = new URI("https://mindmath.lip6.fr/videos/ResolutionEquation.mp4");
-//		attachment.setUsageType(expected_type);
-//		key = "en-US";
-//		HashMap<String, String> expected_display = new HashMap<String, String>();
-//		expected_display.put(key, "Feedback Video.");
-//		attachment.setDisplay(expected_display);
-//		attachments.add(attachment);
-//		statement.setAttachments(attachments);
+		ContextActivities ca = new ContextActivities();
+		ArrayList<Activity> category = new ArrayList<>();
+		category.add(a);
+		ca.setCategory(category);
+		Context c = new Context();
+		c.setContextActivities(ca);
+		statement.setContext(c);
+		
+		Attachment attachment = new Attachment();
+		attachment.addAttachment("../mindmath2/src/main/resources/static/videos/ResolutionEquation.mp4", "application/octet-stream");
+		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+		URI expected_type = new URI("http://lrsmocah.lip6.fr/attachments/video");
+		attachment.setUsageType(expected_type);
+		key = "en-US";
+		HashMap<String, String> expected_display = new HashMap<String, String>();
+		expected_display.put(key, "Feedback Video.");
+		attachment.setDisplay(expected_display);
+		attachment.setFileUrl(new URI("https://mindmath.lip6.fr/videos/ResolutionEquation.mp4"));
+		attachments.add(attachment);
+		
+		//save JSON data of Cabri
+	    LocalRouteRepository.writeFile(data, LocalRoute.CabriRoute);
+		attachment = new Attachment();
+		attachment.addAttachment(data, "text/plain");
+		expected_type = new URI("http://lrsmocah.lip6.fr/attachments/data");
+		attachment.setUsageType(expected_type);
+		key = "en-US";
+		expected_display = new HashMap<String, String>();
+		expected_display.put(key, "JSON file from Cabri.");
+		attachment.setDisplay(expected_display);
+		attachment.setFileUrl(new URI("https://mindmath.lip6.fr/assets/cabri.json"));
+		attachments.add(attachment);
+		statement.setAttachments(attachments);
 		
 		Gson gson = new Gson();
 		LearningLockerRepository ll = new LearningLockerRepository();

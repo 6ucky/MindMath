@@ -1,0 +1,30 @@
+{
+    "id": "101",
+    "sensors": {
+        "domain": "algebre",
+        "generator": "resoudreEquationPremierDegre",
+        "taskFamily": "ft3.1",
+        "correctAnswer": false,
+        "codeError": "ce_err5"
+    },
+    "log": [
+        {
+            "time": 4015,
+            "type": "tool",
+            "name": "line_tool",
+            "action": "create"
+        },
+        {
+            "time": 5813,
+            "type": "button",
+            "name": "bouton-effacer",
+            "action": "push"
+        },
+        {
+            "time": 7689,
+            "type": "button",
+            "name": "bouton-valider",
+            "action": "push"
+        }
+    ]
+}

@@ -1,5 +1,7 @@
 package com.mocah.mindmath.repository;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,5 +26,11 @@ public interface LocalRouteRepository {
 	        textBuilder.append((char) i);
 	    }
 	    return textBuilder.toString();
+	}
+	
+	public static void writeFile(String data, String route) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(LocalRouteRepository.class.getClassLoader().getResource(route).getPath()));
+		writer.write(data);
+	    writer.close();
 	}
 }

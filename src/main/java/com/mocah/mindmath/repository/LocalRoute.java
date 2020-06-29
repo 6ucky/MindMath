@@ -6,4 +6,5 @@ public class LocalRoute {
 	public static String PrologTestRoute = "assets/test.pl";
 	public static String OntologyRoute = "assets/MindMathOnto.owl";
 
+	public static String CabriRoute = "static/assets/cabri.json";
 }
