@@ -2,6 +2,8 @@ package com.mocah.mindmath.repository.learninglocker;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -9,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import javax.net.ssl.SSLContext;
@@ -26,17 +29,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLRS;
 import com.mocah.mindmath.parser.jsonparser.LRSType;
 import com.mocah.mindmath.repository.XAPIRepository;
 import com.mocah.mindmath.repository.jxapi.Actor;
+import com.mocah.mindmath.repository.jxapi.IStatementObject;
 import com.mocah.mindmath.repository.jxapi.Statement;
 import com.mocah.mindmath.repository.jxapi.StatementResult;
 import com.mocah.mindmath.repository.jxapi.Verb;
+import com.mocah.mindmath.repository.jxapi.adapters.ActorAdapter;
+import com.mocah.mindmath.repository.jxapi.adapters.StatementObjectAdapter;
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 
@@ -124,6 +131,17 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 		}
 		return query;
 	}	
+	
+	//add Generic Interface Adapter of Actor class and IStatementObject class for Gson
+	private Gson getDecoder() {	
+		Gson gson_decoder = new Gson();
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(Actor.class, new ActorAdapter());
+		builder.registerTypeAdapter(IStatementObject.class,
+				new StatementObjectAdapter());
+		gson_decoder = builder.create();
+		return gson_decoder;
+	}
 
 	/**
 	 * get about of LRS
@@ -152,7 +170,7 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
 
 		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL, HttpMethod.GET, entity, String.class);
-		return gson.fromJson(response.getBody(), StatementResult.class);
+		return getDecoder().fromJson(response.getBody(), StatementResult.class);
 	}
 	
 	@Override
@@ -171,9 +189,13 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	public StatementResult getFilteredStatements() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
 		
-		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL + InitializeQuaryURL().toString(), HttpMethod.GET,
-				entity, String.class);
-		return gson.fromJson(response.getBody(), StatementResult.class);
+		//set true to URI string
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(STATEMENT_URL + InitializeQuaryURL().toString());
+		URI uri = builder.build(true).toUri();
+		ResponseEntity<String> response = this.restTemp.exchange(uri, HttpMethod.GET,
+		entity, String.class);
+		
+		return getDecoder().fromJson(response.getBody(), StatementResult.class);
 	}
 
 	public String postStatementTEST(String id, Sensors sensors, List<Log> log) {
@@ -203,12 +225,18 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	 * @param key   key name (ie "context.extensions.yourExtension")
 	 * @param value expected value (ie "customExtensionValue")
 	 */
-	public void addFilter(String key, String value) {
-		if (this.filters == null) {
-			this.filters = new HashMap<>();
+	public LearningLockerRepository addFilter(String key, String value) {
+		LearningLockerRepository client = new LearningLockerRepository();
+		if (client.filters == null) {
+			client.filters = new HashMap<String, String>();
 		}
-
-		this.filters.put(key, value);
+		if (this.filters != null) {
+			for (Entry<String, String> filter : filters.entrySet()) {
+				client.filters.put(filter.getKey(), filter.getValue());
+			}
+		}
+		client.filters.put(key, value);
+		return client;
 	}
 
 	/**
@@ -222,111 +250,111 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	 * @param v
 	 * @throws UnsupportedEncodingException
 	 */
-	public void filterByVerb(Verb v) throws UnsupportedEncodingException {
-		addFilter("verb", URLEncoder.encode(v.getId(), "UTF-8"));
+	public LearningLockerRepository filterByVerb(Verb v) throws UnsupportedEncodingException {
+		return addFilter("verb", URLEncoder.encode(v.getId(), "UTF-8"));
 	}
 
 	/**
 	 * @param verbId
 	 */
-	public void filterByVerb(String verbId) {
-		addFilter("verb", verbId);
+	public LearningLockerRepository filterByVerb(String verbId) {
+		return addFilter("verb", verbId);
 	}
 
 	/**
 	 * @param a
 	 * @throws UnsupportedEncodingException
 	 */
-	public void filterByActor(Actor a) throws UnsupportedEncodingException {
-		addFilter("agent", URLEncoder.encode(gson.toJson(a.serialize()), "UTF-8"));
+	public LearningLockerRepository filterByActor(Actor a) throws UnsupportedEncodingException {
+		return addFilter("agent", URLEncoder.encode(gson.toJson(a.serialize()), "UTF-8"));
 	}
 
 	/**
 	 * @param activityId
 	 */
-	public void filterByActivity(String activityId) {
-		addFilter("activity", activityId);
+	public LearningLockerRepository filterByActivity(String activityId) {
+		return addFilter("activity", activityId);
 	}
 
 	/**
 	 * @param registrationId
 	 */
-	public void filterByRegistration(String registrationId) {
-		addFilter("registration", registrationId);
+	public LearningLockerRepository filterByRegistration(String registrationId) {
+		return addFilter("registration", registrationId);
 	}
 
 	/**
 	 * @param include
 	 */
-	public void includeRelatedActivities(boolean include) {
+	public LearningLockerRepository includeRelatedActivities(boolean include) {
 		if (include) {
-			addFilter("related_activities", "true");
+			return addFilter("related_activities", "true");
 		} else {
-			addFilter("related_activities", "false");
+			return addFilter("related_activities", "false");
 		}
 	}
 
 	/**
 	 * @param include
 	 */
-	public void includeRelatedAgents(boolean include) {
+	public LearningLockerRepository includeRelatedAgents(boolean include) {
 		if (include) {
-			addFilter("related_agents", "true");
+			return addFilter("related_agents", "true");
 		} else {
-			addFilter("related_agents", "false");
+			return addFilter("related_agents", "false");
 		}
 	}
 
 	/**
 	 * @param timestamp
 	 */
-	public void filterBySince(String timestamp) {
-		addFilter("since", timestamp);
+	public LearningLockerRepository filterBySince(String timestamp) {
+		return addFilter("since", timestamp);
 	}
 
 	/**
 	 * @param timestamp
 	 */
-	public void filterByUntil(String timestamp) {
-		addFilter("until", timestamp);
+	public LearningLockerRepository filterByUntil(String timestamp) {
+		return addFilter("until", timestamp);
 	}
 
 	/**
 	 * @param limit
 	 */
-	public void limitResults(int limit) {
-		addFilter("limit", Integer.toString(limit));
+	public LearningLockerRepository limitResults(int limit) {
+		return addFilter("limit", Integer.toString(limit));
 	}
 
 	/**
 	 *
 	 */
-	public void exact() {
-		addFilter("format", "exact");
+	public LearningLockerRepository exact() {
+		return addFilter("format", "exact");
 	}
 
 	/**
 	 *
 	 */
-	public void ids() {
-		addFilter("format", "ids");
+	public LearningLockerRepository ids() {
+		return addFilter("format", "ids");
 	}
 
 	/**
 	 *
 	 */
-	public void canonical() {
-		addFilter("format", "canonical");
+	public LearningLockerRepository canonical() {
+		return addFilter("format", "canonical");
 	}
 
 	/**
 	 * @param include
 	 */
-	public void ascending(boolean include) {
+	public LearningLockerRepository ascending(boolean include) {
 		if (include) {
-			addFilter("ascending", "true");
+			return addFilter("ascending", "true");
 		} else {
-			addFilter("ascending", "false");
+			return addFilter("ascending", "false");
 		}
 	}
 

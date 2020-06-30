@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
@@ -82,10 +83,19 @@ public class LRScontroller {
 	 * @return the message from Learning Locker
 	 */
 	@GetMapping("/all")
-	public ResponseEntity<String> getAboutLearningLocker() {
+	public ResponseEntity<String> getAllLearningLocker() {
 		LearningLockerRepository ll = new LearningLockerRepository();
 		StatementResult statements = ll.getAllStatementsfromLearningLocker();
 		return new ResponseEntity<String>(statements.getStatements().toString(), HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/filters")
+	public ResponseEntity<String> getFilterLearningLocker() throws UnsupportedEncodingException {
+		LearningLockerRepository ll = new LearningLockerRepository();
+		Agent agent = new Agent();
+		agent.setMbox("mailto:test1@lrsmocah.lip6.fr");
+		StatementResult result = ll.filterByActor(agent).includeRelatedAgents(true).limitResults(10).canonical().getFilteredStatements();
+		return new ResponseEntity<String>(result.getStatements().toString(), HttpStatus.ACCEPTED);
 	}
 
 	/**
