@@ -4,8 +4,14 @@ open module com.mocah.mindmath {
 	exports com.mocah.mindmath.server.cabri;
 	exports com.mocah.mindmath.server.cabri.jsondata;
 
+	exports com.mocah.mindmath.repository.jxapi;
+
 	exports com.mocah.mindmath.decisiontree;
 	exports com.mocah.mindmath.learning;
+	exports com.mocah.mindmath.learning.algorithms;
+	exports com.mocah.mindmath.learning.utils.actions;
+	exports com.mocah.mindmath.learning.utils.states;
+	exports com.mocah.mindmath.learning.utils.values;
 
 	requires java.persistence;
 	requires spring.beans;

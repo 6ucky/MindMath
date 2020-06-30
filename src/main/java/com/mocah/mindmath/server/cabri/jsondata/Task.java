@@ -13,6 +13,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.mocah.mindmath.repository.jxapi.Account;
+import com.mocah.mindmath.repository.jxapi.Actor;
+import com.mocah.mindmath.repository.jxapi.Agent;
+
 /**
  * @author Yan Wang
  * @since 21/02/2020
@@ -106,5 +110,12 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	public String getFeedback() {
 		return feedback_id;
+	}
+
+	public Actor getLearnerAsActor() {
+		Account account = new Account(this.getId_learner(), "?");
+		Actor actor = new Agent("?", account);
+
+		return actor;
 	}
 }

@@ -41,9 +41,7 @@ import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
-import com.mocah.mindmath.repository.jxapi.Account;
 import com.mocah.mindmath.repository.jxapi.Actor;
-import com.mocah.mindmath.repository.jxapi.Agent;
 import com.mocah.mindmath.repository.jxapi.Statement;
 import com.mocah.mindmath.repository.jxapi.StatementResult;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
@@ -460,12 +458,11 @@ public class LearningProcess {
 		// TODO ask LRS and add all feedbackID for statements of same learner and family
 		// task to feedbacks List
 
-		Account account = new Account(task.getId_learner(), "?");
-		Actor actor = new Agent("?", account);
+		Actor learner = task.getLearnerAsActor();
 
 		LearningLockerRepository lrs = new LearningLockerRepository();
 		try {
-			lrs = lrs.filterByActor(actor);
+			lrs = lrs.filterByActor(learner);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
