@@ -6,6 +6,7 @@ package com.mocah.mindmath.learning;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -40,6 +41,12 @@ import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
+import com.mocah.mindmath.repository.jxapi.Account;
+import com.mocah.mindmath.repository.jxapi.Actor;
+import com.mocah.mindmath.repository.jxapi.Agent;
+import com.mocah.mindmath.repository.jxapi.Statement;
+import com.mocah.mindmath.repository.jxapi.StatementResult;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 import com.mocah.mindmath.server.cabri.jsondata.Params;
 import com.mocah.mindmath.server.cabri.jsondata.Sensors;
@@ -441,7 +448,7 @@ public class LearningProcess {
 	}
 
 	/**
-	 * Get all the feedbacks sended to a learner (got from Task object) for a same
+	 * Get all the feedbacks sent to a learner (got from Task object) for a same
 	 * family task.
 	 *
 	 * @param task
@@ -452,6 +459,35 @@ public class LearningProcess {
 
 		// TODO ask LRS and add all feedbackID for statements of same learner and family
 		// task to feedbacks List
+
+		Account account = new Account(task.getId_learner(), "?");
+		Actor actor = new Agent("?", account);
+
+		LearningLockerRepository lrs = new LearningLockerRepository();
+		try {
+			lrs = lrs.filterByActor(actor);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+
+		// TODO wait for final statement design for filter
+		lrs = lrs.addFilter("path.to.familytask", task.getSensors().getTaskFamily());
+
+		StatementResult results = lrs.getFilteredStatements();
+		List<Statement> statements = results.getStatements();
+
+		for (Statement statement : statements) {
+			String feedback = "";
+
+			// TODO get feedbackid from the statement
+			// Depends on the structure version: will the statement be unique (one statement
+			// for feedback demand and answer) or separated in two statements (one statement
+			// for feedback demand and another statement from feedback answer) ?
+			statement.getAttachments();
+
+			feedbacks.add(feedback);
+		}
 
 		// temp
 		feedbacks.add("0.0.0.0");
