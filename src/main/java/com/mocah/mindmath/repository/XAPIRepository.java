@@ -12,14 +12,14 @@ public interface XAPIRepository {
 	 *
 	 * @return list of statements as json string
 	 */
-	public String getAllStatementsfromLearningLockerAsString();
+	public String getAllStatementsAsString();
 
 	/**
 	 * Get all the statements from LRS
 	 *
 	 * @return list of statements as list of Statement object
 	 */
-	public StatementResult getAllStatementsfromLearningLocker();
+	public StatementResult getAllStatements();
 
 	/**
 	 * Get statements from LRS in json format (with filter, if no filter then is

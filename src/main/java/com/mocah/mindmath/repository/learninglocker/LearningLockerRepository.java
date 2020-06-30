@@ -156,7 +156,7 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	}
 
 	@Override
-	public String getAllStatementsfromLearningLockerAsString() {
+	public String getAllStatementsAsString() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
 
 		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL, HttpMethod.GET, entity, String.class);
@@ -166,7 +166,7 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	}
 
 	@Override
-	public StatementResult getAllStatementsfromLearningLocker() {
+	public StatementResult getAllStatements() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
 
 		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL, HttpMethod.GET, entity, String.class);
