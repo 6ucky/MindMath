@@ -21,9 +21,13 @@ public class Feedbackjson implements Serializable{
 	
 	//Test Feedback response
 	public Feedbackjson(String id) throws IOException {
+		this(id, "0.0.0.0");
+	}
+	
+	public Feedbackjson(String id, String FBId) throws IOException {
 		this.idLearner = id;
 		this.idFbCabri = "";
-		this.idFb = "F1.1";
+		this.idFb = FBId;
 		this.motivationalElementFb = String2GeneralHTML("Bravo!");
 		this.contentFb = String2ContentFBHTML("","https://mindmath.lip6.fr/videos/ResolutionEquation.mp4","");
 		this.glossaryFb = String2GlossaryFBHTML("Une propriété est bla bla.", "Ceci signifie bla bla.");
