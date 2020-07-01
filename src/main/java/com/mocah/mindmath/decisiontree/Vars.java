@@ -18,4 +18,9 @@ public class Vars {
 	public String getKey() {
 		return key;
 	}
+
+	@Override
+	public String toString() {
+		return "Var from " + this.source + " with key " + this.key;
+	}
 }

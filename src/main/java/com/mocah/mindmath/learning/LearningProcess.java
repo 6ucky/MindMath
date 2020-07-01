@@ -279,7 +279,7 @@ public class LearningProcess {
 		qValues.put(s, values);
 	}
 
-	private static IState decisionTreeBFS(Tree tree, Task task) throws IOException, InvalidTheoryException,
+	public static IState decisionTreeBFS(Tree tree, Task task) throws IOException, InvalidTheoryException,
 			NoSuchFieldException, NoSuchMethodException, InvocationTargetException, MalformedGoalException {
 		BreadthFirstSearch bfs = new BreadthFirstSearch(tree);
 
@@ -351,6 +351,7 @@ public class LearningProcess {
 								break;
 							}
 
+							System.out.println(var);
 							query = query.replaceFirst("_VAR_", replacement);
 						}
 
@@ -403,7 +404,12 @@ public class LearningProcess {
 			// No answer -> ask help case
 			return reward;
 
-		reward = baseReward * (1 / feedbackInfo(task)); // TODO check case feedbackInfo return 0
+		double feedbackInfo = feedbackInfo(task);
+		if (feedbackInfo > 0) {
+			reward = baseReward * (1 / feedbackInfo);
+		} else {
+			reward = baseReward;
+		}
 
 		if (!b) {
 			// Answer was false -> negative reward
@@ -501,6 +507,31 @@ public class LearningProcess {
 	private static double getWeightInfo(String feedbackId) {
 		// TODO get the weight of informations given by the feedback from Benjamin DB
 
-		return 1;
+		// temp
+		switch (feedbackId) {
+		case "0.0.0.0":
+		default:
+			return 1;
+
+		case "1.0.0.0":
+		case "1.1.GNC.0":
+		case "1.1.GC.0":
+		case "2.0.0.X":
+		case "2.1.GNC.X":
+		case "2.1.GC.X":
+			return 2;
+
+		case "1.2.GNC.0":
+		case "1.2.GC.0":
+		case "3.0.0.X":
+		case "4.0.0.X":
+			return 3;
+
+		case "3.2.GNC.X":
+		case "3.2.GC.X":
+		case "4.2.GNC.X":
+		case "4.2.GC.X":
+			return 4;
+		}
 	}
 }
