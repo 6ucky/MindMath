@@ -113,7 +113,7 @@ public class Extractor {
 	 * @param task
 	 * @return
 	 */
-	protected static String getTrigger(Task task) {
+	public static String getTrigger(Task task) {
 		List<Log> logs = task.getLog();
 
 		Collections.reverse(logs);
