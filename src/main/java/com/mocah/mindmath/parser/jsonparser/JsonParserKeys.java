@@ -10,6 +10,7 @@ public class JsonParserKeys {
 	public static String TASK_ID = "id";
 	public static String TASK_NAME = "task";
 	public static String TASK_TRIGGER = "trigger";
+	public static String TASK_FEEDBACK_ID = "feedback_id";
 	
 	//Parameters object
 	public static String PARAMS = "params";

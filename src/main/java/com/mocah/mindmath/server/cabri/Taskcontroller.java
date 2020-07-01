@@ -200,7 +200,7 @@ public class Taskcontroller {
 
 	/**
 	 * Get the previous Task from database
-	 *
+	 * @deprecated use getTaskrepository().getPreviousTask() instead
 	 * @param task the {@code Task} object from which one we want the previous task
 	 * @return the previous task, {@code null} if there isn't previous Task
 	 */
@@ -209,7 +209,7 @@ public class Taskcontroller {
 		List<Task> tasks = new ArrayList<>();
 		getTaskrepository().findAll().forEach(tasks::add);
 
-		Task previoustask = new Task(0);
+		Task previoustask = new Task("0");
 
 		for (int i = 0; i < tasks.size(); i++) {
 			if (tasks.get(i).equals(task)) {
@@ -222,6 +222,6 @@ public class Taskcontroller {
 			}
 		}
 
-		return (!previoustask.equals(new Task(0))) ? previoustask : null;
+		return (!previoustask.equals(new Task("0"))) ? previoustask : null;
 	}
 }

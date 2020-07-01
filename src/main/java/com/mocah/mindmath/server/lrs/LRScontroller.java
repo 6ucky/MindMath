@@ -85,7 +85,7 @@ public class LRScontroller {
 	@GetMapping("/all")
 	public ResponseEntity<String> getAllLearningLocker() {
 		LearningLockerRepository ll = new LearningLockerRepository();
-		StatementResult statements = ll.getAllStatementsfromLearningLocker();
+		StatementResult statements = ll.getAllStatements();
 		return new ResponseEntity<String>(statements.getStatements().toString(), HttpStatus.ACCEPTED);
 	}
 	

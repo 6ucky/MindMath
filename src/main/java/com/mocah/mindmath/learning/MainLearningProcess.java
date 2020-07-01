@@ -351,7 +351,7 @@ public class MainLearningProcess {
 			e.printStackTrace();
 		}
 
-		Task t = new Task("1", null, null, null, null, null);
+		Task t = new Task("1", null, null, null, null, null, null);
 		try {
 			System.out.println(t.getFieldValue("id"));
 			System.out.println(t.getFieldValue("task"));

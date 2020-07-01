@@ -130,7 +130,8 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory <
 					getValueforDB(rootObject,TASK_TRIGGER),
 					sensorparser.getSensor(), 
 					paramsparser.getParams(), 
-					logsparser.getLogs()
+					logsparser.getLogs(),
+					getValueforDB(rootObject,TASK_FEEDBACK_ID)
 			);
 		}
 		

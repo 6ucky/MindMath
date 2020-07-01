@@ -61,12 +61,12 @@ public class Task extends AbstractJsonData implements Serializable {
 		this.id_learner = "";
 	}
 
-	public Task(long id) {
+	public Task(String feedback_id) {
 		this();
-		this.id = id;
+		this.feedback_id = feedback_id;
 	}
 
-	public Task(String id_learner, String task, String trigger, Sensors sensors, Params params, List<Log> log) {
+	public Task(String id_learner, String task, String trigger, Sensors sensors, Params params, List<Log> log, String feedback_id) {
 		super();
 		this.id_learner = id_learner;
 		this.task = task;
@@ -74,6 +74,7 @@ public class Task extends AbstractJsonData implements Serializable {
 		this.sensors = sensors;
 		this.params = params;
 		this.log = log;
+		this.feedback_id = feedback_id;
 	}
 
 	public void setFeedback(String feedback_id) {
