@@ -5,8 +5,8 @@ package com.mocah.mindmath.learning;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 import com.mocah.mindmath.server.cabri.jsondata.Params;
@@ -113,12 +113,12 @@ public class Extractor {
 	 * @param task
 	 * @return
 	 */
-	public static String getTrigger(Task task) {
+	protected static String getTrigger(Task task) {
 		List<Log> logs = task.getLog();
+		ListIterator<Log> listIterator = logs.listIterator(logs.size());
 
-		Collections.reverse(logs);
-
-		for (Log log : logs) {
+		while (listIterator.hasPrevious()) {
+			Log log = listIterator.previous();
 			if (log.getType().equals("button")) {
 				if (log.getName().equals("bouton-valider") || log.getName().equals("bouton-aide"))
 					return log.getName();

@@ -2,8 +2,8 @@ package com.mocah.mindmath.server.cabri.jsondata;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -67,7 +67,8 @@ public class Task extends AbstractJsonData implements Serializable {
 		this.feedback_id = feedback_id;
 	}
 
-	public Task(String id_learner, String task, String trigger, Sensors sensors, Params params, List<Log> log, String feedback_id) {
+	public Task(String id_learner, String task, String trigger, Sensors sensors, Params params, List<Log> log,
+			String feedback_id) {
 		super();
 		this.id_learner = id_learner;
 		this.task = task;
@@ -120,12 +121,12 @@ public class Task extends AbstractJsonData implements Serializable {
 
 		return actor;
 	}
-	
+
 	public String getVerb() {
+		ListIterator<Log> listIterator = this.logs.listIterator(this.logs.size());
 
-		Collections.reverse(logs);
-
-		for (Log log : logs) {
+		while (listIterator.hasPrevious()) {
+			Log log = listIterator.previous();
 			if (log.getType().equals("button")) {
 				if (log.getName().equals("bouton-valider") || log.getName().equals("bouton-aide"))
 					return log.getName();
