@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * @author Yan Wang
  * @since 21/02/2020
@@ -23,12 +25,16 @@ public class Log extends AbstractJsonData implements Serializable {
 	@SequenceGenerator(name="logs_id", sequenceName="logs", initialValue = 1, allocationSize = 1)
 	private long id;
 
+	@Expose (serialize = true) 
 	private final String time;
 
+	@Expose (serialize = true) 
 	private final String type;
 
+	@Expose (serialize = true) 
 	private final String name;
 
+	@Expose (serialize = true) 
 	private final String action;
 
 	// empty object

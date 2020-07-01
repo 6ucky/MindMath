@@ -1,8 +1,5 @@
 package com.mocah.mindmath.server.lrs;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -23,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -38,8 +36,6 @@ import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
-import com.mocah.mindmath.repository.LocalRoute;
-import com.mocah.mindmath.repository.LocalRouteRepository;
 import com.mocah.mindmath.repository.jxapi.Account;
 import com.mocah.mindmath.repository.jxapi.Activity;
 import com.mocah.mindmath.repository.jxapi.ActivityDefinition;
@@ -48,6 +44,7 @@ import com.mocah.mindmath.repository.jxapi.Attachment;
 import com.mocah.mindmath.repository.jxapi.Context;
 import com.mocah.mindmath.repository.jxapi.ContextActivities;
 import com.mocah.mindmath.repository.jxapi.InteractionComponent;
+import com.mocah.mindmath.repository.jxapi.Result;
 import com.mocah.mindmath.repository.jxapi.Statement;
 import com.mocah.mindmath.repository.jxapi.StatementResult;
 import com.mocah.mindmath.repository.jxapi.Verb;
@@ -63,7 +60,7 @@ public class LRScontroller {
 
 	private static final String license_num = "mocah";
 	
-	private Activity a = new Activity();
+	private Statement statement;
 
 	/**
 	 * check the post request based on authorization
@@ -176,7 +173,7 @@ public class LRScontroller {
 		statement.setVerb(verb);
 
 		// Activity
-		a = new Activity();
+		Activity a = new Activity();
 		a.setId("http://example.com");
 		statement.setObject(a);
 
@@ -268,114 +265,58 @@ public class LRScontroller {
 	public ResponseEntity<String> testJXAPIexample(@RequestBody String data, @RequestHeader("Authorization") String auth) throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException{
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, "v1.0");
+		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
+		Gson gson = new Gson();
 		
-		Statement statement = new Statement();
+		statement = new Statement();
 		
 		Agent agent = new Agent();
-		Account account = new Account("idLearner:" + task.getId_learner(), "https://www.tralalere.com/");
+		Account account = new Account(task.getId_learner(), "https://www.tralalere.com/");
 		agent.setAccount(account);
 		statement.setActor(agent);
 		
 		Verb verb = Verbs.experienced();
+		if(task.getVerb().equals("bouton-valider"))
+			verb = Verbs.answered();
+		else if(task.getVerb().equals("bouton-aide"))
+			verb = Verbs.asked();
 		statement.setVerb(verb);
 		
-		a = new Activity();
-		a.setId("https://mindmath.lip6.fr");
+		Activity a = new Activity();
+		String ac_id = "https://mindmath.lip6.fr/" + fbjson.getIdFb();
+		a.setId(ac_id);
+		String key = "fr-FR";
+		String name = "resoudreEquationPremierDegre";
+		String description = "algebre";
+		HashMap<String, String> nameMap = new HashMap<>();
+		HashMap<String, String> descriptionMap = new HashMap<>();
+		nameMap.put(key, name);
+		descriptionMap.put(key, description);
+		ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
+		a.setDefinition(activityDefinition);
 		statement.setObject(a);
 		
-		String key = "en-US";
-		String name = "Cabri";
-		String description = "Json file from Cabri.";
-		HashMap<String, String> nameMap = new HashMap<String, String>();
-		HashMap<String, String> descriptionMap = new HashMap<String, String>();
-		nameMap.put(key, name);
-		descriptionMap.put(key, description);
-		ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
-		HashMap<String, JsonElement> extensions = new HashMap<String, JsonElement>();
+		Result fdresult = new Result();
+		JsonParserSensor sensorobject = new JsonParserSensor(data);
+		boolean correctness = jsonparser.getValueAsBoolean(sensorobject.getObject(),
+				JsonParserKeys.SENSOR_CORRECTANSWER);
+		fdresult.setSuccess(correctness);
 		JsonObject jo = new JsonObject();
-		jo.addProperty("https://mindmath.lip6.fr/sensor/domain", task.getSensors().getDomain());
-		jo.addProperty("https://mindmath.lip6.fr/sensor/generator", task.getSensors().getGenerator());
-		jo.addProperty("https://mindmath.lip6.fr/sensor/taskFamily", task.getSensors().getTaskFamily());
-		jo.addProperty("https://mindmath.lip6.fr/sensor/correctAnswer", task.getSensors().isCorrectAnswer());
-		jo.addProperty("https://mindmath.lip6.fr/sensor/codeError", task.getSensors().getCodeError());
-		key = "https://mindmath.lip6.fr/sensor";
-		extensions.put(key, jo);
-		for(int i = 0; i < task.getLog().size(); i++)
-		{
-			jo = new JsonObject();
-			jo.addProperty("https://mindmath.lip6.fr/log" + i + "/action", task.getLog().get(i).getAction());
-			jo.addProperty("https://mindmath.lip6.fr/log" + i + "/name", task.getLog().get(i).getName());
-			jo.addProperty("https://mindmath.lip6.fr/log" + i + "/time", task.getLog().get(i).getTime());
-			jo.addProperty("https://mindmath.lip6.fr/log" + i + "/type", task.getLog().get(i).getType());
-			key = "https://mindmath.lip6.fr/log" + i;
-			extensions.put(key, jo);
-		}
-		activityDefinition.setExtensions(extensions);
-		a.setDefinition(activityDefinition);
+		jo.addProperty("idFdbck", fbjson.getIdLearner());
+		jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
+		jo.addProperty("contentFb", fbjson.getContentFb());
+		jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
+		JsonObject root_jo = new JsonObject();
+		root_jo.add("https://mindmath.lip6.fr/feedback", jo);
+		fdresult.setExtensions(root_jo);
+		statement.setResult(fdresult);
 		
-//		Attachment attachment = new Attachment();
-//		attachment.addAttachment(data, "text/plain");
-//		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
-//		URI expected_type = new URI("");
-//		attachment.setUsageType(expected_type);
-//		key = "en-US";
-//		HashMap<String, String> expected_display = new HashMap<String, String>();
-//		expected_display.put(key, "JSON file from Cabri.");
-//		attachment.setDisplay(expected_display);
-//		attachments.add(attachment);
-//		statement.setAttachments(attachments);
-		
-		Gson gson = new Gson();
-		LearningLockerRepository ll = new LearningLockerRepository();
-		return new ResponseEntity<String>(gson.toJson(statement), HttpStatus.ACCEPTED);
-//		return new ResponseEntity<String>(ll.postStatement(statement), HttpStatus.ACCEPTED);
-	}
-		
-	@PostMapping("/testJXAPIexampleFB")
-	public ResponseEntity<String> testJXAPIexampleFB(@RequestBody String data, @RequestHeader("Authorization") String auth) throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException{
-		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		Task task = jsonparser.parse(data, "v1.0");
-		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
-		
-		Statement statement = new Statement();
-		
-		Agent agent = new Agent();
-		Account account = new Account("Feedback:" + fbjson.getIdFb(), "https://mindmath.lip6.fr");
-		agent.setAccount(account);
-		statement.setActor(agent);
-		
-		Verb verb = Verbs.experienced();
-		statement.setVerb(verb);
-		
-		Activity a_FB = new Activity();
-		a_FB.setId("https://mindmath.lip6.fr");
-		statement.setObject(a_FB);
-		
-		String key = "en-US";
-		String name = "Feedback";
-		String description = "Feedback from MindMath LIP6.";
-		HashMap<String, String> nameMap = new HashMap<String, String>();
-		HashMap<String, String> descriptionMap = new HashMap<String, String>();
-		nameMap.put(key, name);
-		descriptionMap.put(key, description);
-		ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
 		HashMap<String, JsonElement> extensions = new HashMap<String, JsonElement>();
-		JsonObject jo = new JsonObject();
-		jo.addProperty("https://mindmath.lip6.fr/feedback/idLearner", fbjson.getIdLearner());
-		jo.addProperty("https://mindmath.lip6.fr/feedback/motivationalElementFb", fbjson.getMotivationalElementFb());
-		jo.addProperty("https://mindmath.lip6.fr/feedback/contentFb", fbjson.getContentFb());
-		jo.addProperty("https://mindmath.lip6.fr/feedback/glossaryFb", fbjson.getGlossaryFb());
-		key = "https://mindmath.lip6.fr/feedback";
-		extensions.put(key, jo);
-		activityDefinition.setExtensions(extensions);
-		a_FB.setDefinition(activityDefinition);
-		
-		ContextActivities ca = new ContextActivities();
-		ArrayList<Activity> category = new ArrayList<>();
-		category.add(a);
-		ca.setCategory(category);
+		gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		extensions.put("https://mindmath.lip6.fr/sensors", gson.toJsonTree(task.getSensors()));
+		extensions.put("https://mindmath.lip6.fr/logs", gson.toJsonTree(task.getLog()));
 		Context c = new Context();
-		c.setContextActivities(ca);
+		c.setExtensions(extensions);
 		statement.setContext(c);
 		
 		Attachment attachment = new Attachment();
@@ -389,25 +330,18 @@ public class LRScontroller {
 		attachment.setDisplay(expected_display);
 		attachment.setFileUrl(new URI("https://mindmath.lip6.fr/videos/ResolutionEquation.mp4"));
 		attachments.add(attachment);
-		
-		//save JSON data of Cabri
-	    LocalRouteRepository.writeFile(data, LocalRoute.CabriRoute);
-		attachment = new Attachment();
-		attachment.addAttachment(data, "text/plain");
-		expected_type = new URI("http://lrsmocah.lip6.fr/attachments/data");
-		attachment.setUsageType(expected_type);
-		key = "en-US";
-		expected_display = new HashMap<String, String>();
-		expected_display.put(key, "JSON file from Cabri.");
-		attachment.setDisplay(expected_display);
-		attachment.setFileUrl(new URI("https://mindmath.lip6.fr/assets/cabri.json"));
-		attachments.add(attachment);
 		statement.setAttachments(attachments);
-		
-		Gson gson = new Gson();
+
 		LearningLockerRepository ll = new LearningLockerRepository();
+		gson = new Gson();
 		return new ResponseEntity<String>(gson.toJson(statement), HttpStatus.ACCEPTED);
 //		return new ResponseEntity<String>(ll.postStatement(statement), HttpStatus.ACCEPTED);
+	}
+	@PostMapping("/testJXAPIexamplePOST")
+	public ResponseEntity<String> testJXAPIexamplePOST(){
+		Gson gson = new Gson();
+		LearningLockerRepository ll = new LearningLockerRepository();
+		return new ResponseEntity<String>(ll.postStatement(statement), HttpStatus.ACCEPTED);
 	}
 }
 

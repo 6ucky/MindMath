@@ -2,6 +2,7 @@ package com.mocah.mindmath.server.cabri.jsondata;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -45,7 +46,7 @@ public class Task extends AbstractJsonData implements Serializable {
 	private final Params params;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private final List<Log> log;
+	private final List<Log> logs;
 
 	private String feedback_id;
 
@@ -53,7 +54,7 @@ public class Task extends AbstractJsonData implements Serializable {
 	public Task() {
 		super();
 		List<Log> emptylist = new ArrayList<>();
-		this.log = emptylist;
+		this.logs = emptylist;
 		this.params = new Params();
 		this.trigger = null;
 		this.task = null;
@@ -73,7 +74,7 @@ public class Task extends AbstractJsonData implements Serializable {
 		this.trigger = trigger;
 		this.sensors = sensors;
 		this.params = params;
-		this.log = log;
+		this.logs = log;
 		this.feedback_id = feedback_id;
 	}
 
@@ -102,7 +103,7 @@ public class Task extends AbstractJsonData implements Serializable {
 	}
 
 	public List<Log> getLog() {
-		return log;
+		return logs;
 	}
 
 	public long getId() {
@@ -118,5 +119,19 @@ public class Task extends AbstractJsonData implements Serializable {
 		Actor actor = new Agent("?", account);
 
 		return actor;
+	}
+	
+	public String getVerb() {
+
+		Collections.reverse(logs);
+
+		for (Log log : logs) {
+			if (log.getType().equals("button")) {
+				if (log.getName().equals("bouton-valider") || log.getName().equals("bouton-aide"))
+					return log.getName();
+			}
+		}
+
+		return null;
 	}
 }

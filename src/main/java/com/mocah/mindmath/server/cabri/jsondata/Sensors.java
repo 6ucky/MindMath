@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * @author Yan Wang
  * @since 21/02/2020
@@ -39,16 +41,22 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	private final String capteur_nb_aide;
 
+	@Expose (serialize = true) 
 	private final String domain;
 
+	@Expose (serialize = true) 
 	private final String generator;
 
+	@Expose (serialize = true) 
 	private final String taskFamily;
 
+	@Expose (serialize = true) 
 	private final String correctAnswer;
 
+	@Expose (serialize = true) 
 	private final String codeError;
 	
+	@Expose (serialize = true) 
 	private final String activityMode;
 
 	// empty object
