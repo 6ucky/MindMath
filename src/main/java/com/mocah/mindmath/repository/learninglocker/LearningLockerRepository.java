@@ -1,8 +1,6 @@
 package com.mocah.mindmath.repository.learninglocker;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
@@ -11,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import javax.net.ssl.SSLContext;

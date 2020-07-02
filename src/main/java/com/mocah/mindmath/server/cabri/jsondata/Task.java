@@ -15,7 +15,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 import com.mocah.mindmath.repository.jxapi.Account;
-import com.mocah.mindmath.repository.jxapi.Actor;
 import com.mocah.mindmath.repository.jxapi.Agent;
 
 /**
@@ -115,11 +114,13 @@ public class Task extends AbstractJsonData implements Serializable {
 		return feedback_id;
 	}
 
-	public Actor getLearnerAsActor() {
-		Account account = new Account(this.getId_learner(), "?");
-		Actor actor = new Agent("?", account);
+	public Agent getLearnerAsActor() {
+		
+		Agent agent = new Agent();
+		Account account = new Account(this.getId_learner(), "https://www.tralalere.com/");
+		agent.setAccount(account);
 
-		return actor;
+		return agent;
 	}
 
 	public String getVerb() {

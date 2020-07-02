@@ -14,47 +14,54 @@ public class Feedbackjson implements Serializable{
 	
 	private final String idLearner;
 	private final String idFbCabri;
-	private final String idFb;
+	//the id of the actitvity family performed by the learner
+	private final String idFamilytask;
+	//feedbackId
+	private final String idFeedback;
 	private final String motivationalElementFb;
 	private final String contentFb;
 	private final String glossaryFb;
 	
 	//Test Feedback response
 	public Feedbackjson(String id) throws IOException {
-		this(id, "0.0.0.0");
+		this(id, "ft3.1", "0.0.0.0");
 	}
 	
-	public Feedbackjson(String id, String FBId) throws IOException {
+	public Feedbackjson(String id, String idFamilytask, String idFeedback) throws IOException {
 		this.idLearner = id;
 		this.idFbCabri = "";
-		this.idFb = FBId;
+		this.idFamilytask = idFamilytask;
+		this.idFeedback = idFeedback;
 		this.motivationalElementFb = String2GeneralHTML("Bravo!");
 		this.contentFb = String2ContentFBHTML("","https://mindmath.lip6.fr/videos/ResolutionEquation.mp4","");
 		this.glossaryFb = String2GlossaryFBHTML("Une propriété est bla bla.", "Ceci signifie bla bla.");
 	}
 	
+	//Test for Tralalere
 	public Feedbackjson(String id, boolean correctness) {
 		this.idLearner = id;
 		this.idFbCabri = "";
 		this.contentFb = "";
 		this.glossaryFb = "";
+		this.idFeedback = "0.0.0.0";
 		if(correctness)
 		{
-			this.idFb = "F1.1";
+			this.idFamilytask = "F1.1";
 			this.motivationalElementFb = "<h1>Bravo! Poursuis dans ta lancée!</h1>";
 		}
 		else
 		{
-			this.idFb = "F2.1";
+			this.idFamilytask = "F2.1";
 			this.motivationalElementFb = "<h1>Ne baisse pas les bras, prend ton temps et réessaye!</h1>";
 		}
 	}
 	
-	public Feedbackjson(String idLearner, String idFbCabri, String idFb, String url, String motivationalElement, String default_img_url, 
+	public Feedbackjson(String idLearner, String idFbCabri, String idFamilytask, String idFeedback, String url, String motivationalElement, String default_img_url, 
 			String video_url, String video_srt_url, String content_propriete, String content_preservation) throws IOException {
 		this.idLearner = idLearner;
 		this.idFbCabri = idFbCabri;
-		this.idFb = idFb;
+		this.idFamilytask = idFamilytask;
+		this.idFeedback = idFeedback;
 		this.motivationalElementFb = String2GeneralHTML(motivationalElement);
 		this.contentFb = String2ContentFBHTML(default_img_url, video_url, video_srt_url);
 		this.glossaryFb = String2GlossaryFBHTML(content_propriete, content_preservation);
@@ -109,12 +116,16 @@ public class Feedbackjson implements Serializable{
 		return glossaryFb;
 	}
 
-	public String getIdFb() {
-		return idFb;
-	}
-
 	public String getIdLearner() {
 		return idLearner;
+	}
+
+	public String getIdFamilytask() {
+		return idFamilytask;
+	}
+
+	public String getIdFeedback() {
+		return idFeedback;
 	}
 
 }
