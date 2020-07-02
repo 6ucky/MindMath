@@ -442,7 +442,7 @@ public class LearningProcess {
 	private static double feedbackInfo(Task task) {
 		double feedbackInfo = 0;
 
-		List<String> feedbacks = getFeedbacks(task);
+		List<String> feedbacks = getFTFeedbacks(task);
 
 		double sum = 0;
 		for (String feedbackId : feedbacks) {
@@ -462,7 +462,7 @@ public class LearningProcess {
 	 * @param task
 	 * @return
 	 */
-	private static List<String> getFeedbacks(Task task) {
+	private static List<String> getFTFeedbacks(Task task) {
 		List<String> feedbacks = new ArrayList<>();
 
 		Actor learner = task.getLearnerAsActor();
