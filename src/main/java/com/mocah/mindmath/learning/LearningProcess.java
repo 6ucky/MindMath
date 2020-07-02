@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mocah.mindmath.decisiontree.Branch;
 import com.mocah.mindmath.decisiontree.Child;
@@ -43,6 +45,7 @@ import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
 import com.mocah.mindmath.repository.jxapi.Actor;
+import com.mocah.mindmath.repository.jxapi.Result;
 import com.mocah.mindmath.repository.jxapi.Statement;
 import com.mocah.mindmath.repository.jxapi.StatementResult;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
@@ -462,39 +465,32 @@ public class LearningProcess {
 	private static List<String> getFeedbacks(Task task) {
 		List<String> feedbacks = new ArrayList<>();
 
-		// TODO ask LRS and add all feedbackID for statements of same learner and family
-		// task to feedbacks List
-
 		Actor learner = task.getLearnerAsActor();
 
 		LearningLockerRepository lrs = new LearningLockerRepository();
 		try {
-			lrs = lrs.filterByActor(learner);
+			// Filter applied : same learner and same task family
+			lrs = lrs.filterByActor(learner).addFilter("context.extensions."
+					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
+					task.getSensors().getTaskFamily());
 		} catch (UnsupportedEncodingException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
 
-		// TODO wait for final statement design for filter
-		lrs = lrs.addFilter("path.to.familytask", task.getSensors().getTaskFamily());
-
 		StatementResult results = lrs.getFilteredStatements();
 		List<Statement> statements = results.getStatements();
 
 		for (Statement statement : statements) {
-			String feedback = "";
-
-			// TODO get feedbackid from the statement
-			// Depends on the structure version: will the statement be unique (one statement
-			// for feedback demand and answer) or separated in two statements (one statement
-			// for feedback demand and another statement from feedback answer) ?
-			statement.getAttachments();
-
-			feedbacks.add(feedback);
+			Result r = statement.getResult();
+			JsonObject extensions = r.getExtensions();
+			if (extensions != null) {
+				// There is a feedback
+				String feedback = extensions.getAsJsonObject("https://mindmath.lip6.fr/feedback").get("idFeedback")
+						.getAsString();
+				feedbacks.add(feedback);
+			}
 		}
-
-		// temp
-		feedbacks.add("0.0.0.0");
 
 		return feedbacks;
 	}
