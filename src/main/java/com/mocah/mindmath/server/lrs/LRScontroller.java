@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -44,7 +43,6 @@ import com.mocah.mindmath.repository.jxapi.Attachment;
 import com.mocah.mindmath.repository.jxapi.Context;
 import com.mocah.mindmath.repository.jxapi.ContextActivities;
 import com.mocah.mindmath.repository.jxapi.InteractionComponent;
-import com.mocah.mindmath.repository.jxapi.Result;
 import com.mocah.mindmath.repository.jxapi.Statement;
 import com.mocah.mindmath.repository.jxapi.StatementResult;
 import com.mocah.mindmath.repository.jxapi.Verb;
@@ -150,6 +148,7 @@ public class LRScontroller {
 		return new ResponseEntity<>(response.toString(), HttpStatus.ACCEPTED);
 	}
 
+	//jxapi template
 	@PostMapping("/testJXAPI")
 	public ResponseEntity<String> testJXAPI(@RequestBody String data, @RequestHeader("Authorization") String auth)
 			throws IOException, NoSuchAlgorithmException, URISyntaxException {
@@ -261,85 +260,45 @@ public class LRScontroller {
 		String json = gson.toJson(statement);
 		return new ResponseEntity<>(json, HttpStatus.ACCEPTED);
 	}
+	/**
+	 * test to get statement json using jxapi
+	 * @param data json from Cabri
+	 * @return json of statement
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws JsonParserCustomException
+	 * @throws URISyntaxException
+	 */
 	@PostMapping("/testJXAPIexample")
-	public ResponseEntity<String> testJXAPIexample(@RequestBody String data, @RequestHeader("Authorization") String auth) throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException{
+	public ResponseEntity<String> testJXAPIexample(@RequestBody String data) throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException{
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, "v1.0");
 		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
-		Gson gson = new Gson();
+		XAPIgenerator generator = new XAPIgenerator();
 		
-		statement = new Statement();
-		
-		Agent agent = new Agent();
-		Account account = new Account(task.getId_learner(), "https://www.tralalere.com/");
-		agent.setAccount(account);
-		statement.setActor(agent);
-		
-		Verb verb = Verbs.experienced();
-		if(task.getVerb().equals("bouton-valider"))
-			verb = Verbs.answered();
-		else if(task.getVerb().equals("bouton-aide"))
-			verb = Verbs.asked();
-		statement.setVerb(verb);
-		
-		Activity a = new Activity();
-		String ac_id = "https://mindmath.lip6.fr/" + fbjson.getIdFb();
-		a.setId(ac_id);
-		String key = "fr-FR";
-		String name = "resoudreEquationPremierDegre";
-		String description = "algebre";
-		HashMap<String, String> nameMap = new HashMap<>();
-		HashMap<String, String> descriptionMap = new HashMap<>();
-		nameMap.put(key, name);
-		descriptionMap.put(key, description);
-		ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
-		a.setDefinition(activityDefinition);
-		statement.setObject(a);
-		
-		Result fdresult = new Result();
-		JsonParserSensor sensorobject = new JsonParserSensor(data);
-		boolean correctness = jsonparser.getValueAsBoolean(sensorobject.getObject(),
-				JsonParserKeys.SENSOR_CORRECTANSWER);
-		fdresult.setSuccess(correctness);
-		JsonObject jo = new JsonObject();
-		jo.addProperty("idFdbck", fbjson.getIdLearner());
-		jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
-		jo.addProperty("contentFb", fbjson.getContentFb());
-		jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
-		JsonObject root_jo = new JsonObject();
-		root_jo.add("https://mindmath.lip6.fr/feedback", jo);
-		fdresult.setExtensions(root_jo);
-		statement.setResult(fdresult);
-		
-		HashMap<String, JsonElement> extensions = new HashMap<String, JsonElement>();
-		gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		extensions.put("https://mindmath.lip6.fr/sensors", gson.toJsonTree(task.getSensors()));
-		extensions.put("https://mindmath.lip6.fr/logs", gson.toJsonTree(task.getLog()));
-		Context c = new Context();
-		c.setExtensions(extensions);
-		statement.setContext(c);
-		
-		Attachment attachment = new Attachment();
-		attachment.addAttachment("../mindmath2/src/main/resources/static/videos/ResolutionEquation.mp4", "application/octet-stream");
-		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
-		URI expected_type = new URI("http://lrsmocah.lip6.fr/attachments/video");
-		attachment.setUsageType(expected_type);
-		key = "en-US";
-		HashMap<String, String> expected_display = new HashMap<String, String>();
-		expected_display.put(key, "Feedback Video.");
-		attachment.setDisplay(expected_display);
-		attachment.setFileUrl(new URI("https://mindmath.lip6.fr/videos/ResolutionEquation.mp4"));
-		attachments.add(attachment);
-		statement.setAttachments(attachments);
+		statement = generator.setAttachment().generateStatement(task, fbjson);
 
-		LearningLockerRepository ll = new LearningLockerRepository();
-		gson = new Gson();
-		return new ResponseEntity<String>(gson.toJson(statement), HttpStatus.ACCEPTED);
-//		return new ResponseEntity<String>(ll.postStatement(statement), HttpStatus.ACCEPTED);
-	}
-	@PostMapping("/testJXAPIexamplePOST")
-	public ResponseEntity<String> testJXAPIexamplePOST(){
 		Gson gson = new Gson();
+		return new ResponseEntity<String>(gson.toJson(statement), HttpStatus.ACCEPTED);
+	}
+	/**
+	 * test to post statement json using jxapi
+	 * @param data json from Cabri
+	 * @return id of statement in Learning Locker
+	 * @throws JsonParserCustomException
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws URISyntaxException
+	 */
+	@PostMapping("/testJXAPIexamplePOST")
+	public ResponseEntity<String> testJXAPIexamplePOST(@RequestBody String data) throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException{
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		Task task = jsonparser.parse(data, "v1.0");
+		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
+		XAPIgenerator generator = new XAPIgenerator();
+		
+		statement = generator.setAttachment().generateStatement(task, fbjson);
+		
 		LearningLockerRepository ll = new LearningLockerRepository();
 		return new ResponseEntity<String>(ll.postStatement(statement), HttpStatus.ACCEPTED);
 	}

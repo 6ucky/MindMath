@@ -1,8 +1,28 @@
 package com.mocah.mindmath.repository.learninglocker;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mocah.mindmath.repository.jxapi.Activity;
+import com.mocah.mindmath.repository.jxapi.ActivityDefinition;
+import com.mocah.mindmath.repository.jxapi.Attachment;
+import com.mocah.mindmath.repository.jxapi.Context;
+import com.mocah.mindmath.repository.jxapi.Result;
+import com.mocah.mindmath.repository.jxapi.Statement;
+import com.mocah.mindmath.repository.jxapi.Verb;
+import com.mocah.mindmath.repository.jxapi.Verbs;
+import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
+import com.mocah.mindmath.server.cabri.jsondata.Task;
 
 /**
  * Generate statement based on xAPI
@@ -15,12 +35,14 @@ public class XAPIgenerator {
 	private JsonObject verbObject;
 	private JsonObject objectObject;
 	private JsonObject contextObject;
+	private Statement statement;
 	
 	public XAPIgenerator() {
 		this.actorObject = new JsonObject();
 		this.verbObject = new JsonObject();
 		this.objectObject = new JsonObject();
 		this.contextObject = new JsonObject();
+		this.statement = new Statement();
 	}
 
 	public void setActor(String email, String name) {
@@ -123,9 +145,83 @@ public class XAPIgenerator {
 		return rootObject;
 	}
 	
-	// TODO get time from Cabri json file
-	public void generateTimestamp() {
+	/**
+	 * set attachment
+	 * @TODO need to give input for each statement
+	 * @return this generator
+	 * @throws NoSuchAlgorithmException
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
+	public XAPIgenerator setAttachment() throws NoSuchAlgorithmException, IOException, URISyntaxException {
+		Attachment attachment = new Attachment();
+		attachment.addAttachment("../mindmath2/src/main/resources/static/videos/ResolutionEquation.mp4", "application/octet-stream");
+		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+		URI expected_type = new URI("http://lrsmocah.lip6.fr/attachments/video");
+		attachment.setUsageType(expected_type);
+		String key = "en-US";
+		HashMap<String, String> expected_display = new HashMap<String, String>();
+		expected_display.put(key, "Feedback Video.");
+		attachment.setDisplay(expected_display);
+		attachment.setFileUrl(new URI("https://mindmath.lip6.fr/videos/ResolutionEquation.mp4"));
+		attachments.add(attachment);
+		statement.setAttachments(attachments);
+		return this;
+	}
+	
+	/**
+	 * generate statement based on jxapi, set actor, verb, object, context
+	 * @param task
+	 * @param fbjson
+	 * @return statement for xAPI
+	 */
+	public Statement generateStatement(Task task, Feedbackjson fbjson) {
+
+		statement.setActor(task.getLearnerAsActor());
 		
+		Verb verb = Verbs.experienced();
+		if(task.getVerb().equals("bouton-valider"))
+			verb = Verbs.answered();
+		else if(task.getVerb().equals("bouton-aide"))
+			verb = Verbs.asked();
+		statement.setVerb(verb);
+		
+		Activity a = new Activity();
+		String ac_id = "https://mindmath.lip6.fr/" + fbjson.getIdFamilytask();
+		a.setId(ac_id);
+		String key = "fr-FR";
+		String name = "resoudreEquationPremierDegre";
+		String description = "algebre";
+		HashMap<String, String> nameMap = new HashMap<>();
+		HashMap<String, String> descriptionMap = new HashMap<>();
+		nameMap.put(key, name);
+		descriptionMap.put(key, description);
+		ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
+		a.setDefinition(activityDefinition);
+		statement.setObject(a);
+		
+		Result fdresult = new Result();
+		boolean correctness = Boolean.getBoolean(task.getSensors().isCorrectAnswer());
+		fdresult.setSuccess(correctness);
+		JsonObject jo = new JsonObject();
+		jo.addProperty("idFeedback", fbjson.getIdFeedback());
+		jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
+		jo.addProperty("contentFb", fbjson.getContentFb());
+		jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
+		JsonObject root_jo = new JsonObject();
+		root_jo.add("https://mindmath.lip6.fr/feedback", jo);
+		fdresult.setExtensions(root_jo);
+		statement.setResult(fdresult);
+		
+		HashMap<String, JsonElement> extensions = new HashMap<String, JsonElement>();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		extensions.put("https://mindmath.lip6.fr/sensors", gson.toJsonTree(task.getSensors()));
+		extensions.put("https://mindmath.lip6.fr/logs", gson.toJsonTree(task.getLog()));
+		Context c = new Context();
+		c.setExtensions(extensions);
+		statement.setContext(c);
+
+		return statement;
 	}
 	
 }
