@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonPrimitive;
@@ -279,7 +280,7 @@ public class LearningProcess {
 		qValues.put(s, values);
 	}
 
-	public static IState decisionTreeBFS(Tree tree, Task task) throws IOException, InvalidTheoryException,
+	private static IState decisionTreeBFS(Tree tree, Task task) throws IOException, InvalidTheoryException,
 			NoSuchFieldException, NoSuchMethodException, InvocationTargetException, MalformedGoalException {
 		BreadthFirstSearch bfs = new BreadthFirstSearch(tree);
 
@@ -325,7 +326,7 @@ public class LearningProcess {
 						Child c = node.getChild(child);
 						Edge e = c.getEdge();
 
-						String query = e.getQuery();
+						String query = StringUtils.appendIfMissing(e.getQuery(), ".");
 						for (Vars var : e.getVars()) {
 							String replacement = "ERROR";
 

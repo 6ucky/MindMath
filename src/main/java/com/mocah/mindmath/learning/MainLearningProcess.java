@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonPrimitive;
 import com.mocah.mindmath.decisiontree.Branch;
@@ -177,27 +179,34 @@ public class MainLearningProcess {
 	}
 
 	private static IState decisionTreeBFS(Tree tree, Task task) throws IOException, InvalidTheoryException,
-			MalformedGoalException, NoSuchFieldException, SecurityException, NoSolutionException, NoSuchMethodException,
-			IllegalAccessException, IllegalArgumentException, InvocationTargetException, NullPointerException {
+			NoSuchFieldException, NoSuchMethodException, InvocationTargetException, MalformedGoalException {
 		BreadthFirstSearch bfs = new BreadthFirstSearch(tree);
 
 		Node node = tree.getRoot();
 		State state = new State();
 
 		InputStream input = LocalRouteRepository.readFileasInputStream(LocalRoute.PrologTestRoute);
-		Theory tr = new Theory(input);
-		Prolog pg = new Prolog();
-		pg.setTheory(tr);
 
-		stateInterprete(bfs, node, task, state, pg);
+		Prolog pg;
+		try {
+			Theory tr = new Theory(input);
+			pg = new Prolog();
+			pg.setTheory(tr);
+		} catch (IOException e) {
+			throw new IOException("Missing Prolog file; file path should be '" + LocalRoute.PrologTestRoute
+					+ "'. Read access to file could be missing to.", e);
+//	e.printStackTrace();
+		}
+
+		if (pg != null) {
+			stateInterprete(bfs, node, task, state, pg);
+		}
 
 		return state;
 	}
 
 	private static void stateInterprete(BreadthFirstSearch bfs, Node node, Task task, State state, Prolog pg)
-			throws MalformedGoalException, NoSuchFieldException, SecurityException, NoSolutionException,
-			NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NullPointerException {
+			throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, MalformedGoalException {
 		if (node != null) {
 			bfs.visitNode(node);
 
@@ -212,11 +221,10 @@ public class MainLearningProcess {
 						Node child = opened.pollFirst();
 						System.out.println("TEST edge to " + child.getId());
 
-//						if (child.getType() == NodeType.STATE) {
 						Child c = node.getChild(child);
 						Edge e = c.getEdge();
 
-						String query = e.getQuery();
+						String query = StringUtils.appendIfMissing(e.getQuery(), ".");
 						for (Vars var : e.getVars()) {
 							String replacement = "ERROR";
 
@@ -242,15 +250,14 @@ public class MainLearningProcess {
 								break;
 							}
 
+							System.out.println(var);
 							query = query.replaceFirst("_VAR_", replacement);
 						}
 
 						System.out.println(query);
 						SolveInfo info = pg.solve(query);
-						if (info.isSuccess()) {
-							System.out.println("solution: " + info.getSolution() + " - bindings: " + info);
-							System.out.println(info.getSolution().getTerm());
 
+						if (info.isSuccess()) {
 							JsonPrimitive val = e.getValue();
 							if (val.isNumber()) {
 								state.putParam(node.getId(), val.getAsNumber());
@@ -264,9 +271,6 @@ public class MainLearningProcess {
 
 							break;
 						}
-//						} else {
-//							//
-//						}
 					}
 				}
 				break;
@@ -361,11 +365,14 @@ public class MainLearningProcess {
 			e.printStackTrace();
 		}
 
-		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":true,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"codeError\":\"ce_err5\",\"ActivityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
-//		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":false,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"codeError\":\"ce_err5\",\"ActivityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
-//		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":false,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"ActivityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
+//		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":true,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"codeError\":\"ce_err5\",\"activityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
+//		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":false,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"codeError\":\"ce_err5\",\"activityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
+//		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":false,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"activityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
 
+		// TODO check null pointer
+		String data = "{ \"id\": \"100\", \"sensors\": {\"idLearner\":\"learner1\", \"domain\": \"algebre\", \"generator\": \"resoudreEquationPremierDegre\", \"taskFamily\": \"ft3.1\", \"correctAnswer\": false, \"codeError\": \"ce_err5\", \"activityMode\":\"0\" }, \"log\": [ { \"time\": 4015, \"type\": \"tool\", \"name\": \"line_tool\", \"action\": \"create\" }, { \"time\": 5813, \"type\": \"button\", \"name\": \"bouton-effacer\", \"action\": \"push\" }, { \"time\": 7689, \"type\": \"button\", \"name\": \"bouton-valider\", \"action\": \"push\" } ] }";
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		System.out.println(data);
 
 		IState readedState = null;
 		try {
@@ -374,8 +381,8 @@ public class MainLearningProcess {
 			readedState = decisionTreeBFS(tree, task);
 
 		} catch (JsonParserCustomException | InvalidTheoryException | MalformedGoalException | NoSuchFieldException
-				| SecurityException | IOException | NoSolutionException | NoSuchMethodException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException | NullPointerException e) {
+				| SecurityException | IOException | NoSuchMethodException | IllegalArgumentException
+				| InvocationTargetException | NullPointerException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
