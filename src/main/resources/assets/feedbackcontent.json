@@ -1,0 +1,63 @@
+{
+    "feedbackcontents":
+    [
+        {
+            "FeedbackName": "3.0",
+            "Ponderation": 0.4,
+            "motivations":
+            [
+                {
+                    "activityMode": "",
+                    "motivation_data": "Dommage, soit attentif aux conseils suivants :"
+                },
+                {
+                    "activityMode": "1",
+                    "motivation_data": "Mince, ça peut arriver. Même aux meilleurs !"
+                },
+                {
+                    "activityMode": "2",
+                    "motivation_data": "Ne baisse pas les bras. "
+                },
+                {
+                    "activityMode": "",
+                    "motivation_data": "Dommage !"
+                },
+                {
+                    "activityMode": "",
+                    "motivation_data": "Ne baisse pas les bras, prend ton temps et lis bien les conseils suivants :"
+                },
+                {
+                    "activityMode": "",
+                    "motivation_data": "Attention !"
+                }
+            ],
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "image",
+                    "glossaire": "",
+                    "content_url": "https://drive.google.com/file/d/1TjpARXpOGKjmLZy8G5sk2X0M2Hb5GLLQ/view?usp=sharing"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": "Une égalité : une égalité est une expression comportant le signe « = ». Elle est composée de deux membres situés de part et d'autre du signe « = »",
+                    "content_url": "https://drive.google.com/file/d/1Z24avTEXR5yiwCufwmdwdqehYmoJ-ntv/view?usp=sharing"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "image",
+                    "glossaire": "Une égalité : une égalité est une expression comportant le signe « = ». Elle est composée de deux membres situés de part et d'autre du signe « = »",
+                    "content_url": "https://drive.google.com/file/d/18a65-NAtq4uNQn0O4020nEwyukMg2kJP/view?usp=sharing"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "image",
+                    "glossaire": "Terme constant : on appelle terme constant un terme qui est un nombre seul (sans x). Par exemple dans l’équation 3x + 4 = 2x - 7, 4 et 7 sont des termes constants.",
+                    "content_url": "https://drive.google.com/file/d/1E4_CX3CRxbs7BLEs-1rudl4xWpWPw_59/view?usp=sharing"
+                }
+            ]
+        }
+    ]
+}
