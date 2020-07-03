@@ -483,12 +483,15 @@ public class LearningProcess {
 
 		for (Statement statement : statements) {
 			Result r = statement.getResult();
-			JsonObject extensions = r.getExtensions();
-			if (extensions != null) {
-				// There is a feedback
-				String feedback = extensions.getAsJsonObject("https://mindmath.lip6.fr/feedback").get("idFeedback")
-						.getAsString();
-				feedbacks.add(feedback);
+			// TODO check null result content
+			if (r != null) {
+				JsonObject extensions = r.getExtensions();
+				if (extensions != null) {
+					// There is a feedback
+					String feedback = extensions.getAsJsonObject("https://mindmath.lip6.fr/feedback").get("idFeedback")
+							.getAsString();
+					feedbacks.add(feedback);
+				}
 			}
 		}
 
