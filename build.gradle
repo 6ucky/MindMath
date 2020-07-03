@@ -70,6 +70,14 @@ dependencies {
 	//Cryptographic API
 	implementation 'bouncycastle:bcprov-jdk16:140'
 	
+	implementation ('gov.adlnet:jxapi:2.0.1') {
+		exclude group: 'com.google.code.gson'
+		exclude group: 'org.bouncycastle'
+		exclude group: 'com.liferay.org.apache.commons.fileupload'
+		exclude group: 'org.apache.maven.plugins'
+		exclude group: 'javax.mail'
+	}
+	
 	springAutoConfig 'org.springframework.boot:spring-boot-autoconfigure'
 	
 	//implementation('org.springframework.boot:spring-boot-starter-test') {

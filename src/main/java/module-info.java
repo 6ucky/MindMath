@@ -4,8 +4,6 @@ open module com.mocah.mindmath {
 	exports com.mocah.mindmath.server.cabri;
 	exports com.mocah.mindmath.server.cabri.jsondata;
 
-	exports com.mocah.mindmath.repository.jxapi;
-
 	exports com.mocah.mindmath.decisiontree;
 	exports com.mocah.mindmath.learning;
 	exports com.mocah.mindmath.learning.algorithms;
@@ -37,6 +35,7 @@ open module com.mocah.mindmath {
 	requires springfox.assembly;
 	requires bcprov.jdk16;
 	requires spring.data.jpa;
+	requires jxapi;
 
 	// test requirements
 	requires spring.boot.test;

@@ -44,10 +44,6 @@ import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
-import com.mocah.mindmath.repository.jxapi.Actor;
-import com.mocah.mindmath.repository.jxapi.Result;
-import com.mocah.mindmath.repository.jxapi.Statement;
-import com.mocah.mindmath.repository.jxapi.StatementResult;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 import com.mocah.mindmath.server.cabri.jsondata.Params;
@@ -59,6 +55,10 @@ import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Theory;
+import gov.adlnet.xapi.model.Actor;
+import gov.adlnet.xapi.model.Result;
+import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.StatementResult;
 
 /**
  * @author Thibaut SIMON-FINE

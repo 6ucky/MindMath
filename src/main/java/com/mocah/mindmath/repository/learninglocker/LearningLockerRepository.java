@@ -34,15 +34,16 @@ import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLRS;
 import com.mocah.mindmath.parser.jsonparser.LRSType;
 import com.mocah.mindmath.repository.XAPIRepository;
-import com.mocah.mindmath.repository.jxapi.Actor;
-import com.mocah.mindmath.repository.jxapi.IStatementObject;
-import com.mocah.mindmath.repository.jxapi.Statement;
-import com.mocah.mindmath.repository.jxapi.StatementResult;
-import com.mocah.mindmath.repository.jxapi.Verb;
-import com.mocah.mindmath.repository.jxapi.adapters.ActorAdapter;
-import com.mocah.mindmath.repository.jxapi.adapters.StatementObjectAdapter;
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 import com.mocah.mindmath.server.cabri.jsondata.Sensors;
+
+import gov.adlnet.xapi.model.Actor;
+import gov.adlnet.xapi.model.IStatementObject;
+import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.StatementResult;
+import gov.adlnet.xapi.model.Verb;
+import gov.adlnet.xapi.model.adapters.ActorAdapter;
+import gov.adlnet.xapi.model.adapters.StatementObjectAdapter;
 
 /**
  * Use Spring Rest Template to connect to Learning Locker
@@ -112,7 +113,7 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 
 		return headers;
 	}
-	
+
 	// add quary parameters in URL
 	private StringBuilder InitializeQuaryURL() {
 		StringBuilder query = new StringBuilder();
@@ -127,15 +128,15 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 			query.deleteCharAt(query.length() - 1);
 		}
 		return query;
-	}	
-	
-	//add Generic Interface Adapter of Actor class and IStatementObject class for Gson
-	private Gson getDecoder() {	
+	}
+
+	// add Generic Interface Adapter of Actor class and IStatementObject class for
+	// Gson
+	private Gson getDecoder() {
 		Gson gson_decoder = new Gson();
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(Actor.class, new ActorAdapter());
-		builder.registerTypeAdapter(IStatementObject.class,
-				new StatementObjectAdapter());
+		builder.registerTypeAdapter(IStatementObject.class, new StatementObjectAdapter());
 		gson_decoder = builder.create();
 		return gson_decoder;
 	}
@@ -169,13 +170,13 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL, HttpMethod.GET, entity, String.class);
 		return getDecoder().fromJson(response.getBody(), StatementResult.class);
 	}
-	
+
 	@Override
 	public String getFilteredStatementsAsString() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
-		
-		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL + InitializeQuaryURL().toString(), HttpMethod.GET,
-				entity, String.class);
+
+		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL + InitializeQuaryURL().toString(),
+				HttpMethod.GET, entity, String.class);
 
 		JsonParserLRS parser = new JsonParserLRS(response.getBody(), LRSType.RESPONSE);
 
@@ -185,13 +186,13 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	@Override
 	public StatementResult getFilteredStatements() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
-		
-		//set true to URI string
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(STATEMENT_URL + InitializeQuaryURL().toString());
+
+		// set true to URI string
+		UriComponentsBuilder builder = UriComponentsBuilder
+				.fromHttpUrl(STATEMENT_URL + InitializeQuaryURL().toString());
 		URI uri = builder.build(true).toUri();
-		ResponseEntity<String> response = this.restTemp.exchange(uri, HttpMethod.GET,
-		entity, String.class);
-		
+		ResponseEntity<String> response = this.restTemp.exchange(uri, HttpMethod.GET, entity, String.class);
+
 		return getDecoder().fromJson(response.getBody(), StatementResult.class);
 	}
 
@@ -225,7 +226,7 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	public LearningLockerRepository addFilter(String key, String value) {
 		LearningLockerRepository client = new LearningLockerRepository();
 		if (client.filters == null) {
-			client.filters = new HashMap<String, String>();
+			client.filters = new HashMap<>();
 		}
 		if (this.filters != null) {
 			for (Entry<String, String> filter : filters.entrySet()) {
@@ -284,22 +285,20 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	 * @param include
 	 */
 	public LearningLockerRepository includeRelatedActivities(boolean include) {
-		if (include) {
+		if (include)
 			return addFilter("related_activities", "true");
-		} else {
+		else
 			return addFilter("related_activities", "false");
-		}
 	}
 
 	/**
 	 * @param include
 	 */
 	public LearningLockerRepository includeRelatedAgents(boolean include) {
-		if (include) {
+		if (include)
 			return addFilter("related_agents", "true");
-		} else {
+		else
 			return addFilter("related_agents", "false");
-		}
 	}
 
 	/**
@@ -348,16 +347,15 @@ public class LearningLockerRepository extends LearningLockerKeys implements XAPI
 	 * @param include
 	 */
 	public LearningLockerRepository ascending(boolean include) {
-		if (include) {
+		if (include)
 			return addFilter("ascending", "true");
-		} else {
+		else
 			return addFilter("ascending", "false");
-		}
 	}
 
 	@Override
 	public String postStatement(Statement statement) {
-		//post statement
+		// post statement
 		HttpEntity<String> entity = new HttpEntity<>(gson.toJson(statement), header_entity);
 		ResponseEntity<String> response1 = this.restTemp.exchange(STATEMENT_URL, HttpMethod.POST, entity, String.class);
 		// the id of the current statement

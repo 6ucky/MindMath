@@ -1,7 +1,7 @@
 package com.mocah.mindmath.repository;
 
-import com.mocah.mindmath.repository.jxapi.Statement;
-import com.mocah.mindmath.repository.jxapi.StatementResult;
+import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.StatementResult;
 
 public interface XAPIRepository {
 
@@ -39,6 +39,7 @@ public interface XAPIRepository {
 
 	/**
 	 * POST statement to LRS
+	 * 
 	 * @param statement
 	 * @return the id of statement
 	 */

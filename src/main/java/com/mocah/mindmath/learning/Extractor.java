@@ -14,17 +14,18 @@ import java.util.ListIterator;
 import org.apache.commons.lang3.BooleanUtils;
 
 import com.google.gson.JsonElement;
-import com.mocah.mindmath.repository.jxapi.Actor;
-import com.mocah.mindmath.repository.jxapi.Context;
-import com.mocah.mindmath.repository.jxapi.Result;
-import com.mocah.mindmath.repository.jxapi.Statement;
-import com.mocah.mindmath.repository.jxapi.StatementResult;
-import com.mocah.mindmath.repository.jxapi.Verbs;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 import com.mocah.mindmath.server.cabri.jsondata.Params;
 import com.mocah.mindmath.server.cabri.jsondata.Sensors;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
+
+import gov.adlnet.xapi.model.Actor;
+import gov.adlnet.xapi.model.Context;
+import gov.adlnet.xapi.model.Result;
+import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.StatementResult;
+import gov.adlnet.xapi.model.Verbs;
 
 /**
  * @author Thibaut SIMON-FINE

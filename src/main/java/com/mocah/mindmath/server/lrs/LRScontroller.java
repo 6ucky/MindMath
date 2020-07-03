@@ -35,18 +35,19 @@ import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 import com.mocah.mindmath.server.cabri.jsondata.Task;
-import com.mocah.mindmath.repository.jxapi.Account;
-import com.mocah.mindmath.repository.jxapi.Activity;
-import com.mocah.mindmath.repository.jxapi.ActivityDefinition;
-import com.mocah.mindmath.repository.jxapi.Agent;
-import com.mocah.mindmath.repository.jxapi.Attachment;
-import com.mocah.mindmath.repository.jxapi.Context;
-import com.mocah.mindmath.repository.jxapi.ContextActivities;
-import com.mocah.mindmath.repository.jxapi.InteractionComponent;
-import com.mocah.mindmath.repository.jxapi.Statement;
-import com.mocah.mindmath.repository.jxapi.StatementResult;
-import com.mocah.mindmath.repository.jxapi.Verb;
-import com.mocah.mindmath.repository.jxapi.Verbs;
+
+import gov.adlnet.xapi.model.Account;
+import gov.adlnet.xapi.model.Activity;
+import gov.adlnet.xapi.model.ActivityDefinition;
+import gov.adlnet.xapi.model.Agent;
+import gov.adlnet.xapi.model.Attachment;
+import gov.adlnet.xapi.model.Context;
+import gov.adlnet.xapi.model.ContextActivities;
+import gov.adlnet.xapi.model.InteractionComponent;
+import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.StatementResult;
+import gov.adlnet.xapi.model.Verb;
+import gov.adlnet.xapi.model.Verbs;
 
 /**
  * @author Yan Wang
@@ -57,12 +58,12 @@ import com.mocah.mindmath.repository.jxapi.Verbs;
 public class LRScontroller {
 
 	private static final String license_num = "mocah";
-	
+
 	private Statement statement;
 
 	/**
 	 * check the post request based on authorization
-	 * 
+	 *
 	 * @param auth the authorization parameter from headers
 	 * @return authorized or unauthorized
 	 */
@@ -74,28 +75,29 @@ public class LRScontroller {
 
 	/**
 	 * Send get request to Learning Locker
-	 * 
+	 *
 	 * @return the message from Learning Locker
 	 */
 	@GetMapping("/all")
 	public ResponseEntity<String> getAllLearningLocker() {
 		LearningLockerRepository ll = new LearningLockerRepository();
 		StatementResult statements = ll.getAllStatements();
-		return new ResponseEntity<String>(statements.getStatements().toString(), HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(statements.getStatements().toString(), HttpStatus.ACCEPTED);
 	}
-	
+
 	@GetMapping("/filters")
 	public ResponseEntity<String> getFilterLearningLocker() throws UnsupportedEncodingException {
 		LearningLockerRepository ll = new LearningLockerRepository();
 		Agent agent = new Agent();
 		agent.setMbox("mailto:test1@lrsmocah.lip6.fr");
-		StatementResult result = ll.filterByActor(agent).includeRelatedAgents(true).limitResults(10).canonical().getFilteredStatements();
-		return new ResponseEntity<String>(result.getStatements().toString(), HttpStatus.ACCEPTED);
+		StatementResult result = ll.filterByActor(agent).includeRelatedAgents(true).limitResults(10).canonical()
+				.getFilteredStatements();
+		return new ResponseEntity<>(result.getStatements().toString(), HttpStatus.ACCEPTED);
 	}
 
 	/**
 	 * Test of post for LRS
-	 * 
+	 *
 	 * @return the added statement
 	 * @throws JsonParseCustomException
 	 */
@@ -148,7 +150,7 @@ public class LRScontroller {
 		return new ResponseEntity<>(response.toString(), HttpStatus.ACCEPTED);
 	}
 
-	//jxapi template
+	// jxapi template
 	@PostMapping("/testJXAPI")
 	public ResponseEntity<String> testJXAPI(@RequestBody String data, @RequestHeader("Authorization") String auth)
 			throws IOException, NoSuchAlgorithmException, URISyntaxException {
@@ -241,11 +243,11 @@ public class LRScontroller {
 		String contentType = "text/plain";
 		Attachment attachment = new Attachment();
 		attachment.addAttachment(att, contentType);
-		ArrayList<Attachment> attachments = new ArrayList<Attachment>();
+		ArrayList<Attachment> attachments = new ArrayList<>();
 		URI expected_type = new URI("https://mindmath.lip6.fr");
 		attachment.setUsageType(expected_type);
 		key = "en-US";
-		HashMap<String, String> expected_display = new HashMap<String, String>();
+		HashMap<String, String> expected_display = new HashMap<>();
 		expected_display.put(key, "JSON file from Cabri.");
 		attachment.setDisplay(expected_display);
 		attachments.add(attachment);
@@ -260,8 +262,10 @@ public class LRScontroller {
 		String json = gson.toJson(statement);
 		return new ResponseEntity<>(json, HttpStatus.ACCEPTED);
 	}
+
 	/**
 	 * test to get statement json using jxapi
+	 * 
 	 * @param data json from Cabri
 	 * @return json of statement
 	 * @throws IOException
@@ -270,19 +274,22 @@ public class LRScontroller {
 	 * @throws URISyntaxException
 	 */
 	@PostMapping("/testJXAPIexample")
-	public ResponseEntity<String> testJXAPIexample(@RequestBody String data) throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException{
+	public ResponseEntity<String> testJXAPIexample(@RequestBody String data)
+			throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, "v1.0");
 		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
-		
+
 		statement = generator.setAttachment().generateStatement(task, fbjson);
 
 		Gson gson = new Gson();
-		return new ResponseEntity<String>(gson.toJson(statement), HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(gson.toJson(statement), HttpStatus.ACCEPTED);
 	}
+
 	/**
 	 * test to post statement json using jxapi
+	 * 
 	 * @param data json from Cabri
 	 * @return id of statement in Learning Locker
 	 * @throws JsonParserCustomException
@@ -291,16 +298,16 @@ public class LRScontroller {
 	 * @throws URISyntaxException
 	 */
 	@PostMapping("/testJXAPIexamplePOST")
-	public ResponseEntity<String> testJXAPIexamplePOST(@RequestBody String data) throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException{
+	public ResponseEntity<String> testJXAPIexamplePOST(@RequestBody String data)
+			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, "v1.0");
 		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
-		
+
 		statement = generator.setAttachment().generateStatement(task, fbjson);
-		
+
 		LearningLockerRepository ll = new LearningLockerRepository();
-		return new ResponseEntity<String>(ll.postStatement(statement), HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(ll.postStatement(statement), HttpStatus.ACCEPTED);
 	}
 }
-

@@ -14,8 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
-import com.mocah.mindmath.repository.jxapi.Account;
-import com.mocah.mindmath.repository.jxapi.Agent;
+import gov.adlnet.xapi.model.Account;
+import gov.adlnet.xapi.model.Agent;
 
 /**
  * @author Yan Wang
@@ -115,7 +115,7 @@ public class Task extends AbstractJsonData implements Serializable {
 	}
 
 	public Agent getLearnerAsActor() {
-		
+
 		Agent agent = new Agent();
 		Account account = new Account(this.getId_learner(), "https://www.tralalere.com/");
 		agent.setAccount(account);
