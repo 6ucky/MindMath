@@ -3,11 +3,24 @@
  */
 package com.mocah.mindmath.learning;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.lang3.BooleanUtils;
+
+import com.google.gson.JsonElement;
+import com.mocah.mindmath.repository.jxapi.Actor;
+import com.mocah.mindmath.repository.jxapi.Context;
+import com.mocah.mindmath.repository.jxapi.Result;
+import com.mocah.mindmath.repository.jxapi.Statement;
+import com.mocah.mindmath.repository.jxapi.StatementResult;
+import com.mocah.mindmath.repository.jxapi.Verbs;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.server.cabri.jsondata.Log;
 import com.mocah.mindmath.server.cabri.jsondata.Params;
 import com.mocah.mindmath.server.cabri.jsondata.Sensors;
@@ -129,15 +142,63 @@ public class Extractor {
 	}
 
 	/**
-	 * Get from LRS the number of time the learner try to solve an exercice
+	 * Get from LRS the number of time the learner try to solve an exercice (based
+	 * on the current one -> min result is "1")
 	 *
 	 * @param task
 	 * @return
 	 */
 	protected static String getNbSolveTry(Task task) {
-		// TODO check from LRS
+		Actor learner = task.getLearnerAsActor();
 
-		return "2";
+		LearningLockerRepository lrs = new LearningLockerRepository();
+		try {
+			// Filter applied : same learner and same task family -> only answers (not help)
+			lrs = lrs.filterByActor(learner).filterByVerb(Verbs.answered()).addFilter("context.extensions."
+					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
+					task.getSensors().getTaskFamily());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+
+		StatementResult results = lrs.getFilteredStatements();
+		// TODO check order system
+		List<Statement> statements = results.getStatements();
+
+		ListIterator<Statement> listIterator = statements.listIterator(statements.size());
+
+		int nbTry = 1;
+		// TODO need to check that statements are sorted by date
+		while (listIterator.hasPrevious()) {
+			Statement statement = listIterator.previous();
+			Result r = statement.getResult();
+			// TODO check null result content case
+			if (r != null) {
+				if (r.getExtensions() != null) {
+					// Skip gaming with system by the learner
+
+					Context c = statement.getContext();
+					HashMap<String, JsonElement> extensions = c.getExtensions();
+					String answer = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject()
+							.get("correctAnswer").getAsString();
+
+					Boolean b = BooleanUtils.toBooleanObject(answer);
+
+					if (b) {
+						// Correct answer (we speculate it's the end of a previous exercice)
+						// Don't count and break
+						break;
+					} else {
+						// False answer (or none)
+					}
+
+					nbTry++;
+				}
+			}
+		}
+
+		return "" + nbTry;
 	}
 
 	/**
