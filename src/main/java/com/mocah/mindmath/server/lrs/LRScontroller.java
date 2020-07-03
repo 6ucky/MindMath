@@ -34,7 +34,7 @@ import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
 import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
-import com.mocah.mindmath.server.cabri.jsondata.Task;
+import com.mocah.mindmath.server.entity.task.Task;
 
 import gov.adlnet.xapi.model.Account;
 import gov.adlnet.xapi.model.Activity;

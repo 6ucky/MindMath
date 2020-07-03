@@ -1,15 +1,26 @@
 /**
  *
  */
-package com.mocah.mindmath.server.cabri.jsondata;
+package com.mocah.mindmath.server.entity;
 
 import java.lang.reflect.Field;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
+@MappedSuperclass
 public abstract class AbstractJsonData {
+	
+	@Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
+	
 	/**
 	 * Get a field value from this object
 	 *
@@ -62,5 +73,9 @@ public abstract class AbstractJsonData {
 		}
 
 		return value;
+	}
+	
+	public long getId() {
+		return id;
 	}
 }

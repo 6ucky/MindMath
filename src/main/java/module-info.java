@@ -2,7 +2,8 @@ open module com.mocah.mindmath {
 
 	exports com.mocah.mindmath.server;
 	exports com.mocah.mindmath.server.cabri;
-	exports com.mocah.mindmath.server.cabri.jsondata;
+	exports com.mocah.mindmath.server.entity.task;
+	exports com.mocah.mindmath.server.entity.feedbackContent;
 
 	exports com.mocah.mindmath.decisiontree;
 	exports com.mocah.mindmath.learning;
@@ -45,4 +46,8 @@ open module com.mocah.mindmath {
 	requires spring.test;
 	requires org.hamcrest;
 	requires org.mockito;
+	requires spring.tx;
+	requires spring.orm;
+	requires spring.jdbc;
+	requires guava;
 }

@@ -34,8 +34,8 @@ import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLRS;
 import com.mocah.mindmath.parser.jsonparser.LRSType;
 import com.mocah.mindmath.repository.XAPIRepository;
-import com.mocah.mindmath.server.cabri.jsondata.Log;
-import com.mocah.mindmath.server.cabri.jsondata.Sensors;
+import com.mocah.mindmath.server.entity.task.Log;
+import com.mocah.mindmath.server.entity.task.Sensors;
 
 import gov.adlnet.xapi.model.Actor;
 import gov.adlnet.xapi.model.IStatementObject;

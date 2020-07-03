@@ -1,14 +1,11 @@
-package com.mocah.mindmath.server.cabri.jsondata;
+package com.mocah.mindmath.server.entity.task;
 
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 import com.google.gson.annotations.Expose;
+import com.mocah.mindmath.server.entity.AbstractJsonData;
 
 /**
  * @author Yan Wang
@@ -19,11 +16,6 @@ import com.google.gson.annotations.Expose;
 public class Sensors extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = 7791961059918284422L;
-
-	@Id
-	@GeneratedValue(strategy =GenerationType.SEQUENCE,generator="sensors_id")  
-	@SequenceGenerator(name="sensors_id", sequenceName="sensors", initialValue = 1, allocationSize = 1)
-	private long id;
 
 	private final String capteur_bool_RF_CO2_1;
 
@@ -129,10 +121,6 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	public String getCapteur_nb_aide() {
 		return capteur_nb_aide;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	public String getDomain() {

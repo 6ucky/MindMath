@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 import com.mocah.mindmath.decisiontree.Branch;
 import com.mocah.mindmath.decisiontree.Child;
 import com.mocah.mindmath.decisiontree.Edge;
@@ -47,10 +48,12 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.owlparser.OWLparserRepo;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
-import com.mocah.mindmath.server.cabri.jsondata.Log;
-import com.mocah.mindmath.server.cabri.jsondata.Params;
-import com.mocah.mindmath.server.cabri.jsondata.Sensors;
-import com.mocah.mindmath.server.cabri.jsondata.Task;
+import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
+import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
+import com.mocah.mindmath.server.entity.task.Log;
+import com.mocah.mindmath.server.entity.task.Params;
+import com.mocah.mindmath.server.entity.task.Sensors;
+import com.mocah.mindmath.server.entity.task.Task;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
@@ -295,6 +298,14 @@ public class MainLearningProcess {
 		Tree tree = null;
 		Gson gson = new Gson();
 
+		// initialize feedbackcontent
+		try {
+			List<FeedbackContent> feedbacks = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute), FeedbackContentList.class).getFeedbackcontents();
+		} catch (JsonSyntaxException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		// initialize ontology file
 		try {
 			OWLparserRepo.owldata = LocalRouteRepository.readFileasString(LocalRoute.OntologyRoute);

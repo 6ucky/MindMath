@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mocah.mindmath.server.cabri.jsondata.Log;
-import com.mocah.mindmath.server.cabri.jsondata.Sensors;
+import com.mocah.mindmath.server.entity.task.Log;
+import com.mocah.mindmath.server.entity.task.Sensors;
 
 /**
  * @author	Yan Wang

@@ -1,4 +1,4 @@
-package com.mocah.mindmath.server.cabri.jsondata;
+package com.mocah.mindmath.server.entity.task;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,12 +7,10 @@ import java.util.ListIterator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
+
+import com.mocah.mindmath.server.entity.AbstractJsonData;
 
 import gov.adlnet.xapi.model.Account;
 import gov.adlnet.xapi.model.Agent;
@@ -26,11 +24,6 @@ import gov.adlnet.xapi.model.Agent;
 public class Task extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = 4790322015762458488L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_id")
-	@SequenceGenerator(name = "task_id", sequenceName = "task", initialValue = 1, allocationSize = 1)
-	private long id;
 
 	private final String id_learner;
 
@@ -104,10 +97,6 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	public List<Log> getLog() {
 		return logs;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	public String getFeedback() {

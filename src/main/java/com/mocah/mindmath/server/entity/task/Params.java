@@ -1,12 +1,10 @@
-package com.mocah.mindmath.server.cabri.jsondata;
+package com.mocah.mindmath.server.entity.task;
 
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+
+import com.mocah.mindmath.server.entity.AbstractJsonData;
 
 /**
  * @author Yan Wang
@@ -17,11 +15,6 @@ import javax.persistence.SequenceGenerator;
 public class Params extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = -6192516976316035400L;
-
-	@Id
-	@GeneratedValue(strategy =GenerationType.SEQUENCE,generator="params_id")  
-	@SequenceGenerator(name="params_id", sequenceName="params", initialValue = 1, allocationSize = 1)
-	private long id;
 
 	private final String VT_2_1;
 
@@ -62,10 +55,6 @@ public class Params extends AbstractJsonData implements Serializable {
 
 	public String isVT_2_4() {
 		return VT_2_4;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 }

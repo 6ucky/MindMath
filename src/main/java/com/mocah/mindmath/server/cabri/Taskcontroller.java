@@ -25,8 +25,9 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
+import com.mocah.mindmath.server.Derbyrepository;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
-import com.mocah.mindmath.server.cabri.jsondata.Task;
+import com.mocah.mindmath.server.entity.task.Task;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
@@ -41,7 +42,7 @@ import alice.tuprolog.MalformedGoalException;
 public class Taskcontroller {
 
 	@Autowired
-	private Taskrepository taskrepository;
+	private Derbyrepository taskrepository;
 
 	private static final String license_num = "mocah";
 
@@ -157,7 +158,7 @@ public class Taskcontroller {
 		if (!auth.equals("test"))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		List<Task> tasks = new ArrayList<>();
-		getTaskrepository().findAll().forEach(tasks::add);
+		getTaskrepository().getAllTask().forEach(tasks::add);
 		if (tasks.size() == 0)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
 		Gson gson = new Gson();
@@ -194,7 +195,7 @@ public class Taskcontroller {
 	 *
 	 * @return a repository interface that works with task entities
 	 */
-	public Taskrepository getTaskrepository() {
+	public Derbyrepository getTaskrepository() {
 		return taskrepository;
 	}
 
@@ -207,7 +208,7 @@ public class Taskcontroller {
 	public Task getPreviousTask(Task task) {
 		// TODO in SQL
 		List<Task> tasks = new ArrayList<>();
-		getTaskrepository().findAll().forEach(tasks::add);
+		getTaskrepository().getAllTask().forEach(tasks::add);
 
 		Task previoustask = new Task("0");
 

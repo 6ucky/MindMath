@@ -15,10 +15,10 @@ import org.apache.commons.lang3.BooleanUtils;
 
 import com.google.gson.JsonElement;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
-import com.mocah.mindmath.server.cabri.jsondata.Log;
-import com.mocah.mindmath.server.cabri.jsondata.Params;
-import com.mocah.mindmath.server.cabri.jsondata.Sensors;
-import com.mocah.mindmath.server.cabri.jsondata.Task;
+import com.mocah.mindmath.server.entity.task.Log;
+import com.mocah.mindmath.server.entity.task.Params;
+import com.mocah.mindmath.server.entity.task.Sensors;
+import com.mocah.mindmath.server.entity.task.Task;
 
 import gov.adlnet.xapi.model.Actor;
 import gov.adlnet.xapi.model.Context;

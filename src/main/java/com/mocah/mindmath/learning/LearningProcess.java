@@ -45,10 +45,10 @@ import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
-import com.mocah.mindmath.server.cabri.jsondata.Log;
-import com.mocah.mindmath.server.cabri.jsondata.Params;
-import com.mocah.mindmath.server.cabri.jsondata.Sensors;
-import com.mocah.mindmath.server.cabri.jsondata.Task;
+import com.mocah.mindmath.server.entity.task.Log;
+import com.mocah.mindmath.server.entity.task.Params;
+import com.mocah.mindmath.server.entity.task.Sensors;
+import com.mocah.mindmath.server.entity.task.Task;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;

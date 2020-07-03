@@ -1,14 +1,11 @@
-package com.mocah.mindmath.server.cabri.jsondata;
+package com.mocah.mindmath.server.entity.task;
 
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 
 import com.google.gson.annotations.Expose;
+import com.mocah.mindmath.server.entity.AbstractJsonData;
 
 /**
  * @author Yan Wang
@@ -19,11 +16,6 @@ import com.google.gson.annotations.Expose;
 public class Log extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = 6036741035696456506L;
-
-	@Id
-	@GeneratedValue(strategy =GenerationType.SEQUENCE,generator="logs_id")  
-	@SequenceGenerator(name="logs_id", sequenceName="logs", initialValue = 1, allocationSize = 1)
-	private long id;
 
 	@Expose (serialize = true) 
 	private final String time;
@@ -52,10 +44,6 @@ public class Log extends AbstractJsonData implements Serializable {
 		this.type = type;
 		this.name = name;
 		this.action = action;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	public String getTime() {

@@ -14,7 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
-import com.mocah.mindmath.server.cabri.jsondata.Task;
+import com.mocah.mindmath.server.entity.task.Task;
 
 import gov.adlnet.xapi.model.Activity;
 import gov.adlnet.xapi.model.ActivityDefinition;

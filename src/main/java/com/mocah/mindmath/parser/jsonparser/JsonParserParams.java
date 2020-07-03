@@ -1,7 +1,7 @@
 package com.mocah.mindmath.parser.jsonparser;
 
 import com.google.gson.JsonObject;
-import com.mocah.mindmath.server.cabri.jsondata.Params;
+import com.mocah.mindmath.server.entity.task.Params;
 
 /**
  * @author	Yan Wang

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.mocah.mindmath.server.cabri.jsondata.Log;
+import com.mocah.mindmath.server.entity.task.Log;
 
 /**
  * @author	Yan Wang

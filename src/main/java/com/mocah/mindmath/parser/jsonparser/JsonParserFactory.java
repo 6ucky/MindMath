@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.ParserFactory;
-import com.mocah.mindmath.server.cabri.jsondata.Task;
+import com.mocah.mindmath.server.entity.task.Task;
 
 /**
  * @author	Yan Wang
