@@ -50,6 +50,8 @@ import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
+import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
+import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
 import com.mocah.mindmath.server.entity.task.Log;
 import com.mocah.mindmath.server.entity.task.Params;
 import com.mocah.mindmath.server.entity.task.Sensors;
@@ -300,7 +302,9 @@ public class MainLearningProcess {
 
 		// initialize feedbackcontent
 		try {
-			List<FeedbackContent> feedbacks = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute), FeedbackContentList.class).getFeedbackcontents();
+			List<FeedbackContent> feedbacks = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute), FeedbackContentList.class).getFeedbackcontentlist();
+			List<Motivation> motivations = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.MotivationRoute), FeedbackContentList.class).getMotivationlist();
+			List<Glossaire> glossaires = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.GlossaireRoute), FeedbackContentList.class).getGlossairelist();
 		} catch (JsonSyntaxException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

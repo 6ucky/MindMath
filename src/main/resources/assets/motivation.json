@@ -1,0 +1,85 @@
+{
+    "motivationlist":
+    [
+        {
+            "motivation_leaf": "6",
+            "activityMode": "",
+            "motivation_data": "Dommage, soit attentif aux conseils suivants :"
+        },
+        {
+            "motivation_leaf": "6",
+            "activityMode": "1",
+            "motivation_data": "Mince, ça peut arriver. Même aux meilleurs !"
+        },
+        {
+            "motivation_leaf": "6",
+            "activityMode": "2",
+            "motivation_data": "Ne baisse pas les bras. "
+        },
+        {
+            "motivation_leaf": "6",
+            "activityMode": "",
+            "motivation_data": "Dommage !"
+        },
+        {
+            "motivation_leaf": "6",
+            "activityMode": "",
+            "motivation_data": "Ne baisse pas les bras, prend ton temps et lis bien les conseils suivants :"
+        },
+        {
+            "motivation_leaf": "6",
+            "activityMode": "",
+            "motivation_data": "Attention !"
+        },
+        {
+            "motivation_leaf": "8",
+            "activityMode": "",
+            "motivation_data": "Fait attention aux conseils suivants :"
+        },
+        {
+            "motivation_leaf": "8",
+            "activityMode": "",
+            "motivation_data": "Des conseils pour t’aider à réaliser la tâche :"
+        },
+        {
+            "motivation_leaf": "10",
+            "activityMode": "",
+            "motivation_data": "Dommage, soit attentif aux conseils suivants :"
+        },
+        {
+            "motivation_leaf": "10",
+            "activityMode": "1",
+            "motivation_data": "Mince, ça peut arriver. Même aux meilleurs !"
+        },
+        {
+            "motivation_leaf": "10",
+            "activityMode": "2",
+            "motivation_data": "Ne baisse pas les bras. "
+        },
+        {
+            "motivation_leaf": "10",
+            "activityMode": "",
+            "motivation_data": "Dommage !"
+        },
+        {
+            "motivation_leaf": "10",
+            "activityMode": "",
+            "motivation_data": "Ne baisse pas les bras, prend ton temps et lis bien les conseils suivants :"
+        },
+        {
+            "motivation_leaf": "10",
+            "activityMode": "",
+            "motivation_data": "Attention !"
+        },
+        {
+            "motivation_leaf": "11",
+            "activityMode": "",
+            "motivation_data": "Fait attention aux conseils suivants :"
+        },
+        {
+            "motivation_leaf": "11",
+            "activityMode": "",
+            "motivation_data": "Des conseils pour t’aider à réaliser la tâche :"
+        }
+    ]
+}

@@ -1,25 +1,31 @@
 package com.mocah.mindmath.server.entity.feedbackContent;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 
 import com.mocah.mindmath.server.entity.AbstractJsonData;
+import com.mocah.mindmath.server.entity.StringListConverter;
 
 @Entity
-public class ContentGlossary extends AbstractJsonData {
+public class ContentErrorType extends AbstractJsonData {
 	
 	private final String erreur_type;
 	
 	private final String format;
 	
-	private final String glossaire;
+	@Convert(converter = StringListConverter.class)
+	private final List<String> glossaire;
 	
 	private final String content_url;
 	
-	public ContentGlossary() {
-		this.erreur_type = null;
-		this.format = null;
-		this.glossaire = null;
-		this.content_url = null;
+	public ContentErrorType() {
+		this.erreur_type = "";
+		this.format = "";
+		this.glossaire = new ArrayList<>();
+		this.content_url = "";
 	}
 
 	public String getErreur_type() {
@@ -30,7 +36,7 @@ public class ContentGlossary extends AbstractJsonData {
 		return format;
 	}
 
-	public String getGlossaire() {
+	public List<String> getGlossaire() {
 		return glossaire;
 	}
 

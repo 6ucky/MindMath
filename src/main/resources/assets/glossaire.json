@@ -1,0 +1,25 @@
+{
+    "glossairelist":
+    [
+        {
+            "glossaire_name": "Une égalité",
+            "glossaire_content": "une égalité est une expression comportant le signe « = ». Elle est composée de deux membres situés de part et d'autre du signe « = »"
+        },
+        {
+            "glossaire_name": "Terme constant",
+            "glossaire_content": "on appelle terme constant un terme qui est un nombre seul (sans x). Par exemple dans l’équation 3x + 4 = 2x - 7, 4 et 7 sont des termes constants."
+        },
+        {
+            "glossaire_name": "Terme en x",
+            "glossaire_content": "bla bla"
+        },
+        {
+            "glossaire_name": "L’inverse",
+            "glossaire_content": "bla bla"
+        },
+        {
+            "glossaire_name": "Nombre non nul",
+            "glossaire_content": "un nombre non nul est un nombre différent de zéro."
+        }
+    ]
+}

@@ -13,37 +13,45 @@ import com.mocah.mindmath.server.entity.AbstractJsonData;
 @Entity
 public class FeedbackContent extends AbstractJsonData {
 	
-	private final String FeedbackName;
+	private final String feedbackName;
 	
-	private final double Ponderation;
+	private final double ponderation;
+
+	private final String motivation_leaf;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private final List<Motivation> motivations;
-
-	@OneToMany(cascade = CascadeType.ALL)
-	private final List<ContentGlossary> contents;
+	private final List<ContentErrorType> contents;
 	
 	public FeedbackContent() {
 		super();
-		this.FeedbackName = "";
-		this.Ponderation = 0;
-		this.motivations = new ArrayList<>();
+		this.feedbackName = "";
+		this.ponderation = 0;
+		this.motivation_leaf = "";
 		this.contents = new ArrayList<>();
 	}
 
-	public List<Motivation> getMotivations() {
-		return motivations;
+	public List<ContentErrorType> getContents() {
+		return contents;
 	}
 
-	public double getPonderation() {
-		return Ponderation;
+	public String getMotivation_leaf() {
+		return motivation_leaf;
 	}
 
 	public String getFeedbackName() {
-		return FeedbackName;
+		return feedbackName;
 	}
 
-	public List<ContentGlossary> getContents() {
-		return contents;
+	public double getPonderation() {
+		return ponderation;
+	}
+	
+	public ContentErrorType getContentErrorType(String erreur_type) {
+		for(ContentErrorType content: contents)
+		{
+			if(content.getErreur_type().equals(erreur_type))
+				return content;
+		}
+		return null;
 	}
 }

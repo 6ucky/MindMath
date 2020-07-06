@@ -1,61 +1,131 @@
 {
-    "feedbackcontents":
+    "feedbackcontentlist":
     [
         {
-            "FeedbackName": "3.0",
-            "Ponderation": 0.4,
-            "motivations":
+            "feedbackName": "1.2.IC",
+            "ponderation": 0,
+            "motivation_leaf": "6",
+            "contents":
             [
                 {
-                    "activityMode": "",
-                    "motivation_data": "Dommage, soit attentif aux conseils suivants :"
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Nombre non nul", "Terme en x"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
                 },
                 {
-                    "activityMode": "1",
-                    "motivation_data": "Mince, ça peut arriver. Même aux meilleurs !"
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Nombre non nul", "Terme en x"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
                 },
                 {
-                    "activityMode": "2",
-                    "motivation_data": "Ne baisse pas les bras. "
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Nombre non nul", "Terme en x"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
                 },
                 {
-                    "activityMode": "",
-                    "motivation_data": "Dommage !"
-                },
-                {
-                    "activityMode": "",
-                    "motivation_data": "Ne baisse pas les bras, prend ton temps et lis bien les conseils suivants :"
-                },
-                {
-                    "activityMode": "",
-                    "motivation_data": "Attention !"
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Nombre non nul", "Terme en x"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
                 }
-            ],
+            ]
+        },
+        {
+            "feedbackName": "3.0",
+            "ponderation": 0.4,
+            "motivation_leaf": "6",
             "contents":
             [
                 {
                     "erreur_type":1,
                     "format": "image",
-                    "glossaire": "",
+                    "glossaire": [],
                     "content_url": "https://drive.google.com/file/d/1TjpARXpOGKjmLZy8G5sk2X0M2Hb5GLLQ/view?usp=sharing"
                 },
                 {
                     "erreur_type":2,
                     "format": "video/mp4",
-                    "glossaire": "Une égalité : une égalité est une expression comportant le signe « = ». Elle est composée de deux membres situés de part et d'autre du signe « = »",
+                    "glossaire": ["Une égalité", "Terme constant", "Nombre non nul", "Terme en x"],
                     "content_url": "https://drive.google.com/file/d/1Z24avTEXR5yiwCufwmdwdqehYmoJ-ntv/view?usp=sharing"
                 },
                 {
                     "erreur_type":3,
                     "format": "image",
-                    "glossaire": "Une égalité : une égalité est une expression comportant le signe « = ». Elle est composée de deux membres situés de part et d'autre du signe « = »",
+                    "glossaire": ["Une égalité", "L’inverse"],
                     "content_url": "https://drive.google.com/file/d/18a65-NAtq4uNQn0O4020nEwyukMg2kJP/view?usp=sharing"
                 },
                 {
                     "erreur_type":4,
                     "format": "image",
-                    "glossaire": "Terme constant : on appelle terme constant un terme qui est un nombre seul (sans x). Par exemple dans l’équation 3x + 4 = 2x - 7, 4 et 7 sont des termes constants.",
+                    "glossaire": ["Terme constant", "Terme en x"],
                     "content_url": "https://drive.google.com/file/d/1E4_CX3CRxbs7BLEs-1rudl4xWpWPw_59/view?usp=sharing"
+                }
+            ]
+        },
+        {
+            "feedbackName": "3.2.INC",
+            "ponderation": 0.3,
+            "motivation_leaf": "6",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": [],
+                    "content_url": "https://drive.google.com/file/d/11FR-_HURisTmMBz_exXJPEOkDoOJnpjo/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité"],
+                    "content_url": "https://drive.google.com/file/d/1UINpBshn-FyLPkFq6_EPECRcYmorKgl3/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1CdngTYhLh5IK8WmhHgFENL_xX0SNpEEL/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1OvACsfTboBy8-TLVuji8isPfTv_3cvPq/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "3.2.IC",
+            "ponderation": 0.3,
+            "motivation_leaf": "6",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1GL2yNOsg3kEHt4TdBKAXxs4C_ONiR-AB/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1LG6mvkpdf6yX3QxyQs9GOej85NvfZw9N/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1EaTMybGO62aE3OfF4AmHUKTTBxc9nudJ/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uMrFc2HU0tq5u7D0a_bztzOsQXY6LELF/view"
                 }
             ]
         }

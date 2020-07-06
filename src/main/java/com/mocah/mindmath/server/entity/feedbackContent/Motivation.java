@@ -7,12 +7,15 @@ import com.mocah.mindmath.server.entity.AbstractJsonData;
 @Entity
 public class Motivation extends AbstractJsonData {
 	
+	private final String motivation_leaf;
+	
 	private final String activityMode;
 	
 	private final String motivation_data;
 	
 	public Motivation() {
-		this.activityMode = null;
+		this.motivation_leaf = "";
+		this.activityMode = "";
 		this.motivation_data = "";
 	}
 
@@ -24,4 +27,7 @@ public class Motivation extends AbstractJsonData {
 		return activityMode;
 	}
 
+	public String getMotivation_leaf() {
+		return motivation_leaf;
+	}
 }
