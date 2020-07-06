@@ -7,11 +7,14 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.JsonElement;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
@@ -175,27 +178,25 @@ public class Extractor {
 			Statement statement = listIterator.previous();
 			Result r = statement.getResult();
 			// TODO check null result content case
-			if (r != null) {
-				if (r.getExtensions() != null) {
-					// Skip gaming with system by the learner
+			if (r != null && r.getExtensions() != null) {
+				// Skip gaming with system by the learner
 
-					Context c = statement.getContext();
-					HashMap<String, JsonElement> extensions = c.getExtensions();
-					String answer = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject()
-							.get("correctAnswer").getAsString();
+				Context c = statement.getContext();
+				HashMap<String, JsonElement> extensions = c.getExtensions();
+				String answer = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject()
+						.get("correctAnswer").getAsString();
 
-					Boolean b = BooleanUtils.toBooleanObject(answer);
+				Boolean b = BooleanUtils.toBooleanObject(answer);
 
-					if (b) {
-						// Correct answer (we speculate it's the end of a previous exercice)
-						// Don't count and break
-						break;
-					} else {
-						// False answer (or none)
-					}
-
-					nbTry++;
+				if (b) {
+					// Correct answer (we speculate it's the end of a previous exercice)
+					// Don't count and break
+					break;
+				} else {
+					// False answer (or none)
 				}
+
+				nbTry++;
 			}
 		}
 
@@ -218,19 +219,70 @@ public class Extractor {
 	}
 
 	/**
-	 * Return the actual learner error frequency for the current task <br>
+	 * Return the actual learner error frequency for the current error in task <br>
 	 * Note: only for errors of the same task familly of object {@code Task}
 	 *
 	 * @param task
 	 * @return
 	 */
 	protected static String errorStabilityForLearner(Task task) {
-		// TODO
+		Sensors currentSensors = task.getSensors();
+		if (currentSensors == null)
+			return "0";
+
+		String currentError = currentSensors.getCodeError();
+		if (StringUtils.isEmpty(currentError))
+			return "0";
 
 		// "Stabilité de l'erreur-type élève: (Nbre de l'erreur-type) / (Nbre exercices
 		// réalisés par l'élève où l'erreur-type pouvait apparaitre)"
+		Actor learner = task.getLearnerAsActor();
 
-		return "0.5";
+		LearningLockerRepository lrs = new LearningLockerRepository();
+		try {
+			// Filter applied : same learner and same task family -> only answers (not help)
+			lrs = lrs.filterByActor(learner).filterByVerb(Verbs.answered()).addFilter("context.extensions."
+					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
+					task.getSensors().getTaskFamily());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+
+		StatementResult results = lrs.getFilteredStatements();
+		// TODO check order system
+		List<Statement> statements = results.getStatements();
+
+		if (statements.isEmpty())
+			return "0";
+
+		ListIterator<Statement> listIterator = statements.listIterator(statements.size());
+
+		int countError = 0;
+		// TODO need to check that statements are sorted by date
+		while (listIterator.hasPrevious()) {
+			Statement statement = listIterator.previous();
+
+			Result r = statement.getResult();
+			// TODO check null result content case
+			if (r != null && r.getExtensions() != null) {
+				// Skip gaming with system by the learner
+
+				Context c = statement.getContext();
+				HashMap<String, JsonElement> extensions = c.getExtensions();
+				String codeError = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject().get("codeError")
+						.getAsString();
+
+				if (currentError.equals(codeError)) {
+					// Same errors
+					countError += 1;
+				}
+			}
+		}
+
+		double freq = countError / statements.size();
+
+		return freq + "";
 	}
 
 	/**
@@ -241,9 +293,63 @@ public class Extractor {
 	 * @return
 	 */
 	protected static String mostStabErrorForLearners(Task task) {
-		// TODO
+		// "Stabilité d'une erreur-type chez tous les élèves au sein d'une famille de
+		// tâche: (Nbre de l'erreur-type) / (Nbre exercices réalisés où l'erreur-type
+		// pouvait apparaitre)"
 
-		return "0.5";
+		LearningLockerRepository lrs = new LearningLockerRepository();
+		try {
+			// Filter applied : same task family -> only answers (not help)
+			lrs = lrs.filterByVerb(Verbs.answered()).addFilter("context.extensions."
+					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
+					task.getSensors().getTaskFamily());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+
+		StatementResult results = lrs.getFilteredStatements();
+		// TODO check order system
+		List<Statement> statements = results.getStatements();
+
+		if (statements.isEmpty())
+			return "0";
+
+		ListIterator<Statement> listIterator = statements.listIterator(statements.size());
+
+		Map<String, Integer> countError = new HashMap<>();
+		// TODO need to check that statements are sorted by date
+		while (listIterator.hasPrevious()) {
+			Statement statement = listIterator.previous();
+
+			Result r = statement.getResult();
+			// TODO check null result content case
+			if (r != null && r.getExtensions() != null) {
+				// Skip gaming with system by the learner
+
+				Context c = statement.getContext();
+				HashMap<String, JsonElement> extensions = c.getExtensions();
+				String codeError = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject().get("codeError")
+						.getAsString();
+
+				if (StringUtils.isNotEmpty(codeError)) {
+					// Error observed
+					if (countError.containsKey(codeError)) {
+						countError.put(codeError, countError.get(codeError) + 1);
+					} else {
+						countError.put(codeError, 1);
+					}
+				}
+			}
+		}
+
+		int max = 0;
+		if (!countError.values().isEmpty()) {
+			max = Collections.max(countError.values());
+		}
+
+		double freq = max / statements.size();
+
+		return freq + "";
 	}
-
 }
