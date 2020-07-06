@@ -128,6 +128,390 @@
                     "content_url": "https://drive.google.com/file/d/1uMrFc2HU0tq5u7D0a_bztzOsQXY6LELF/view"
                 }
             ]
+        },
+        {
+            "feedbackName": "1.2.INC",
+            "ponderation": 0.3,
+            "motivation_leaf": "8",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.2.IC",
+            "ponderation": 0.3,
+            "motivation_leaf": "8",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "3.2.IC",
+            "ponderation": 0.2,
+            "motivation_leaf": "8",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1GL2yNOsg3kEHt4TdBKAXxs4C_ONiR-AB/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1LG6mvkpdf6yX3QxyQs9GOej85NvfZw9N/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1EaTMybGO62aE3OfF4AmHUKTTBxc9nudJ/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uMrFc2HU0tq5u7D0a_bztzOsQXY6LELF/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "3.2.INC",
+            "ponderation": 0.2,
+            "motivation_leaf": "8",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": [],
+                    "content_url": "https://drive.google.com/file/d/11FR-_HURisTmMBz_exXJPEOkDoOJnpjo/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité"],
+                    "content_url": "https://drive.google.com/file/d/1UINpBshn-FyLPkFq6_EPECRcYmorKgl3/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1CdngTYhLh5IK8WmhHgFENL_xX0SNpEEL/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1OvACsfTboBy8-TLVuji8isPfTv_3cvPq/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.1.GNC",
+            "ponderation": 0.4,
+            "motivation_leaf": "10",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1e_iazdAW49-6pwFYnqCpzTFLtQ4XoQuB/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1e_iazdAW49-6pwFYnqCpzTFLtQ4XoQuB/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1e_iazdAW49-6pwFYnqCpzTFLtQ4XoQuB/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1e_iazdAW49-6pwFYnqCpzTFLtQ4XoQuB/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.1.GC",
+            "ponderation": 0.4,
+            "motivation_leaf": "10",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1C8IrCd_agOJtuZken9wAnz3hGcagD4-t/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1C8IrCd_agOJtuZken9wAnz3hGcagD4-t/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1C8IrCd_agOJtuZken9wAnz3hGcagD4-t/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1C8IrCd_agOJtuZken9wAnz3hGcagD4-t/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.2.INC",
+            "ponderation": 0.1,
+            "motivation_leaf": "10",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.2.IC",
+            "ponderation": 0.1,
+            "motivation_leaf": "10",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.1.GNC",
+            "ponderation": 0.4,
+            "motivation_leaf": "11",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1e_iazdAW49-6pwFYnqCpzTFLtQ4XoQuB/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1e_iazdAW49-6pwFYnqCpzTFLtQ4XoQuB/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1e_iazdAW49-6pwFYnqCpzTFLtQ4XoQuB/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1e_iazdAW49-6pwFYnqCpzTFLtQ4XoQuB/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.1.GC",
+            "ponderation": 0.4,
+            "motivation_leaf": "11",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1C8IrCd_agOJtuZken9wAnz3hGcagD4-t/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1C8IrCd_agOJtuZken9wAnz3hGcagD4-t/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1C8IrCd_agOJtuZken9wAnz3hGcagD4-t/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1C8IrCd_agOJtuZken9wAnz3hGcagD4-t/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.2.INC",
+            "ponderation": 0.05,
+            "motivation_leaf": "11",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1uLMKOwYKnJ1hxk1X55upBPs0OPIEmzQK/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.2.IC",
+            "ponderation": 0.05,
+            "motivation_leaf": "11",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                },
+                {
+                    "erreur_type":2,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                },
+                {
+                    "erreur_type":3,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                },
+                {
+                    "erreur_type":4,
+                    "format": "video/mp4",
+                    "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
+                    "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                }
+            ]
         }
     ]
 }

@@ -3,6 +3,8 @@ package com.mocah.mindmath.server.cabri.feedback;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -33,8 +35,24 @@ public class Feedbackjson implements Serializable{
 		this.idFamilytask = idFamilytask;
 		this.idFeedback = idFeedback;
 		this.motivationalElementFb = String2GeneralHTML("Bravo!");
-		this.contentFb = String2ContentFBHTML("","https://mindmath.lip6.fr/videos/ResolutionEquation.mp4","");
-		this.glossaryFb = String2GlossaryFBHTML("Une propriété est bla bla.", "Ceci signifie bla bla.");
+		this.contentFb = String2ContentFBHTML("","https://mindmath.lip6.fr/videos/ResolutionEquation.mp4","", "video/mp4");
+		HashMap<String, String> glossaryMap = new HashMap<String, String>();
+		glossaryMap.put("Une propriété est bla bla.", "Ceci signifie bla bla.");
+		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
+	}
+	
+	//Test for Feedbackcontent Database
+	public Feedbackjson(String motivation, String content_url, String content_type, HashMap<String, String> glossaryMap) throws IOException {
+		this.idLearner = "100";
+		this.idFbCabri = "";
+		this.idFamilytask = "ft3.1";
+		this.idFeedback = "0.0.0.0";
+		this.motivationalElementFb = String2GeneralHTML(motivation);
+		if(content_type.equals("video/mp4"))
+			this.contentFb = String2ContentFBHTML("", content_url, "", content_type);
+		else
+			this.contentFb = String2ContentFBHTML(content_url, "", "", content_type);
+		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
 	}
 	
 	//Test for Tralalere
@@ -57,14 +75,14 @@ public class Feedbackjson implements Serializable{
 	}
 	
 	public Feedbackjson(String idLearner, String idFbCabri, String idFamilytask, String idFeedback, String url, String motivationalElement, String default_img_url, 
-			String video_url, String video_srt_url, String content_propriete, String content_preservation) throws IOException {
+			String video_url, String video_srt_url, String content_type,HashMap<String, String> glossaryMap) throws IOException {
 		this.idLearner = idLearner;
 		this.idFbCabri = idFbCabri;
 		this.idFamilytask = idFamilytask;
 		this.idFeedback = idFeedback;
 		this.motivationalElementFb = String2GeneralHTML(motivationalElement);
-		this.contentFb = String2ContentFBHTML(default_img_url, video_url, video_srt_url);
-		this.glossaryFb = String2GlossaryFBHTML(content_propriete, content_preservation);
+		this.contentFb = String2ContentFBHTML(default_img_url, video_url, video_srt_url, content_type);
+		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
 	}
 
 	private String String2GeneralHTML(String content) throws IOException {
@@ -78,26 +96,43 @@ public class Feedbackjson implements Serializable{
 		return writer.toString();
 	}
 	
-	private String String2ContentFBHTML(String default_img_url, String video_url, String video_srt_url) throws IOException {
+	private String String2ContentFBHTML(String default_img_url, String video_url, String video_srt_url, String type) throws IOException {
 		//Compiling the Mustache Template
 		MustacheFactory mf = new DefaultMustacheFactory();
-		Mustache m = mf.compile("mustache_template/contentFB.mustache");
-		ContentFBHTML fbhtml = new ContentFBHTML(default_img_url, video_url, video_srt_url);
 		StringWriter writer = new StringWriter();
+		switch(type) {
+		case "video/mp4":
+			Mustache m1 = mf.compile("mustache_template/contentFBVideo.mustache");
+			ContentFBHTML fbhtml1 = new ContentFBHTML(default_img_url, video_url, video_srt_url);
+			m1.execute(writer, fbhtml1).flush();
+			return writer.toString();
+		case "image":
+			Mustache m2 = mf.compile("mustache_template/contentFBImage.mustache");
+			ContentFBHTML fbhtml2 = new ContentFBHTML(default_img_url, "", "");
+			m2.execute(writer, fbhtml2).flush();
+			return writer.toString();
+		}
+		
 		//Executing the Mustache Template
-		m.execute(writer, fbhtml).flush();
-		return writer.toString();
+		return null;
 	}
 	
-	private String String2GlossaryFBHTML(String content_propriete, String content_preservation) throws IOException {
+	private String String2GlossaryFBHTML(HashMap<String, String> glossaryMap) throws IOException {
 		//Compiling the Mustache Template
 		MustacheFactory mf = new DefaultMustacheFactory();
 		Mustache m = mf.compile("mustache_template/glossaryFB.mustache");
-		GlossaryFBHTML fbhtml = new GlossaryFBHTML(content_propriete, content_preservation);
+		String result = "";
 		StringWriter writer = new StringWriter();
+		Iterator iterator = glossaryMap.keySet().iterator();
+        while (iterator.hasNext()){
+            String key = (String)iterator.next();
+            GlossaryFBHTML fbhtml = new GlossaryFBHTML(key, glossaryMap.get(key));
+    		m.execute(writer, fbhtml).flush();
+    		result += writer.toString();
+        }
+		
 		//Executing the Mustache Template
-		m.execute(writer, fbhtml).flush();
-		return writer.toString();
+		return result;
 	}
 	
 	public String getIdFbCabri() {
