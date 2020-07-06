@@ -386,6 +386,38 @@
             ]
         },
         {
+            "feedbackName": "1.0",
+            "ponderation": 0,
+            "motivation_leaf": "10",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "image",
+                    "glossaire": ["Une égalité"],
+                    "content_url": ""
+                },
+                {
+                    "erreur_type":2,
+                    "format": "image",
+                    "glossaire": ["Une égalité"],
+                    "content_url": ""
+                },
+                {
+                    "erreur_type":3,
+                    "format": "image",
+                    "glossaire": ["Une égalité"],
+                    "content_url": ""
+                },
+                {
+                    "erreur_type":4,
+                    "format": "image",
+                    "glossaire": ["Une égalité"],
+                    "content_url": ""
+                }
+            ]
+        },
+        {
             "feedbackName": "1.1.GNC",
             "ponderation": 0.4,
             "motivation_leaf": "11",
@@ -510,6 +542,38 @@
                     "format": "video/mp4",
                     "glossaire": ["Une égalité", "Terme constant", "Terme en x", "L’inverse"],
                     "content_url": "https://drive.google.com/file/d/1tHhkr22fUU5TvSeFjSb8O34tNU9ljqBZ/view"
+                }
+            ]
+        },
+        {
+            "feedbackName": "1.0",
+            "ponderation": 0.4,
+            "motivation_leaf": "11",
+            "contents":
+            [
+                {
+                    "erreur_type":1,
+                    "format": "image",
+                    "glossaire": ["Une égalité"],
+                    "content_url": ""
+                },
+                {
+                    "erreur_type":2,
+                    "format": "image",
+                    "glossaire": ["Une égalité"],
+                    "content_url": ""
+                },
+                {
+                    "erreur_type":3,
+                    "format": "image",
+                    "glossaire": ["Une égalité"],
+                    "content_url": ""
+                },
+                {
+                    "erreur_type":4,
+                    "format": "image",
+                    "glossaire": ["Une égalité"],
+                    "content_url": ""
                 }
             ]
         }
