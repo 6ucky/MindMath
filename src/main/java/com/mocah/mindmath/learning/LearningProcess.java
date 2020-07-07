@@ -516,21 +516,30 @@ public class LearningProcess {
 		case "1.0.0.0":
 		case "1.1.NC.0":
 		case "1.1.C.0":
-		case "2.0.0.X":
-		case "2.1.NC.X":
-		case "2.1.C.X":
+		case "2.0.0.E":
+		case "2.0.0.FT":
+		case "2.1.NC.E":
+		case "2.1.NC.FT":
+		case "2.1.C.E":
+		case "2.1.C.FT":
 			return 2;
 
 		case "1.2.NC.0":
 		case "1.2.C.0":
-		case "3.0.0.X":
-		case "4.0.0.X":
+		case "3.0.0.E":
+		case "3.0.0.FT":
+		case "4.0.0.E":
+		case "4.0.0.FT":
 			return 3;
 
-		case "3.2.NC.X":
-		case "3.2.C.X":
-		case "4.2.NC.X":
-		case "4.2.C.X":
+		case "3.2.NC.E":
+		case "3.2.NC.FT":
+		case "3.2.C.R":
+		case "3.2.C.FT":
+		case "4.2.NC.E":
+		case "4.2.NC.FT":
+		case "4.2.C.E":
+		case "4.2.C.FT":
 			return 4;
 		}
 	}
