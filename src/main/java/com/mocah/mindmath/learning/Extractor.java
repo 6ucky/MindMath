@@ -3,10 +3,8 @@
  */
 package com.mocah.mindmath.learning;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +15,7 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.JsonElement;
-import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
 import com.mocah.mindmath.server.entity.task.Log;
 import com.mocah.mindmath.server.entity.task.Params;
 import com.mocah.mindmath.server.entity.task.Sensors;
@@ -28,7 +26,6 @@ import gov.adlnet.xapi.model.Context;
 import gov.adlnet.xapi.model.Result;
 import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementResult;
-import gov.adlnet.xapi.model.Verbs;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -155,16 +152,17 @@ public class Extractor {
 	protected static String getNbSolveTry(Task task) {
 		Actor learner = task.getLearnerAsActor();
 
-		LearningLockerRepository lrs = new LearningLockerRepository();
-		try {
-			// Filter applied : same learner and same task family -> only answers (not help)
-			lrs = lrs.filterByActor(learner).filterByVerb(Verbs.answered()).addFilter("context.extensions."
-					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
-					task.getSensors().getTaskFamily());
-		} catch (UnsupportedEncodingException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		}
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation();
+		// TODO
+//		try {
+//			// Filter applied : same learner and same task family -> only answers (not help)
+//			lrs = lrs.filterByActor(learner).filterByVerb(Verbs.answered()).addFilter("context.extensions."
+//					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
+//					task.getSensors().getTaskFamily());
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		}
 
 		StatementResult results = lrs.getFilteredStatements();
 		// TODO check order system
@@ -238,16 +236,17 @@ public class Extractor {
 		// réalisés par l'élève où l'erreur-type pouvait apparaitre)"
 		Actor learner = task.getLearnerAsActor();
 
-		LearningLockerRepository lrs = new LearningLockerRepository();
-		try {
-			// Filter applied : same learner and same task family -> only answers (not help)
-			lrs = lrs.filterByActor(learner).filterByVerb(Verbs.answered()).addFilter("context.extensions."
-					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
-					task.getSensors().getTaskFamily());
-		} catch (UnsupportedEncodingException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		}
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation();
+		// TODO
+//		try {
+//			// Filter applied : same learner and same task family -> only answers (not help)
+//			lrs = lrs.filterByActor(learner).filterByVerb(Verbs.answered()).addFilter("context.extensions."
+//					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
+//					task.getSensors().getTaskFamily());
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		}
 
 		StatementResult results = lrs.getFilteredStatements();
 		// TODO check order system
@@ -297,16 +296,16 @@ public class Extractor {
 		// tâche: (Nbre de l'erreur-type) / (Nbre exercices réalisés où l'erreur-type
 		// pouvait apparaitre)"
 
-		LearningLockerRepository lrs = new LearningLockerRepository();
-		try {
-			// Filter applied : same task family -> only answers (not help)
-			lrs = lrs.filterByVerb(Verbs.answered()).addFilter("context.extensions."
-					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
-					task.getSensors().getTaskFamily());
-		} catch (UnsupportedEncodingException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		}
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation();
+		// TODO
+//		try {
+//			// Filter applied : same task family -> only answers (not help)
+//			lrs = lrs.filterByVerb(Verbs.answered()).addFilter("https://mindmath.lip6.fr/sensors",
+//					task.getSensors().getTaskFamily());
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		}
 
 		StatementResult results = lrs.getFilteredStatements();
 		// TODO check order system

@@ -302,14 +302,21 @@ public class MainLearningProcess {
 
 		// initialize feedbackcontent
 		try {
-			List<FeedbackContent> feedbacks = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute), FeedbackContentList.class).getFeedbackcontentlist();
-			List<Motivation> motivations = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.MotivationRoute), FeedbackContentList.class).getMotivationlist();
-			List<Glossaire> glossaires = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.GlossaireRoute), FeedbackContentList.class).getGlossairelist();
+			List<FeedbackContent> feedbacks = gson
+					.fromJson(LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute),
+							FeedbackContentList.class)
+					.getFeedbackcontentlist();
+			List<Motivation> motivations = gson
+					.fromJson(LocalRouteRepository.readFileasString(LocalRoute.MotivationRoute),
+							FeedbackContentList.class)
+					.getMotivationlist();
+			List<Glossaire> glossaires = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.GlossaireRoute),
+					FeedbackContentList.class).getGlossairelist();
 		} catch (JsonSyntaxException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		// initialize ontology file
 		try {
 			OWLparserRepo.owldata = LocalRouteRepository.readFileasString(LocalRoute.OntologyRoute);

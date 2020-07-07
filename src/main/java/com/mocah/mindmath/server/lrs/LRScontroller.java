@@ -30,7 +30,7 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLogs;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
-import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryHttp;
 import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
@@ -80,14 +80,14 @@ public class LRScontroller {
 	 */
 	@GetMapping("/all")
 	public ResponseEntity<String> getAllLearningLocker() {
-		LearningLockerRepository ll = new LearningLockerRepository();
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
 		StatementResult statements = ll.getAllStatements();
 		return new ResponseEntity<>(statements.getStatements().toString(), HttpStatus.ACCEPTED);
 	}
 
 	@GetMapping("/filters")
 	public ResponseEntity<String> getFilterLearningLocker() throws UnsupportedEncodingException {
-		LearningLockerRepository ll = new LearningLockerRepository();
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
 		Agent agent = new Agent();
 		agent.setMbox("mailto:test1@lrsmocah.lip6.fr");
 		StatementResult result = ll.filterByActor(agent).includeRelatedAgents(true).limitResults(10).canonical()
@@ -106,7 +106,7 @@ public class LRScontroller {
 			@RequestHeader("Authorization") String auth) throws JsonParserCustomException {
 		if (checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
-		LearningLockerRepository ll = new LearningLockerRepository();
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
 		JsonParserLogs parserLog = new JsonParserLogs(data);
 		JsonParserSensor parserSensor = new JsonParserSensor(data);
 		JsonParserFactory parserRoot = new JsonParserFactory(data);
@@ -265,7 +265,7 @@ public class LRScontroller {
 
 	/**
 	 * test to get statement json using jxapi
-	 * 
+	 *
 	 * @param data json from Cabri
 	 * @return json of statement
 	 * @throws IOException
@@ -289,7 +289,7 @@ public class LRScontroller {
 
 	/**
 	 * test to post statement json using jxapi
-	 * 
+	 *
 	 * @param data json from Cabri
 	 * @return id of statement in Learning Locker
 	 * @throws JsonParserCustomException
@@ -307,7 +307,7 @@ public class LRScontroller {
 
 		statement = generator.setAttachment().generateStatement(task, fbjson);
 
-		LearningLockerRepository ll = new LearningLockerRepository();
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
 		return new ResponseEntity<>(ll.postStatement(statement), HttpStatus.ACCEPTED);
 	}
 }

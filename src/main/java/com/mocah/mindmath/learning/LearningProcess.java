@@ -6,9 +6,7 @@ package com.mocah.mindmath.learning;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -44,7 +42,7 @@ import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
-import com.mocah.mindmath.repository.learninglocker.LearningLockerRepository;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
 import com.mocah.mindmath.server.entity.task.Log;
 import com.mocah.mindmath.server.entity.task.Params;
 import com.mocah.mindmath.server.entity.task.Sensors;
@@ -467,16 +465,17 @@ public class LearningProcess {
 
 		Actor learner = task.getLearnerAsActor();
 
-		LearningLockerRepository lrs = new LearningLockerRepository();
-		try {
-			// Filter applied : same learner and same task family
-			lrs = lrs.filterByActor(learner).addFilter("context.extensions."
-					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
-					task.getSensors().getTaskFamily());
-		} catch (UnsupportedEncodingException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		}
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation();
+		// TODO
+//		try {
+//			// Filter applied : same learner and same task family
+//			lrs = lrs.filterByActor(learner).addFilter("context.extensions."
+//					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
+//					task.getSensors().getTaskFamily());
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		}
 
 		StatementResult results = lrs.getFilteredStatements();
 		List<Statement> statements = results.getStatements();
