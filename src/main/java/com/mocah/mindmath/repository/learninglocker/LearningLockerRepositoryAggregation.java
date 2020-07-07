@@ -87,8 +87,6 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	 * @return
 	 */
 	private StringBuilder InitializeQueryURL() {
-
-		// https://lrsmocah.lip6.fr/api/statements/aggregate?cache=false&maxTimeMS=5000&maxScan=10000&pipeline=%5B%7B%22%24match%22%3A%7B%22%24and%22%3A%5B%7B%22%24or%22%3A%5B%7B%22person%22%3Anull%7D%5D%2C%22%24comment%22%3A%22%7B%5C%22criterionLabel%5C%22%3A%5C%22A%5C%22%2C%5C%22criteriaPath%5C%22%3A%5B%5C%22person%5C%22%5D%7D%22%7D%2C%7B%22%24comment%22%3A%22%7B%5C%22criterionLabel%5C%22%3A%5C%22B%5C%22%2C%5C%22criteriaPath%5C%22%3A%5B%5C%22lrs_id%5C%22%5D%7D%22%2C%22%24or%22%3A%5B%7B%22lrs_id%22%3A%7B%22%24oid%22%3A%225ee3440719a0867c2982f6f9%22%7D%7D%5D%7D%2C%7B%22%24comment%22%3A%22%7B%5C%22criterionLabel%5C%22%3A%5C%22C%5C%22%2C%5C%22criteriaPath%5C%22%3A%5B%5C%22statement%5C%22%2C%5C%22object%5C%22%2C%5C%22definition%5C%22%2C%5C%22extensions%5C%22%2C%5C%22https%3A%2F%2Fwww%2646%3Blip6%2646%3Bfr%2Fmocah%2FinvalidURI%2Fextensions%2Finput-context%5C%22%5D%7D%22%2C%22%24or%22%3A%5B%7B%22statement.object.definition.extensions.https%3A%2F%2Fwww%2646%3Blip6%2646%3Bfr%2Fmocah%2FinvalidURI%2Fextensions%2Finput-context%22%3A%22user-input%22%7D%5D%7D%5D%7D%7D%5D
 		StringBuilder query = new StringBuilder();
 		query.append("?");
 		query.append("cache=false");
@@ -231,7 +229,7 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	/**
 	 *
 	 */
-	public void clearFilters() {
+	public void clearPipelineStages() {
 		this.pipeline.clear();
 	}
 
