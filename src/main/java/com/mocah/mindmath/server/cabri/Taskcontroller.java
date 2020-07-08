@@ -90,7 +90,7 @@ public class Taskcontroller {
 		getTaskrepository().save(task);
 
 		// TODO call Q-learning algorithm
-		Task prevTask = getPreviousTask(task);
+		Task prevTask = getTaskrepository().getPreviousTask(task);
 
 		IAction action = null;
 		try {
@@ -201,10 +201,12 @@ public class Taskcontroller {
 
 	/**
 	 * Get the previous Task from database
+	 * 
 	 * @deprecated use getTaskrepository().getPreviousTask() instead
 	 * @param task the {@code Task} object from which one we want the previous task
 	 * @return the previous task, {@code null} if there isn't previous Task
 	 */
+	@Deprecated
 	public Task getPreviousTask(Task task) {
 		// TODO in SQL
 		List<Task> tasks = new ArrayList<>();
