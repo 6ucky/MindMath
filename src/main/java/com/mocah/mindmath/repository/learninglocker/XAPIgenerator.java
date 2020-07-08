@@ -23,11 +23,10 @@ import gov.adlnet.xapi.model.Context;
 import gov.adlnet.xapi.model.Result;
 import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.Verb;
-import gov.adlnet.xapi.model.Verbs;
 
 /**
  * Generate statement based on xAPI
- * 
+ *
  * @author Yan Wang
  * @since 20/04/2020
  */
@@ -137,7 +136,7 @@ public class XAPIgenerator {
 
 	/**
 	 * set attachment
-	 * 
+	 *
 	 * @TODO need to give input for each statement
 	 * @return this generator
 	 * @throws NoSuchAlgorithmException
@@ -160,18 +159,20 @@ public class XAPIgenerator {
 		statement.setAttachments(attachments);
 		return this;
 	}
-	
+
 	/**
 	 * set result for statement
-	 * @param success	true if we call decision process, false if we decide the cabri JSON is gaming with the system
-	 * @param completion	true if decision process work, false if decision produces an error
-	 * @param fbjson feedback object
+	 * 
+	 * @param success    true if we call decision process, false if we decide the
+	 *                   cabri JSON is gaming with the system
+	 * @param completion true if decision process work, false if decision produces
+	 *                   an error
+	 * @param fbjson     feedback object
 	 * @return this generator
 	 */
-	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson ) {
+	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson) {
 		Result fdresult = new Result();
-		if(success == true && completion == true)
-		{
+		if (success == true && completion == true) {
 			JsonObject jo = new JsonObject();
 			jo.addProperty("idFeedback", fbjson.getIdFeedback());
 			jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
@@ -183,14 +184,14 @@ public class XAPIgenerator {
 		}
 		fdresult.setSuccess(success);
 		fdresult.setCompletion(completion);
-		
+
 		statement.setResult(fdresult);
 		return this;
 	}
 
 	/**
 	 * generate statement based on jxapi, set actor, verb, object, context
-	 * 
+	 *
 	 * @param task
 	 * @param fbjson
 	 * @return statement for xAPI
@@ -199,12 +200,7 @@ public class XAPIgenerator {
 
 		statement.setActor(task.getLearnerAsActor());
 
-		Verb verb = Verbs.experienced();
-		if (task.getVerb().equals("bouton-valider")) {
-			verb = Verbs.answered();
-		} else if (task.getVerb().equals("bouton-aide")) {
-			verb = Verbs.asked();
-		}
+		Verb verb = task.getVerb();
 		statement.setVerb(verb);
 
 		Activity a = new Activity();

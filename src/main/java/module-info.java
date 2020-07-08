@@ -36,7 +36,7 @@ open module com.mocah.mindmath {
 	requires springfox.assembly;
 	requires bcprov.jdk16;
 	requires spring.data.jpa;
-	requires jxapi;
+	requires transitive jxapi;
 
 	// test requirements
 	requires spring.boot.test;
