@@ -14,6 +14,8 @@ import com.mocah.mindmath.server.entity.AbstractJsonData;
 
 import gov.adlnet.xapi.model.Account;
 import gov.adlnet.xapi.model.Agent;
+import gov.adlnet.xapi.model.Verb;
+import gov.adlnet.xapi.model.Verbs;
 
 /**
  * @author Yan Wang
@@ -28,8 +30,6 @@ public class Task extends AbstractJsonData implements Serializable {
 	private final String id_learner;
 
 	private final String task;
-
-	private final String trigger;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private final Sensors sensors;
@@ -48,7 +48,6 @@ public class Task extends AbstractJsonData implements Serializable {
 		List<Log> emptylist = new ArrayList<>();
 		this.logs = emptylist;
 		this.params = new Params();
-		this.trigger = null;
 		this.task = null;
 		this.sensors = new Sensors();
 		this.id_learner = "";
@@ -59,12 +58,10 @@ public class Task extends AbstractJsonData implements Serializable {
 		this.feedback_id = feedback_id;
 	}
 
-	public Task(String id_learner, String task, String trigger, Sensors sensors, Params params, List<Log> log,
-			String feedback_id) {
+	public Task(String id_learner, String task, Sensors sensors, Params params, List<Log> log, String feedback_id) {
 		super();
 		this.id_learner = id_learner;
 		this.task = task;
-		this.trigger = trigger;
 		this.sensors = sensors;
 		this.params = params;
 		this.logs = log;
@@ -81,10 +78,6 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	public String getTask() {
 		return task;
-	}
-
-	public String getTrigger() {
-		return trigger;
 	}
 
 	public Sensors getSensors() {
@@ -112,7 +105,7 @@ public class Task extends AbstractJsonData implements Serializable {
 		return agent;
 	}
 
-	public String getVerb() {
+	public String getTrigger() {
 		ListIterator<Log> listIterator = this.logs.listIterator(this.logs.size());
 
 		while (listIterator.hasPrevious()) {
@@ -124,5 +117,21 @@ public class Task extends AbstractJsonData implements Serializable {
 		}
 
 		return null;
+	}
+
+	public Verb getVerb() {
+		Verb verb = Verbs.experienced();
+		switch (getTrigger()) {
+		case "bouton-valider":
+			verb = Verbs.answered();
+			break;
+		case "bouton-aide":
+			verb = Verbs.asked();
+			break;
+		default:
+			break;
+		}
+
+		return verb;
 	}
 }
