@@ -8,6 +8,7 @@ open module com.mocah.mindmath {
 	exports com.mocah.mindmath.decisiontree;
 	exports com.mocah.mindmath.learning;
 	exports com.mocah.mindmath.learning.algorithms;
+	exports com.mocah.mindmath.learning.policies;
 	exports com.mocah.mindmath.learning.utils.actions;
 	exports com.mocah.mindmath.learning.utils.states;
 	exports com.mocah.mindmath.learning.utils.values;
@@ -30,7 +31,7 @@ open module com.mocah.mindmath {
 	requires org.apache.jena.core;
 	requires org.apache.commons.lang3;
 	requires com.github.mustachejava;
-	requires springfox.spring.web;
+	requires transitive springfox.spring.web;
 	requires spring.core;
 	requires springfox.swagger2;
 	requires springfox.assembly;
