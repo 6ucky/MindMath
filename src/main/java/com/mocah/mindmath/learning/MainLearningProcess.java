@@ -425,11 +425,11 @@ public class MainLearningProcess {
 
 			lrs = lrs.filterByMatcher(query);
 
-			String resultsStr = lrs.getFilteredStatementsAsString();
+			// String resultsStr = lrs.getFilteredStatementsAsString();
 			StatementResult results = lrs.getFilteredStatements();
 			List<Statement> statements = results.getStatements();
 
-			System.out.println(resultsStr);
+			// System.out.println(resultsStr);
 			System.out.println(statements.size());
 		} catch (IOException e) {
 			// TODO Bloc catch généré automatiquement

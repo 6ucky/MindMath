@@ -3,6 +3,7 @@ package com.mocah.mindmath.repository.learninglocker;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -12,10 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLRS;
 import com.mocah.mindmath.parser.jsonparser.LRSType;
 import com.mocah.mindmath.repository.XAPIRepository;
 
+import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementResult;
 
 /**
@@ -132,7 +138,27 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 
 		ResponseEntity<String> response = this.restTemp.exchange(uri, HttpMethod.GET, entity, String.class);
 
-		return getDecoder().fromJson(response.getBody(), StatementResult.class);
+		return aggregationResultToStatementResult(response.getBody());
+		// getDecoder().fromJson(response.getBody(), StatementResult.class);
+	}
+
+	private StatementResult aggregationResultToStatementResult(String body) {
+		StatementResult sr = new StatementResult();
+		ArrayList<Statement> statements = new ArrayList<>();
+
+		Gson decoder = getDecoder();
+
+		JsonArray results = gson.fromJson(body, JsonArray.class);
+		for (JsonElement result : results) {
+			JsonObject one_result = result.getAsJsonObject();
+
+			Statement statement = decoder.fromJson(one_result, Statement.class);
+			statements.add(statement);
+		}
+
+		sr.setStatements(statements);
+
+		return sr;
 	}
 
 	/**
