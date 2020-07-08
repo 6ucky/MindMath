@@ -466,24 +466,26 @@ public class LearningProcess {
 	private static List<String> getFTFeedbacks(Task task) {
 		List<String> feedbacks = new ArrayList<>();
 
-		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation();
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(true);
 
+		// Filter applied : same learner and same task family
 		HashMap<String, Object> scopes = new HashMap<>();
 		scopes.put("learner_id", task.getId_learner());
 		scopes.put("family_task", task.getSensors().getTaskFamily());
+		scopes.put("no_gaming", "true");
+		scopes.put("has_feedback", "true");
 
 		StringWriter writer = new StringWriter();
 		MustacheFactory mf = new DefaultMustacheFactory();
 		Mustache mustache = mf.compile("mustache_template/queryAVFt.mustache");
 		try {
 			mustache.execute(writer, scopes).flush();
+			String query = writer.toString();
+			lrs = lrs.filterByMatcher(query);
 		} catch (IOException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
-		String query = writer.toString();
-
-		lrs = lrs.filterByMatcher(query);
 
 		StatementResult results = lrs.getFilteredStatements();
 		List<Statement> statements = results.getStatements();

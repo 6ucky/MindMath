@@ -71,6 +71,7 @@ import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Theory;
 import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementResult;
+import gov.adlnet.xapi.model.Verbs;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -410,8 +411,9 @@ public class MainLearningProcess {
 			LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(true);
 
 			HashMap<String, Object> scopes = new HashMap<>();
-			scopes.put("learner_id", task.getId_learner());
+			scopes.put("verb_id", Verbs.answered().getId());
 			scopes.put("family_task", task.getSensors().getTaskFamily());
+			scopes.put("no_gaming", "true");
 
 			StringWriter writer = new StringWriter();
 			MustacheFactory mf = new DefaultMustacheFactory();
@@ -431,12 +433,6 @@ public class MainLearningProcess {
 
 			// System.out.println(resultsStr);
 			System.out.println(statements.size());
-			for (Statement statement : statements) {
-				System.out.println(statement.getId());
-				System.out.println(statement.getActor());
-				System.out.println(statement.getVerb());
-				System.out.println(statement);
-			}
 		} catch (IOException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();

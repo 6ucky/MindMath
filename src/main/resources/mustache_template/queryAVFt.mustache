@@ -22,17 +22,17 @@
       ]
     }
     {{/learner_id}}
-    {{#verb_url}}
+    {{#verb_id}}
     ,
     {
       "$comment": "{\"criterionLabel\":\"C\",\"criteriaPath\":[\"statement\",\"verb\"]}",
       "$or": [
         {
-          "statement.verb.id": "{{verb_url}}"
+          "statement.verb.id": "{{verb_id}}"
         }
       ]
     }
-    {{/verb_url}}
+    {{/verb_id}}
     {{#family_task}}
     ,
     {
@@ -44,5 +44,19 @@
       ]
     }
     {{/family_task}}
+    {{#no_gaming}}
+    ,
+    {
+      "$comment": "{\"criterionLabel\":\"A\",\"criteriaPath\":[\"statement\",\"result\",\"success\"]}",
+      "statement.result.success": {{no_gaming}}
+    }
+    {{/no_gaming}}
+    {{#has_feedback}}
+    ,
+    {
+      "$comment": "{\"criterionLabel\":\"A\",\"criteriaPath\":[\"statement\",\"result\",\"completion\"]}",
+      "statement.result.completion": {{has_feedback}}
+    }
+    {{/has_feedback}}
   ]
 }
