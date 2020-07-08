@@ -431,6 +431,12 @@ public class MainLearningProcess {
 
 			// System.out.println(resultsStr);
 			System.out.println(statements.size());
+			for (Statement statement : statements) {
+				System.out.println(statement.getId());
+				System.out.println(statement.getActor());
+				System.out.println(statement.getVerb());
+				System.out.println(statement);
+			}
 		} catch (IOException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();

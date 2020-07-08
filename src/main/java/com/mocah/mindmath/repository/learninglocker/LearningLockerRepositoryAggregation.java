@@ -152,7 +152,7 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 		for (JsonElement result : results) {
 			JsonObject one_result = result.getAsJsonObject();
 
-			Statement statement = decoder.fromJson(one_result, Statement.class);
+			Statement statement = decoder.fromJson(one_result.get("statement"), Statement.class);
 			statements.add(statement);
 		}
 
