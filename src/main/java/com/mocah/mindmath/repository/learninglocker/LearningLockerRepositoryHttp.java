@@ -81,8 +81,11 @@ public class LearningLockerRepositoryHttp extends LearningLockerRepository imple
 	public String getFilteredStatementsAsString() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
 
-		ResponseEntity<String> response = this.restTemp.exchange(STATEMENT_URL + InitializeQueryURL().toString(),
-				HttpMethod.GET, entity, String.class);
+		// set true to URI string
+		UriComponentsBuilder builder = UriComponentsBuilder
+				.fromHttpUrl(STATEMENT_URL + InitializeQueryURL().toString());
+		URI uri = builder.build(true).toUri();
+		ResponseEntity<String> response = this.restTemp.exchange(uri, HttpMethod.GET, entity, String.class);
 
 		JsonParserLRS parser = new JsonParserLRS(response.getBody(), LRSType.RESPONSE);
 

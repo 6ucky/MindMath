@@ -105,10 +105,14 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	public String getFilteredStatementsAsString() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
 
-		System.out.println(STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString());
+		// set true to URI string
+		UriComponentsBuilder builder = UriComponentsBuilder
+				.fromHttpUrl(STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString());
+		URI uri = builder.build(true).toUri();
 
-		ResponseEntity<String> response = this.restTemp.exchange(
-				STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString(), HttpMethod.GET, entity, String.class);
+		System.out.println(uri.toString());
+
+		ResponseEntity<String> response = this.restTemp.exchange(uri, HttpMethod.GET, entity, String.class);
 
 		JsonParserLRS parser = new JsonParserLRS(response.getBody(), LRSType.RESPONSE);
 
@@ -119,12 +123,13 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	public StatementResult getFilteredStatements() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
 
-		System.out.println(STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString());
-
 		// set true to URI string
 		UriComponentsBuilder builder = UriComponentsBuilder
 				.fromHttpUrl(STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString());
 		URI uri = builder.build(true).toUri();
+
+		System.out.println(uri.toString());
+
 		ResponseEntity<String> response = this.restTemp.exchange(uri, HttpMethod.GET, entity, String.class);
 
 		return getDecoder().fromJson(response.getBody(), StatementResult.class);
