@@ -103,7 +103,7 @@ public abstract class LearningLockerRepository extends LearningLockerKeys implem
 		RestTemplate temp = new RestTemplate(requestFactory);
 		return temp;
 	}
-	
+
 	/**
 	 * Add basic authorization, version, content type to header
 	 */
@@ -148,11 +148,25 @@ public abstract class LearningLockerRepository extends LearningLockerKeys implem
 		gson_decoder = builder.create();
 		return gson_decoder;
 	}
-	
+
+	/**
+	 * get about of LRS
+	 *
+	 * @return message from Learning Locker
+	 */
+	@Override
+	public String getAboutfromLearningLocker() {
+		HttpEntity<String> entity = new HttpEntity<>(header_entity);
+		ResponseEntity<String> response = this.restTemp.exchange(ABOUT_URL, HttpMethod.GET, entity, String.class);
+		return response.getBody();
+	}
+
 	/**
 	 * post a statement to LRS
+	 * 
 	 * @return the id of the statement in LRS
 	 */
+	@Override
 	public String postStatement(Statement statement) {
 		// post statement
 		HttpEntity<String> entity = new HttpEntity<>(gson.toJson(statement), header_entity);
@@ -161,10 +175,11 @@ public abstract class LearningLockerRepository extends LearningLockerKeys implem
 		String response_id = JsonParser.parseString(response.getBody()).getAsString();
 		return response_id;
 	}
-	
+
 	/**
 	 * @deprecated use jxAPI instead
 	 */
+	@Deprecated
 	public String postStatementTEST(String id, Sensors sensors, List<Log> log) {
 		// TODO design statement and put fb inside
 		String test_text = "{\r\n" + "  \"id\": \"18bac5d4-f6f0-4d9b-9888-ef98891cb117\",\r\n"

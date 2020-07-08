@@ -58,19 +58,6 @@ public class LearningLockerRepositoryHttp extends LearningLockerRepository imple
 		return query;
 	}
 
-	/**
-	 * get about of LRS
-	 *
-	 * @return message from Learning Locker
-	 */
-	@Override
-	public String getAboutfromLearningLocker() {
-		HttpEntity<String> entity = new HttpEntity<>(header_entity);
-		ResponseEntity<String> response = this.restTemp.exchange(ABOUT_URL, HttpMethod.GET, entity, String.class);
-
-		return response.getBody();
-	}
-
 	@Override
 	public String getAllStatementsAsString() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);

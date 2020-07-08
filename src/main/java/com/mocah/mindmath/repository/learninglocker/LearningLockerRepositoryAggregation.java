@@ -80,18 +80,6 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 		return query;
 	}
 
-	/**
-	 * get about of LRS
-	 *
-	 * @return message from Learning Locker
-	 */
-	@Override
-	public String getAboutfromLearningLocker() {
-		HttpEntity<String> entity = new HttpEntity<>(header_entity);
-		ResponseEntity<String> response = this.restTemp.exchange(ABOUT_URL, HttpMethod.GET, entity, String.class);
-		return response.getBody();
-	}
-
 	@Override
 	public String getAllStatementsAsString() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
@@ -144,8 +132,7 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	 * @param value expected value (ie "customExtensionValue")
 	 */
 	public LearningLockerRepositoryAggregation addPipelineStage(String key, String value) {
-		LearningLockerRepositoryAggregation client = new LearningLockerRepositoryAggregation(
-				this.isTestEnv);
+		LearningLockerRepositoryAggregation client = new LearningLockerRepositoryAggregation(this.isTestEnv);
 		if (client.pipeline == null) {
 			client.pipeline = new HashMap<>();
 		}
@@ -172,5 +159,5 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	public LearningLockerRepositoryAggregation filterByMatcher(String matchQuery) {
 		return addPipelineStage("$match", matchQuery);
 	}
-	
+
 }
