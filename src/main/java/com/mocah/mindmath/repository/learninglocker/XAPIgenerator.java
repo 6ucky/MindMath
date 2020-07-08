@@ -160,6 +160,33 @@ public class XAPIgenerator {
 		statement.setAttachments(attachments);
 		return this;
 	}
+	
+	/**
+	 * set result for statement
+	 * @param success	true if we call decision process, false if we decide the cabri JSON is gaming with the system
+	 * @param completion	true if decision process work, false if decision produces an error
+	 * @param fbjson feedback object
+	 * @return this generator
+	 */
+	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson ) {
+		Result fdresult = new Result();
+		if(success == true && completion == true)
+		{
+			JsonObject jo = new JsonObject();
+			jo.addProperty("idFeedback", fbjson.getIdFeedback());
+			jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
+			jo.addProperty("contentFb", fbjson.getContentFb());
+			jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
+			JsonObject root_jo = new JsonObject();
+			root_jo.add("https://mindmath.lip6.fr/feedback", jo);
+			fdresult.setExtensions(root_jo);
+		}
+		fdresult.setSuccess(success);
+		fdresult.setCompletion(completion);
+		
+		statement.setResult(fdresult);
+		return this;
+	}
 
 	/**
 	 * generate statement based on jxapi, set actor, verb, object, context
@@ -168,7 +195,7 @@ public class XAPIgenerator {
 	 * @param fbjson
 	 * @return statement for xAPI
 	 */
-	public Statement generateStatement(Task task, Feedbackjson fbjson) {
+	public Statement generateStatement(Task task) {
 
 		statement.setActor(task.getLearnerAsActor());
 
@@ -181,7 +208,7 @@ public class XAPIgenerator {
 		statement.setVerb(verb);
 
 		Activity a = new Activity();
-		String ac_id = "https://mindmath.lip6.fr/" + fbjson.getIdFamilytask();
+		String ac_id = "https://mindmath.lip6.fr/" + task.getSensors().getTaskFamily();
 		a.setId(ac_id);
 		String key = "fr-FR";
 		String name = "resoudreEquationPremierDegre";
@@ -193,19 +220,6 @@ public class XAPIgenerator {
 		ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
 		a.setDefinition(activityDefinition);
 		statement.setObject(a);
-
-		Result fdresult = new Result();
-		boolean correctness = Boolean.getBoolean(task.getSensors().isCorrectAnswer());
-		fdresult.setSuccess(correctness);
-		JsonObject jo = new JsonObject();
-		jo.addProperty("idFeedback", fbjson.getIdFeedback());
-		jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
-		jo.addProperty("contentFb", fbjson.getContentFb());
-		jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
-		JsonObject root_jo = new JsonObject();
-		root_jo.add("https://mindmath.lip6.fr/feedback", jo);
-		fdresult.setExtensions(root_jo);
-		statement.setResult(fdresult);
 
 		HashMap<String, JsonElement> extensions = new HashMap<>();
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();

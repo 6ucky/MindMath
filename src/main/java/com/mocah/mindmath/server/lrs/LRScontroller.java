@@ -281,7 +281,7 @@ public class LRScontroller {
 		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
 
-		statement = generator.setAttachment().generateStatement(task, fbjson);
+		statement = generator.setAttachment().setResult(true, true, fbjson).generateStatement(task);
 
 		Gson gson = new Gson();
 		return new ResponseEntity<>(gson.toJson(statement), HttpStatus.ACCEPTED);
@@ -305,7 +305,7 @@ public class LRScontroller {
 		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
 
-		statement = generator.setAttachment().generateStatement(task, fbjson);
+		statement = generator.setAttachment().setResult(true, true, fbjson).generateStatement(task);
 
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
 		return new ResponseEntity<>(ll.postStatement(statement), HttpStatus.ACCEPTED);
