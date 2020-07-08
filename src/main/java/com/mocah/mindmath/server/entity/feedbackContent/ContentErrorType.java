@@ -12,7 +12,7 @@ import com.mocah.mindmath.server.entity.StringListConverter;
 @Entity
 public class ContentErrorType extends AbstractJsonData {
 	
-	private final String erreur_type;
+	private final String erreurID;
 	
 	private final String format;
 	
@@ -22,14 +22,10 @@ public class ContentErrorType extends AbstractJsonData {
 	private final String content_url;
 	
 	public ContentErrorType() {
-		this.erreur_type = "";
+		this.erreurID = "";
 		this.format = "";
 		this.glossaire = new ArrayList<>();
 		this.content_url = "";
-	}
-
-	public String getErreur_type() {
-		return erreur_type;
 	}
 
 	public String getFormat() {
@@ -42,5 +38,9 @@ public class ContentErrorType extends AbstractJsonData {
 
 	public String getContent_url() {
 		return content_url;
+	}
+
+	public String getErreurID() {
+		return erreurID;
 	}
 }

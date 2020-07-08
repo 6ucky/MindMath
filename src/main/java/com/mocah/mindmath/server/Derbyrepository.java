@@ -35,11 +35,11 @@ public interface Derbyrepository extends CrudRepository <AbstractJsonData, Strin
 	@Query("select m from Motivation m")
 	List<Motivation> getAllMotivation();
 	
-	@Query("select f from FeedbackContent f where f.feedbackName = :feedbackName and f.motivation_leaf = :motivation_leaf")
-	FeedbackContent getFeedbackContent(@Param("feedbackName") String feedbackName, @Param("motivation_leaf") String motivation_leaf);
+	@Query("select f from FeedbackContent f where f.feedbackID = :feedbackID and f.motivation_leaf = :motivation_leaf")
+	FeedbackContent getFeedbackContent(@Param("feedbackID") String feedbackID, @Param("motivation_leaf") String motivation_leaf);
 	
-	@Query("select g from Glossaire g where g.glossaire_name = :glossaire_name")
-	Glossaire getGlossaire(@Param("glossaire_name") String glossaire_name);
+	@Query("select g from Glossaire g where g.glossaireID = :glossaireID")
+	Glossaire getGlossaire(@Param("glossaireID") String glossaireID);
 	
 	@Query("select m from Motivation m where m.motivation_leaf = :motivation_leaf")
 	List<Motivation> getMotivation(@Param("motivation_leaf") String motivation_leaf);

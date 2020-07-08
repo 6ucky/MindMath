@@ -13,7 +13,7 @@ import com.mocah.mindmath.server.entity.AbstractJsonData;
 @Entity
 public class FeedbackContent extends AbstractJsonData {
 	
-	private final String feedbackName;
+	private final String feedbackID;
 	
 	private final double ponderation;
 
@@ -24,7 +24,7 @@ public class FeedbackContent extends AbstractJsonData {
 	
 	public FeedbackContent() {
 		super();
-		this.feedbackName = "";
+		this.feedbackID = "";
 		this.ponderation = 0;
 		this.motivation_leaf = "";
 		this.contents = new ArrayList<>();
@@ -38,10 +38,6 @@ public class FeedbackContent extends AbstractJsonData {
 		return motivation_leaf;
 	}
 
-	public String getFeedbackName() {
-		return feedbackName;
-	}
-
 	public double getPonderation() {
 		return ponderation;
 	}
@@ -49,9 +45,13 @@ public class FeedbackContent extends AbstractJsonData {
 	public ContentErrorType getContentErrorType(String erreur_type) {
 		for(ContentErrorType content: contents)
 		{
-			if(content.getErreur_type().equals(erreur_type))
+			if(content.getErreurID().equals(erreur_type))
 				return content;
 		}
 		return null;
+	}
+
+	public String getFeedbackID() {
+		return feedbackID;
 	}
 }

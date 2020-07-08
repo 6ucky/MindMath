@@ -88,32 +88,8 @@ public class Feedbackcontroller {
 		}
 		return new ResponseEntity<>(gson.toJson(glossaires), HttpStatus.OK);
 	}
-	
-	@GetMapping(path = "/example")
-	public ResponseEntity<String> getExample(@RequestHeader("Authorization") String auth) throws JsonSyntaxException, IOException {
-		if (!checkauth(auth))
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
-		getFeedbackcontentrepository().deleteAll(getFeedbackcontentrepository().getAllFeedbackContent());
-		getFeedbackcontentrepository().deleteAll(getFeedbackcontentrepository().getAllGlossaire());
-		getFeedbackcontentrepository().deleteAll(getFeedbackcontentrepository().getAllMotivation());
-		addfeedbackrepo(license_num, LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute));
-		addmotivationrepo(license_num, LocalRouteRepository.readFileasString(LocalRoute.MotivationRoute));
-		addglossairerepo(license_num, LocalRouteRepository.readFileasString(LocalRoute.GlossaireRoute));
-		
-		String feedbackName = "3.2.INC"; // TEST name
-		
-		FeedbackContent fb = getFeedbackcontentrepository().getFeedbackContent(feedbackName, "6");
-		ContentErrorType error = fb.getContentErrorType("2");
-		System.out.println("content_url:" + error.getContent_url());
-		for(int i = 0; i < error.getGlossaire().size(); i++)
-		{
-			System.out.println(error.getGlossaire().get(i) + ":" + getFeedbackcontentrepository().getGlossaire(error.getGlossaire().get(i)).getGlossaire_content());
-		}
-		Gson gson = new Gson();
-		return new ResponseEntity<>(gson.toJson(getFeedbackcontentrepository().getMotivation(fb.getMotivation_leaf())), HttpStatus.OK);
-	}
-	
+	// a test for feedbackcontent database to feedbackjson
 	@GetMapping(path = "/feedbackexample")
 	public ResponseEntity<String> getFeedbackExample(@RequestHeader("Authorization") String auth) throws JsonSyntaxException, IOException {
 		if (!checkauth(auth))
@@ -126,17 +102,18 @@ public class Feedbackcontroller {
 		addmotivationrepo(license_num, LocalRouteRepository.readFileasString(LocalRoute.MotivationRoute));
 		addglossairerepo(license_num, LocalRouteRepository.readFileasString(LocalRoute.GlossaireRoute));
 		
-		String feedbackName = "1.1.GNC"; // TEST name
+		String feedbackID = "1.1.GNC"; // TEST name
 		String leaf = "11";
 		String error_code = "1";
 		
-		FeedbackContent fb = getFeedbackcontentrepository().getFeedbackContent(feedbackName, leaf);
+		FeedbackContent fb = getFeedbackcontentrepository().getFeedbackContent(feedbackID, leaf);
 		List<Motivation> motivations = getFeedbackcontentrepository().getMotivation(fb.getMotivation_leaf());
 		HashMap<String, String> glossaireMap = new HashMap<String, String>();
 		for(int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++)
 		{
 			String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
-			glossaireMap.put(mapkey, getFeedbackcontentrepository().getGlossaire(mapkey).getGlossaire_content());
+			Glossaire temp = getFeedbackcontentrepository().getGlossaire(mapkey);
+			glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
 		}
 		Feedbackjson feedbackjson = new Feedbackjson(
 				motivations.get(new Random().nextInt(motivations.size())).getMotivation_data(),
