@@ -30,6 +30,7 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLogs;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryHttp;
 import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
@@ -84,19 +85,38 @@ public class LRScontroller {
 		StatementResult statements = ll.getAllStatements();
 		return new ResponseEntity<>(statements.getStatements().toString(), HttpStatus.ACCEPTED);
 	}
+	
+	//test to get all statements from MindMath test store
+	@GetMapping("/test/all")
+	public ResponseEntity<String> getTestAllLearningLocker() {
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		StatementResult statements = ll.getAllStatements();
+		return new ResponseEntity<>(statements.getStatements().toString(), HttpStatus.ACCEPTED);
+	}
 
-	@GetMapping("/filters")
+	//test to get filters statements from MindMath test store
+	@GetMapping("/test/filters")
 	public ResponseEntity<String> getFilterLearningLocker() throws UnsupportedEncodingException {
-		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
 		Agent agent = new Agent();
-		agent.setMbox("mailto:test1@lrsmocah.lip6.fr");
+		Account account = new Account("100", "https://www.tralalere.com/");
+		agent.setAccount(account);
 		StatementResult result = ll.filterByActor(agent).includeRelatedAgents(true).limitResults(10).canonical()
 				.getFilteredStatements();
+		return new ResponseEntity<>(result.getStatements().toString(), HttpStatus.ACCEPTED);
+	}
+	
+	//test to get aggregation statements from MindMath test store
+	@GetMapping("/test/aggregation")
+	public ResponseEntity<String> getAggregationLearningLocker() {
+		LearningLockerRepositoryAggregation lltest = new LearningLockerRepositoryAggregation(true);
+		StatementResult result = lltest.addPipelineStage("context.extensions.yourExtension", "customExtensionValue").getFilteredStatements();
 		return new ResponseEntity<>(result.getStatements().toString(), HttpStatus.ACCEPTED);
 	}
 
 	/**
 	 * Test of post for LRS
+	 * @deprecated use jxapi instead
 	 *
 	 * @return the added statement
 	 * @throws JsonParseCustomException
@@ -151,7 +171,7 @@ public class LRScontroller {
 	}
 
 	// jxapi template
-	@PostMapping("/testJXAPI")
+	@PostMapping("/test/JXAPI")
 	public ResponseEntity<String> testJXAPI(@RequestBody String data, @RequestHeader("Authorization") String auth)
 			throws IOException, NoSuchAlgorithmException, URISyntaxException {
 		// Statement
@@ -273,7 +293,7 @@ public class LRScontroller {
 	 * @throws JsonParserCustomException
 	 * @throws URISyntaxException
 	 */
-	@PostMapping("/testJXAPIexample")
+	@PostMapping("/test/JXAPIexample")
 	public ResponseEntity<String> testJXAPIexample(@RequestBody String data)
 			throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
@@ -297,7 +317,7 @@ public class LRScontroller {
 	 * @throws NoSuchAlgorithmException
 	 * @throws URISyntaxException
 	 */
-	@PostMapping("/testJXAPIexamplePOST")
+	@PostMapping("/test/JXAPIexamplePOST")
 	public ResponseEntity<String> testJXAPIexamplePOST(@RequestBody String data)
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);

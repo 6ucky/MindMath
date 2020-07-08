@@ -4,33 +4,21 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLRS;
 import com.mocah.mindmath.parser.jsonparser.LRSType;
 import com.mocah.mindmath.repository.XAPIRepository;
-import com.mocah.mindmath.server.entity.task.Log;
-import com.mocah.mindmath.server.entity.task.Sensors;
 
 import gov.adlnet.xapi.model.Actor;
-import gov.adlnet.xapi.model.IStatementObject;
-import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementResult;
 import gov.adlnet.xapi.model.Verb;
-import gov.adlnet.xapi.model.adapters.ActorAdapter;
-import gov.adlnet.xapi.model.adapters.StatementObjectAdapter;
 
 /**
  * Use Spring Rest Template to connect to Learning Locker
@@ -41,48 +29,13 @@ import gov.adlnet.xapi.model.adapters.StatementObjectAdapter;
 @Service
 public class LearningLockerRepositoryHttp extends LearningLockerRepository implements XAPIRepository {
 	private HashMap<String, String> filters = null;
-	private Gson gson = new Gson();
 
 	public LearningLockerRepositoryHttp() {
-		this(new FeedbackforLRS(), false);
+		this(false);
 	}
 
 	public LearningLockerRepositoryHttp(boolean isTestEnv) {
-		this(new FeedbackforLRS(), isTestEnv);
-	}
-
-	public LearningLockerRepositoryHttp(FeedbackforLRS fbLRS) {
-		this(fbLRS, false);
-	}
-
-	public LearningLockerRepositoryHttp(FeedbackforLRS fbLRS, boolean isTestEnv) {
-		super(fbLRS, isTestEnv);
-	}
-
-	@Override
-	protected HttpHeaders InitializeHeader() {
-		HttpHeaders headers = new HttpHeaders();
-
-		// header as chart form
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add(BASIC_AUTHORIZATION, BASIC_AUTHORIZATION_VALUE);
-		headers.add(BASIC_VERSION, BASIC_VERSION_VALUE);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		return headers;
-	}
-
-	@Override
-	protected HttpHeaders InitializeTestHeader() {
-		HttpHeaders headers = new HttpHeaders();
-
-		// header as chart form
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add(BASIC_AUTHORIZATION, BASIC_AUTHORIZATION_TEST_VALUE);
-		headers.add(BASIC_VERSION, BASIC_VERSION_TEST_VALUE);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		return headers;
+		super(isTestEnv);
 	}
 
 	/**
@@ -103,23 +56,6 @@ public class LearningLockerRepositoryHttp extends LearningLockerRepository imple
 			query.deleteCharAt(query.length() - 1);
 		}
 		return query;
-	}
-
-	/**
-	 * Add Generic Interface Adapter of Actor class and IStatementObject class for
-	 * Gson
-	 *
-	 * @return
-	 */
-	@Override
-	protected Gson getDecoder() {
-		Gson gson_decoder = new Gson();
-		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(Actor.class, new ActorAdapter());
-		builder.registerTypeAdapter(IStatementObject.class, new StatementObjectAdapter());
-		gson_decoder = builder.create();
-
-		return gson_decoder;
 	}
 
 	/**
@@ -179,27 +115,6 @@ public class LearningLockerRepositoryHttp extends LearningLockerRepository imple
 		return getDecoder().fromJson(response.getBody(), StatementResult.class);
 	}
 
-	public String postStatementTEST(String id, Sensors sensors, List<Log> log) {
-		// TODO design statement and put fb inside
-		String test_text = "{\r\n" + "  \"id\": \"18bac5d4-f6f0-4d9b-9888-ef98891cb117\",\r\n"
-				+ "  \"actor\": { \"mbox\": \"mailto:test1@lrsmocah.lip6.fr\" },\r\n"
-				+ "  \"verb\": { \"id\": \"http://lrsmocah.lip6.fr/verb\" },\r\n"
-				+ "  \"object\": { \"id\": \"http://lrsmocah.lip6.fr/activity\" }\r\n" + "}";
-
-		// post test text to LRS and return its id
-		HttpEntity<String> entity = new HttpEntity<>(test_text, header_entity);
-		ResponseEntity<String> response1 = this.restTemp.exchange(STATEMENT_URL, HttpMethod.POST, entity, String.class);
-		// the id of the current statement
-		String response1_id = JsonParser.parseString(response1.getBody()).getAsString();
-
-		// return statement based on id
-		ResponseEntity<String> response2 = this.restTemp.exchange(
-				STATEMENT_URL + "?statementId=" + response1_id + "&format=exact&attachments=false", HttpMethod.GET,
-				entity, String.class);
-		JsonParserLRS parser = new JsonParserLRS(response2.getBody(), LRSType.POST);
-		return parser.getStatement();
-	}
-
 	/**
 	 * Add a filter to the statement request
 	 *
@@ -207,7 +122,7 @@ public class LearningLockerRepositoryHttp extends LearningLockerRepository imple
 	 * @param value expected value (ie "customExtensionValue")
 	 */
 	public LearningLockerRepositoryHttp addFilter(String key, String value) {
-		LearningLockerRepositoryHttp client = new LearningLockerRepositoryHttp(this.fbLRS, this.isTestEnv);
+		LearningLockerRepositoryHttp client = new LearningLockerRepositoryHttp(this.isTestEnv);
 		if (client.filters == null) {
 			client.filters = new HashMap<>();
 		}
@@ -334,15 +249,5 @@ public class LearningLockerRepositoryHttp extends LearningLockerRepository imple
 			return addFilter("ascending", "true");
 		else
 			return addFilter("ascending", "false");
-	}
-
-	@Override
-	public String postStatement(Statement statement) {
-		// post statement
-		HttpEntity<String> entity = new HttpEntity<>(gson.toJson(statement), header_entity);
-		ResponseEntity<String> response1 = this.restTemp.exchange(STATEMENT_URL, HttpMethod.POST, entity, String.class);
-		// the id of the current statement
-		String response1_id = JsonParser.parseString(response1.getBody()).getAsString();
-		return response1_id;
 	}
 }

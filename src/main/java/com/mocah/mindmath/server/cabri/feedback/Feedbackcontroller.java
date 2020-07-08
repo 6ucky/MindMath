@@ -90,7 +90,7 @@ public class Feedbackcontroller {
 	}
 
 	// a test for feedbackcontent database to feedbackjson
-	@GetMapping(path = "/feedbackexample")
+	@GetMapping(path = "/test/feedbackexample")
 	public ResponseEntity<String> getFeedbackExample(@RequestHeader("Authorization") String auth) throws JsonSyntaxException, IOException {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");

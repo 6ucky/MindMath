@@ -4,31 +4,19 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mocah.mindmath.parser.jsonparser.JsonParserLRS;
 import com.mocah.mindmath.parser.jsonparser.LRSType;
 import com.mocah.mindmath.repository.XAPIRepository;
-import com.mocah.mindmath.server.entity.task.Log;
-import com.mocah.mindmath.server.entity.task.Sensors;
 
-import gov.adlnet.xapi.model.Actor;
-import gov.adlnet.xapi.model.IStatementObject;
-import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementResult;
-import gov.adlnet.xapi.model.adapters.ActorAdapter;
-import gov.adlnet.xapi.model.adapters.StatementObjectAdapter;
 
 /**
  * Use Spring Rest Template to connect to Learning Locker
@@ -39,46 +27,13 @@ import gov.adlnet.xapi.model.adapters.StatementObjectAdapter;
 @Service
 public class LearningLockerRepositoryAggregation extends LearningLockerRepository implements XAPIRepository {
 	private HashMap<String, String> pipeline = null;
-	private Gson gson = new Gson();
 
 	public LearningLockerRepositoryAggregation() {
-		this(new FeedbackforLRS(), false);
+		this(false);
 	}
 
 	public LearningLockerRepositoryAggregation(boolean isTestEnv) {
-		this(new FeedbackforLRS(), isTestEnv);
-	}
-
-	public LearningLockerRepositoryAggregation(FeedbackforLRS fbLRS) {
-		this(fbLRS, false);
-	}
-
-	public LearningLockerRepositoryAggregation(FeedbackforLRS fbLRS, boolean isTestEnv) {
-		super(fbLRS, isTestEnv);
-	}
-
-	@Override
-	protected HttpHeaders InitializeHeader() {
-		HttpHeaders headers = new HttpHeaders();
-
-		// header as chart form
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add(BASIC_AUTHORIZATION, BASIC_AUTHORIZATION_VALUE);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		return headers;
-	}
-
-	@Override
-	protected HttpHeaders InitializeTestHeader() {
-		HttpHeaders headers = new HttpHeaders();
-
-		// header as chart form
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.add(BASIC_AUTHORIZATION, BASIC_AUTHORIZATION_TEST_VALUE);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		return headers;
+		super(isTestEnv);
 	}
 
 	/**
@@ -123,23 +78,6 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 		}
 
 		return query;
-	}
-
-	/**
-	 * Add Generic Interface Adapter of Actor class and IStatementObject class for
-	 * Gson
-	 *
-	 * @return
-	 */
-	@Override
-	protected Gson getDecoder() {
-		Gson gson_decoder = new Gson();
-		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(Actor.class, new ActorAdapter());
-		builder.registerTypeAdapter(IStatementObject.class, new StatementObjectAdapter());
-		gson_decoder = builder.create();
-
-		return gson_decoder;
 	}
 
 	/**
@@ -199,11 +137,6 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 		return getDecoder().fromJson(response.getBody(), StatementResult.class);
 	}
 
-	public String postStatementTEST(String id, Sensors sensors, List<Log> log) {
-		// TODO
-		return null;
-	}
-
 	/**
 	 * Add a stage to the pipeline's statement request
 	 *
@@ -211,7 +144,7 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	 * @param value expected value (ie "customExtensionValue")
 	 */
 	public LearningLockerRepositoryAggregation addPipelineStage(String key, String value) {
-		LearningLockerRepositoryAggregation client = new LearningLockerRepositoryAggregation(this.fbLRS,
+		LearningLockerRepositoryAggregation client = new LearningLockerRepositoryAggregation(
 				this.isTestEnv);
 		if (client.pipeline == null) {
 			client.pipeline = new HashMap<>();
@@ -236,13 +169,8 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	/**
 	 * @param matchQuery
 	 */
-	public LearningLockerRepositoryAggregation filterByActivity(String matchQuery) {
+	public LearningLockerRepositoryAggregation filterByMatcher(String matchQuery) {
 		return addPipelineStage("$match", matchQuery);
 	}
-
-	@Override
-	public String postStatement(Statement statement) {
-		// TODO
-		return null;
-	}
+	
 }
