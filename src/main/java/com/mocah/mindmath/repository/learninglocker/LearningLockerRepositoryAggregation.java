@@ -53,7 +53,7 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 
 		StringBuilder pipeline = new StringBuilder();
 		if (this.pipeline != null && !this.pipeline.isEmpty()) {
-
+			pipeline.append("[");
 			for (Entry<String, String> item : this.pipeline.entrySet()) {
 				pipeline.append("{\"");
 				pipeline.append(item.getKey());
@@ -63,7 +63,8 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 				pipeline.append("},");
 			}
 
-			pipeline.deleteCharAt(query.length() - 1);
+			pipeline.deleteCharAt(pipeline.length() - 1);
+			pipeline.append("]");
 		} else {
 			pipeline.append("[]");
 		}
@@ -104,6 +105,8 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	public String getFilteredStatementsAsString() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
 
+		System.out.println(STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString());
+
 		ResponseEntity<String> response = this.restTemp.exchange(
 				STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString(), HttpMethod.GET, entity, String.class);
 
@@ -115,6 +118,8 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	@Override
 	public StatementResult getFilteredStatements() {
 		HttpEntity<String> entity = new HttpEntity<>(header_entity);
+
+		System.out.println(STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString());
 
 		// set true to URI string
 		UriComponentsBuilder builder = UriComponentsBuilder

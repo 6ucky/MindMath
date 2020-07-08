@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -16,6 +17,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
@@ -48,6 +52,7 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.owlparser.OWLparserRepo;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
@@ -64,6 +69,8 @@ import alice.tuprolog.NoSolutionException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Theory;
+import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.StatementResult;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -392,9 +399,45 @@ public class MainLearningProcess {
 //		String data = "{\"id\":\"100\",\"sensors\":{\"idLearner\":\"learner1\",\"domain\":\"algebre\",\"generator\":\"resoudreEquationPremierDegre\",\"taskFamily\":\"ft3.1\",\"correctAnswer\":false,\"intermediaryResponse\":[{\"step\":1,\"correctAnswer\":true},{\"step\":2,\"correctAnswer\":false}],\"activityMode\":0},\"log\":[{\"time\":4015,\"type\":\"tool\",\"name\":\"line_tool\",\"action\":\"create\"},{\"time\":5813,\"type\":\"button\",\"name\":\"bouton-effacer\",\"action\":\"push\"},{\"time\":7689,\"type\":\"button\",\"name\":\"bouton-valider\",\"action\":\"push\"}]}";
 
 		// TODO check null pointer
-		String data = "{ \"id\": \"100\", \"sensors\": {\"idLearner\":\"learner1\", \"domain\": \"algebre\", \"generator\": \"resoudreEquationPremierDegre\", \"taskFamily\": \"ft3.1\", \"correctAnswer\": false, \"codeError\": \"ce_err5\", \"activityMode\":\"0\" }, \"log\": [ { \"time\": 4015, \"type\": \"tool\", \"name\": \"line_tool\", \"action\": \"create\" }, { \"time\": 5813, \"type\": \"button\", \"name\": \"bouton-effacer\", \"action\": \"push\" }, { \"time\": 7689, \"type\": \"button\", \"name\": \"bouton-valider\", \"action\": \"push\" } ] }";
+		String data = "{ \"id\": \"100\", \"sensors\": {\"idLearner\":\"100\", \"domain\": \"algebre\", \"generator\": \"resoudreEquationPremierDegre\", \"taskFamily\": \"ft3.1\", \"correctAnswer\": false, \"codeError\": \"ce_err5\", \"activityMode\":\"0\" }, \"log\": [ { \"time\": 4015, \"type\": \"tool\", \"name\": \"line_tool\", \"action\": \"create\" }, { \"time\": 5813, \"type\": \"button\", \"name\": \"bouton-effacer\", \"action\": \"push\" }, { \"time\": 7689, \"type\": \"button\", \"name\": \"bouton-valider\", \"action\": \"push\" } ] }";
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		System.out.println(data);
+
+		try {
+			jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
+			Task task = jsonparser.parse(data, "v1.0");
+
+			LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(true);
+
+			HashMap<String, Object> scopes = new HashMap<>();
+			scopes.put("learner_id", task.getId_learner());
+			scopes.put("family_task", task.getSensors().getTaskFamily());
+
+			StringWriter writer = new StringWriter();
+			MustacheFactory mf = new DefaultMustacheFactory();
+			Mustache mustache = mf.compile("mustache_template/queryAVFt.mustache");
+
+			mustache.execute(writer, scopes).flush();
+
+			String query = writer.toString();
+
+			System.out.println(query);
+
+			lrs = lrs.filterByMatcher(query);
+
+			String resultsStr = lrs.getFilteredStatementsAsString();
+			StatementResult results = lrs.getFilteredStatements();
+			List<Statement> statements = results.getStatements();
+
+			System.out.println(resultsStr);
+			System.out.println(statements.size());
+		} catch (IOException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		} catch (JsonParserCustomException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
 
 		IState readedState = null;
 		try {

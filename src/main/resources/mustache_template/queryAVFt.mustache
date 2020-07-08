@@ -1,0 +1,48 @@
+{
+  "$and": [
+    {
+      "$comment": "{\"criterionLabel\":\"A\",\"criteriaPath\":[\"lrs_id\"]}",
+      "$or": [
+        {
+          "lrs_id": {
+            "$oid": "5f04392019a0867c2982f71b"
+          }
+        }
+      ]
+    }
+    {{#learner_id}}
+    ,
+    {
+      "$comment": "{\"criterionLabel\":\"B\",\"criteriaPath\":[\"statement\",\"actor\"]}",
+      "$or": [
+        {
+          "statement.actor.account.name": "{{learner_id}}",
+          "statement.actor.account.homePage": "https://www.tralalere.com/"
+        }
+      ]
+    }
+    {{/learner_id}}
+    {{#verb_url}}
+    ,
+    {
+      "$comment": "{\"criterionLabel\":\"C\",\"criteriaPath\":[\"statement\",\"verb\"]}",
+      "$or": [
+        {
+          "statement.verb.id": "{{verb_url}}"
+        }
+      ]
+    }
+    {{/verb_url}}
+    {{#family_task}}
+    ,
+    {
+      "$comment": "{\"criterionLabel\":\"F\",\"criteriaPath\":[\"statement\",\"object\"]}",
+      "$or": [
+        {
+          "statement.object.id": "https://mindmath.lip6.fr/{{family_task}}"
+        }
+      ]
+    }
+    {{/family_task}}
+  ]
+}

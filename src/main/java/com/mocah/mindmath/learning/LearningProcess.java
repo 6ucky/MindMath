@@ -6,6 +6,7 @@ package com.mocah.mindmath.learning;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -18,6 +19,9 @@ import java.util.Set;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -53,7 +57,6 @@ import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Theory;
-import gov.adlnet.xapi.model.Actor;
 import gov.adlnet.xapi.model.Result;
 import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementResult;
@@ -463,19 +466,24 @@ public class LearningProcess {
 	private static List<String> getFTFeedbacks(Task task) {
 		List<String> feedbacks = new ArrayList<>();
 
-		Actor learner = task.getLearnerAsActor();
-
 		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation();
-		// TODO
-//		try {
-//			// Filter applied : same learner and same task family
-//			lrs = lrs.filterByActor(learner).addFilter("context.extensions."
-//					+ URLEncoder.encode("https://mindmath.lip6.fr/sensors", "UTF-8") + "taskFamily",
-//					task.getSensors().getTaskFamily());
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Bloc catch généré automatiquement
-//			e.printStackTrace();
-//		}
+
+		HashMap<String, Object> scopes = new HashMap<>();
+		scopes.put("learner_id", task.getId_learner());
+		scopes.put("family_task", task.getSensors().getTaskFamily());
+
+		StringWriter writer = new StringWriter();
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache mustache = mf.compile("mustache_template/queryAVFt.mustache");
+		try {
+			mustache.execute(writer, scopes).flush();
+		} catch (IOException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+		String query = writer.toString();
+
+		lrs = lrs.filterByMatcher(query);
 
 		StatementResult results = lrs.getFilteredStatements();
 		List<Statement> statements = results.getStatements();

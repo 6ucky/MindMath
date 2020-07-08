@@ -163,7 +163,7 @@ public abstract class LearningLockerRepository extends LearningLockerKeys implem
 
 	/**
 	 * post a statement to LRS
-	 * 
+	 *
 	 * @return the id of the statement in LRS
 	 */
 	@Override

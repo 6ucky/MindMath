@@ -10,7 +10,7 @@ public class LearningLockerKeys {
 	protected static String ABOUT_URL = "https://lrsmocah.lip6.fr/data/xAPI/about";
 
 	protected static String STATEMENT_URL = "https://lrsmocah.lip6.fr/data/xAPI/statements";
-	protected static String STATEMENT_AGGREGATION_URL = "https://lrsmocah.lip6.fr/data/xAPI/statements/aggregate";
+	protected static String STATEMENT_AGGREGATION_URL = "https://lrsmocah.lip6.fr/api/statements/aggregate";
 
 	protected static String BASIC_AUTHORIZATION = "Authorization";
 
