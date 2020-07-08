@@ -1,4 +1,4 @@
-package com.mocah.mindmath.server.lrs;
+package com.mocah.mindmath.server.config;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

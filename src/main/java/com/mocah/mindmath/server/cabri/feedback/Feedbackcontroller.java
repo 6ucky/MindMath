@@ -47,11 +47,15 @@ public class Feedbackcontroller {
 		return false;
 	}
 
+	//Update feedbackcontent in Derby
 	@PostMapping(path = "/feedbackcontent", consumes = "application/json")
 	public ResponseEntity<String> addfeedbackrepo(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		getFeedbackcontentrepository().deleteAll(getFeedbackcontentrepository().getAllFeedbackContent());
+		
 		Gson gson = new Gson();
 		List<FeedbackContent> feedbacks = gson.fromJson(data, FeedbackContentList.class).getFeedbackcontentlist();
 		for (FeedbackContent feedback : feedbacks) {
@@ -60,11 +64,15 @@ public class Feedbackcontroller {
 		return new ResponseEntity<>(gson.toJson(feedbacks), HttpStatus.OK);
 	}
 
+	//Update motivation in Derby
 	@PostMapping(path = "/motivation", consumes = "application/json")
 	public ResponseEntity<String> addmotivationrepo(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		
+		getFeedbackcontentrepository().deleteAll(getFeedbackcontentrepository().getAllMotivation());
+		
 		Gson gson = new Gson();
 		List<Motivation> motivations = gson.fromJson(data, FeedbackContentList.class).getMotivationlist();
 		for (Motivation motivation : motivations) {
@@ -73,11 +81,15 @@ public class Feedbackcontroller {
 		return new ResponseEntity<>(gson.toJson(motivations), HttpStatus.OK);
 	}
 
+	//Update glossaire in Derby
 	@PostMapping(path = "/glossaire", consumes = "application/json")
 	public ResponseEntity<String> addglossairerepo(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		
+		getFeedbackcontentrepository().deleteAll(getFeedbackcontentrepository().getAllGlossaire());
+		
 		Gson gson = new Gson();
 		List<Glossaire> glossaires = gson.fromJson(data, FeedbackContentList.class).getGlossairelist();
 		for (Glossaire glossaire : glossaires) {

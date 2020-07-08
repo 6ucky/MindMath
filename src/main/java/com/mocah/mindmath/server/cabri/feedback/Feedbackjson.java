@@ -74,15 +74,18 @@ public class Feedbackjson implements Serializable {
 		}
 	}
 
-	public Feedbackjson(String idLearner, String idFbCabri, String idFamilytask, String idFeedback, String url,
-			String motivationalElement, String default_img_url, String video_url, String video_srt_url,
-			String content_type, HashMap<String, String> glossaryMap) throws IOException {
+	public Feedbackjson(String idLearner, String idFbCabri, String idFamilytask, String idFeedback,
+			String motivationalElement, String content_url,	String content_type, HashMap<String, String> glossaryMap) throws IOException {
 		this.idLearner = idLearner;
 		this.idFbCabri = idFbCabri;
 		this.idFamilytask = idFamilytask;
 		this.idFeedback = idFeedback;
 		this.motivationalElementFb = String2GeneralHTML(motivationalElement);
-		this.contentFb = String2ContentFBHTML(default_img_url, video_url, video_srt_url, content_type);
+		if (content_type.equals("video/mp4")) {
+			this.contentFb = String2ContentFBHTML("", content_url, "", content_type);
+		} else {
+			this.contentFb = String2ContentFBHTML(content_url, "", "", content_type);
+		}
 		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
 	}
 

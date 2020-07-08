@@ -2,8 +2,12 @@ package com.mocah.mindmath.server.cabri;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.mocah.mindmath.learning.LearningProcess;
 import com.mocah.mindmath.learning.utils.actions.Action;
 import com.mocah.mindmath.learning.utils.actions.IAction;
@@ -25,12 +30,21 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
+import com.mocah.mindmath.repository.LocalRoute;
+import com.mocah.mindmath.repository.LocalRouteRepository;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryHttp;
+import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.server.Derbyrepository;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
+import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
+import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
+import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
+import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
 import com.mocah.mindmath.server.entity.task.Task;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
+import gov.adlnet.xapi.model.Statement;
 
 /**
  * @author Yan Wang
@@ -45,7 +59,35 @@ public class Taskcontroller {
 	private Derbyrepository taskrepository;
 
 	private static final String license_num = "mocah";
+	
+	private boolean isInsertfeedbackContent = false;
+	
+	private Gson gson = new Gson();
 
+	//initialize feedbackContent in Derby from local Repository
+	private void insertfeedbackcontentDerby() throws JsonSyntaxException, IOException {
+		getTaskrepository().deleteAll(getTaskrepository().getAllFeedbackContent());
+		getTaskrepository().deleteAll(getTaskrepository().getAllGlossaire());
+		getTaskrepository().deleteAll(getTaskrepository().getAllMotivation());
+		
+		List<FeedbackContent> feedbacks = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute), FeedbackContentList.class).getFeedbackcontentlist();
+		for (FeedbackContent feedback : feedbacks) {
+			getTaskrepository().save(feedback);
+		}
+		
+		List<Motivation> motivations = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.MotivationRoute), FeedbackContentList.class).getMotivationlist();
+		for (Motivation motivation : motivations) {
+			getTaskrepository().save(motivation);
+		}
+		
+		List<Glossaire> glossaires = gson.fromJson(LocalRouteRepository.readFileasString(LocalRoute.GlossaireRoute), FeedbackContentList.class).getGlossairelist();
+		for (Glossaire glossaire : glossaires) {
+			getTaskrepository().save(glossaire);
+		}
+		
+		System.out.println("+++++++---------");
+	}
+	
 	/**
 	 * check the post request based on authorization
 	 *
@@ -60,10 +102,12 @@ public class Taskcontroller {
 
 	/**
 	 * Handle POST request default version is 1.0
+	 * @throws URISyntaxException 
+	 * @throws NoSuchAlgorithmException 
 	 */
 	@PostMapping(path = "", consumes = "application/json")
 	public ResponseEntity<String> addtask(@RequestHeader("Authorization") String auth, @RequestBody String data)
-			throws JsonParserCustomException, IOException {
+			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 		return addtaskv1_0(auth, data);
 	}
 
@@ -74,23 +118,33 @@ public class Taskcontroller {
 	 * @param auth authorization headers
 	 * @return feedback message
 	 * @throws IOException
+	 * @throws URISyntaxException 
+	 * @throws NoSuchAlgorithmException 
 	 * @throws JsonParseCustomException
 	 */
 	@PostMapping(path = "/v1.0", consumes = "application/json")
 	public ResponseEntity<String> addtaskv1_0(@RequestHeader("Authorization") String auth, @RequestBody String data)
-			throws JsonParserCustomException, IOException {
+			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		
+		if (!isInsertfeedbackContent)
+		{
+			insertfeedbackcontentDerby();
+			isInsertfeedbackContent = true;
+		}
+		
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
 		Task task = jsonparser.parse(data, "v1.0");
 
 		// TODO avoid consider gaming with system tasks
 
+		Task prevTask = getTaskrepository().getPreviousTask(task.getId_learner());
+		
 		getTaskrepository().save(task);
 
 		// TODO call Q-learning algorithm
-		Task prevTask = getTaskrepository().getPreviousTask(task);
 
 		IAction action = null;
 		try {
@@ -136,16 +190,40 @@ public class Taskcontroller {
 		task.setFeedback(feedback_id);
 		getTaskrepository().save(task); // TODO not save but just update -> check if it's only updated
 
-		// TODO generate feedback based on 'feedback_id' -> get info from Benjamin DB
-		// generate feedback
-		JsonParserSensor sensorobject = new JsonParserSensor(data);
-		boolean correctness = jsonparser.getValueAsBoolean(sensorobject.getObject(),
-				JsonParserKeys.SENSOR_CORRECTANSWER);
-		Feedbackjson responsejson = new Feedbackjson(
-				jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID), correctness);
-		Gson gson = new Gson();
+		// TODO get feedbackID, leaf, error_code from Q-learning
+		String feedbackID = "1.1.GNC";
+		String leaf = "11";
+		String error_code = "1";
 
-		return new ResponseEntity<>(gson.toJson(responsejson), HttpStatus.OK);
+		// get feedbackcontent from Derby
+		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
+		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf());
+		HashMap<String, String> glossaireMap = new HashMap<>();
+		for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
+			String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
+			Glossaire temp = getTaskrepository().getGlossaire(mapkey);
+			glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
+		}
+		Feedbackjson feedbackjson = new Feedbackjson(
+				task.getId_learner(),
+				"",
+				task.getSensors().getTaskFamily(),
+				feedbackID,
+				motivations.get(new Random().nextInt(motivations.size())).getMotivation_data(),
+				fb.getContentErrorType(error_code).getContent_url(), fb.getContentErrorType(error_code).getFormat(),
+				glossaireMap);
+		
+		// TODO set statement success and completion
+		boolean statement_success = true;
+		boolean statement_completion = true;
+		XAPIgenerator generator = new XAPIgenerator();
+		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson).generateStatement(task);
+		// TODO validate post statement to LRS
+		//LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
+		//ll.postStatement(statement);
+		
+		//return new ResponseEntity<>("feedback:" + gson.toJson(feedbackjson) + "\nstatement:" + gson.toJson(statement), HttpStatus.OK);
+		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
 
 	/**
@@ -161,7 +239,6 @@ public class Taskcontroller {
 		getTaskrepository().getAllTask().forEach(tasks::add);
 		if (tasks.size() == 0)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
-		Gson gson = new Gson();
 		return new ResponseEntity<>(gson.toJson(tasks), HttpStatus.FOUND);
 	}
 
