@@ -44,6 +44,17 @@
       ]
     }
     {{/family_task}}
+    {{#correct_answer}}
+    ,
+    {
+      "$comment": "{\"criterionLabel\":\"G\",\"criteriaPath\":[\"statement\",\"context\",\"extensions\",\"https://mindmath&46;lip6&46;fr/sensors\",\"correctAnswer\"]}",
+      "$or": [
+        {
+          "statement.context.extensions.https://mindmath&46;lip6&46;fr/sensors.correctAnswer": "{{correct_answer}}"
+        }
+      ]
+    }
+    {{/correct_answer}}
     {{#no_gaming}}
     ,
     {

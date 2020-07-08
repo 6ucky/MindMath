@@ -238,15 +238,17 @@ public class Extractor {
 			return "0";
 
 		// "Stabilité de l'erreur-type élève: (Nbre de l'erreur-type) / (Nbre de fois où
-		// l'erreur-type pouvait apparaitre)"
+		// l'erreur-type pouvait apparaître)"
 		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(true);
 
-		// Filter applied : same learner and same task family -> only answers (not help)
+		// Filter applied : same learner and same task family -> only incorrect answers
+		// (not help)
 		HashMap<String, Object> scopes = new HashMap<>();
 		scopes.put("learner_id", task.getId_learner());
 		scopes.put("verb_id", Verbs.answered().getId());
 		scopes.put("family_task", task.getSensors().getTaskFamily());
 		scopes.put("no_gaming", "true");
+		scopes.put("correct_answer", "false");
 
 		StringWriter writer = new StringWriter();
 		MustacheFactory mf = new DefaultMustacheFactory();
@@ -302,14 +304,15 @@ public class Extractor {
 
 		// "Stabilité d'une erreur-type chez tous les élèves au sein d'une famille de
 		// tâche: (Nbre de l'erreur-type) / (Nbre de fois où l'erreur-type pouvait
-		// apparaitre)"
+		// apparaître)"
 		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(true);
 
-		// Filter applied : same task family -> only answers (not help)
+		// Filter applied : same task family -> only incorrect answers (not help)
 		HashMap<String, Object> scopes = new HashMap<>();
 		scopes.put("verb_id", Verbs.answered().getId());
 		scopes.put("family_task", task.getSensors().getTaskFamily());
 		scopes.put("no_gaming", "true");
+		scopes.put("correct_answer", "false");
 
 		StringWriter writer = new StringWriter();
 		MustacheFactory mf = new DefaultMustacheFactory();
