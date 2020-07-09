@@ -1,0 +1,725 @@
+{
+  "root": "declencheur_FB",
+  "nodes": [
+    {
+      "nodeid": "declencheur_FB",
+      "nodetype": "state",
+      "valuetype": "string",
+      "childs": [
+        {
+          "edge": {
+            "value": "valider",
+            "query": "equal('_VAR_','bouton-valider').",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getTrigger"
+              }
+            ]
+          },
+          "nodeid": "reponse_juste"
+        },
+        {
+          "edge": {
+            "value": "aide",
+            "query": "equal('_VAR_','bouton-aide').",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getTrigger"
+              }
+            ]
+          },
+          "nodeid": "avant_premiere_validation"
+        }
+      ]
+    },
+    {
+      "nodeid": "avant_premiere_validation",
+      "nodetype": "state",
+      "valuetype": "number",
+      "childs": [
+        {
+          "edge": {
+            "value": ">0",
+            "query": "strictsup(_VAR_,0).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getNbSolveTry"
+              }
+            ]
+          },
+          "nodeid": "une_erreur_type_stab"
+        },
+        {
+          "edge":  {
+            "value": "=0",
+            "query": "equal(_VAR_,0).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getNbSolveTry"
+              }
+            ]
+          },
+          "nodeid": "decision_11"
+        }
+      ]
+    },
+    {
+      "nodeid": "reponse_juste",
+      "nodetype": "state",
+      "valuetype": "boolean",
+      "childs": [
+        {
+          "edge": {
+            "value": true,
+            "query": "_VAR_.",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "correctAnswer"
+              }
+            ]
+          },
+          "nodeid": "plusieurs_tentatives_de_resolution"
+        },
+        {
+          "edge": {
+            "value": false,
+            "query": "not(_VAR_).",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "correctAnswer"
+              }
+            ]
+          },
+          "nodeid": "erreur_type_identifie"
+        }
+      ]
+    },
+    {
+      "nodeid": "plusieurs_tentatives_de_resolution",
+      "nodetype": "state",
+      "valuetype": "number",
+      "childs": [
+        {
+          "edge": {
+            "value": ">1",
+            "query": "strictsup(_VAR_,1).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getNbSolveTry"
+              }
+            ]
+          },
+          "nodeid": "mode_activite_1"
+        },
+        {
+          "edge":  {
+            "value": "=1",
+            "query": "equal(_VAR_,1).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "getNbSolveTry"
+              }
+            ]
+          },
+          "nodeid": "decision_3"
+        }
+      ]
+    },
+    {
+      "nodeid": "mode_activite_1",
+      "nodetype": "state",
+      "valuetype": "number",
+      "childs": [
+        {
+          "edge": {
+            "value": "<2",
+            "query": "inf(_VAR_,2).",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
+          },
+          "nodeid": "decision_1"
+        },
+        {
+          "edge": {
+            "value": "=2",
+            "query": "equal(_VAR_,2).",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
+          },
+          "nodeid": "decision_2"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_1",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_renforcer_technique"
+        },
+        {
+          "edge":{
+            "value": 0.2
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_2",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.2
+          },
+          "nodeid": "feedback_renforcer_technique"
+        },
+        {
+          "edge":{
+            "value": 0.8
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_3",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "erreur_type_identifie",
+      "nodetype": "state",
+      "valuetype": "boolean",
+      "childs": [
+        {
+          "edge": {
+            "value": true,
+            "query": "_VAR_.",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "isErrorIdentified"
+              }
+            ]
+          },
+          "nodeid": "mode_activite_2"
+        },
+        {
+          "edge": {
+            "value": false,
+            "query": "not(_VAR_).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "isErrorIdentified"
+              }
+            ]
+          },
+          "nodeid": "mode_activite_3"
+        }
+      ]
+    },
+    {
+      "nodeid": "mode_activite_2",
+      "nodetype": "state",
+      "valuetype": "number",
+      "childs": [
+        {
+          "edge": {
+            "value": "=1",
+            "query": "equal(_VAR_,1)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
+          },
+          "nodeid": "stab_erreur_1"
+        },
+        {
+          "edge": {
+            "value": "=0",
+            "query": "equal(_VAR_,0)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
+          },
+          "nodeid": "stab_erreur_2"
+        },
+        {
+          "edge": {
+            "value": "=2",
+            "query": "equal(_VAR_,2)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
+          },
+          "nodeid": "stab_erreur_3"
+        }
+      ]
+    },
+    {
+      "nodeid": "stab_erreur_1",
+      "nodetype": "state",
+      "valuetype": "?",
+      "childs": [
+        {
+          "edge": {
+            "value": "peu stable",
+            "query": "inf(_VAR_,0.33).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
+          },
+          "nodeid": "decision_5"
+        },
+        {
+          "edge": {
+            "value": "stable",
+            "query": "strictbetween(_VAR_, 0.33, 0.66).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
+          },
+          "nodeid": "decision_6"
+        },
+        {
+          "edge": {
+            "value": "très stable",
+            "query": "sup(_VAR_,0.66).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
+          },
+          "nodeid": "decision_7"
+        }
+      ]
+    },
+    {
+      "nodeid": "stab_erreur_2",
+      "nodetype": "state",
+      "valuetype": "string",
+      "childs": [
+        {
+          "edge": {
+            "value": "stable",
+            "query": "sup(_VAR_,0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
+          },
+          "nodeid": "decision_7"
+        },
+        {
+          "edge": {
+            "value": "peu stable",
+            "query": "strictinf(_VAR_,0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
+          },
+          "nodeid": "decision_6"
+        }
+      ]
+    },
+    {
+      "nodeid": "stab_erreur_3",
+      "nodetype": "state",
+      "valuetype": "string",
+      "childs": [
+        {
+          "edge": {
+            "value": "très stable",
+            "query": "strictsup(_VAR_, 0.75);.",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
+          },
+          "nodeid": "decision_7"
+        },
+        {
+          "edge": {
+            "value": "stable",
+            "query": "between(_VAR_, 0.5, 0.75).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
+          },
+          "nodeid": "decision_6"
+        },
+        {
+          "edge": {
+            "value": "peu stable",
+            "query": "between(_VAR_, 0.25, 0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "errorStabilityForLearner"
+              }
+            ]
+          },
+          "nodeid": "decision_5"
+        },
+        {
+          "edge": {
+            "value": "pas stable",
+            "query": "strictinf(_VAR_,0.25).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
+          },
+          "nodeid": "decision_4"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_4",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_5",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_6",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_7",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "mode_activite_3",
+      "nodetype": "state",
+      "valuetype": "number",
+      "childs": [
+        {
+          "edge": {
+            "value": "<2",
+            "query": "strictinf(_VAR_,2)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
+          },
+          "nodeid": "une_erreur_type_stab"
+        },
+        {
+          "edge": {
+            "value": "=2",
+            "query": "equal(_VAR_,2)",
+            "vars": [
+              {
+                "source": "Sensor",
+                "key": "activityMode"
+              }
+            ]
+          },
+          "nodeid": "decision_10"
+        }
+      ]
+    },
+    {
+      "nodeid": "une_erreur_type_stab",
+      "nodetype": "state",
+      "valuetype": "string",
+      "childs": [
+        {
+          "edge": {
+            "value": "peu stable",
+            "query": "strictinf(_VAR_,0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
+          },
+          "nodeid": "decision_8"
+        },
+        {
+          "edge": {
+            "value": "stable",
+            "query": "sup(_VAR_,0.5).",
+            "vars": [
+              {
+                "source": "Method",
+                "key": "mostStabErrorForLearners"
+              }
+            ]
+          },
+          "nodeid": "decision_9"
+        }
+      ]
+    },
+{
+      "nodeid": "decision_8",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_9",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_10",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_11",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.8
+          },
+          "nodeid": "feedback_informer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technologie"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "feedback_renforcer_technique"
+        }
+      ]
+    },
+    {
+      "nodeid": "feedback_renforcer_technique",
+      "nodetype": "feedback",
+      "feedback_id": "1"
+    },
+    {
+      "nodeid": "feedback_renforcer_technologie",
+      "nodetype": "feedback",
+      "feedback_id": "2"
+    },
+    {
+      "nodeid": "feedback_informer_technologie",
+      "nodetype": "feedback",
+      "feedback_id": "3"
+    },
+    {
+      "nodeid": "feedback_aide_erreur_type_technique",
+      "nodetype": "feedback",
+      "feedback_id": "4"
+    }
+  ]
+}
