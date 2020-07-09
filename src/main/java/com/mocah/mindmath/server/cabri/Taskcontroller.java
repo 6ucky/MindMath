@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,12 @@ import org.springframework.web.server.ResponseStatusException;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.mocah.mindmath.learning.LearningProcess;
+import com.mocah.mindmath.learning.algorithms.ILearning;
+import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.actions.IAction;
 import com.mocah.mindmath.learning.utils.actions.MindMathAction;
+import com.mocah.mindmath.learning.utils.states.IState;
+import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
@@ -261,6 +266,47 @@ public class Taskcontroller {
 	@GetMapping("/v1.0")
 	public ResponseEntity<String> getALLtaskv1_0(@RequestHeader("Authorization") String auth) {
 		return getALLtask(auth);
+	}
+
+	/**
+	 * Get actual qValues from learning
+	 *
+	 * @param auth
+	 * @return
+	 */
+	@GetMapping("/qvalues")
+	public ResponseEntity<String> getQValues(@RequestHeader("Authorization") String auth) {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		ILearning learning = LearningProcess.getLearning();
+		Map<IState, ArrayList<IValue>> qValues = null;
+
+		if (learning instanceof QLearning) {
+			QLearning ql = (QLearning) learning;
+			qValues = ql.getQValues();
+		}
+
+		StringBuilder res = new StringBuilder();
+
+		for (IState state : qValues.keySet()) {
+			StringBuilder line = new StringBuilder();
+			line.append(state);
+			line.append(";");
+
+			for (IValue value : qValues.get(state)) {
+				line.append(value.myAction());
+				line.append("→");
+				line.append(value.getValue());
+				line.append(";");
+			}
+
+			line.append("\n");
+
+			res.append(line);
+		}
+
+		return new ResponseEntity<>(res.toString(), HttpStatus.FOUND);
 	}
 
 	/**

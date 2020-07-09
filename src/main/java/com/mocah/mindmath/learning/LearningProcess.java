@@ -84,7 +84,7 @@ public class LearningProcess {
 	public final static double BASE_QVALUE_SCORESUM_INIT = 10000;
 
 	/**
-	 *
+	 * @return
 	 */
 	public static ILearning initLearningProcess() {
 		// 1 Check/restore existing values
@@ -123,6 +123,13 @@ public class LearningProcess {
 			}
 		}
 
+		return learning;
+	}
+
+	/**
+	 * @return
+	 */
+	public static ILearning getLearning() {
 		return learning;
 	}
 
@@ -179,6 +186,12 @@ public class LearningProcess {
 			// learn
 			learning.learn(oldState, previousAction, reward, newState);
 			System.out.println("[Decision] Reward from action " + previousAction + " is : " + reward);
+
+			if (learning instanceof QLearning) {
+				Map<IState, ArrayList<IValue>> trainedValues = ((QLearning) learning).getQValues();
+				ArrayList<IValue> values = trainedValues.get(oldState);
+				System.out.println("[Decision] qvalues for this state updated " + values);
+			}
 		}
 
 		// 3 choose action
