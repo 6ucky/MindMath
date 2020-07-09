@@ -135,19 +135,26 @@ public class MainLearningProcess {
 
 		System.out.println(qValues);
 
-		String res = "\n";
+		StringBuilder res = new StringBuilder();
 
 		for (IState state : qValues.keySet()) {
-			String line = state + ";";
+			StringBuilder line = new StringBuilder();
+			line.append(state);
+			line.append(";");
 
 			for (IValue value : qValues.get(state)) {
-				line += value.myAction() + "→" + value.getValue() + ";";
+				line.append(value.myAction());
+				line.append("→");
+				line.append(value.getValue());
+				line.append(";");
 			}
 
-			res += "\n" + line;
+			line.append("\n");
+
+			res.append(line);
 		}
 
-		System.out.println(res);
+		System.out.println(res.toString());
 	}
 
 	private static void computeBranch(Map<IState, List<IValue>> qValues, Branch branch) {
