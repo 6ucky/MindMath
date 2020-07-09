@@ -26,8 +26,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="5" language="java" name="com.mocah.mindmath.learning.utils.actions.Action" project="MindMath" 
-    file="/MindMath/src/main/java/com/mocah/mindmath/learning/utils/actions/Action.java" binary="false" 
+  <class id="5" language="java" name="com.mocah.mindmath.learning.utils.actions.MindMathAction" project="MindMath" 
+    file="/MindMath/src/main/java/com/mocah/mindmath/learning/utils/actions/MindMathAction.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="136" y="326"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -86,22 +86,26 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="11">    
+  <realization id="11">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </realization>  
+  <realization id="12">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <association id="13">    
     <end type="SOURCE" refId="9" navigable="false">      
-      <attribute id="12" name="params"/>      
-      <multiplicity id="13" minimum="0" maximum="2147483647"/>    
+      <attribute id="14" name="params">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="15" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <realization id="14">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="7"/>  
-  </realization>  
-  <realization id="15">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="4"/>  
-  </realization>  
   <realization id="16">    
     <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="6"/>  

@@ -7,18 +7,18 @@ package com.mocah.mindmath.learning.utils.actions;
  * @author Thibaut SIMON-FINE
  *
  */
-public class Action implements IAction {
+public class BasicAction implements IAction {
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = -4240823337990480436L;
+	private static final long serialVersionUID = 354477421231673616L;
 
 	private String id;
 
 	/**
 	 * Action with custom ID
 	 */
-	public Action(String id) {
+	public BasicAction(String id) {
 		this.id = id;
 	}
 
@@ -43,14 +43,14 @@ public class Action implements IAction {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Action other = (Action) obj;
-		if (id != other.id)
+		BasicAction other = (BasicAction) obj;
+		if (this.id != other.id)
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "feedback_" + id;
+		return "fdbck_" + this.id;
 	}
 }

@@ -43,15 +43,18 @@ public class EpsilonGreedy extends Greedy {
 			// explore
 			IAction randomAction;
 
+			System.out.println("[Decision] " + this.getClass().getName() + " I'm exploring.");
+
 			do {
 				int i = rand.nextInt(actionsCount);
 				randomAction = values.get(i).myAction();
 			} while (randomAction.equals(action));
 
 			action = randomAction;
+		} else {
+			System.out.println("[Decision] " + this.getClass().getName() + " I'm exploiting.");
 		}
 
 		return action;
 	}
-
 }

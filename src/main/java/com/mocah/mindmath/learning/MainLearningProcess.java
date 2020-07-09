@@ -33,8 +33,8 @@ import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.policies.EpsilonGreedy;
 import com.mocah.mindmath.learning.policies.Greedy;
 import com.mocah.mindmath.learning.policies.IPolicy;
-import com.mocah.mindmath.learning.utils.actions.Action;
 import com.mocah.mindmath.learning.utils.actions.IAction;
+import com.mocah.mindmath.learning.utils.actions.MindMathAction;
 import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.states.State;
 import com.mocah.mindmath.learning.utils.values.IValue;
@@ -174,8 +174,11 @@ public class MainLearningProcess {
 
 		List<IValue> values = new ArrayList<>();
 		for (Node node : feedbacks) {
-			IAction action = new Action(node.getFeedbackId());
-			IValue qvalue = new QValue(action, decision.getChild(node).getEdge().getValue().getAsDouble());
+			MindMathAction action = new MindMathAction(node.getFeedbackId());
+			action.setLeaf(decision.getId());
+
+			double defaultWeight = decision.getChild(node).getEdge().getValue().getAsDouble();
+			IValue qvalue = new QValue(action, defaultWeight * LearningProcess.BASE_QVALUE_SCORESUM_INIT);
 
 			values.add(qvalue);
 		}
@@ -200,7 +203,6 @@ public class MainLearningProcess {
 		} catch (IOException e) {
 			throw new IOException("Missing Prolog file; file path should be '" + LocalRoute.PrologTestRoute
 					+ "'. Read access to file could be missing to.", e);
-//	e.printStackTrace();
 		}
 
 		if (pg != null) {
@@ -337,6 +339,9 @@ public class MainLearningProcess {
 			decisionTreeDFS(tree);
 		}
 
+		if (true)
+			return;
+
 		try {
 			String trigger = "sally";
 //			FileInputStream is = new FileInputStream("test.pl");
@@ -396,10 +401,10 @@ public class MainLearningProcess {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		System.out.println(data);
 
-		try {
-			jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
-			Task task = jsonparser.parse(data, "v1.0");
-
+//		try {
+//			jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
+//			Task task = jsonparser.parse(data, "v1.0");
+//
 //			LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(true);
 //
 //			HashMap<String, Object> scopes = new HashMap<>();
@@ -428,10 +433,10 @@ public class MainLearningProcess {
 //		} catch (IOException e) {
 //			// TODO Bloc catch généré automatiquement
 //			e.printStackTrace();
-		} catch (JsonParserCustomException e) {
-			// TODO Bloc catch généré automatiquement
-			e.printStackTrace();
-		}
+//		} catch (JsonParserCustomException e) {
+//			// TODO Bloc catch généré automatiquement
+//			e.printStackTrace();
+//		}
 
 		IState readedState = null;
 		try {

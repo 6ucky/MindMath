@@ -38,8 +38,8 @@ import com.mocah.mindmath.learning.algorithms.ILearning;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.policies.EpsilonGreedy;
 import com.mocah.mindmath.learning.policies.IPolicy;
-import com.mocah.mindmath.learning.utils.actions.Action;
 import com.mocah.mindmath.learning.utils.actions.IAction;
+import com.mocah.mindmath.learning.utils.actions.MindMathAction;
 import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.states.State;
 import com.mocah.mindmath.learning.utils.values.IValue;
@@ -74,6 +74,14 @@ public class LearningProcess {
 	private static ILearning learning;
 
 	private static Tree tree;
+
+	/**
+	 * The default value used to init all qValues for a state. Each qValue will use
+	 * the weighting (which generally sum to 1) from the decision tree and take the
+	 * result value of {@code base_weight*LearningProcess.BASE_QVALUE_SCORESUM_INIT}
+	 *
+	 */
+	public final static double BASE_QVALUE_SCORESUM_INIT = 10000;
 
 	/**
 	 *
@@ -152,6 +160,7 @@ public class LearningProcess {
 		// 1 generate current state
 		IState newState = null;
 		newState = decisionTreeBFS(tree, task);
+		System.out.println("[Decision] State detected : " + newState);
 
 		// TODO check if newState exist in Qtable else try to get the most similar state
 
@@ -160,6 +169,7 @@ public class LearningProcess {
 			// generate previous task
 			IState oldState = null;
 			oldState = decisionTreeBFS(tree, previousTask);
+			System.out.println("[Decision] Previous state detected : " + oldState);
 
 			// TODO check if oldState exist in Qtable else try to get the most similar state
 
@@ -168,10 +178,13 @@ public class LearningProcess {
 
 			// learn
 			learning.learn(oldState, previousAction, reward, newState);
+			System.out.println("[Decision] Reward from action " + previousAction + " is : " + reward);
 		}
 
 		// 3 choose action
 		IAction action = learning.step(newState);
+
+		System.out.println("[Decision] Action decided : " + action);
 
 		return action;
 	}
@@ -275,8 +288,11 @@ public class LearningProcess {
 
 		ArrayList<IValue> values = new ArrayList<>();
 		for (Node node : feedbacks) {
-			IAction action = new Action(node.getFeedbackId());
-			IValue qvalue = new QValue(action, decision.getChild(node).getEdge().getValue().getAsDouble());
+			MindMathAction action = new MindMathAction(node.getFeedbackId());
+			action.setLeaf(decision.getId());
+
+			double defaultWeight = decision.getChild(node).getEdge().getValue().getAsDouble();
+			IValue qvalue = new QValue(action, defaultWeight * LearningProcess.BASE_QVALUE_SCORESUM_INIT);
 
 			values.add(qvalue);
 		}
@@ -301,7 +317,6 @@ public class LearningProcess {
 		} catch (IOException e) {
 			throw new IOException("Missing Prolog file; file path should be '" + LocalRoute.PrologTestRoute
 					+ "'. Read access to file could be missing to.", e);
-//			e.printStackTrace();
 		}
 
 		if (pg != null) {
@@ -325,7 +340,7 @@ public class LearningProcess {
 				} else {
 					while (!opened.isEmpty()) {
 						Node child = opened.pollFirst();
-						System.out.println("TEST edge to " + child.getId());
+//						System.out.println("TEST edge to " + child.getId());
 
 						Child c = node.getChild(child);
 						Edge e = c.getEdge();
@@ -356,11 +371,11 @@ public class LearningProcess {
 								break;
 							}
 
-							System.out.println(var);
+//							System.out.println(var);
 							query = query.replaceFirst("_VAR_", replacement);
 						}
 
-						System.out.println(query);
+//						System.out.println(query);
 						SolveInfo info = pg.solve(query);
 
 						if (info.isSuccess()) {
@@ -523,32 +538,25 @@ public class LearningProcess {
 			return 1;
 
 		case "1.0.0.0":
-		case "1.1.NC.0":
-		case "1.1.C.0":
-		case "2.0.0.E":
-		case "2.0.0.FT":
-		case "2.1.NC.E":
-		case "2.1.NC.FT":
-		case "2.1.C.E":
-		case "2.1.C.FT":
+		case "1.1.GC.0":
+		case "1.1.GNC.0":
+		case "2.0.0.XE":
+		case "2.0.0.XFT":
+		case "2.1.GNC.XE":
 			return 2;
 
-		case "1.2.NC.0":
-		case "1.2.C.0":
-		case "3.0.0.E":
-		case "3.0.0.FT":
-		case "4.0.0.E":
-		case "4.0.0.FT":
+		case "1.2.IC.0":
+		case "1.2.INC.0":
+		case "3.0.0.XE":
+		case "3.0.0.XFT":
 			return 3;
 
-		case "3.2.NC.E":
-		case "3.2.NC.FT":
-		case "3.2.C.R":
-		case "3.2.C.FT":
-		case "4.2.NC.E":
-		case "4.2.NC.FT":
-		case "4.2.C.E":
-		case "4.2.C.FT":
+		case "3.2.IC.0":
+		case "3.2.INC.0":
+		case "3.2.IC.XE":
+		case "3.2.IC.XFT":
+		case "3.2.INC.XE":
+		case "3.2.INC.XFT":
 			return 4;
 		}
 	}

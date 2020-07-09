@@ -8,7 +8,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
+import com.mocah.mindmath.learning.LearningProcess;
 import com.mocah.mindmath.learning.MainLearningProcess;
+import com.mocah.mindmath.learning.algorithms.ILearning;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -35,7 +37,18 @@ public class ServerApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ServerApplication.class, args);
+
+		// TODO remove line & class in prod
 		MainLearningProcess.main(args);
+
+		// TODO improve init system
+		// ie Save learning object in DB and add initLearning with ILearning parameter
+		// -> thus it can allow multiple learning instances (and of course backups !)
+		// Note : each time a learn decision will be call, we will need to get the
+		// correct instance from DB, pass it to makeDecision and in case it's a decision
+		// with learning -> update DB (because the instance is modified : only qValues
+		// attribute)
+		ILearning learn1 = LearningProcess.initLearningProcess();
 	}
 
 	// Documentation of task API v1.0
