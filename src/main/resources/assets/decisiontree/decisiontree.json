@@ -167,66 +167,6 @@
       ]
     },
     {
-      "nodeid": "decision_1",
-      "nodetype": "decision",
-      "childs": [
-        {
-          "edge": {
-            "value": 0.8
-          },
-          "nodeid": "feedback_renforcer_technique"
-        },
-        {
-          "edge":{
-            "value": 0.2
-          },
-          "nodeid": "feedback_renforcer_technologie"
-        }
-      ]
-    },
-    {
-      "nodeid": "decision_2",
-      "nodetype": "decision",
-      "childs": [
-        {
-          "edge": {
-            "value": 0.2
-          },
-          "nodeid": "feedback_renforcer_technique"
-        },
-        {
-          "edge":{
-            "value": 0.8
-          },
-          "nodeid": "feedback_renforcer_technologie"
-        }
-      ]
-    },
-    {
-      "nodeid": "decision_3",
-      "nodetype": "decision",
-      "childs": [
-        {
-          "edge": {
-            "value": 0.8
-          },
-          "nodeid": "feedback_informer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technique"
-        }
-      ]
-    },
-    {
       "nodeid": "erreur_type_identifie",
       "nodetype": "state",
       "valuetype": "boolean",
@@ -444,102 +384,6 @@
       ]
     },
     {
-      "nodeid": "decision_4",
-      "nodetype": "decision",
-      "childs": [
-        {
-          "edge": {
-            "value": 0.8
-          },
-          "nodeid": "feedback_informer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technique"
-        }
-      ]
-    },
-    {
-      "nodeid": "decision_5",
-      "nodetype": "decision",
-      "childs": [
-        {
-          "edge": {
-            "value": 0.8
-          },
-          "nodeid": "feedback_informer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technique"
-        }
-      ]
-    },
-    {
-      "nodeid": "decision_6",
-      "nodetype": "decision",
-      "childs": [
-        {
-          "edge": {
-            "value": 0.8
-          },
-          "nodeid": "feedback_informer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technique"
-        }
-      ]
-    },
-    {
-      "nodeid": "decision_7",
-      "nodetype": "decision",
-      "childs": [
-        {
-          "edge": {
-            "value": 0.8
-          },
-          "nodeid": "feedback_informer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technologie"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "feedback_renforcer_technique"
-        }
-      ]
-    },
-    {
       "nodeid": "mode_activite_3",
       "nodetype": "state",
       "valuetype": "number",
@@ -605,27 +449,213 @@
         }
       ]
     },
-{
+    {
+      "nodeid": "decision_1",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.6
+          },
+          "nodeid": "2.0.0.XFT"
+        },
+        {
+          "edge":{
+            "value": 0.4
+          },
+          "nodeid": "3.0.0.XFT"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_2",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.5
+          },
+          "nodeid": "1.0.0.0"
+        },
+        {
+          "edge":{
+            "value": 0.5
+          },
+          "nodeid": "0.0.0.0"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_3",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 1
+          },
+          "nodeid": "0.0.0.0"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_4",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.5
+          },
+          "nodeid": "1.0.0.0"
+        },
+        {
+          "edge":{
+            "value": 0.2
+          },
+          "nodeid": "2.1.GNC.XE"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "3.0.0.XE"
+        },
+        {
+          "edge":{
+            "value": 0
+          },
+          "nodeid": "1.2.IC.0"
+        },
+        {
+          "edge":{
+            "value": 0
+          },
+          "nodeid": "1.1.GC.0"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_5",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.5
+          },
+          "nodeid": "2.0.0.XE"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "3.0.0.XE"
+        },
+        {
+          "edge":{
+            "value": 0.2
+          },
+          "nodeid": "2.1.GNC.XE"
+        },
+        {
+          "edge":{
+            "value": 0.2
+          },
+          "nodeid": "3.2.INC.XE"
+        },
+        {
+          "edge":{
+            "value": 0
+          },
+          "nodeid": "1.2.INC.0"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_6",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.4
+          },
+          "nodeid": "3.0.0.XE"
+        },
+        {
+          "edge":{
+            "value": 0.3
+          },
+          "nodeid": "3.2.INC.XE"
+        },
+        {
+          "edge":{
+            "value": 0.3
+          },
+          "nodeid": "3.2.IC.XE"
+        },
+        {
+          "edge":{
+            "value": 0
+          },
+          "nodeid": "1.2.IC.0"
+        }
+      ]
+    },
+    {
+      "nodeid": "decision_7",
+      "nodetype": "decision",
+      "childs": [
+        {
+          "edge": {
+            "value": 0.4
+          },
+          "nodeid": "3.2.IC.XE"
+        },
+        {
+          "edge":{
+            "value": 0.4
+          },
+          "nodeid": "3.2.INC.XE"
+        },
+        {
+          "edge":{
+            "value": 0.2
+          },
+          "nodeid": "3.0.0.XE"
+        },
+        {
+          "edge":{
+            "value": 0
+          },
+          "nodeid": "1.2.IC.0"
+        }
+      ]
+    },
+    {
       "nodeid": "decision_8",
       "nodetype": "decision",
       "childs": [
         {
           "edge": {
-            "value": 0.8
+            "value": 0.3
           },
-          "nodeid": "feedback_informer_technologie"
+          "nodeid": "1.2.INC.0"
         },
         {
           "edge":{
-            "value": 0.1
+            "value": 0.3
           },
-          "nodeid": "feedback_renforcer_technologie"
+          "nodeid": "1.2.IC.0"
         },
         {
           "edge":{
-            "value": 0.1
+            "value": 0.2
           },
-          "nodeid": "feedback_renforcer_technique"
+          "nodeid": "3.2.IC.XFT"
+        },
+        {
+          "edge":{
+            "value": 0.2
+          },
+          "nodeid": "3.2.INC.XFT"
         }
       ]
     },
@@ -635,21 +665,27 @@
       "childs": [
         {
           "edge": {
-            "value": 0.8
+            "value": 0.4
           },
-          "nodeid": "feedback_informer_technologie"
+          "nodeid": "2.0.0.XFT"
+        },
+        {
+          "edge":{
+            "value": 0.4
+          },
+          "nodeid": "3.0.0.XFT"
         },
         {
           "edge":{
             "value": 0.1
           },
-          "nodeid": "feedback_renforcer_technologie"
+          "nodeid": "3.2.IC.0"
         },
         {
           "edge":{
             "value": 0.1
           },
-          "nodeid": "feedback_renforcer_technique"
+          "nodeid": "3.2.INC.0"
         }
       ]
     },
@@ -659,21 +695,33 @@
       "childs": [
         {
           "edge": {
-            "value": 0.8
+            "value": 0.4
           },
-          "nodeid": "feedback_informer_technologie"
+          "nodeid": "1.1.GNC.0"
+        },
+        {
+          "edge":{
+            "value": 0.4
+          },
+          "nodeid": "1.1.GC.0"
         },
         {
           "edge":{
             "value": 0.1
           },
-          "nodeid": "feedback_renforcer_technologie"
+          "nodeid": "1.2.INC.0"
         },
         {
           "edge":{
             "value": 0.1
           },
-          "nodeid": "feedback_renforcer_technique"
+          "nodeid": "1.2.IC.0"
+        },
+        {
+          "edge":{
+            "value": 0
+          },
+          "nodeid": "1.0.0.0"
         }
       ]
     },
@@ -683,43 +731,120 @@
       "childs": [
         {
           "edge": {
-            "value": 0.8
+            "value": 0.4
           },
-          "nodeid": "feedback_informer_technologie"
+          "nodeid": "1.0.0.0"
+        },
+        {
+          "edge":{
+            "value": 0.4
+          },
+          "nodeid": "1.1.GNC.0"
         },
         {
           "edge":{
             "value": 0.1
           },
-          "nodeid": "feedback_renforcer_technologie"
+          "nodeid": "1.1.GC.0"
         },
         {
           "edge":{
-            "value": 0.1
+            "value": 0.05
           },
-          "nodeid": "feedback_renforcer_technique"
+          "nodeid": "1.2.INC.0"
+        },
+        {
+          "edge":{
+            "value": 0.05
+          },
+          "nodeid": "1.2.IC.0"
         }
       ]
     },
     {
-      "nodeid": "feedback_renforcer_technique",
+      "nodeid": "0.0.0.0",
       "nodetype": "feedback",
-      "feedback_id": "1"
+      "feedback_id": "0.0.0.0"
     },
     {
-      "nodeid": "feedback_renforcer_technologie",
+      "nodeid": "1.0.0.0",
       "nodetype": "feedback",
-      "feedback_id": "2"
+      "feedback_id": "1.0.0.0"
     },
     {
-      "nodeid": "feedback_informer_technologie",
+      "nodeid": "1.1.GC.0",
       "nodetype": "feedback",
-      "feedback_id": "3"
+      "feedback_id": "1.1.GC.0"
     },
     {
-      "nodeid": "feedback_aide_erreur_type_technique",
+      "nodeid": "1.1.GNC.0",
       "nodetype": "feedback",
-      "feedback_id": "4"
+      "feedback_id": "1.1.GNC.0"
+    },
+    {
+      "nodeid": "1.2.IC.0",
+      "nodetype": "feedback",
+      "feedback_id": "1.2.IC.0"
+    },
+    {
+      "nodeid": "1.2.INC.0",
+      "nodetype": "feedback",
+      "feedback_id": "1.2.INC.0"
+    },
+    {
+      "nodeid": "2.0.0.XE",
+      "nodetype": "feedback",
+      "feedback_id": "2.0.0.XE"
+    },
+    {
+      "nodeid": "2.0.0.XFT",
+      "nodetype": "feedback",
+      "feedback_id": "2.0.0.XFT"
+    },
+    {
+      "nodeid": "2.1.GNC.XE",
+      "nodetype": "feedback",
+      "feedback_id": "2.1.GNC.XE"
+    },
+    {
+      "nodeid": "3.0.0.XE",
+      "nodetype": "feedback",
+      "feedback_id": "3.0.0.XE"
+    },
+    {
+      "nodeid": "3.0.0.XFT",
+      "nodetype": "feedback",
+      "feedback_id": "3.0.0.XFT"
+    },
+    {
+      "nodeid": "3.2.IC.0",
+      "nodetype": "feedback",
+      "feedback_id": "3.2.IC.0"
+    },
+    {
+      "nodeid": "3.2.INC.0",
+      "nodetype": "feedback",
+      "feedback_id": "3.2.INC.0"
+    },
+    {
+      "nodeid": "3.2.IC.XE",
+      "nodetype": "feedback",
+      "feedback_id": "3.2.IC.XE"
+    },
+    {
+      "nodeid": "3.2.IC.XFT",
+      "nodetype": "feedback",
+      "feedback_id": "3.2.IC.XFT"
+    },
+    {
+      "nodeid": "3.2.INC.XE",
+      "nodetype": "feedback",
+      "feedback_id": "3.2.INC.XE"
+    },
+    {
+      "nodeid": "3.2.INC.XFT",
+      "nodetype": "feedback",
+      "feedback_id": "3.2.INC.XFT"
     }
   ]
 }
