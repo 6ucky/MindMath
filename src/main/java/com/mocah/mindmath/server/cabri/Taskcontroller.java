@@ -272,7 +272,7 @@ public class Taskcontroller {
 	 * Get actual qValues from learning
 	 *
 	 * @param auth
-	 * @return
+	 * @return the qvalue from learning algorithm
 	 */
 	@GetMapping("/qvalues")
 	public ResponseEntity<String> getQValues(@RequestHeader("Authorization") String auth) {
