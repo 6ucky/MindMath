@@ -40,7 +40,7 @@ public class MindMathAction implements IAction {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -53,7 +53,10 @@ public class MindMathAction implements IAction {
 		if (getClass() != obj.getClass())
 			return false;
 		MindMathAction other = (MindMathAction) obj;
-		if (this.id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
