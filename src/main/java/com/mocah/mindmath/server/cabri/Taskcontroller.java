@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,11 +66,10 @@ public class Taskcontroller {
 
 	private static final String license_num = "mocah";
 
-	private boolean isInsertfeedbackContent = false;
-
 	private Gson gson = new Gson();
 
 	// initialize feedbackContent in Derby from local Repository
+	@PostConstruct
 	private void insertfeedbackcontentDerby() throws JsonSyntaxException, IOException {
 		getTaskrepository().deleteAll(getTaskrepository().getAllFeedbackContent());
 		getTaskrepository().deleteAll(getTaskrepository().getAllGlossaire());
@@ -139,11 +140,6 @@ public class Taskcontroller {
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
-
-		if (!isInsertfeedbackContent) {
-			insertfeedbackcontentDerby();
-			isInsertfeedbackContent = true;
-		}
 
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);

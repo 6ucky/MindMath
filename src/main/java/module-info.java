@@ -38,6 +38,7 @@ open module com.mocah.mindmath {
 	requires bcprov.jdk16;
 	requires spring.data.jpa;
 	requires transitive jxapi;
+	requires java.annotation;
 
 	// test requirements
 	requires spring.boot.test;
@@ -47,8 +48,4 @@ open module com.mocah.mindmath {
 	requires spring.test;
 	requires org.hamcrest;
 	requires org.mockito;
-	requires spring.tx;
-	requires spring.orm;
-	requires spring.jdbc;
-	requires guava;
 }
