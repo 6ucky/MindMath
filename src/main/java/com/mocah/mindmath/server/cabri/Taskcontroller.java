@@ -155,14 +155,13 @@ public class Taskcontroller {
 
 		task = getTaskrepository().save(task);
 
-		// TODO call Q-learning algorithm
+		// Call Q-learning algorithm
 		IAction action = null;
 		try {
 			if (prevTask != null) {
 				IAction prevAction = new MindMathAction(prevTask.getFeedback());
 
 				action = LearningProcess.makeDecision(task, prevTask, prevAction);
-
 			} else {
 				action = LearningProcess.makeDecision(task);
 			}
