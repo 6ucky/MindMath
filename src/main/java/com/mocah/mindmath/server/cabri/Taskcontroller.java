@@ -195,19 +195,19 @@ public class Taskcontroller {
 		// Here 'action' should contains the feedback_id to send back
 		String feedback_id = action.getId();
 
-		// TODO link 'feedback_id' to 'task' (in order to know which feedback we send
+		// Link 'feedback_id' to 'task' (in order to know which feedback we send
 		// for a task -> will be get back with 'getActionDone')
 		task.setFeedback(feedback_id);
-		getTaskrepository().save(task); // TODO not save but just update -> check if it's only updated
+		getTaskrepository().save(task);
 
 		boolean isTest = true;
 		Feedbackjson feedbackjson;
 		if (isTest) {
 			HashMap<String, String> glossaireMap = new HashMap<>();
-			glossaireMap.put("<word1>", "<definition>");
-			glossaireMap.put("<word2>", "<definition>");
+			glossaireMap.put("{word1}", "{definition}");
+			glossaireMap.put("{word2}", "{definition}");
 			feedbackjson = new Feedbackjson(task.getId_learner(), "", task.getSensors().getTaskFamily(), feedback_id,
-					"<motivation here>", "<content url here>", "<content type here>", glossaireMap);
+					"{motivation here}", "{content url here}", "image", glossaireMap);
 		} else {
 			// TODO get feedbackID, leaf, error_code from Q-learning
 			String feedbackID = "1.1.GNC"; // Got from action.getId()
