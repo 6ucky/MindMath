@@ -8,15 +8,15 @@ package com.mocah.mindmath.datasimulation.attributes;
  *
  */
 public enum AnswerEnum {
-	TRUE(true), FALSE(false);
+	NULL(null), TRUE(Boolean.TRUE), FALSE(Boolean.FALSE);
 
-	private final boolean boolValue;
+	private final Boolean boolValue;
 
-	private AnswerEnum(boolean boolValue) {
+	private AnswerEnum(Boolean boolValue) {
 		this.boolValue = boolValue;
 	}
 
-	public boolean getBoolValue() {
+	public Boolean getBoolValue() {
 		return this.boolValue;
 	}
 

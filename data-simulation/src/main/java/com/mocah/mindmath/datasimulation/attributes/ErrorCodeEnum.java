@@ -8,7 +8,7 @@ package com.mocah.mindmath.datasimulation.attributes;
  *
  */
 public enum ErrorCodeEnum {
-	ERR1("ce_err1"), ERR2("ce_err2"), ERR3("ce_err3"), ERR4("ce_err4"), ERR5("ce_err5");
+	NULL(""), ERR1("ce_err1"), ERR2("ce_err2"), ERR3("ce_err3"), ERR4("ce_err4"), ERR5("ce_err5");
 
 	private final String strValue;
 
