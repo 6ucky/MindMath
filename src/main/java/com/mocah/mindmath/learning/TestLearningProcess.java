@@ -69,7 +69,7 @@ import alice.tuprolog.Theory;
  * @author Thibaut SIMON-FINE
  *
  */
-public class MainLearningProcess {
+public class TestLearningProcess {
 
 	private static void decisionTreeDFS(Tree tree) {
 		DeepFirstSearch dfs = new DeepFirstSearch(tree);

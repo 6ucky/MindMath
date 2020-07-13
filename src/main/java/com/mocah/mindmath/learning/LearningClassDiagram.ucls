@@ -13,7 +13,7 @@
   </package>  
   <package id="3" language="java" name="com.mocah.mindmath.learning.exceptions" project="MindMath" 
     file="/MindMath/src/main/java/com/mocah/mindmath/learning/exceptions" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="996" y="539"/>    
+    <position height="-1" width="-1" x="1075" y="445"/>    
     <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
   <package id="4" language="java" name="com.mocah.mindmath.learning.utils.actions" project="MindMath" 
@@ -36,10 +36,9 @@
     <position height="-1" width="-1" x="180" y="428"/>    
     <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
-  <class id="8" language="java" name="com.mocah.mindmath.learning.MainLearningProcess" project="MindMath" 
-    file="/MindMath/src/main/java/com/mocah/mindmath/learning/MainLearningProcess.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1079" y="103"/>    
+  <class id="8" language="java" name="com.mocah.mindmath.learning.LearningProcess" project="MindMath" 
+    file="/MindMath/src/main/java/com/mocah/mindmath/learning/LearningProcess.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1122" y="19"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -47,32 +46,32 @@
     </display>  
   </class>  
   <dependency id="9">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="6"/>  
-  </dependency>  
-  <dependency id="10">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="4"/>  
-  </dependency>  
-  <dependency id="11">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="5"/>  
-  </dependency>  
-  <dependency id="12">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="5"/>  
-  </dependency>  
-  <dependency id="13">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="6"/>  
-  </dependency>  
-  <dependency id="14">    
     <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="2"/>  
   </dependency>  
-  <dependency id="15">    
+  <dependency id="10">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="12">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="13">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="14">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
   </dependency>  
   <dependency id="16">    
     <end type="SOURCE" refId="1"/>    

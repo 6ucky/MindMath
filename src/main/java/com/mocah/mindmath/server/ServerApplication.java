@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 
 import com.mocah.mindmath.learning.LearningProcess;
-import com.mocah.mindmath.learning.MainLearningProcess;
+import com.mocah.mindmath.learning.TestLearningProcess;
 import com.mocah.mindmath.learning.algorithms.ILearning;
 
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -39,7 +39,7 @@ public class ServerApplication extends SpringBootServletInitializer {
 		SpringApplication.run(ServerApplication.class, args);
 
 		// TODO remove line & class in prod
-		MainLearningProcess.main(args);
+		TestLearningProcess.main(args);
 
 		// TODO improve init system
 		// ie Save learning object in DB and add initLearning with ILearning parameter
