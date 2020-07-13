@@ -1,0 +1,38 @@
+plugins {
+	id 'java'
+	id 'eclipse'
+}
+
+group = 'com.mocah'
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'com.google.code.gson:gson:2.8.6'
+	implementation 'com.google.guava:guava:29.0-jre'
+
+	// Use JUnit test framework
+	testImplementation 'junit:junit:4.12'
+}
+
+eclipse {
+	classpath {
+		containers 'org.eclipse.buildship.core.gradleclasspathcontainer'
+		file {
+			whenMerged {
+				entries.findAll { it.properties.kind.equals('lib') || it.properties.path.contains("junit") }.each {
+					it.entryAttributes['module'] = 'true'
+				}
+				entries.findAll { it.properties.path.startsWith('org.eclipse.jdt.launching.JRE_CONTAINER') }.each {
+					it.entryAttributes['module'] = 'true'
+				}
+			}
+		}
+	}
+}
