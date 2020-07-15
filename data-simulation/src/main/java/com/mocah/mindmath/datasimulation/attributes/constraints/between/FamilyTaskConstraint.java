@@ -1,12 +1,12 @@
-package com.mocah.mindmath.datasimulation.attributes.constraints;
+package com.mocah.mindmath.datasimulation.attributes.constraints.between;
 
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableMap;
-import com.mocah.mindmath.datasimulation.attributes.ErrorCodeEnum;
-import com.mocah.mindmath.datasimulation.attributes.FamilyTaskEnum;
+import com.mocah.mindmath.datasimulation.attributes.constraints.in.ErrorCodeEnum;
+import com.mocah.mindmath.datasimulation.attributes.constraints.in.FamilyTaskEnum;
 
 /**
  * @author Thibaut SIMON-FINE

@@ -1,13 +1,13 @@
 /**
  *
  */
-package com.mocah.mindmath.datasimulation.attributes;
+package com.mocah.mindmath.datasimulation.attributes.constraints.in;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
-public enum DomainEnum {
+public enum DomainEnum implements AttributeEnum<String> {
 	ALGEBRA("algebre"), GEOMETRY("geometrie");
 
 	private final String strValue;
@@ -16,7 +16,8 @@ public enum DomainEnum {
 		this.strValue = strValue;
 	}
 
-	public String getStrValue() {
+	@Override
+	public String getValue() {
 		return this.strValue;
 	}
 

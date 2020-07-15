@@ -1,13 +1,13 @@
 /**
  *
  */
-package com.mocah.mindmath.datasimulation.attributes;
+package com.mocah.mindmath.datasimulation.attributes.constraints.in;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
-public enum FamilyTaskEnum {
+public enum FamilyTaskEnum implements AttributeEnum<String> {
 	FT3_1("ft3.1"), FT8_3_1("ft8.3.1");
 
 	private final String strValue;
@@ -16,7 +16,8 @@ public enum FamilyTaskEnum {
 		this.strValue = strValue;
 	}
 
-	public String getStrValue() {
+	@Override
+	public String getValue() {
 		return this.strValue;
 	}
 

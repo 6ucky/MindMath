@@ -1,13 +1,13 @@
 /**
  *
  */
-package com.mocah.mindmath.datasimulation.attributes;
+package com.mocah.mindmath.datasimulation.attributes.constraints.in;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
-public enum TriggerEnum {
+public enum TriggerEnum implements AttributeEnum<String> {
 	VALIDATE("bouton-valider"), HELP("bouton-aide");
 
 	private final String strValue;
@@ -16,7 +16,8 @@ public enum TriggerEnum {
 		this.strValue = strValue;
 	}
 
-	public String getStrValue() {
+	@Override
+	public String getValue() {
 		return this.strValue;
 	}
 

@@ -1,13 +1,13 @@
 /**
  *
  */
-package com.mocah.mindmath.datasimulation.attributes;
+package com.mocah.mindmath.datasimulation.attributes.constraints.in;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
-public enum AnswerEnum {
+public enum AnswerEnum implements AttributeEnum<Boolean> {
 	NULL(null), TRUE(Boolean.TRUE), FALSE(Boolean.FALSE);
 
 	private final Boolean boolValue;
@@ -16,7 +16,8 @@ public enum AnswerEnum {
 		this.boolValue = boolValue;
 	}
 
-	public Boolean getBoolValue() {
+	@Override
+	public Boolean getValue() {
 		return this.boolValue;
 	}
 

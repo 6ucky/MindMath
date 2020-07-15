@@ -1,13 +1,13 @@
 /**
  *
  */
-package com.mocah.mindmath.datasimulation.attributes;
+package com.mocah.mindmath.datasimulation.attributes.constraints.in;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
-public enum ErrorCodeEnum {
+public enum ErrorCodeEnum implements AttributeEnum<String> {
 	NULL(""), ERR1("ce_err1"), ERR2("ce_err2"), ERR3("ce_err3"), ERR4("ce_err4"), ERR5("ce_err5");
 
 	private final String strValue;
@@ -16,7 +16,8 @@ public enum ErrorCodeEnum {
 		this.strValue = strValue;
 	}
 
-	public String getStrValue() {
+	@Override
+	public String getValue() {
 		return this.strValue;
 	}
 
