@@ -6,13 +6,13 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableMap;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.ErrorCodeEnum;
-import com.mocah.mindmath.datasimulation.attributes.constraints.in.FamilyTaskEnum;
+import com.mocah.mindmath.datasimulation.attributes.constraints.in.TaskFamilyEnum;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
-public class FamilyTaskConstraint {
-	public static final Map<FamilyTaskEnum, Set<ErrorCodeEnum>> map = ImmutableMap.of(FamilyTaskEnum.FT3_1,
-			EnumSet.of(ErrorCodeEnum.ERR1), FamilyTaskEnum.FT8_3_1, EnumSet.of(ErrorCodeEnum.ERR2));
+public class TaskFamilyConstraint {
+	public static final Map<TaskFamilyEnum, Set<ErrorCodeEnum>> map = ImmutableMap.of(TaskFamilyEnum.FT3_1,
+			EnumSet.of(ErrorCodeEnum.ERR1), TaskFamilyEnum.FT8_3_1, EnumSet.of(ErrorCodeEnum.ERR2));
 }
