@@ -4,8 +4,8 @@ open module com.mocah.mindmath {
 
 	requires java.desktop;
 	requires com.google.gson;
-	requires com.google.common;
+	requires transitive com.google.common;
 
 	// test requirements
-//	requires org.junit.jupiter.api;
+	requires org.junit.jupiter.api;
 }
