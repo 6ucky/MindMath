@@ -17,5 +17,4 @@ public class ErrorCode extends Attribute<String> {
 	public ErrorCode(ErrorCodeEnum val) {
 		this.value = val;
 	}
-
 }

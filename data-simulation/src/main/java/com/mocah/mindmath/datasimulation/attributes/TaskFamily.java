@@ -17,5 +17,4 @@ public class TaskFamily extends Attribute<String> {
 	public TaskFamily(TaskFamilyEnum val) {
 		this.value = val;
 	}
-
 }

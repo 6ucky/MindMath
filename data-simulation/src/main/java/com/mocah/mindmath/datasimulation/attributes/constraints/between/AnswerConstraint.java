@@ -14,5 +14,7 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.ErrorCodeEnum
  */
 public class AnswerConstraint {
 	public static final Map<AnswerEnum, Set<ErrorCodeEnum>> map = ImmutableMap.of(AnswerEnum.NULL,
-			EnumSet.of(ErrorCodeEnum.NULL), AnswerEnum.TRUE, EnumSet.of(ErrorCodeEnum.NULL));
+			EnumSet.of(ErrorCodeEnum.NULL), AnswerEnum.TRUE, EnumSet.of(ErrorCodeEnum.NULL), AnswerEnum.FALSE,
+			EnumSet.allOf(ErrorCodeEnum.class));
+
 }

@@ -17,5 +17,4 @@ public class Trigger extends Attribute<String> {
 	public Trigger(TriggerEnum val) {
 		this.value = val;
 	}
-
 }

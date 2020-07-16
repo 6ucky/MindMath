@@ -15,7 +15,7 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.TriggerEnum;
  */
 public class TriggerConstraint {
 	public static final Map<TriggerEnum, Set<ErrorCodeEnum>> map = ImmutableMap.of(TriggerEnum.VALIDATE,
-			EnumSet.complementOf(EnumSet.of(ErrorCodeEnum.NULL)), TriggerEnum.HELP, EnumSet.of(ErrorCodeEnum.NULL));
+			EnumSet.allOf(ErrorCodeEnum.class), TriggerEnum.HELP, EnumSet.of(ErrorCodeEnum.NULL));
 
 	public static final Map<TriggerEnum, Set<AnswerEnum>> map2 = ImmutableMap.of(TriggerEnum.VALIDATE,
 			EnumSet.complementOf(EnumSet.of(AnswerEnum.NULL)), TriggerEnum.HELP, EnumSet.of(AnswerEnum.NULL));

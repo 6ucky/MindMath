@@ -17,5 +17,4 @@ public class Domain extends Attribute<String> {
 	public Domain(DomainEnum val) {
 		this.value = val;
 	}
-
 }

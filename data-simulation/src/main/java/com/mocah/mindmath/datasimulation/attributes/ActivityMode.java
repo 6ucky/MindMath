@@ -17,5 +17,4 @@ public class ActivityMode extends Attribute<Integer> {
 	public ActivityMode(ActivityModeEnum val) {
 		this.value = val;
 	}
-
 }

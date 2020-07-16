@@ -17,5 +17,4 @@ public class Answer extends Attribute<Boolean> {
 	public Answer(AnswerEnum val) {
 		this.value = val;
 	}
-
 }

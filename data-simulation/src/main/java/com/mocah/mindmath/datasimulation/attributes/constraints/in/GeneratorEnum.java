@@ -7,13 +7,12 @@ package com.mocah.mindmath.datasimulation.attributes.constraints.in;
  * @author Thibaut SIMON-FINE
  *
  */
-public enum ErrorCodeEnum implements AttributeEnum<String> {
-	NULL(""), CONFUSION_RATIONNEL("ce_confusionRationnel"), NON_GESTION_OPPOSE("ce_nonGestionOppose"),
-	INV_NUM_DEN("ce_inversionNumerateurDenominateur"), CONCAT("ce_concatenation"), OPPOSE("ce_oppose");
+public enum GeneratorEnum implements AttributeEnum<String> {
+	RES_EQ_PERMIER_DEGRE("resoudreEquationPremierDegre");
 
 	private final String strValue;
 
-	private ErrorCodeEnum(String strValue) {
+	private GeneratorEnum(String strValue) {
 		this.strValue = strValue;
 	}
 

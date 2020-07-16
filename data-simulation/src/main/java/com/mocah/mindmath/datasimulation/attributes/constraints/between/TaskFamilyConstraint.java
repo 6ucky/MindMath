@@ -1,6 +1,5 @@
 package com.mocah.mindmath.datasimulation.attributes.constraints.between;
 
-import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +12,5 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.TaskFamilyEnu
  *
  */
 public class TaskFamilyConstraint {
-	public static final Map<TaskFamilyEnum, Set<ErrorCodeEnum>> map = ImmutableMap.of(TaskFamilyEnum.FT3_1,
-			EnumSet.of(ErrorCodeEnum.ERR1), TaskFamilyEnum.FT8_3_1, EnumSet.of(ErrorCodeEnum.ERR2));
+	public static final Map<TaskFamilyEnum, Set<ErrorCodeEnum>> map = ImmutableMap.of();
 }

@@ -7,12 +7,14 @@ import com.mocah.mindmath.datasimulation.attributes.ActivityMode;
 import com.mocah.mindmath.datasimulation.attributes.Answer;
 import com.mocah.mindmath.datasimulation.attributes.Domain;
 import com.mocah.mindmath.datasimulation.attributes.ErrorCode;
+import com.mocah.mindmath.datasimulation.attributes.Generator;
 import com.mocah.mindmath.datasimulation.attributes.TaskFamily;
 import com.mocah.mindmath.datasimulation.attributes.Trigger;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.ActivityModeEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.AnswerEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.DomainEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.ErrorCodeEnum;
+import com.mocah.mindmath.datasimulation.attributes.constraints.in.GeneratorEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.TaskFamilyEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.TriggerEnum;
 
@@ -23,7 +25,7 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.TriggerEnum;
 public class CabriData {
 	private String learnerId;
 	private Domain domain;
-	private String generator;
+	private Generator generator;
 	private TaskFamily taskFamily;
 	private Answer correctAnswer;
 	private ErrorCode errorCode;
@@ -75,15 +77,22 @@ public class CabriData {
 	/**
 	 * @return the generator
 	 */
-	public String getGenerator() {
+	public Generator getGenerator() {
 		return generator;
 	}
 
 	/**
 	 * @param generator the generator to define
 	 */
-	public void setGenerator(String generator) {
+	public void setGenerator(Generator generator) {
 		this.generator = generator;
+	}
+
+	/**
+	 * @param generator the generator to define
+	 */
+	public void setTaskFamily(GeneratorEnum generator) {
+		this.generator = new Generator(generator);
 	}
 
 	/**
