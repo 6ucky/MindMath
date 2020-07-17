@@ -9,7 +9,7 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.DomainEnum;
  * @author Thibaut SIMON-FINE
  *
  */
-public class Domain extends Attribute<String> {
+public class Domain extends Attribute<DomainEnum, String> {
 
 	/**
 	 *

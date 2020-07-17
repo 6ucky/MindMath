@@ -9,7 +9,7 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.ErrorCodeEnum
  * @author Thibaut SIMON-FINE
  *
  */
-public class ErrorCode extends Attribute<String> {
+public class ErrorCode extends Attribute<ErrorCodeEnum, String> {
 
 	/**
 	 *

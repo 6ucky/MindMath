@@ -9,7 +9,7 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.TaskFamilyEnu
  * @author Thibaut SIMON-FINE
  *
  */
-public class TaskFamily extends Attribute<String> {
+public class TaskFamily extends Attribute<TaskFamilyEnum, String> {
 
 	/**
 	 *

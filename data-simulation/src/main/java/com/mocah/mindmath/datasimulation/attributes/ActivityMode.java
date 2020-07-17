@@ -9,7 +9,7 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.ActivityModeE
  * @author Thibaut SIMON-FINE
  *
  */
-public class ActivityMode extends Attribute<Integer> {
+public class ActivityMode extends Attribute<ActivityModeEnum, Integer> {
 
 	/**
 	 *

@@ -9,7 +9,7 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.GeneratorEnum
  * @author Thibaut SIMON-FINE
  *
  */
-public class Generator extends Attribute<String> {
+public class Generator extends Attribute<GeneratorEnum, String> {
 
 	/**
 	 *

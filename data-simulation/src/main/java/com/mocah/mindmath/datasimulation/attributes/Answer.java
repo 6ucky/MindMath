@@ -9,7 +9,7 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.AnswerEnum;
  * @author Thibaut SIMON-FINE
  *
  */
-public class Answer extends Attribute<Boolean> {
+public class Answer extends Attribute<AnswerEnum, Boolean> {
 
 	/**
 	 *

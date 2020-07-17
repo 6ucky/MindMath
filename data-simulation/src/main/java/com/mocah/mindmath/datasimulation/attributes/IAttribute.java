@@ -8,9 +8,11 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.AttributeEnum
 /**
  * @author Thibaut SIMON-FINE
  *
+ * @param <E> the contained enum class
+ * @param <T> the used value type
  */
-public interface IAttribute<E> {
-	public AttributeEnum<E> getEnum();
+public interface IAttribute<E extends Enum<E>, T> {
+	public AttributeEnum<E, T> getEnum();
 
-	public E getValue();
+	public T getValue();
 }
