@@ -5,8 +5,9 @@ open module com.mocah.mindmath.datasimulation {
 
 	requires java.desktop;
 	requires com.google.gson;
-	requires transitive com.google.common;
+	requires com.google.common;
 
 	// test requirements
 	requires org.junit.jupiter.api;
+	requires java.net.http;
 }
