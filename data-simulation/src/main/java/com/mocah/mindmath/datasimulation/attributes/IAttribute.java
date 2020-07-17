@@ -3,13 +3,14 @@
  */
 package com.mocah.mindmath.datasimulation.attributes;
 
+import com.mocah.mindmath.datasimulation.attributes.constraints.in.AttributeEnum;
+
 /**
  * @author Thibaut SIMON-FINE
  *
  */
 public interface IAttribute<E> {
-	public E getValue();
+	public AttributeEnum<E> getEnum();
 
-	@Override
-	String toString();
+	public E getValue();
 }

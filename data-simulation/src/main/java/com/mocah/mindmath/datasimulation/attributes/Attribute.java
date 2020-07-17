@@ -19,7 +19,17 @@ public abstract class Attribute<E> implements IAttribute<E> {
 	}
 
 	@Override
+	public AttributeEnum<E> getEnum() {
+		return this.value;
+	}
+
+	@Override
 	public E getValue() {
 		return this.value.getValue();
+	}
+
+	@Override
+	public String toString() {
+		return this.value.toString();
 	}
 }
