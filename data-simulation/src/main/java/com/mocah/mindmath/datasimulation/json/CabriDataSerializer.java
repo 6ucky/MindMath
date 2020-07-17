@@ -36,7 +36,7 @@ public class CabriDataSerializer implements JsonSerializer<CabriData>, JsonDeser
 		sensors.addProperty("activityMode", src.getActivityMode().getValue());
 
 		JsonArray logs = new JsonArray();
-		root.add("logs", logs);
+		root.add("log", logs);
 		JsonObject triggerLog = new JsonObject();
 		logs.add(triggerLog);
 		triggerLog.addProperty("time", 4000);
