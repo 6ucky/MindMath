@@ -19,9 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
-import com.mocah.mindmath.server.entity.task.Log;
 import com.mocah.mindmath.server.entity.task.Params;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
@@ -122,7 +122,12 @@ public class Extractor {
 			e.printStackTrace();
 		}
 
-		return result.toString();
+		if (result != null)
+			return result.toString();
+
+		System.out.println(
+				"WARNING : Null return from " + methodName + " for Task " + (new GsonBuilder()).create().toJson(task));
+		return "";
 	}
 
 	/**
@@ -132,18 +137,7 @@ public class Extractor {
 	 * @return
 	 */
 	protected static String getTrigger(Task task) {
-		List<Log> logs = task.getLog();
-		ListIterator<Log> listIterator = logs.listIterator(logs.size());
-
-		while (listIterator.hasPrevious()) {
-			Log log = listIterator.previous();
-			if (log.getType().equals("button")) {
-				if (log.getName().equals("bouton-valider") || log.getName().equals("bouton-aide"))
-					return log.getName();
-			}
-		}
-
-		return null;
+		return task.getTrigger();
 	}
 
 	/**
