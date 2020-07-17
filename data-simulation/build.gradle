@@ -1,6 +1,11 @@
 plugins {
 	id 'java'
 	id 'eclipse'
+	id 'application'
+	// https://github.com/java9-modularity/gradle-modules-plugin
+	id 'org.javamodularity.moduleplugin' version '1.7.0'
+	// https://github.com/brunoborges/javafx-jlink-starter-gradle
+	id 'org.beryx.jlink'               version '2.21.0'
 }
 
 group = 'com.mocah'
@@ -8,6 +13,14 @@ version = '0.0.1-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
+
+// Application Configuration
+ext {
+	appModuleName = "com.mocah.mindmath.datasimulation"
+	appMainClass = "com.mocah.mindmath.datasimulation.MainSimulation"
+}
+
+mainClassName = "${ext.appModuleName}/${ext.appMainClass}"
 
 repositories {
 	mavenCentral()

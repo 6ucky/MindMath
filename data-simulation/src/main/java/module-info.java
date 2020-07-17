@@ -1,6 +1,4 @@
-open module com.mocah.mindmath {
-
-	exports com.mocah.mindmath.datasimulation;
+open module com.mocah.mindmath.datasimulation {
 	exports com.mocah.mindmath.datasimulation.attributes;
 	exports com.mocah.mindmath.datasimulation.attributes.constraints.in;
 	exports com.mocah.mindmath.datasimulation.attributes.constraints.between;
