@@ -91,7 +91,7 @@ public class CabriData {
 	/**
 	 * @param generator the generator to define
 	 */
-	public void setTaskFamily(GeneratorEnum generator) {
+	public void setGenerator(GeneratorEnum generator) {
 		this.generator = new Generator(generator);
 	}
 
