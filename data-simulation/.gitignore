@@ -2,7 +2,7 @@
 # MindMath excludes
 #
 
-
+simulated/*
 
 #
 # Default excludes

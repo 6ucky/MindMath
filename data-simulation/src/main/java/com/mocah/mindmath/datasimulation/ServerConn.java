@@ -25,7 +25,7 @@ public class ServerConn {
 	private static final String SERVER_URL = "";
 	private static final String TEST_SERVER_URL = "http://localhost:8080/";
 
-	private static final String TASK_POST_PATH = "task";
+	private static final String TASK_POST_PATH = "task/v1.0";
 	private static final String QVAL_GET_PATH = "task/qvalues";
 
 	private static final String HEADER_AUTH = "mocah";

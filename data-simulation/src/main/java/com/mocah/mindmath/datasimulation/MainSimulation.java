@@ -16,6 +16,10 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.between.Generato
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.AnswerEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.ErrorCodeEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.TriggerEnum;
+import com.mocah.mindmath.datasimulation.json.DataExporter;
+import com.mocah.mindmath.datasimulation.json.SimulatedData;
+import com.mocah.mindmath.datasimulation.json.SimulatedDataContainer;
+import com.mocah.mindmath.datasimulation.json.SimulatedDataLearner;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -27,37 +31,6 @@ public class MainSimulation {
 	private static String learnerId;
 	private static double successProb;
 
-	private static double getWeightInfo(String feedbackId) {
-		// temp
-		switch (feedbackId) {
-		case "0.0.0.0":
-		default:
-			return 1;
-
-		case "1.0.0.0":
-		case "1.1.GC.0":
-		case "1.1.GNC.0":
-		case "2.0.0.XE":
-		case "2.0.0.XFT":
-		case "2.1.GNC.XE":
-			return 2;
-
-		case "1.2.IC.0":
-		case "1.2.INC.0":
-		case "3.0.0.XE":
-		case "3.0.0.XFT":
-			return 3;
-
-		case "3.2.IC.0":
-		case "3.2.INC.0":
-		case "3.2.IC.XE":
-		case "3.2.IC.XFT":
-		case "3.2.INC.XE":
-		case "3.2.INC.XFT":
-			return 4;
-		}
-	}
-
 	private static void initALearner() {
 		learnerId = Config.getLearnerID();
 		successProb = Config.BASE_SUCCESS_PROB;
@@ -67,12 +40,17 @@ public class MainSimulation {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		SimulatedDataContainer container = new SimulatedDataContainer();
 
+		String finalQTable = null;
 		int currentLearnerIteration = 1;
 		while (currentLearnerIteration <= Config.NB_DIF_LEARNERS) {
 			initALearner();
+			SimulatedDataLearner sdLearner = new SimulatedDataLearner(currentLearnerIteration, learnerId);
+			container.put(learnerId, sdLearner);
 
 			int currentIteration = 1;
+			FeedbackData feedbackData = null;
 			while (currentIteration <= Config.MAX_ITERATION) {
 				CabriData data = new CabriData();
 				data.setLearnerId(learnerId);
@@ -148,15 +126,32 @@ public class MainSimulation {
 				System.out.println("Données envoyées : " + Config.getGson().toJson(data));
 				System.out.println("Feedback reçu : " + feedback);
 
-				FeedbackData feedbackData = Config.getGson().fromJson(feedback, FeedbackData.class);
+				feedbackData = Config.getGson().fromJson(feedback, FeedbackData.class);
+
+				SimulatedData simData = new SimulatedData(currentIteration, data, feedbackData);
+				sdLearner.add(simData);
+
+				int fdbkInfoWeight = 0;
+				if (Config.READ_FEEDBACK) {
+					fdbkInfoWeight = Config.getWeightInfo(feedbackData.getIdFeedback());
+				}
+
+				successProb = Config.calcNewSuccessProb(successProb, fdbkInfoWeight);
 
 				currentIteration++;
 			}
 
 			String qtable = ServerConn.getQtable();
+			sdLearner.setLearnerCSV(qtable);
+			finalQTable = qtable;
 			System.out.println(qtable);
 
 			currentLearnerIteration++;
 		}
+
+		container.setFinalCSV(finalQTable);
+
+		DataExporter de = new DataExporter(container);
+		de.export();
 	}
 }
