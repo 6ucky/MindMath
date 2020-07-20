@@ -134,12 +134,12 @@ public class LRScontroller {
 		JsonObject response = new JsonObject();
 		response.add("Response from LRS",
 				JsonParser.parseString(ll.postStatementTEST(
-						parserRoot.getValueAsString(parserRoot.getObject(), JsonParserKeys.TASK_ID),
+						parserRoot.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_LEARNER_ID),
 						parserSensor.getSensor(), parserLog.getLogs())).getAsJsonObject());
 
 		JsonArray statementArray = new JsonArray();
 		XAPIgenerator xapi = new XAPIgenerator();
-		String student_id = parserRoot.getValueAsString(parserRoot.getObject(), JsonParserKeys.TASK_ID);
+		String student_id = parserRoot.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_LEARNER_ID);
 		xapi.setActor("student-" + student_id + "@lip6.fr", "student-" + student_id);
 		xapi.setVerb();
 
@@ -298,7 +298,7 @@ public class LRScontroller {
 			throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, "v1.0");
-		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
+		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
 
 		statement = generator.setAttachment().setResult(true, true, fbjson).generateStatement(task);
@@ -322,7 +322,7 @@ public class LRScontroller {
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, "v1.0");
-		Feedbackjson fbjson = new Feedbackjson(task.getId_learner());
+		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
 
 		statement = generator.setAttachment().setResult(true, true, fbjson).generateStatement(task);

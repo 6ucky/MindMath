@@ -1,12 +1,16 @@
 package com.mocah.mindmath.repository;
 
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 public interface LocalRouteRepository {
@@ -30,7 +34,9 @@ public interface LocalRouteRepository {
 	}
 	
 	public static void writeFile(String data, String route) throws IOException {
-		BufferedWriter writer = new BufferedWriter(new FileWriter(LocalRouteRepository.class.getClassLoader().getResource(route).getPath()));
+		String path = URLDecoder.decode(LocalRouteRepository.class.getClassLoader().getResource(route).getPath(), StandardCharsets.UTF_8.toString());
+		
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8));
 		writer.write(data);
 	    writer.close();
 	}

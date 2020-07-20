@@ -147,7 +147,7 @@ public class Taskcontroller {
 
 		// TODO avoid consider gaming with system tasks
 
-		Task prevTask = getTaskrepository().getPreviousTask(task.getId_learner());
+		Task prevTask = getTaskrepository().getPreviousTask(task.getSensors().getId_learner());
 
 		task = getTaskrepository().save(task);
 
@@ -202,7 +202,7 @@ public class Taskcontroller {
 			HashMap<String, String> glossaireMap = new HashMap<>();
 			glossaireMap.put("{word1}", "{definition}");
 			glossaireMap.put("{word2}", "{definition}");
-			feedbackjson = new Feedbackjson(task.getId_learner(), "", task.getSensors().getTaskFamily(), feedback_id,
+			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(), feedback_id,
 					"{motivation here}", "{content url here}", "image", glossaireMap);
 		} else {
 			feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
@@ -351,7 +351,7 @@ public class Taskcontroller {
 			Glossaire temp = getTaskrepository().getGlossaire(mapkey);
 			glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
 		}
-		return new Feedbackjson(task.getId_learner(), "", task.getSensors().getTaskFamily(), feedbackID,
+		return new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(), feedbackID,
 				motivations.get(new Random().nextInt(motivations.size())).getMotivation_data(),
 				fb.getContentErrorType(error_code).getContent_url(), fb.getContentErrorType(error_code).getFormat(),
 				glossaireMap);
@@ -377,7 +377,7 @@ public class Taskcontroller {
 				continue;
 			}
 
-			if (tasks.get(i).getId_learner().equals(task.getId_learner())
+			if (tasks.get(i).getSensors().getId_learner().equals(task.getSensors().getId_learner())
 					&& tasks.get(i).getId() > previoustask.getId()) {
 				previoustask = tasks.get(i);
 			}

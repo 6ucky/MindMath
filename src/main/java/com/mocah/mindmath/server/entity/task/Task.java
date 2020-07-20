@@ -27,8 +27,6 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = 4790322015762458488L;
 
-	private final String id_learner;
-
 	private final String task;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -41,6 +39,8 @@ public class Task extends AbstractJsonData implements Serializable {
 	private final List<Log> logs;
 
 	private String feedback_id;
+	
+	private boolean isTest = false;
 
 	// empty object
 	public Task() {
@@ -50,17 +50,25 @@ public class Task extends AbstractJsonData implements Serializable {
 		this.params = new Params();
 		this.task = null;
 		this.sensors = new Sensors();
-		this.id_learner = "";
+	}
+	
+	public Task(boolean isTest) {
+		this();
+		this.isTest = isTest;
 	}
 
 	public Task(String feedback_id) {
 		this();
 		this.feedback_id = feedback_id;
 	}
+	
+	public Task(String task, Sensors sensors, Params params, List<Log> log, String feedback_id, boolean isTest) {
+		this(task, sensors, params, log, feedback_id);
+		this.feedback_id = feedback_id;
+	}
 
-	public Task(String id_learner, String task, Sensors sensors, Params params, List<Log> log, String feedback_id) {
+	public Task(String task, Sensors sensors, Params params, List<Log> log, String feedback_id) {
 		super();
-		this.id_learner = id_learner;
 		this.task = task;
 		this.sensors = sensors;
 		this.params = params;
@@ -70,10 +78,6 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	public void setFeedback(String feedback_id) {
 		this.feedback_id = feedback_id;
-	}
-
-	public String getId_learner() {
-		return id_learner;
 	}
 
 	public String getTask() {
@@ -99,7 +103,7 @@ public class Task extends AbstractJsonData implements Serializable {
 	public Agent getLearnerAsActor() {
 
 		Agent agent = new Agent();
-		Account account = new Account(this.getId_learner(), "https://www.tralalere.com/");
+		Account account = new Account(this.getSensors().getId_learner(), "https://www.tralalere.com/");
 		agent.setAccount(account);
 
 		return agent;
@@ -133,5 +137,9 @@ public class Task extends AbstractJsonData implements Serializable {
 		}
 
 		return verb;
+	}
+
+	public boolean isTest() {
+		return isTest;
 	}
 }

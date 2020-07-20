@@ -22,7 +22,7 @@ public interface Derbyrepository extends CrudRepository<AbstractJsonData, String
 	@Query("select t from Task t where t.id = (select max(t.id) from Task t)")
 	Task getPreviousTask();
 
-	@Query("select t from Task t where t.id = (select max(t.id) from Task t where t.id_learner = :id_learner)")
+	@Query("select t from Task t where t.id = (select max(t.id) from Task t where t.sensors.id_learner = :id_learner)")
 	Task getPreviousTask(@Param("id_learner") String id_learner);
 
 	@Query("select t from Task t")

@@ -36,6 +36,7 @@ public class JsonParserSensor extends JsonParserFactory{
 					getValueforDB(sensorsObject,SENSOR_CAPTEUR_NB_VALIDER),
 					getValueforDB(sensorsObject,SENSOR_CAPTEUR_NB_EFFACER),
 					getValueforDB(sensorsObject,SENSOR_CAPTEUR_NB_AIDE),
+					getValueforDB(sensorsObject,SENSOR_LEARNER_ID),
 					getValueforDB(sensorsObject,SENSOR_DOMAIN),
 					getValueforDB(sensorsObject,SENSOR_GENERATOR),
 					getValueforDB(sensorsObject,SENSOR_TASKFAMILY),

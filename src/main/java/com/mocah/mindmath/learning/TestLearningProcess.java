@@ -389,7 +389,7 @@ public class TestLearningProcess {
 			e.printStackTrace();
 		}
 
-		Task t = new Task("1", null, null, null, null, null);
+		Task t = new Task(null, null, null, null, null);
 		try {
 			System.out.println(t.getFieldValue("id"));
 			System.out.println(t.getFieldValue("task"));
@@ -447,7 +447,6 @@ public class TestLearningProcess {
 
 		IState readedState = null;
 		try {
-			jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
 			Task task = jsonparser.parse(data, "v1.0");
 			readedState = decisionTreeBFS(tree, task);
 

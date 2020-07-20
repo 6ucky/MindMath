@@ -152,7 +152,7 @@ public class Extractor {
 
 		// Filter applied : same learner and same task family -> only answers (not help)
 		HashMap<String, Object> scopes = new HashMap<>();
-		scopes.put("learner_id", task.getId_learner());
+		scopes.put("learner_id", task.getSensors().getId_learner());
 		scopes.put("verb_id", Verbs.answered().getId());
 		scopes.put("family_task", task.getSensors().getTaskFamily());
 		scopes.put("no_gaming", "true");
@@ -238,7 +238,7 @@ public class Extractor {
 		// Filter applied : same learner and same task family -> only incorrect answers
 		// (not help)
 		HashMap<String, Object> scopes = new HashMap<>();
-		scopes.put("learner_id", task.getId_learner());
+		scopes.put("learner_id", task.getSensors().getId_learner());
 		scopes.put("verb_id", Verbs.answered().getId());
 		scopes.put("family_task", task.getSensors().getTaskFamily());
 		scopes.put("no_gaming", "true");

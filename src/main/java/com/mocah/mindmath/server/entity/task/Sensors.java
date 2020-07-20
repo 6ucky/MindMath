@@ -32,6 +32,8 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	private final String capteur_nb_effacer;
 
 	private final String capteur_nb_aide;
+	
+	private final String id_learner;
 
 	@Expose (serialize = true) 
 	private final String domain;
@@ -61,6 +63,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		this.capteur_bool_RF_CO2_3 = null;
 		this.capteur_nb_aide = null;
 		this.capteur_bool_RJ = null;
+		this.id_learner = "";
 		this.domain = null;
 		this.generator = null;
 		this.taskFamily = null;
@@ -72,7 +75,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	public Sensors(String capteur_bool_RF_CO2_1, String capteur_bool_RF_CO2_2, String capteur_bool_RF_CO2_3,
 			String capteur_bool_RJ, String capteur_nb_temps, String capteur_nb_valider, String capteur_nb_effacer,
-			String capteur_nb_aide, String domain, String generator, String taskFamily, String correctAnswer,
+			String capteur_nb_aide, String idLearner, String domain, String generator, String taskFamily, String correctAnswer,
 			String codeError, String activityMode) {
 		super();
 		this.capteur_bool_RF_CO2_1 = capteur_bool_RF_CO2_1;
@@ -83,6 +86,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		this.capteur_nb_valider = capteur_nb_valider;
 		this.capteur_nb_effacer = capteur_nb_effacer;
 		this.capteur_nb_aide = capteur_nb_aide;
+		this.id_learner = idLearner;
 		this.domain = domain;
 		this.generator = generator;
 		this.taskFamily = taskFamily;
@@ -145,5 +149,9 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	public String getActivityMode() {
 		return activityMode;
+	}
+
+	public String getId_learner() {
+		return id_learner;
 	}
 }

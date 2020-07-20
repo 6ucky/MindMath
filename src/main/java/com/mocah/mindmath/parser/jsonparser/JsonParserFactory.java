@@ -113,14 +113,12 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory<T
 		if (!version.equals("v1.0"))
 			return tasks;
 
-		if (rootObject.has(TASK_ID)) {
-			JsonParserSensor sensorparser = new JsonParserSensor(data);
-			JsonParserParams paramsparser = new JsonParserParams(data);
-			JsonParserLogs logsparser = new JsonParserLogs(data);
-			tasks = new Task(getValueforDB(rootObject, TASK_ID), getValueforDB(rootObject, TASK_NAME),
-					sensorparser.getSensor(), paramsparser.getParams(), logsparser.getLogs(),
-					getValueforDB(rootObject, TASK_FEEDBACK_ID));
-		}
+		JsonParserSensor sensorparser = new JsonParserSensor(data);
+		JsonParserParams paramsparser = new JsonParserParams(data);
+		JsonParserLogs logsparser = new JsonParserLogs(data);
+		tasks = new Task(getValueforDB(rootObject, TASK_NAME),
+				sensorparser.getSensor(), paramsparser.getParams(), logsparser.getLogs(),
+				getValueforDB(rootObject, TASK_FEEDBACK_ID));
 
 		return tasks;
 	}

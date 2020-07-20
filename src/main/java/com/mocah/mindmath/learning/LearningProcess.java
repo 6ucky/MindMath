@@ -498,7 +498,7 @@ public class LearningProcess {
 
 		// Filter applied : same learner and same task family
 		HashMap<String, Object> scopes = new HashMap<>();
-		scopes.put("learner_id", task.getId_learner());
+		scopes.put("learner_id", task.getSensors().getId_learner());
 		scopes.put("family_task", task.getSensors().getTaskFamily());
 		scopes.put("no_gaming", "true");
 		scopes.put("has_feedback", "true");
