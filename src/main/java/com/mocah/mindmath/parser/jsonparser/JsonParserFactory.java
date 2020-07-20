@@ -78,7 +78,7 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory<T
 	 * @param the  attribute name of Json object
 	 * @return string value
 	 */
-	protected String getValueforDB(JsonObject object, String key) {
+	public String getValueforDB(JsonObject object, String key) {
 		return object.has(key) ? object.get(key).getAsString() : null;
 	}
 

@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
+import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryHttp;
@@ -65,7 +67,7 @@ public class Taskcontroller {
 	private Derbyrepository taskrepository;
 
 	private static final String license_num = "mocah";
-
+	
 	private Gson gson = new Gson();
 
 	// initialize feedbackContent in Derby from local Repository
@@ -96,8 +98,6 @@ public class Taskcontroller {
 		for (Glossaire glossaire : glossaires) {
 			getTaskrepository().save(glossaire);
 		}
-
-		System.out.println("+++++++---------");
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class Taskcontroller {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
+//		jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
 		Task task = jsonparser.parse(data, "v1.0");
 
 		// TODO avoid consider gaming with system tasks
@@ -205,26 +205,26 @@ public class Taskcontroller {
 			feedbackjson = new Feedbackjson(task.getId_learner(), "", task.getSensors().getTaskFamily(), feedback_id,
 					"{motivation here}", "{content url here}", "image", glossaireMap);
 		} else {
-			// TODO get feedbackID, leaf, error_code from Q-learning
-			String feedbackID = "1.1.GNC"; // Got from action.getId()
-			String leaf = "11"; // Got from ((MindMathAction) action).getLeaf()
-			String error_code = "1"; // Got from Task.sensors.errorCode
-
-			// get feedbackcontent from Derby
-			FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
-			List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf());
-			HashMap<String, String> glossaireMap = new HashMap<>();
-			for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
-				String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
-				Glossaire temp = getTaskrepository().getGlossaire(mapkey);
-				glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
-			}
-			feedbackjson = new Feedbackjson(task.getId_learner(), "", task.getSensors().getTaskFamily(), feedbackID,
-					motivations.get(new Random().nextInt(motivations.size())).getMotivation_data(),
-					fb.getContentErrorType(error_code).getContent_url(), fb.getContentErrorType(error_code).getFormat(),
-					glossaireMap);
+			feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
 		}
 
+//		JsonParserSensor sensorparser = new JsonParserSensor(data);
+//		if(sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER))
+//		{
+//			feedbackjson = generateFeedback("3.0", "6", "3", task);
+//		}
+//		else
+//		{
+//			String feedbackID_test = jsonparser.getValueforDB(jsonparser.getObject(), "feedbackID_test");
+//			String motivation_leaf_test = jsonparser.getValueforDB(jsonparser.getObject(), "motivation_leaf_test");
+//			String erreurID_test = jsonparser.getValueforDB(jsonparser.getObject(), "erreurID_test");
+//			String[] error_list = {"1", "2", "3", "4"};
+//			if(getTaskrepository().getFeedbackContent(feedbackID_test, motivation_leaf_test) != null && Arrays.asList(error_list).contains(erreurID_test))
+//				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task);
+//			else
+//				feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
+//		}
+		
 		// TODO set statement success and completion
 		boolean statement_success = true;
 		boolean statement_completion = true;
@@ -330,6 +330,31 @@ public class Taskcontroller {
 	 */
 	public Derbyrepository getTaskrepository() {
 		return taskrepository;
+	}
+	
+	/**
+	 * TODO get feedbackID, leaf, error_code from Q-learning
+	 * @param feedbackID Got from action.getId()
+	 * @param leaf Got from ((MindMathAction) action).getLeaf()
+	 * @param error_code Got from Task.sensors.errorCode
+	 * @param task
+	 * @return feedback
+	 * @throws IOException 
+	 */
+	public Feedbackjson generateFeedback(String feedbackID, String leaf, String error_code, Task task) throws IOException {
+		// get feedbackcontent from Derby
+		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
+		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf());
+		HashMap<String, String> glossaireMap = new HashMap<>();
+		for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
+			String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
+			Glossaire temp = getTaskrepository().getGlossaire(mapkey);
+			glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
+		}
+		return new Feedbackjson(task.getId_learner(), "", task.getSensors().getTaskFamily(), feedbackID,
+				motivations.get(new Random().nextInt(motivations.size())).getMotivation_data(),
+				fb.getContentErrorType(error_code).getContent_url(), fb.getContentErrorType(error_code).getFormat(),
+				glossaireMap);
 	}
 
 	/**
