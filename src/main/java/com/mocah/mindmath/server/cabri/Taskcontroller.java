@@ -239,7 +239,7 @@ public class Taskcontroller {
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		if(sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER))
 		{
-			feedbackjson = generateFeedback("3.0", "6", "3", task);
+			feedbackjson = generateFeedback("3.0", "6", "1", task);
 		}
 		else
 		{

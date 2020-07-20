@@ -8,6 +8,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
+import com.google.common.base.Predicates;
 import com.mocah.mindmath.learning.LearningProcess;
 import com.mocah.mindmath.learning.TestLearningProcess;
 import com.mocah.mindmath.learning.algorithms.ILearning;
@@ -57,7 +58,7 @@ public class ServerApplication extends SpringBootServletInitializer {
 		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("task-api-1.0")
 				.protocols(Collections.singleton("https")).host(hostbase).select()
 				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.cabri"))
-				.paths(PathSelectors.regex("/task/v1.0.*")).build()
+				.paths(PathSelectors.ant("/task/**")).build()
 				.apiInfo(new ApiInfoBuilder().version("1.0").title("Task API from Cabri")
 						.description("POST JSON of Cabri from Tralalere and Return Feedback Documentation v1.0")
 						.contact(amel).build());
@@ -90,9 +91,31 @@ public class ServerApplication extends SpringBootServletInitializer {
 	public Docket swaggerLRSApi1_0() {
 		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("lrs-api-1.0")
 				.protocols(Collections.singleton("https")).host(hostbase).select()
-				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.lrs")).paths(PathSelectors.any())
+				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.config"))
+				.paths(PathSelectors.ant("/lrs/**"))
+//				.paths(Predicates.not(PathSelectors.ant("/lrs/test/**")))
 				.build().apiInfo(new ApiInfoBuilder().version("1.0").title("LRS API")
 						.description("Connect with Learning Locker LRS Documentation").contact(amel).build());
 	}
+	
+	// Documentation of feedback for Derby API
+	@Bean
+	public Docket swaggerFBApi1_0() {
+		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("fb-api-1.0")
+				.protocols(Collections.singleton("https")).host(hostbase).select()
+				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.cabri.feedback")).paths(PathSelectors.any())
+				.build().apiInfo(new ApiInfoBuilder().version("1.0").title("Feedback API")
+						.description("Feedback content in Derby Documentation").contact(amel).build());
+	}
 
+	// Documentation of file management API
+	@Bean
+	public Docket swaggerFileApi1_0() {
+		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("file-api-1.0")
+				.protocols(Collections.singleton("https")).host(hostbase).select()
+				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.config"))
+				.paths(PathSelectors.ant("/file/**"))
+				.build().apiInfo(new ApiInfoBuilder().version("1.0").title("File API")
+						.description("Local file read/write Documentation").contact(amel).build());
+	}
 }
