@@ -123,6 +123,8 @@ public class Feedbackjson implements Serializable {
 	}
 
 	private String String2GlossaryFBHTML(HashMap<String, String> glossaryMap) throws IOException {
+		if(glossaryMap.size() == 0)
+			return "";
 		// Compiling the Mustache Template
 		MustacheFactory mf = new DefaultMustacheFactory();
 		Mustache m = mf.compile("mustache_template/glossaryFB.mustache");

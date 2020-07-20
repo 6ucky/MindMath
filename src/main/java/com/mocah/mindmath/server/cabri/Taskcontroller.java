@@ -368,10 +368,13 @@ public class Taskcontroller {
 		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
 		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf());
 		HashMap<String, String> glossaireMap = new HashMap<>();
-		for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
-			String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
-			Glossaire temp = getTaskrepository().getGlossaire(mapkey);
-			glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
+		if(!fb.getContentErrorType(error_code).getGlossaire().toString().equals("[]"))
+		{
+			for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
+				String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
+				Glossaire temp = getTaskrepository().getGlossaire(mapkey);
+				glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
+			}
 		}
 		return new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(), feedbackID,
 				motivations.get(new Random().nextInt(motivations.size())).getMotivation_data(),
