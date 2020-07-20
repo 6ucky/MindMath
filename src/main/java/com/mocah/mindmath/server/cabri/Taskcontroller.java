@@ -121,7 +121,8 @@ public class Taskcontroller {
 	@PostMapping(path = "", consumes = "application/json")
 	public ResponseEntity<String> addtask(@RequestHeader("Authorization") String auth, @RequestBody String data)
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
-		return addtaskv1_0(auth, data);
+//		return addtaskv1_0(auth, data);
+		return addtaskTEST(auth, data);
 	}
 
 	/**
@@ -142,7 +143,6 @@ public class Taskcontroller {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-//		jsonparser.getValueAsString(jsonparser.getObject(), JsonParserKeys.TASK_ID);
 		Task task = jsonparser.parse(data, "v1.0");
 
 		// TODO avoid consider gaming with system tasks
@@ -207,23 +207,6 @@ public class Taskcontroller {
 		} else {
 			feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
 		}
-
-//		JsonParserSensor sensorparser = new JsonParserSensor(data);
-//		if(sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER))
-//		{
-//			feedbackjson = generateFeedback("3.0", "6", "3", task);
-//		}
-//		else
-//		{
-//			String feedbackID_test = jsonparser.getValueforDB(jsonparser.getObject(), "feedbackID_test");
-//			String motivation_leaf_test = jsonparser.getValueforDB(jsonparser.getObject(), "motivation_leaf_test");
-//			String erreurID_test = jsonparser.getValueforDB(jsonparser.getObject(), "erreurID_test");
-//			String[] error_list = {"1", "2", "3", "4"};
-//			if(getTaskrepository().getFeedbackContent(feedbackID_test, motivation_leaf_test) != null && Arrays.asList(error_list).contains(erreurID_test))
-//				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task);
-//			else
-//				feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
-//		}
 		
 		// TODO set statement success and completion
 		boolean statement_success = true;
@@ -237,6 +220,45 @@ public class Taskcontroller {
 
 //		return new ResponseEntity<>("feedback:" + gson.toJson(feedbackjson) + "\nstatement:" + gson.toJson(statement),
 //				HttpStatus.OK);
+
+		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/test", consumes = "application/json")
+	public ResponseEntity<String> addtaskTEST(@RequestHeader("Authorization") String auth, @RequestBody String data) throws JsonParserCustomException, IOException
+	{
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		Task task = jsonparser.parse(data, "test");
+		
+		task = getTaskrepository().save(task);
+		
+		Feedbackjson feedbackjson;
+		JsonParserSensor sensorparser = new JsonParserSensor(data);
+		if(sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER))
+		{
+			feedbackjson = generateFeedback("3.0", "6", "3", task);
+		}
+		else
+		{
+			String feedbackID_test = jsonparser.getValueforDB(jsonparser.getObject(), "feedbackID_test");
+			String motivation_leaf_test = jsonparser.getValueforDB(jsonparser.getObject(), "motivation_leaf_test");
+			String erreurID_test = jsonparser.getValueforDB(jsonparser.getObject(), "erreurID_test");
+			String[] error_list = {"1", "2", "3", "4"};
+			if(getTaskrepository().getFeedbackContent(feedbackID_test, motivation_leaf_test) != null && Arrays.asList(error_list).contains(erreurID_test))
+				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task);
+			else
+				feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
+		}
+		boolean statement_success = true;
+		boolean statement_completion = true;
+		XAPIgenerator generator = new XAPIgenerator();
+		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson)
+				.generateStatement(task);
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		ll.postStatement(statement);
 
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
@@ -313,7 +335,7 @@ public class Taskcontroller {
 	public ResponseEntity<String> cleandatabase(@RequestHeader("Authorization") String auth) {
 		if (!auth.equals("test"))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
-		getTaskrepository().deleteAll();
+		getTaskrepository().deleteAll(getTaskrepository().getAllTask());
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
 	}
 

@@ -1,5 +1,7 @@
 package com.mocah.mindmath.parser.jsonparser;
 
+import java.util.Arrays;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.ParserFactory;
@@ -107,15 +109,17 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory<T
 	@Override
 	public Task parse(String data, String version) throws JsonParserCustomException {
 
+		String[] versionList = {"v1.0", "test"};
+		
 		Task tasks = new Task();
-
-		// there is only one version currently
-		if (!version.equals("v1.0"))
+		
+		if (!Arrays.asList(versionList).contains(version))
 			return tasks;
 
 		boolean isTest = false;
 		if (version.equals("test"))
 			isTest = true;
+		
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		JsonParserParams paramsparser = new JsonParserParams(data);
 		JsonParserLogs logsparser = new JsonParserLogs(data);
