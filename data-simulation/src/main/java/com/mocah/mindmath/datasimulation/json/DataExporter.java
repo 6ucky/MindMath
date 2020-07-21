@@ -32,14 +32,14 @@ public class DataExporter {
 		File datasets = new File(pathStr + "datasets.json");
 		writeInFile(datasets, content);
 
-		File finalQtable = new File(pathStr + "finalQtable.xml");
+		File finalQtable = new File(pathStr + "finalQtable.csv");
 		writeInFile(finalQtable, toExport.getFinalCSV());
 
 		Iterator<SimulatedDataLearner> it = toExport.getDatasets().values().iterator();
 		while (it.hasNext()) {
 			SimulatedDataLearner simulatedDataLearner = it.next();
 
-			File qtable = new File(pathStr + simulatedDataLearner.getLearnerId() + "_Qtable.xml");
+			File qtable = new File(pathStr + simulatedDataLearner.getLearnerId() + "_Qtable.csv");
 			writeInFile(qtable, simulatedDataLearner.getLearnerCSV());
 		}
 	}
