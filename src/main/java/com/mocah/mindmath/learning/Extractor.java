@@ -21,6 +21,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
 import com.mocah.mindmath.server.entity.task.Params;
 import com.mocah.mindmath.server.entity.task.Sensors;
@@ -270,12 +271,23 @@ public class Extractor {
 
 			Context c = statement.getContext();
 			HashMap<String, JsonElement> extensions = c.getExtensions();
-			String codeError = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject().get("codeError")
-					.getAsString();
 
-			if (currentError.equals(codeError)) {
-				// Same errors
-				countError += 1;
+			String codeError = "";
+			if (extensions.containsKey("https://mindmath.lip6.fr/sensors")) {
+				JsonObject jsonExt = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject();
+
+				if (jsonExt.has("codeError")) {
+					codeError = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject().get("codeError")
+							.getAsString();
+				}
+			}
+
+			if (StringUtils.isNotEmpty(codeError)) {
+				// Error observed
+				if (currentError.equals(codeError)) {
+					// Same errors
+					countError += 1;
+				}
 			}
 		}
 
@@ -334,8 +346,16 @@ public class Extractor {
 
 			Context c = statement.getContext();
 			HashMap<String, JsonElement> extensions = c.getExtensions();
-			String codeError = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject().get("codeError")
-					.getAsString();
+
+			String codeError = "";
+			if (extensions.containsKey("https://mindmath.lip6.fr/sensors")) {
+				JsonObject jsonExt = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject();
+
+				if (jsonExt.has("codeError")) {
+					codeError = extensions.get("https://mindmath.lip6.fr/sensors").getAsJsonObject().get("codeError")
+							.getAsString();
+				}
+			}
 
 			if (StringUtils.isNotEmpty(codeError)) {
 				// Error observed
