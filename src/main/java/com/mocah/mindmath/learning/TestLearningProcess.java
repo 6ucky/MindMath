@@ -44,7 +44,6 @@ import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
-import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.owlparser.OWLparserRepo;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
@@ -213,13 +212,15 @@ public class TestLearningProcess {
 		}
 
 		if (pg != null) {
-			stateInterprete(bfs, node, task, state, pg);
+			Map<Vars, String> varcache = new HashMap<>();
+			stateInterprete(bfs, node, task, state, pg, varcache);
 		}
 
 		return state;
 	}
 
-	private static void stateInterprete(BreadthFirstSearch bfs, Node node, Task task, State state, Prolog pg)
+	private static void stateInterprete(BreadthFirstSearch bfs, Node node, Task task, State state, Prolog pg,
+			Map<Vars, String> varcache)
 			throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, MalformedGoalException {
 		if (node != null) {
 			bfs.visitNode(node);
@@ -242,30 +243,36 @@ public class TestLearningProcess {
 						for (Vars var : e.getVars()) {
 							String replacement = "ERROR";
 
-							switch (var.getSource()) {
-							case LOG:
-								List<Log> logs = task.getLog();
-								break;
-							case PARAM:
-								Params params = task.getParams();
-								replacement = Extractor.getFromParams(params, var.getKey());
-								break;
-							case SENSOR:
-								Sensors sensors = task.getSensors();
-								replacement = Extractor.getFromSensors(sensors, var.getKey());
-								break;
-							case TASK:
-								replacement = Extractor.getFromTask(task, var.getKey());
-								break;
-							case CUSTOM_METHOD:
-								replacement = Extractor.getFromMethod(task, var.getKey());
-								break;
-							default:
-								break;
+							if (varcache.containsKey(var)) {
+								replacement = varcache.get(var);
+							} else {
+								switch (var.getSource()) {
+								case LOG:
+									List<Log> logs = task.getLog();
+									break;
+								case PARAM:
+									Params params = task.getParams();
+									replacement = Extractor.getFromParams(params, var.getKey());
+									break;
+								case SENSOR:
+									Sensors sensors = task.getSensors();
+									replacement = Extractor.getFromSensors(sensors, var.getKey());
+									break;
+								case TASK:
+									replacement = Extractor.getFromTask(task, var.getKey());
+									break;
+								case CUSTOM_METHOD:
+									replacement = Extractor.getFromMethod(task, var.getKey());
+									break;
+								default:
+									break;
+								}
+
+								varcache.put(var, replacement);
 							}
 
 							System.out.println(var);
-							query = query.replaceFirst("_VAR_", replacement);
+							query = query.replaceAll("_" + var.getName() + "_", replacement);
 						}
 
 						System.out.println(query);
@@ -281,7 +288,7 @@ public class TestLearningProcess {
 								state.putParam(node.getId(), val.getAsString());
 							}
 
-							stateInterprete(bfs, child, task, state, pg);
+							stateInterprete(bfs, child, task, state, pg, varcache);
 
 							break;
 						}

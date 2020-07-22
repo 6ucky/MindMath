@@ -10,6 +10,7 @@ package com.mocah.mindmath.decisiontree;
 public class Child {
 	private Edge edge;
 	private String nodeid;
+//	private List<Vars> child_vars;
 
 	public Edge getEdge() {
 		return this.edge;

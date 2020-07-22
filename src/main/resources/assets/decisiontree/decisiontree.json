@@ -9,9 +9,10 @@
         {
           "edge": {
             "value": "valider",
-            "query": "equal('_VAR_','bouton-valider').",
+            "query": "equal('_trigger_','bouton-valider').",
             "vars": [
               {
+                "name": "trigger",
                 "source": "Method",
                 "key": "getTrigger"
               }
@@ -22,9 +23,10 @@
         {
           "edge": {
             "value": "aide",
-            "query": "equal('_VAR_','bouton-aide').",
+            "query": "equal('_trigger_','bouton-aide').",
             "vars": [
               {
+                "name": "trigger",
                 "source": "Method",
                 "key": "getTrigger"
               }
@@ -42,9 +44,10 @@
         {
           "edge": {
             "value": ">0",
-            "query": "strictsup(_VAR_,0).",
+            "query": "strictsup(_nbSolveTry_,0).",
             "vars": [
               {
+                "name": "nbSolveTry",
                 "source": "Method",
                 "key": "getNbSolveTry"
               }
@@ -55,9 +58,10 @@
         {
           "edge":  {
             "value": "=0",
-            "query": "equal(_VAR_,0).",
+            "query": "equal(_nbSolveTry_,0).",
             "vars": [
               {
+                "name": "nbSolveTry",
                 "source": "Method",
                 "key": "getNbSolveTry"
               }
@@ -75,9 +79,10 @@
         {
           "edge": {
             "value": true,
-            "query": "_VAR_.",
+            "query": "_isCorrectAnswer_.",
             "vars": [
               {
+                "name": "isCorrectAnswer",
                 "source": "Sensor",
                 "key": "correctAnswer"
               }
@@ -88,9 +93,10 @@
         {
           "edge": {
             "value": false,
-            "query": "not(_VAR_).",
+            "query": "not(_isCorrectAnswer_).",
             "vars": [
               {
+                "name": "isCorrectAnswer",
                 "source": "Sensor",
                 "key": "correctAnswer"
               }
@@ -108,9 +114,10 @@
         {
           "edge": {
             "value": ">1",
-            "query": "strictsup(_VAR_,1).",
+            "query": "strictsup(_nbSolveTry_,1).",
             "vars": [
               {
+                "name": "nbSolveTry",
                 "source": "Method",
                 "key": "getNbSolveTry"
               }
@@ -121,9 +128,10 @@
         {
           "edge":  {
             "value": "=1",
-            "query": "equal(_VAR_,1).",
+            "query": "equal(_nbSolveTry_,1).",
             "vars": [
               {
+                "name": "nbSolveTry",
                 "source": "Method",
                 "key": "getNbSolveTry"
               }
@@ -141,9 +149,10 @@
         {
           "edge": {
             "value": "<2",
-            "query": "inf(_VAR_,2).",
+            "query": "inf(_activityMode_,2).",
             "vars": [
               {
+                "name": "activityMode",
                 "source": "Sensor",
                 "key": "activityMode"
               }
@@ -154,9 +163,10 @@
         {
           "edge": {
             "value": "=2",
-            "query": "equal(_VAR_,2).",
+            "query": "equal(_activityMode_,2).",
             "vars": [
               {
+                "name": "activityMode",
                 "source": "Sensor",
                 "key": "activityMode"
               }
@@ -174,9 +184,10 @@
         {
           "edge": {
             "value": true,
-            "query": "_VAR_.",
+            "query": "_isErrorIdentified_.",
             "vars": [
               {
+                "name": "isErrorIdentified",
                 "source": "Method",
                 "key": "isErrorIdentified"
               }
@@ -187,9 +198,10 @@
         {
           "edge": {
             "value": false,
-            "query": "not(_VAR_).",
+            "query": "not(_isErrorIdentified_).",
             "vars": [
               {
+                "name": "isErrorIdentified",
                 "source": "Method",
                 "key": "isErrorIdentified"
               }
@@ -207,9 +219,10 @@
         {
           "edge": {
             "value": "=1",
-            "query": "equal(_VAR_,1)",
+            "query": "equal(_activityMode_,1)",
             "vars": [
               {
+                "name": "activityMode",
                 "source": "Sensor",
                 "key": "activityMode"
               }
@@ -220,9 +233,10 @@
         {
           "edge": {
             "value": "=0",
-            "query": "equal(_VAR_,0)",
+            "query": "equal(_activityMode_,0)",
             "vars": [
               {
+                "name": "activityMode",
                 "source": "Sensor",
                 "key": "activityMode"
               }
@@ -233,9 +247,10 @@
         {
           "edge": {
             "value": "=2",
-            "query": "equal(_VAR_,2)",
+            "query": "equal(_activityMode_,2)",
             "vars": [
               {
+                "name": "activityMode",
                 "source": "Sensor",
                 "key": "activityMode"
               }
@@ -248,14 +263,15 @@
     {
       "nodeid": "stab_erreur_1",
       "nodetype": "state",
-      "valuetype": "?",
+      "valuetype": "string",
       "childs": [
         {
           "edge": {
             "value": "peu stable",
-            "query": "inf(_VAR_,0.33).",
+            "query": "inf(_learnerErrorStability_,0.33).",
             "vars": [
               {
+                "name": "learnerErrorStability",
                 "source": "Method",
                 "key": "errorStabilityForLearner"
               }
@@ -266,9 +282,10 @@
         {
           "edge": {
             "value": "stable",
-            "query": "strictbetween(_VAR_, 0.33, 0.66).",
+            "query": "strictbetween(_learnerErrorStability_, 0.33, 0.66).",
             "vars": [
               {
+                "name": "learnerErrorStability",
                 "source": "Method",
                 "key": "errorStabilityForLearner"
               }
@@ -279,9 +296,10 @@
         {
           "edge": {
             "value": "très stable",
-            "query": "sup(_VAR_,0.66).",
+            "query": "sup(_learnerErrorStability_,0.66).",
             "vars": [
               {
+                "name": "learnerErrorStability",
                 "source": "Method",
                 "key": "errorStabilityForLearner"
               }
@@ -299,9 +317,10 @@
         {
           "edge": {
             "value": "stable",
-            "query": "sup(_VAR_,0.5).",
+            "query": "sup(_mostLearnersErrorStability_,0.5).",
             "vars": [
               {
+                "name": "mostLearnersErrorStability",
                 "source": "Method",
                 "key": "mostStabErrorForLearners"
               }
@@ -312,9 +331,10 @@
         {
           "edge": {
             "value": "peu stable",
-            "query": "strictinf(_VAR_,0.5).",
+            "query": "strictinf(_mostLearnersErrorStability_,0.5).",
             "vars": [
               {
+                "name": "mostLearnersErrorStability",
                 "source": "Method",
                 "key": "mostStabErrorForLearners"
               }
@@ -332,9 +352,10 @@
         {
           "edge": {
             "value": "très stable",
-            "query": "strictsup(_VAR_, 0.75);.",
+            "query": "strictsup(_learnerErrorStability_, 0.75);.",
             "vars": [
               {
+                "name": "learnerErrorStability",
                 "source": "Method",
                 "key": "errorStabilityForLearner"
               }
@@ -345,9 +366,10 @@
         {
           "edge": {
             "value": "stable",
-            "query": "between(_VAR_, 0.5, 0.75).",
+            "query": "between(_learnerErrorStability_, 0.5, 0.75).",
             "vars": [
               {
+                "name": "learnerErrorStability",
                 "source": "Method",
                 "key": "errorStabilityForLearner"
               }
@@ -358,9 +380,10 @@
         {
           "edge": {
             "value": "peu stable",
-            "query": "between(_VAR_, 0.25, 0.5).",
+            "query": "between(_learnerErrorStability_, 0.25, 0.5).",
             "vars": [
               {
+                "name": "learnerErrorStability",
                 "source": "Method",
                 "key": "errorStabilityForLearner"
               }
@@ -371,9 +394,10 @@
         {
           "edge": {
             "value": "pas stable",
-            "query": "strictinf(_VAR_,0.25).",
+            "query": "strictinf(_learnerErrorStability_,0.25).",
             "vars": [
               {
+                "name": "learnerErrorStability",
                 "source": "Method",
                 "key": "mostStabErrorForLearners"
               }
@@ -391,9 +415,10 @@
         {
           "edge": {
             "value": "<2",
-            "query": "strictinf(_VAR_,2)",
+            "query": "strictinf(_activityMode_,2)",
             "vars": [
               {
+                "name": "activityMode",
                 "source": "Sensor",
                 "key": "activityMode"
               }
@@ -404,9 +429,10 @@
         {
           "edge": {
             "value": "=2",
-            "query": "equal(_VAR_,2)",
+            "query": "equal(_activityMode_,2)",
             "vars": [
               {
+                "name": "activityMode",
                 "source": "Sensor",
                 "key": "activityMode"
               }
@@ -424,9 +450,10 @@
         {
           "edge": {
             "value": "peu stable",
-            "query": "strictinf(_VAR_,0.5).",
+            "query": "strictinf(_mostLearnersErrorStability_,0.5).",
             "vars": [
               {
+                "name": "mostLearnersErrorStability",
                 "source": "Method",
                 "key": "mostStabErrorForLearners"
               }
@@ -437,9 +464,10 @@
         {
           "edge": {
             "value": "stable",
-            "query": "sup(_VAR_,0.5).",
+            "query": "sup(_mostLearnersErrorStability_,0.5).",
             "vars": [
               {
+                "name": "mostLearnersErrorStability",
                 "source": "Method",
                 "key": "mostStabErrorForLearners"
               }
