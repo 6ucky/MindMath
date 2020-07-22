@@ -2,6 +2,7 @@ open module com.mocah.mindmath {
 
 	exports com.mocah.mindmath.server;
 	exports com.mocah.mindmath.server.cabri;
+	exports com.mocah.mindmath.server.cabri.feedback;
 	exports com.mocah.mindmath.server.entity.task;
 	exports com.mocah.mindmath.server.entity.feedbackContent;
 

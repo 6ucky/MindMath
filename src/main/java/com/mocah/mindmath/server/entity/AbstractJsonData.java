@@ -16,11 +16,10 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public abstract class AbstractJsonData {
-	
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
-	
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private long id;
+
 	/**
 	 * Get a field value from this object
 	 *
@@ -74,7 +73,7 @@ public abstract class AbstractJsonData {
 
 		return value;
 	}
-	
+
 	public long getId() {
 		return id;
 	}

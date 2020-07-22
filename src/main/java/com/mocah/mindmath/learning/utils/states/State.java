@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -47,7 +48,7 @@ public class State implements IState {
 	 * @param key a string key
 	 * @param val the value of custom type
 	 */
-	public <T extends Serializable> void putParam(String key, T val) {
+	public <T extends Object & Serializable> void putParam(String key, T val) {
 		params.put(key, new StateParam<>(val));
 	}
 
@@ -58,10 +59,7 @@ public class State implements IState {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((params == null) ? 0 : params.hashCode());
-		return result;
+		return Objects.hash(params);
 	}
 
 	@Override

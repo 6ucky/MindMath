@@ -3,29 +3,33 @@
  */
 package com.mocah.mindmath.learning.utils.actions;
 
+import com.mocah.mindmath.learning.utils.states.IState;
+
 /**
  * @author Thibaut SIMON-FINE
  *
  */
-public class MindMathAction implements IAction {
+public class MindMathAction extends AbstractAction {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = -4240823337990480436L;
 
-	private String id;
 	private String leaf;
 
 	/**
 	 * Action with custom ID
 	 */
-	public MindMathAction(String id) {
-		this.id = id;
+	public MindMathAction(String id, IState state) {
+		this(id, state, null);
 	}
 
-	@Override
-	public String getId() {
-		return this.id;
+	/**
+	 * Action with custom ID
+	 */
+	public MindMathAction(String id, IState state, String leaf) {
+		super(id, state);
+		this.leaf = leaf;
 	}
 
 	public void setLeaf(String leaf) {
@@ -34,31 +38,6 @@ public class MindMathAction implements IAction {
 
 	public String getLeaf() {
 		return this.id;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MindMathAction other = (MindMathAction) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
 	}
 
 	@Override

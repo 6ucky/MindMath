@@ -31,7 +31,6 @@ import com.mocah.mindmath.learning.LearningProcess;
 import com.mocah.mindmath.learning.algorithms.ILearning;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.actions.IAction;
-import com.mocah.mindmath.learning.utils.actions.MindMathAction;
 import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
@@ -67,7 +66,7 @@ public class Taskcontroller {
 	private Derbyrepository taskrepository;
 
 	private static final String license_num = "mocah";
-	
+
 	private Gson gson = new Gson();
 
 	// initialize feedbackContent in Derby from local Repository
@@ -147,17 +146,25 @@ public class Taskcontroller {
 
 		// TODO avoid consider gaming with system tasks
 
+		long starttime = System.nanoTime();
 		Task prevTask = getTaskrepository().getPreviousTask(task.getSensors().getId_learner());
+		System.out.println("Time retrieve prev task : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
+		starttime = System.nanoTime();
 		task = getTaskrepository().save(task);
+		System.out.println("Time read actual task : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
 		// Call Q-learning algorithm
 		IAction action = null;
 		try {
 			if (prevTask != null) {
-				IAction prevAction = new MindMathAction(prevTask.getFeedback());
+				starttime = System.nanoTime();
+				IAction prevAction = prevTask.getDecisionAction();
+				IState prevState = prevAction.getState();
+				System.out.println(
+						"Time retrieve action & state : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
-				action = LearningProcess.makeDecision(task, prevTask, prevAction);
+				action = LearningProcess.makeDecision(task, prevState, prevAction);
 			} else {
 				action = LearningProcess.makeDecision(task);
 			}
@@ -188,12 +195,16 @@ public class Taskcontroller {
 			e.printStackTrace();
 		}
 
-		// Here 'action' should contains the feedback_id to send back
-		String feedback_id = action.getId();
+		// Here 'action' should contains the feedback_id to send back and task's
+		// interpreted state
+//		String feedback_id = action.getId(); // Feedback id
+//		IState state = action.getState(); // State object
+		// Aslo in case of MindMathAction object, action should contains the leaf
+//		String leaf = ((MindMathAction) action).getLeaf();
 
 		// Link 'feedback_id' to 'task' (in order to know which feedback we send
 		// for a task -> will be get back with 'getActionDone')
-		task.setFeedback(feedback_id);
+		task.setDecisionAction(action);
 		getTaskrepository().save(task);
 
 		boolean isTest = true;
@@ -202,12 +213,12 @@ public class Taskcontroller {
 			HashMap<String, String> glossaireMap = new HashMap<>();
 			glossaireMap.put("{word1}", "{definition}");
 			glossaireMap.put("{word2}", "{definition}");
-			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(), feedback_id,
-					"{motivation here}", "{content url here}", "image", glossaireMap);
+			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(),
+					task.getFeedback(), "{motivation here}", "{content url here}", "image", glossaireMap);
 		} else {
 			feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
 		}
-		
+
 		// TODO set statement success and completion
 		boolean statement_success = true;
 		boolean statement_completion = true;
@@ -223,34 +234,33 @@ public class Taskcontroller {
 
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
-	
+
 	@PostMapping(path = "/test", consumes = "application/json")
-	public ResponseEntity<String> addtaskTEST(@RequestHeader("Authorization") String auth, @RequestBody String data) throws JsonParserCustomException, IOException
-	{
+	public ResponseEntity<String> addtaskTEST(@RequestHeader("Authorization") String auth, @RequestBody String data)
+			throws JsonParserCustomException, IOException {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, "test");
-		
+
 		task = getTaskrepository().save(task);
-		
+
 		Feedbackjson feedbackjson;
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
-		if(sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER))
-		{
+		if (sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER)) {
 			feedbackjson = generateFeedback("3.0", "6", "1", task);
-		}
-		else
-		{
+		} else {
 			String feedbackID_test = jsonparser.getValueforDB(jsonparser.getObject(), "feedbackID_test");
 			String motivation_leaf_test = jsonparser.getValueforDB(jsonparser.getObject(), "motivation_leaf_test");
 			String erreurID_test = jsonparser.getValueforDB(jsonparser.getObject(), "erreurID_test");
-			String[] error_list = {"1", "2", "3", "4"};
-			if(getTaskrepository().getFeedbackContent(feedbackID_test, motivation_leaf_test) != null && Arrays.asList(error_list).contains(erreurID_test))
+			String[] error_list = { "1", "2", "3", "4" };
+			if (getTaskrepository().getFeedbackContent(feedbackID_test, motivation_leaf_test) != null
+					&& Arrays.asList(error_list).contains(erreurID_test)) {
 				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task);
-			else
+			} else {
 				feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
+			}
 		}
 		boolean statement_success = true;
 		boolean statement_completion = true;
@@ -353,23 +363,24 @@ public class Taskcontroller {
 	public Derbyrepository getTaskrepository() {
 		return taskrepository;
 	}
-	
+
 	/**
 	 * TODO get feedbackID, leaf, error_code from Q-learning
+	 *
 	 * @param feedbackID Got from action.getId()
-	 * @param leaf Got from ((MindMathAction) action).getLeaf()
+	 * @param leaf       Got from ((MindMathAction) action).getLeaf()
 	 * @param error_code Got from Task.sensors.errorCode
 	 * @param task
 	 * @return feedback
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public Feedbackjson generateFeedback(String feedbackID, String leaf, String error_code, Task task) throws IOException {
+	public Feedbackjson generateFeedback(String feedbackID, String leaf, String error_code, Task task)
+			throws IOException {
 		// get feedbackcontent from Derby
 		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
 		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf());
 		HashMap<String, String> glossaireMap = new HashMap<>();
-		if(!fb.getContentErrorType(error_code).getGlossaire().toString().equals("[]"))
-		{
+		if (!fb.getContentErrorType(error_code).getGlossaire().toString().equals("[]")) {
 			for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
 				String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
 				Glossaire temp = getTaskrepository().getGlossaire(mapkey);

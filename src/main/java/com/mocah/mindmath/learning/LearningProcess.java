@@ -151,8 +151,8 @@ public class LearningProcess {
 
 	/**
 	 * @param task
-	 * @param previousTask
-	 * @param previousAction
+	 * @param prevState
+	 * @param prevAction
 	 * @return
 	 * @throws IOException
 	 * @throws MalformedGoalException
@@ -161,41 +161,49 @@ public class LearningProcess {
 	 * @throws NoSuchFieldException
 	 * @throws InvalidTheoryException
 	 */
-	public static IAction makeDecision(Task task, Task previousTask, IAction previousAction)
+	public static IAction makeDecision(Task task, IState prevState, IAction prevAction)
 			throws InvalidTheoryException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException,
 			MalformedGoalException, IOException {
+		long starttime = System.nanoTime();
 		// 1 generate current state
 		IState newState = null;
 		newState = decisionTreeBFS(tree, task);
 		System.out.println("[Decision] State detected : " + newState);
+		System.out.println(
+				"Time interprete current state : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
 		// TODO check if newState exist in Qtable else try to get the most similar state
 
 		// 2 calc reward
-		if (previousTask != null) {
+		if (prevState != null) {
 			// generate previous task
-			IState oldState = null;
-			oldState = decisionTreeBFS(tree, previousTask);
-			System.out.println("[Decision] Previous state detected : " + oldState);
+			System.out.println("[Decision] Previous state detected : " + prevState);
 
-			// TODO check if oldState exist in Qtable else try to get the most similar state
+			// TODO check if prevState exist in Qtable else try to get the most similar
+			// state
 
+			starttime = System.nanoTime();
 			// calc reward
 			double reward = calcReward(task);
+			System.out.println("Time calc reward : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
 			// learn
-			learning.learn(oldState, previousAction, reward, newState);
-			System.out.println("[Decision] Reward from action " + previousAction + " is : " + reward);
+			starttime = System.nanoTime();
+			learning.learn(prevState, prevAction, reward, newState);
+			System.out.println("[Decision] Reward from action " + prevAction + " is : " + reward);
+			System.out.println("Time apply reward : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
 			if (learning instanceof QLearning) {
 				Map<IState, ArrayList<IValue>> trainedValues = ((QLearning) learning).getQValues();
-				ArrayList<IValue> values = trainedValues.get(oldState);
+				ArrayList<IValue> values = trainedValues.get(prevState);
 				System.out.println("[Decision] qvalues for this state updated " + values);
 			}
 		}
 
 		// 3 choose action
+		starttime = System.nanoTime();
 		IAction action = learning.step(newState);
+		System.out.println("Time taking action : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
 		System.out.println("[Decision] Action decided : " + action);
 
@@ -301,7 +309,7 @@ public class LearningProcess {
 
 		ArrayList<IValue> values = new ArrayList<>();
 		for (Node node : feedbacks) {
-			MindMathAction action = new MindMathAction(node.getFeedbackId());
+			MindMathAction action = new MindMathAction(node.getFeedbackId(), s, decision.getId());
 			action.setLeaf(decision.getId());
 
 			double defaultWeight = decision.getChild(node).getEdge().getValue().getAsDouble();

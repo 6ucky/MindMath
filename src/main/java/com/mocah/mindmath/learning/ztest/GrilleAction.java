@@ -1,15 +1,14 @@
 package com.mocah.mindmath.learning.ztest;
 
-import com.mocah.mindmath.learning.utils.actions.IAction;
+import com.mocah.mindmath.learning.utils.actions.AbstractAction;
 
-public class GrilleAction implements IAction {
+public class GrilleAction extends AbstractAction {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 6690600593051084876L;
 
 	private static int COUNT = 0;
-	private String id;
 
 	private TypeAction type;
 
@@ -17,13 +16,8 @@ public class GrilleAction implements IAction {
 	 * Action with incremental ID
 	 */
 	public GrilleAction(TypeAction t) {
-		this.id = "" + ++COUNT;
+		super("" + ++COUNT, null);
 		this.type = t;
-	}
-
-	@Override
-	public String getId() {
-		return this.id;
 	}
 
 	public TypeAction getType() {
@@ -34,5 +28,4 @@ public class GrilleAction implements IAction {
 	public String toString() {
 		return type.toString();
 	}
-
 }

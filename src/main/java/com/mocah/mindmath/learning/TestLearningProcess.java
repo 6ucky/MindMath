@@ -180,8 +180,7 @@ public class TestLearningProcess {
 
 		List<IValue> values = new ArrayList<>();
 		for (Node node : feedbacks) {
-			MindMathAction action = new MindMathAction(node.getFeedbackId());
-			action.setLeaf(decision.getId());
+			MindMathAction action = new MindMathAction(node.getFeedbackId(), s, decision.getId());
 
 			double defaultWeight = decision.getChild(node).getEdge().getValue().getAsDouble();
 			IValue qvalue = new QValue(action, defaultWeight * LearningProcess.BASE_QVALUE_SCORESUM_INIT);

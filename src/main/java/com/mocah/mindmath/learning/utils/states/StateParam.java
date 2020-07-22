@@ -1,6 +1,7 @@
 package com.mocah.mindmath.learning.utils.states;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Implement parameters
@@ -9,7 +10,7 @@ import java.io.Serializable;
  *
  * @param <T> the type of the parameter
  */
-public class StateParam<T extends Serializable> implements Serializable {
+public class StateParam<T extends Object & Serializable> implements Serializable {
 	/**
 	 *
 	 */
@@ -51,10 +52,7 @@ public class StateParam<T extends Serializable> implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		return result;
+		return Objects.hash(value);
 	}
 
 	@Override
@@ -65,17 +63,7 @@ public class StateParam<T extends Serializable> implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-
 		StateParam<?> other = (StateParam<?>) obj;
-
-		if (this.value == null) {
-			if (other.getValue() != null)
-				return false;
-		} else {
-			if (!value.equals(other.getValue()))
-				return false;
-		}
-
-		return true;
+		return Objects.equals(value, other.value);
 	}
 }

@@ -1,5 +1,10 @@
 package com.mocah.mindmath.server.entity.task;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,9 +12,12 @@ import java.util.ListIterator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
+import com.mocah.mindmath.learning.utils.actions.IAction;
 import com.mocah.mindmath.server.entity.AbstractJsonData;
 
 import gov.adlnet.xapi.model.Account;
@@ -39,45 +47,40 @@ public class Task extends AbstractJsonData implements Serializable {
 	private final List<Log> logs;
 
 	private String feedback_id;
-	
+
+	private boolean has_decision = false;
+	@Transient
+	private IAction decision_action;
+	@Lob
+	private byte[] action_as_bytes;
+
 	private boolean isTest = false;
 
 	// empty object
 	public Task() {
-		super();
-		List<Log> emptylist = new ArrayList<>();
-		this.logs = emptylist;
-		this.params = new Params();
-		this.task = null;
-		this.sensors = new Sensors();
-	}
-	
-	public Task(boolean isTest) {
-		this();
-		this.isTest = isTest;
+		this(null, new Sensors(), new Params(), new ArrayList<Log>(), null, false);
 	}
 
-	public Task(String feedback_id) {
-		this();
-		this.feedback_id = feedback_id;
+	public Task(String task) {
+		this(task, new Sensors(), new Params(), new ArrayList<Log>(), null, false);
 	}
-	
-	public Task(String task, Sensors sensors, Params params, List<Log> log, String feedback_id, boolean isTest) {
-		this(task, sensors, params, log, feedback_id);
-		this.feedback_id = feedback_id;
+
+	public Task(boolean isTest) {
+		this(null, new Sensors(), new Params(), new ArrayList<Log>(), null, isTest);
 	}
 
 	public Task(String task, Sensors sensors, Params params, List<Log> log, String feedback_id) {
+		this(task, sensors, params, log, feedback_id, false);
+	}
+
+	public Task(String task, Sensors sensors, Params params, List<Log> log, String feedback_id, boolean isTest) {
 		super();
 		this.task = task;
 		this.sensors = sensors;
 		this.params = params;
 		this.logs = log;
 		this.feedback_id = feedback_id;
-	}
-
-	public void setFeedback(String feedback_id) {
-		this.feedback_id = feedback_id;
+		this.isTest = isTest;
 	}
 
 	public String getTask() {
@@ -96,8 +99,65 @@ public class Task extends AbstractJsonData implements Serializable {
 		return logs;
 	}
 
+	@Deprecated
+	public void setFeedback(String feedback_id) {
+		this.feedback_id = feedback_id;
+	}
+
 	public String getFeedback() {
 		return feedback_id;
+	}
+
+	public void setDecisionAction(IAction action) {
+		this.has_decision = (action != null) ? true : false;
+		this.decision_action = action;
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(baos);
+			oos.writeObject(this.decision_action);
+
+			this.action_as_bytes = baos.toByteArray();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (oos != null) {
+					oos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		this.feedback_id = action.getId();
+	}
+
+	public IAction getDecisionAction() {
+		if (!this.has_decision)
+			return null;
+
+		if (this.decision_action == null) {
+			ByteArrayInputStream bais = new ByteArrayInputStream(this.action_as_bytes);
+			ObjectInputStream ois = null;
+			try {
+				ois = new ObjectInputStream(bais);
+				this.decision_action = (IAction) ois.readObject();
+			} catch (ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (ois != null) {
+						ois.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return this.decision_action;
 	}
 
 	public Agent getLearnerAsActor() {
