@@ -56,6 +56,8 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	private boolean isTest = false;
 
+	private boolean useTestLRS = true; // TODO get from cabri + default init false
+
 	// empty object
 	public Task() {
 		this(null, new Sensors(), new Params(), new ArrayList<Log>(), null, false);
@@ -201,5 +203,9 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	public boolean isTest() {
 		return isTest;
+	}
+
+	public boolean useTestLRS() {
+		return this.useTestLRS;
 	}
 }

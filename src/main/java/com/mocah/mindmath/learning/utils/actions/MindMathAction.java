@@ -16,6 +16,7 @@ public class MindMathAction extends AbstractAction {
 	private static final long serialVersionUID = -4240823337990480436L;
 
 	private String leaf;
+	private double init_weight;
 
 	/**
 	 * Action with custom ID
