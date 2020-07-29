@@ -57,9 +57,9 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	private boolean isTest = false;
 
-	private boolean expertMode = false; // TODO get from cabri + default init false
-	private boolean useTestLRS = true; // TODO get from cabri + default init false
-	private boolean verbose = true; // TODO get from cabri + default init false
+	private boolean expertMode = false;
+	private boolean useTestLRS = false;
+	private boolean verbose = false;
 
 	// empty object
 	public Task() {
