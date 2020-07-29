@@ -11,7 +11,6 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
 public class Feedbackjson implements Serializable {
-
 	private static final long serialVersionUID = -9041203134380944632L;
 
 	private final String idLearner;
@@ -23,6 +22,10 @@ public class Feedbackjson implements Serializable {
 	private final String motivationalElementFb;
 	private final String contentFb;
 	private final String glossaryFb;
+
+	// Verbose fields
+	private String mode;
+	private Double reward = null;
 
 	// Test Feedback response
 	public Feedbackjson(String id) throws IOException {
@@ -75,7 +78,8 @@ public class Feedbackjson implements Serializable {
 	}
 
 	public Feedbackjson(String idLearner, String idFbCabri, String idFamilytask, String idFeedback,
-			String motivationalElement, String content_url,	String content_type, HashMap<String, String> glossaryMap) throws IOException {
+			String motivationalElement, String content_url, String content_type, HashMap<String, String> glossaryMap)
+			throws IOException {
 		this.idLearner = idLearner;
 		this.idFbCabri = idFbCabri;
 		this.idFamilytask = idFamilytask;
@@ -123,7 +127,7 @@ public class Feedbackjson implements Serializable {
 	}
 
 	private String String2GlossaryFBHTML(HashMap<String, String> glossaryMap) throws IOException {
-		if(glossaryMap.size() == 0)
+		if (glossaryMap.size() == 0)
 			return "";
 		// Compiling the Mustache Template
 		MustacheFactory mf = new DefaultMustacheFactory();
@@ -170,4 +174,31 @@ public class Feedbackjson implements Serializable {
 		return idFeedback;
 	}
 
+	/**
+	 * @return the decision mode
+	 */
+	public String getMode() {
+		return mode;
+	}
+
+	/**
+	 * @param mode the decision mode to define
+	 */
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	/**
+	 * @return the reward
+	 */
+	public Double getReward() {
+		return reward;
+	}
+
+	/**
+	 * @param reward the reward value to define
+	 */
+	public void setReward(Double reward) {
+		this.reward = reward;
+	}
 }

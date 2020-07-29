@@ -257,6 +257,21 @@ public class Taskcontroller {
 //		return new ResponseEntity<>("feedback:" + gson.toJson(feedbackjson) + "\nstatement:" + gson.toJson(statement),
 //				HttpStatus.OK);
 
+		// Add verbose fields
+		if (task.isVerbose()) {
+			// Set decision mode
+			if (task.isExpertMode()) {
+				feedbackjson.setMode("Expert");
+			} else {
+				feedbackjson.setMode("RL");
+			}
+
+			// Set reward value
+			if (decision.hasLearn()) {
+				feedbackjson.setReward(decision.getReward());
+			}
+		}
+
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
 
