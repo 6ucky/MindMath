@@ -56,7 +56,9 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	private boolean isTest = false;
 
+	private boolean expertMode = false; // TODO get from cabri + default init false
 	private boolean useTestLRS = true; // TODO get from cabri + default init false
+	private boolean verbose = true; // TODO get from cabri + default init false
 
 	// empty object
 	public Task() {
@@ -205,7 +207,32 @@ public class Task extends AbstractJsonData implements Serializable {
 		return isTest;
 	}
 
+	/**
+	 * Expert Mode : use decision tree instead of learning process
+	 *
+	 * @return if task use expert mode
+	 */
+	public boolean isExpertMode() {
+		return expertMode;
+	}
+
+	/**
+	 * Expert Mode : use decision tree instead of learning process
+	 *
+	 * @param expertMode define if task use expert mode
+	 */
+	public void setExpertMode(boolean expertMode) {
+		this.expertMode = expertMode;
+	}
+
 	public boolean isUsingTestLRS() {
 		return this.useTestLRS;
+	}
+
+	/**
+	 * @return if task is verbose
+	 */
+	public boolean isVerbose() {
+		return verbose;
 	}
 }
