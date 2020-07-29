@@ -182,7 +182,7 @@ public class Taskcontroller {
 				decision = LearningProcess.makeDecision(task, prevState, prevAction);
 
 				if (decision.hasLearn()) {
-					// Save the reward to the prev task
+					// Save the prev task action's reward to the prev task
 					prevTask.setReward(decision.getReward());
 					getTaskrepository().save(prevTask);
 				}
