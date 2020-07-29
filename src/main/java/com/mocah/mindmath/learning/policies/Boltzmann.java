@@ -86,12 +86,12 @@ public class Boltzmann implements IPolicy {
 		double[] actionSoftMax = new double[actionsCount];
 		double sum = 0;
 
-		for (int i = 0; i < actionsCount; ++i) {
+		for (int i = 0; i < actionsCount; i++) {
 			actionSoftMax[i] = Math.exp(temperature * values.get(i).getValue());
 			sum += actionSoftMax[i];
 		}
 
-		for (int i = 0; i < actionSoftMax.length; ++i) {
+		for (int i = 0; i < actionSoftMax.length; i++) {
 			actionSoftMax[i] /= sum;
 		}
 

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -205,7 +206,57 @@ public class LearningProcess {
 
 		// 3 choose action
 		starttime = System.nanoTime();
-		IAction action = learning.step(newState);
+		IAction action = null;
+		if (task.isExpertMode()) {
+			// Choose action based on decision tree weights
+			List<IAction> actions = learning.getPossibleActions(newState);
+
+			int actionsCount = actions.size();
+
+			List<Double> actionProb = new ArrayList<>();
+			double sum = 0;
+
+			for (int i = 0; i < actionsCount; i++) {
+				if (actions.get(i) instanceof MindMathAction) {
+					actionProb.add(((MindMathAction) actions.get(i)).getInitalWeight());
+					sum += actionProb.get(i);
+				}
+			}
+
+			if (sum > 0) {
+				for (int i = 0; i < actionProb.size(); i++) {
+					actionProb.set(i, actionProb.get(i) / sum);
+				}
+			}
+
+			// Begin discrete prob
+			Random rand = new Random();
+			double d = rand.nextDouble();
+
+			double[] cumprob = new double[actionProb.size() + 1];
+			cumprob[0] = 0;
+			double total = 0;
+			for (int i = 0; i < actionProb.size(); i++) {
+				total += actionProb.get(i);
+				cumprob[i + 1] = total;
+			}
+
+			for (int i = 0; i < actionProb.size(); i++) {
+				if (d > cumprob[i] && d <= cumprob[i + 1]) {
+					action = actions.get(i);
+					break;
+				}
+			}
+			// End discrete prob
+
+			if (action == null) {
+				int i = rand.nextInt(actionsCount);
+				action = actions.get(i);
+			}
+		} else {
+			// Choose action based on policy
+			action = learning.step(newState);
+		}
 		decision.setAction(action);
 		System.out.println("Time taking action : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 

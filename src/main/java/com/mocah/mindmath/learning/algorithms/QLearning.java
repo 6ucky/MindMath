@@ -138,6 +138,18 @@ public class QLearning extends AbstractLearning {
 
 	}
 
+	@Override
+	public List<IAction> getPossibleActions(IState state) {
+		List<IValue> stateValues = this.qValues.get(state);
+
+		List<IAction> actions = new ArrayList<>(stateValues.size());
+		for (IValue value : stateValues) {
+			actions.add(value.myAction());
+		}
+
+		return actions;
+	}
+
 	public Map<IState, ArrayList<IValue>> getQValues() {
 		return this.qValues;
 	}
@@ -157,5 +169,4 @@ public class QLearning extends AbstractLearning {
 
 		return res;
 	}
-
 }

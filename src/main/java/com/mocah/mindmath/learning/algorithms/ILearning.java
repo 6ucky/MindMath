@@ -4,6 +4,7 @@
 package com.mocah.mindmath.learning.algorithms;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.mocah.mindmath.learning.utils.actions.IAction;
 import com.mocah.mindmath.learning.utils.states.IState;
@@ -17,8 +18,8 @@ public interface ILearning extends Serializable {
 	/**
 	 * Make a choice for the next action
 	 *
-	 * @param state
-	 * @return the action choosed or to do
+	 * @param state the current state
+	 * @return the chosen action
 	 */
 	public IAction step(IState state);
 
@@ -31,4 +32,10 @@ public interface ILearning extends Serializable {
 	 * @param newState the state of the environment after the action was done
 	 */
 	public void learn(IState oldState, IAction action, double reward, IState newState);
+
+	/**
+	 * @param state a state of the environment
+	 * @return the list of possible actions for this state
+	 */
+	public List<IAction> getPossibleActions(IState state);
 }

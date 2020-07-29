@@ -172,7 +172,7 @@ public class Taskcontroller {
 		// Call Q-learning algorithm
 		Decision decision = null;
 		try {
-			if (prevTask != null) {
+			if (prevTask != null && !prevTask.isExpertMode()) {
 				starttime = System.nanoTime();
 				IAction prevAction = prevTask.getDecisionAction();
 				IState prevState = prevAction.getState();
