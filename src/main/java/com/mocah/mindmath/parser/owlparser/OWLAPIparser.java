@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
 import com.mocah.mindmath.parser.ParserFactory;
+import com.mocah.mindmath.parser.jsonparser.CabriVersion;
 
 /**
  * @author	Yan Wang
@@ -174,7 +175,7 @@ public class OWLAPIparser implements ParserFactory <OWLparserRepo> {
 	 * Update or overwrite the data of owl file
 	 */
 	@Override
-	public OWLparserRepo parse(String data, String version) {
+	public OWLparserRepo parse(String data, CabriVersion version) {
 		OWLparserRepo.owldata = data;
 		model.read(getInputStream(), "");
 		return null;

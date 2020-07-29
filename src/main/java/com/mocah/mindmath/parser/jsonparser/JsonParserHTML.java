@@ -101,7 +101,7 @@ public class JsonParserHTML implements ParserFactory<String> {
 	}
 
 	@Override
-	public String parse(String data, String version) throws JsonParserCustomException {
+	public String parse(String data, CabriVersion version) throws JsonParserCustomException {
 		if (isGoodJson(data)) {
 			json2html(JsonParser.parseString(data).getAsJsonObject());
 		} else {

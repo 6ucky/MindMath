@@ -42,6 +42,7 @@ import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.learning.ztest.Grille;
 import com.mocah.mindmath.learning.ztest.GrilleAction;
 import com.mocah.mindmath.learning.ztest.TypeEtat;
+import com.mocah.mindmath.parser.jsonparser.CabriVersion;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.owlparser.OWLparserRepo;
@@ -143,7 +144,7 @@ public class TestLearningProcess {
 
 			for (IValue value : qValues.get(state)) {
 				line.append(value.myAction());
-				line.append("→");
+				line.append("鈫�");
 				line.append(value.getValue());
 				line.append(";");
 			}
@@ -376,22 +377,22 @@ public class TestLearningProcess {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			e.printStackTrace();
 		} catch (InvalidTheoryException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			e.printStackTrace();
 		} catch (MalformedGoalException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			e.printStackTrace();
 		} catch (NoSolutionException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			e.printStackTrace();
 		} catch (NoMoreSolutionException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			e.printStackTrace();
 		}
 
@@ -401,7 +402,7 @@ public class TestLearningProcess {
 			System.out.println(t.getFieldValue("task"));
 			System.out.println(t.getFieldValue("none"));
 		} catch (NoSuchFieldException | SecurityException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			e.printStackTrace();
 		}
 
@@ -444,22 +445,22 @@ public class TestLearningProcess {
 //			// System.out.println(resultsStr);
 //			System.out.println(statements.size());
 //		} catch (IOException e) {
-//			// TODO Bloc catch généré automatiquement
+//			// TODO Bloc catch g茅n茅r茅 automatiquement
 //			e.printStackTrace();
 //		} catch (JsonParserCustomException e) {
-//			// TODO Bloc catch généré automatiquement
+//			// TODO Bloc catch g茅n茅r茅 automatiquement
 //			e.printStackTrace();
 //		}
 
 		IState readedState = null;
 		try {
-			Task task = jsonparser.parse(data, "v1.0");
+			Task task = jsonparser.parse(data, CabriVersion.test);
 			readedState = decisionTreeBFS(tree, task);
 
 		} catch (JsonParserCustomException | InvalidTheoryException | MalformedGoalException | NoSuchFieldException
 				| SecurityException | IOException | NoSuchMethodException | IllegalArgumentException
 				| InvocationTargetException | NullPointerException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			e.printStackTrace();
 		}
 
@@ -579,7 +580,7 @@ public class TestLearningProcess {
 			String line = state + ";";
 
 			for (IValue value : qValues.get(state)) {
-				line += value.myAction() + "→" + value.getValue() + ";";
+				line += value.myAction() + "鈫�" + value.getValue() + ";";
 			}
 
 			res += "\n" + line;
@@ -596,7 +597,7 @@ public class TestLearningProcess {
 			IAction action = qLearning.step(state);
 			reward += testEnv.step((GrilleAction) action);
 
-			str += state + "→";
+			str += state + "鈫�";
 			state = testEnv.getCurrentState();
 
 //			System.out.println(str);

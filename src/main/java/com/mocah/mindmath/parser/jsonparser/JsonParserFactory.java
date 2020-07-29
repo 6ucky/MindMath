@@ -117,32 +117,39 @@ public class JsonParserFactory implements ParserFactory<Task> {
 	}
 
 	@Override
-	public Task parse(String data, String version) throws JsonParserCustomException {
-
-		String[] versionList = { "v1.0", "test" };
-
-		Task tasks = new Task();
-
-		if (!Arrays.asList(versionList).contains(version))
-			return tasks;
-
-		boolean isTest = false;
-		if (version.equals("test")) {
-			isTest = true;
-		}
+	public Task parse(String data, CabriVersion version) throws JsonParserCustomException {
+		
+		Task tasks;
 
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		JsonParserParams paramsparser = new JsonParserParams(data);
 		JsonParserLogs logsparser = new JsonParserLogs(data);
-		tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
-				paramsparser.getParams(), logsparser.getLogs(),
-				getValueforDB(rootObject, JsonParserKeys.TASK_FEEDBACK_ID), isTest);
+		
+		switch(version) {
+		
+		case v1_0:
+			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
+					paramsparser.getParams(), logsparser.getLogs(),
+					getValueforDB(rootObject, JsonParserKeys.TASK_FEEDBACK_ID), false);
 
-		// Optional fields
-		tasks.setExpertMode(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_EXPERT_MODE)));
-		tasks.setUsingTestLRS(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_TEST_LRS)));
-		tasks.setVerbose(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_VERBOSE)));
+			// Optional fields
+			tasks.setExpertMode(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_EXPERT_MODE)));
+			tasks.setUsingTestLRS(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_TEST_LRS)));
+			tasks.setVerbose(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_VERBOSE)));
+		
+		case test:
+			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
+					paramsparser.getParams(), logsparser.getLogs(),
+					getValueforDB(rootObject, JsonParserKeys.TASK_FEEDBACK_ID), true);
 
+			// Optional fields
+			tasks.setExpertMode(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_EXPERT_MODE)));
+			tasks.setUsingTestLRS(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_TEST_LRS)));
+			tasks.setVerbose(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_VERBOSE)));
+		
+		default:
+			tasks = new Task();
+		}
 		return tasks;
 	}
 

@@ -34,6 +34,7 @@ import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.actions.IAction;
 import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.values.IValue;
+import com.mocah.mindmath.parser.jsonparser.CabriVersion;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
@@ -157,7 +158,7 @@ public class Taskcontroller {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		Task task = jsonparser.parse(data, "v1.0");
+		Task task = jsonparser.parse(data, CabriVersion.v1_0);
 
 		// TODO avoid consider gaming with system tasks
 
@@ -190,12 +191,12 @@ public class Taskcontroller {
 				decision = LearningProcess.makeDecision(task);
 			}
 		} catch (InvalidTheoryException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			// Thus mean here that content of pl file isn't valid
 
 			e.printStackTrace();
 		} catch (NoSuchFieldException | NoSuchMethodException | MalformedGoalException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 			// Thus mean here that there should be an error with a node in json tree
 
 			// NoSuchFieldException -> in case of Task/Sensor/Param source type when the
@@ -208,7 +209,7 @@ public class Taskcontroller {
 
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Bloc catch généré automatiquement
+			// TODO Bloc catch g茅n茅r茅 automatiquement
 
 			// Thus mean that a method called in com.mocah.mindmath.learning.Extractor
 			// thrown an error -> method should be updated
@@ -282,7 +283,7 @@ public class Taskcontroller {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		Task task = jsonparser.parse(data, "test");
+		Task task = jsonparser.parse(data, CabriVersion.test);
 
 		task = getTaskrepository().save(task);
 
@@ -363,7 +364,7 @@ public class Taskcontroller {
 
 			for (IValue value : qValues.get(state)) {
 				line.append(value.myAction());
-				line.append("→");
+				line.append("鈫�");
 				line.append(value.getValue());
 				line.append(";");
 			}

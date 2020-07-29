@@ -25,6 +25,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.mocah.mindmath.parser.jsonparser.CabriVersion;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
@@ -297,7 +298,7 @@ public class LRScontroller {
 	public ResponseEntity<String> testJXAPIexample(@RequestBody String data)
 			throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		Task task = jsonparser.parse(data, "v1.0");
+		Task task = jsonparser.parse(data, CabriVersion.test);
 		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
 
@@ -321,7 +322,7 @@ public class LRScontroller {
 	public ResponseEntity<String> testJXAPIexamplePOST(@RequestBody String data)
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		Task task = jsonparser.parse(data, "v1.0");
+		Task task = jsonparser.parse(data, CabriVersion.test);
 		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
 
