@@ -2,6 +2,8 @@ package com.mocah.mindmath.parser.jsonparser;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang3.BooleanUtils;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.ParserFactory;
@@ -11,8 +13,7 @@ import com.mocah.mindmath.server.entity.task.Task;
  * @author Yan Wang
  * @since 09/03/2020
  */
-public class JsonParserFactory extends JsonParserKeys implements ParserFactory<Task> {
-
+public class JsonParserFactory implements ParserFactory<Task> {
 	protected final JsonObject rootObject;
 
 	// constructor of jsonparser
@@ -29,7 +30,7 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory<T
 	 */
 	public String getValueAsString(JsonObject object, String key) throws JsonParserCustomException {
 		try {
-			return object.get(key).getAsString();
+			return object.has(key) ? object.get(key).getAsString() : null;
 		} catch (Exception e) {
 			throwjsonexception(object, key, e, "String");
 		}
@@ -48,7 +49,7 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory<T
 	 */
 	public Boolean getValueAsBoolean(JsonObject object, String key) throws JsonParserCustomException {
 		try {
-			return object.get(key).getAsBoolean();
+			return object.has(key) ? object.get(key).getAsBoolean() : null;
 		} catch (Exception e) {
 			throwjsonexception(object, key, e, "Boolean");
 		}
@@ -65,7 +66,7 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory<T
 	 */
 	public Long getValueAsLong(JsonObject object, String key) throws JsonParserCustomException {
 		try {
-			return object.get(key).getAsLong();
+			return object.has(key) ? object.get(key).getAsLong() : null;
 		} catch (Exception e) {
 			throwjsonexception(object, key, e, "Long");
 		}
@@ -84,7 +85,16 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory<T
 		return object.has(key) ? object.get(key).getAsString() : null;
 	}
 
-	// handle json parser exceptions
+	/**
+	 * Handle json parser exceptions
+	 *
+	 * @param object
+	 * @param key
+	 * @param e
+	 * @param type
+	 * @return
+	 * @throws JsonParserCustomException
+	 */
 	private String throwjsonexception(JsonObject object, String key, Exception e, String type)
 			throws JsonParserCustomException {
 		String root = null;
@@ -109,23 +119,29 @@ public class JsonParserFactory extends JsonParserKeys implements ParserFactory<T
 	@Override
 	public Task parse(String data, String version) throws JsonParserCustomException {
 
-		String[] versionList = {"v1.0", "test"};
-		
+		String[] versionList = { "v1.0", "test" };
+
 		Task tasks = new Task();
-		
+
 		if (!Arrays.asList(versionList).contains(version))
 			return tasks;
 
 		boolean isTest = false;
-		if (version.equals("test"))
+		if (version.equals("test")) {
 			isTest = true;
-		
+		}
+
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		JsonParserParams paramsparser = new JsonParserParams(data);
 		JsonParserLogs logsparser = new JsonParserLogs(data);
-		tasks = new Task(getValueforDB(rootObject, TASK_NAME),
-				sensorparser.getSensor(), paramsparser.getParams(), logsparser.getLogs(),
-				getValueforDB(rootObject, TASK_FEEDBACK_ID), isTest);
+		tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
+				paramsparser.getParams(), logsparser.getLogs(),
+				getValueforDB(rootObject, JsonParserKeys.TASK_FEEDBACK_ID), isTest);
+
+		// Optional fields
+		tasks.setExpertMode(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_EXPERT_MODE)));
+		tasks.setUsingTestLRS(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_TEST_LRS)));
+		tasks.setVerbose(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_VERBOSE)));
 
 		return tasks;
 	}

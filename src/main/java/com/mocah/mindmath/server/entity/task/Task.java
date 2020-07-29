@@ -237,10 +237,21 @@ public class Task extends AbstractJsonData implements Serializable {
 		return this.useTestLRS;
 	}
 
+	public void setUsingTestLRS(boolean useTestLRS) {
+		this.useTestLRS = useTestLRS;
+	}
+
 	/**
 	 * @return if task is verbose
 	 */
 	public boolean isVerbose() {
 		return verbose;
+	}
+
+	/**
+	 * @param isVerbose if task is verbose
+	 */
+	public void setVerbose(boolean isVerbose) {
+		this.verbose = isVerbose;
 	}
 }
