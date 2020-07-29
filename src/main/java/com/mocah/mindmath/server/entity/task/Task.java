@@ -53,6 +53,7 @@ public class Task extends AbstractJsonData implements Serializable {
 	private IAction decision_action;
 	@Lob
 	private byte[] action_as_bytes;
+	private double reward;
 
 	private boolean isTest = false;
 
@@ -164,8 +165,15 @@ public class Task extends AbstractJsonData implements Serializable {
 		return this.decision_action;
 	}
 
-	public Agent getLearnerAsActor() {
+	public double getReward() {
+		return this.reward;
+	}
 
+	public void setReward(double reward) {
+		this.reward = reward;
+	}
+
+	public Agent getLearnerAsActor() {
 		Agent agent = new Agent();
 		Account account = new Account(this.getSensors().getId_learner(), "https://www.tralalere.com/");
 		agent.setAccount(account);

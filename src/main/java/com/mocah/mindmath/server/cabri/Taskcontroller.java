@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.mocah.mindmath.learning.Decision;
 import com.mocah.mindmath.learning.LearningProcess;
 import com.mocah.mindmath.learning.algorithms.ILearning;
 import com.mocah.mindmath.learning.algorithms.QLearning;
@@ -119,37 +120,20 @@ public class Taskcontroller {
 	 * @throws NoSuchAlgorithmException
 	 */
 	@PostMapping(path = "", consumes = "application/json")
-	public ResponseEntity<String> addtask(@RequestHeader("Authorization") String auth, @RequestBody @ApiParam(value = "example:\n{\r\n" + 
-			"	\"sensors\": {\r\n" + 
-			"		\"idLearner\": \"123\",\r\n" + 
-			"		\"domain\": \"algebre123\",\r\n" + 
-			"		\"generator\": \"resoudreEquationPremierDegre\",\r\n" + 
-			"		\"taskFamily\": \"ft3.1\",\r\n" + 
-			"		\"correctAnswer\": true,\r\n" + 
-			"		\"codeError\": \"ce_err5\",\r\n" + 
-			"		\"activityMode\": 0\r\n" + 
-			"	},\r\n" + 
-			"	\"log\": [\r\n" + 
-			"		{\r\n" + 
-			"			\"time\": 4015,\r\n" + 
-			"			\"type\": \"tool\",\r\n" + 
-			"			\"name\": \"line_tool\",\r\n" + 
-			"			\"action\": \"create\"\r\n" + 
-			"		},\r\n" + 
-			"		{\r\n" + 
-			"			\"time\": 5813,\r\n" + 
-			"			\"type\": \"button\",\r\n" + 
-			"			\"name\": \"bouton-effacer\",\r\n" + 
-			"			\"action\": \"push\"\r\n" + 
-			"		},\r\n" + 
-			"		{\r\n" + 
-			"			\"time\": 7689,\r\n" + 
-			"			\"type\": \"button\",\r\n" + 
-			"			\"name\": \"bouton-valider\",\r\n" + 
-			"			\"action\": \"push\"\r\n" + 
-			"		}\r\n" + 
-			"	]\r\n" + 
-			"}") String data)
+	public ResponseEntity<String> addtask(@RequestHeader("Authorization") String auth,
+			@RequestBody @ApiParam(value = "example:\n{\r\n" + "	\"sensors\": {\r\n"
+					+ "		\"idLearner\": \"123\",\r\n" + "		\"domain\": \"algebre123\",\r\n"
+					+ "		\"generator\": \"resoudreEquationPremierDegre\",\r\n"
+					+ "		\"taskFamily\": \"ft3.1\",\r\n" + "		\"correctAnswer\": true,\r\n"
+					+ "		\"codeError\": \"ce_err5\",\r\n" + "		\"activityMode\": 0\r\n" + "	},\r\n"
+					+ "	\"log\": [\r\n" + "		{\r\n" + "			\"time\": 4015,\r\n"
+					+ "			\"type\": \"tool\",\r\n" + "			\"name\": \"line_tool\",\r\n"
+					+ "			\"action\": \"create\"\r\n" + "		},\r\n" + "		{\r\n"
+					+ "			\"time\": 5813,\r\n" + "			\"type\": \"button\",\r\n"
+					+ "			\"name\": \"bouton-effacer\",\r\n" + "			\"action\": \"push\"\r\n"
+					+ "		},\r\n" + "		{\r\n" + "			\"time\": 7689,\r\n"
+					+ "			\"type\": \"button\",\r\n" + "			\"name\": \"bouton-valider\",\r\n"
+					+ "			\"action\": \"push\"\r\n" + "		}\r\n" + "	]\r\n" + "}") String data)
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 //		return addtaskv1_0(auth, data);
 		return addtaskTEST(auth, data);
@@ -186,7 +170,7 @@ public class Taskcontroller {
 		System.out.println("Time read actual task : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
 		// Call Q-learning algorithm
-		IAction action = null;
+		Decision decision = null;
 		try {
 			if (prevTask != null) {
 				starttime = System.nanoTime();
@@ -195,9 +179,15 @@ public class Taskcontroller {
 				System.out.println(
 						"Time retrieve action & state : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
-				action = LearningProcess.makeDecision(task, prevState, prevAction);
+				decision = LearningProcess.makeDecision(task, prevState, prevAction);
+
+				if (decision.hasLearn()) {
+					// Save the reward to the prev task
+					prevTask.setReward(decision.getReward());
+					getTaskrepository().save(prevTask);
+				}
 			} else {
-				action = LearningProcess.makeDecision(task);
+				decision = LearningProcess.makeDecision(task);
 			}
 		} catch (InvalidTheoryException e) {
 			// TODO Bloc catch généré automatiquement
@@ -225,7 +215,11 @@ public class Taskcontroller {
 
 			e.printStackTrace();
 		}
+		// Here 'decision' should contains the action decided and reward value
+//		boolean hasReward = decision.hasLearn(); // Does the decision contains a reward
+//		double reward = decision.getReward(); // Reward value
 
+		IAction action = decision.getAction();
 		// Here 'action' should contains the feedback_id to send back and task's
 		// interpreted state
 //		String feedback_id = action.getId(); // Feedback id

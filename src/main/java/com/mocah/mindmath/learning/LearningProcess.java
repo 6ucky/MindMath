@@ -144,7 +144,7 @@ public class LearningProcess {
 	 * @throws NoSuchFieldException
 	 * @throws InvalidTheoryException
 	 */
-	public static IAction makeDecision(Task task) throws InvalidTheoryException, NoSuchFieldException,
+	public static Decision makeDecision(Task task) throws InvalidTheoryException, NoSuchFieldException,
 			NoSuchMethodException, InvocationTargetException, MalformedGoalException, IOException {
 		return makeDecision(task, null, null);
 	}
@@ -161,9 +161,11 @@ public class LearningProcess {
 	 * @throws NoSuchFieldException
 	 * @throws InvalidTheoryException
 	 */
-	public static IAction makeDecision(Task task, IState prevState, IAction prevAction)
+	public static Decision makeDecision(Task task, IState prevState, IAction prevAction)
 			throws InvalidTheoryException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException,
 			MalformedGoalException, IOException {
+		Decision decision = new Decision();
+
 		long starttime = System.nanoTime();
 		// 1 generate current state
 		IState newState = null;
@@ -185,12 +187,13 @@ public class LearningProcess {
 			starttime = System.nanoTime();
 			// calc reward
 			double reward = calcReward(task);
+			decision.setReward(reward);
 			System.out.println("Time calc reward : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
+			System.out.println("[Decision] Reward from action " + prevAction + " is : " + reward);
 
 			// learn
 			starttime = System.nanoTime();
 			learning.learn(prevState, prevAction, reward, newState);
-			System.out.println("[Decision] Reward from action " + prevAction + " is : " + reward);
 			System.out.println("Time apply reward : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
 			if (learning instanceof QLearning) {
@@ -203,11 +206,12 @@ public class LearningProcess {
 		// 3 choose action
 		starttime = System.nanoTime();
 		IAction action = learning.step(newState);
+		decision.setAction(action);
 		System.out.println("Time taking action : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
 		System.out.println("[Decision] Action decided : " + action);
 
-		return action;
+		return decision;
 	}
 
 	/**
@@ -309,10 +313,9 @@ public class LearningProcess {
 
 		ArrayList<IValue> values = new ArrayList<>();
 		for (Node node : feedbacks) {
-			MindMathAction action = new MindMathAction(node.getFeedbackId(), s, decision.getId());
-			action.setLeaf(decision.getId());
-
 			double defaultWeight = decision.getChild(node).getEdge().getValue().getAsDouble();
+			MindMathAction action = new MindMathAction(node.getFeedbackId(), s, decision.getId(), defaultWeight);
+
 			IValue qvalue = new QValue(action, defaultWeight * LearningProcess.BASE_QVALUE_SCORESUM_INIT);
 
 			values.add(qvalue);
