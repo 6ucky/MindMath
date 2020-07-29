@@ -536,7 +536,7 @@ public class LearningProcess {
 	private static List<String> getFTFeedbacks(Task task) {
 		List<String> feedbacks = new ArrayList<>();
 
-		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(task.useTestLRS());
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(task.isUsingTestLRS());
 
 		// Filter applied : same learner and same task family
 		HashMap<String, Object> scopes = new HashMap<>();

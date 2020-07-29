@@ -205,7 +205,7 @@ public class Task extends AbstractJsonData implements Serializable {
 		return isTest;
 	}
 
-	public boolean useTestLRS() {
+	public boolean isUsingTestLRS() {
 		return this.useTestLRS;
 	}
 }

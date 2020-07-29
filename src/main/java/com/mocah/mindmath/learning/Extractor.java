@@ -149,7 +149,7 @@ public class Extractor {
 	 * @return
 	 */
 	protected static String getNbSolveTry(Task task) {
-		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(task.useTestLRS());
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(task.isUsingTestLRS());
 
 		// Filter applied : same learner and same task family -> only answers (not help)
 		HashMap<String, Object> scopes = new HashMap<>();
@@ -234,7 +234,7 @@ public class Extractor {
 
 		// "Stabilité de l'erreur-type élève: (Nbre de l'erreur-type) / (Nbre de fois où
 		// l'erreur-type pouvait apparaître)"
-		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(task.useTestLRS());
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(task.isUsingTestLRS());
 
 		// Filter applied : same learner and same task family -> only incorrect answers
 		// (not help)
@@ -311,7 +311,7 @@ public class Extractor {
 		// "Stabilité d'une erreur-type chez tous les élèves au sein d'une famille de
 		// tâche: (Nbre de l'erreur-type) / (Nbre de fois où l'erreur-type pouvait
 		// apparaître)"
-		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(task.useTestLRS());
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(task.isUsingTestLRS());
 
 		// Filter applied : same task family -> only incorrect answers (not help)
 		HashMap<String, Object> scopes = new HashMap<>();
