@@ -1,13 +1,15 @@
 open module com.mocah.mindmath.datasimulation {
 	exports com.mocah.mindmath.datasimulation.attributes;
-	exports com.mocah.mindmath.datasimulation.attributes.constraints.in;
 	exports com.mocah.mindmath.datasimulation.attributes.constraints.between;
+	exports com.mocah.mindmath.datasimulation.attributes.constraints.in;
+
+	exports com.mocah.mindmath.datasimulation.profiles;
 
 	requires java.desktop;
 	requires com.google.gson;
 	requires com.google.common;
 
 	// test requirements
-	requires org.junit.jupiter.api;
+//	requires org.junit.jupiter.api;
 	requires java.net.http;
 }

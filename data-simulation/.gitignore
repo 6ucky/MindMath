@@ -3,6 +3,7 @@
 #
 
 simulated/*
+*.ods#
 
 #
 # Default excludes
