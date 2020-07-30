@@ -191,12 +191,12 @@ public class Taskcontroller {
 				decision = LearningProcess.makeDecision(task);
 			}
 		} catch (InvalidTheoryException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			// Thus mean here that content of pl file isn't valid
 
 			e.printStackTrace();
 		} catch (NoSuchFieldException | NoSuchMethodException | MalformedGoalException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			// Thus mean here that there should be an error with a node in json tree
 
 			// NoSuchFieldException -> in case of Task/Sensor/Param source type when the
@@ -209,7 +209,7 @@ public class Taskcontroller {
 
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 
 			// Thus mean that a method called in com.mocah.mindmath.learning.Extractor
 			// thrown an error -> method should be updated
@@ -358,13 +358,12 @@ public class Taskcontroller {
 		StringBuilder res = new StringBuilder();
 
 		for (IState state : qValues.keySet()) {
-			StringBuilder line = new StringBuilder();
-			line.append(state);
+			StringBuilder line = new StringBuilder(state.toString());
 			line.append(";");
 
 			for (IValue value : qValues.get(state)) {
 				line.append(value.myAction());
-				line.append("鈫�");
+				line.append("→");
 				line.append(value.getValue());
 				line.append(";");
 			}

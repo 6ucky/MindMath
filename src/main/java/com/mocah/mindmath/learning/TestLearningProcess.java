@@ -144,7 +144,7 @@ public class TestLearningProcess {
 
 			for (IValue value : qValues.get(state)) {
 				line.append(value.myAction());
-				line.append("鈫�");
+				line.append("→");
 				line.append(value.getValue());
 				line.append(";");
 			}
@@ -377,22 +377,22 @@ public class TestLearningProcess {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		} catch (InvalidTheoryException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		} catch (MalformedGoalException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		} catch (NoSolutionException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		} catch (NoMoreSolutionException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
 
@@ -402,7 +402,7 @@ public class TestLearningProcess {
 			System.out.println(t.getFieldValue("task"));
 			System.out.println(t.getFieldValue("none"));
 		} catch (NoSuchFieldException | SecurityException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
 
@@ -445,10 +445,10 @@ public class TestLearningProcess {
 //			// System.out.println(resultsStr);
 //			System.out.println(statements.size());
 //		} catch (IOException e) {
-//			// TODO Bloc catch g茅n茅r茅 automatiquement
+//			// TODO Bloc catch généré automatiquement
 //			e.printStackTrace();
 //		} catch (JsonParserCustomException e) {
-//			// TODO Bloc catch g茅n茅r茅 automatiquement
+//			// TODO Bloc catch généré automatiquement
 //			e.printStackTrace();
 //		}
 
@@ -460,7 +460,7 @@ public class TestLearningProcess {
 		} catch (JsonParserCustomException | InvalidTheoryException | MalformedGoalException | NoSuchFieldException
 				| SecurityException | IOException | NoSuchMethodException | IllegalArgumentException
 				| InvocationTargetException | NullPointerException e) {
-			// TODO Bloc catch g茅n茅r茅 automatiquement
+			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
 
@@ -574,52 +574,44 @@ public class TestLearningProcess {
 		}
 
 		Map<IState, ArrayList<IValue>> qValues = qLearning.getQValues();
-		String res = "";
+		StringBuilder res = new StringBuilder();
 
 		for (IState state : testEnv.getStates()) {
-			String line = state + ";";
+			StringBuilder line = new StringBuilder(state.toString());
+			line.append(";");
 
 			for (IValue value : qValues.get(state)) {
-				line += value.myAction() + "鈫�" + value.getValue() + ";";
+				line.append(value.myAction());
+				line.append("→");
+				line.append(value.getValue());
+				line.append(";");
 			}
 
-			res += "\n" + line;
+			res.append("\n");
+			res.append(line);
 		}
 
-		System.out.println(res);
+		System.out.println(res.toString());
 
 		qLearning.setExplorationPolicy(new Greedy());
 		testEnv.reset();
 		IState state = testEnv.getCurrentState();
-		String str = "";
+		StringBuilder str = new StringBuilder();
 		int reward = 0;
 		while (testEnv.getCurrentState().getType() != TypeEtat.Goal) {
 			IAction action = qLearning.step(state);
 			reward += testEnv.step((GrilleAction) action);
 
-			str += state + "鈫�";
+			str.append(state);
+			str.append("→");
 			state = testEnv.getCurrentState();
 
 //			System.out.println(str);
 		}
 
-		str += state.toString();
+		str.append(state.toString());
 
-		System.out.println(str);
+		System.out.println(str.toString());
 		System.out.println(reward);
-	}
-
-	/**
-	 * Init the learning process based on data given
-	 *
-	 * <ul>
-	 * <li>Should get an existing learning (or at least learned values)
-	 * <li>Instantiate a learning
-	 * <li>Populate with default data (for empty ones) -> ie compute states from
-	 * decision tree
-	 * </ul>
-	 */
-	public void initLearning() {
-		// TODO
 	}
 }
