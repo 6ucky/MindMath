@@ -112,7 +112,7 @@ public class Feedbackcontroller {
 		addmotivationrepo(license_num, LocalRouteRepository.readFileasString(LocalRoute.MotivationRoute));
 		addglossairerepo(license_num, LocalRouteRepository.readFileasString(LocalRoute.GlossaireRoute));
 
-		String feedbackID = "1.1.GNC"; // TEST name
+		String feedbackID = "1.1.GNC.0"; // TEST name
 		String leaf = "11";
 		String error_code = "1";
 

@@ -2,6 +2,136 @@
     "motivationlist":
     [
         {
+            "motivation_leaf": "1",
+            "activityMode": "",
+            "motivation_data": "Félicitation!"
+        },
+        {
+            "motivation_leaf": "1",
+            "activityMode": "",
+            "motivation_data": "Bien!"
+        },
+        {
+            "motivation_leaf": "1",
+            "activityMode": "2",
+            "motivation_data": "C’est bien, poursuis dans ta lancée !"
+        },
+        {
+            "motivation_leaf": "1",
+            "activityMode": "2",
+            "motivation_data": "Plus rien ne t’arrête !"
+        },
+        {
+            "motivation_leaf": "1",
+            "activityMode": "",
+            "motivation_data": "C’est encourageant, poursuis ainsi."
+        },
+        {
+            "motivation_leaf": "1",
+            "activityMode": "2",
+            "motivation_data": "C’est bien ! Tu as su, à nouveau, mettre en place un raisonnement pertinent."
+        },
+        {
+            "motivation_leaf": "2",
+            "activityMode": "",
+            "motivation_data": "Félicitation!"
+        },
+        {
+            "motivation_leaf": "2",
+            "activityMode": "",
+            "motivation_data": "Bien!"
+        },
+        {
+            "motivation_leaf": "2",
+            "activityMode": "2",
+            "motivation_data": "C’est bien, poursuis dans ta lancée !"
+        },
+        {
+            "motivation_leaf": "2",
+            "activityMode": "2",
+            "motivation_data": "Plus rien ne t’arrête !"
+        },
+        {
+            "motivation_leaf": "2",
+            "activityMode": "",
+            "motivation_data": "C’est encourageant, poursuis ainsi."
+        },
+        {
+            "motivation_leaf": "2",
+            "activityMode": "2",
+            "motivation_data": "C’est bien ! Tu as su, à nouveau, mettre en place un raisonnement pertinent."
+        },
+        {
+            "motivation_leaf": "3",
+            "activityMode": "",
+            "motivation_data": "Félicitation!"
+        },
+        {
+            "motivation_leaf": "3",
+            "activityMode": "",
+            "motivation_data": "Bien!"
+        },
+        {
+            "motivation_leaf": "3",
+            "activityMode": "2",
+            "motivation_data": "C’est bien, poursuis dans ta lancée !"
+        },
+        {
+            "motivation_leaf": "3",
+            "activityMode": "2",
+            "motivation_data": "Plus rien ne t’arrête !"
+        },
+        {
+            "motivation_leaf": "3",
+            "activityMode": "",
+            "motivation_data": "C’est encourageant, poursuis ainsi."
+        },
+        {
+            "motivation_leaf": "3",
+            "activityMode": "2",
+            "motivation_data": "C’est bien ! Tu as su, à nouveau, mettre en place un raisonnement pertinent."
+        },
+        {
+            "motivation_leaf": "4",
+            "activityMode": "",
+            "motivation_data": "Dommage, soit attentif aux conseils suivants :"
+        },
+        {
+            "motivation_leaf": "4",
+            "activityMode": "1",
+            "motivation_data": "Mince, ça peut arriver. Même aux meilleurs !"
+        },
+        {
+            "motivation_leaf": "4",
+            "activityMode": "2",
+            "motivation_data": "Ne baisse pas les bras. "
+        },
+        {
+            "motivation_leaf": "4",
+            "activityMode": "",
+            "motivation_data": "Dommage !"
+        },
+        {
+            "motivation_leaf": "4",
+            "activityMode": "",
+            "motivation_data": "Ne baisse pas les bras, prend ton temps et lis bien les conseils suivants :"
+        },
+        {
+            "motivation_leaf": "4",
+            "activityMode": "",
+            "motivation_data": "Attention !"
+        },
+        {
+            "motivation_leaf": "5",
+            "activityMode": "",
+            "motivation_data": "Fait attention aux conseils suivants :"
+        },
+        {
+            "motivation_leaf": "5",
+            "activityMode": "",
+            "motivation_data": "Des conseils pour t’aider à réaliser la tâche :"
+        },
+        {
             "motivation_leaf": "6",
             "activityMode": "",
             "motivation_data": "Dommage, soit attentif aux conseils suivants :"
@@ -32,12 +162,32 @@
             "motivation_data": "Attention !"
         },
         {
+            "motivation_leaf": "7",
+            "activityMode": "",
+            "motivation_data": "Fait attention aux conseils suivants :"
+        },
+        {
+            "motivation_leaf": "7",
+            "activityMode": "",
+            "motivation_data": "Des conseils pour t’aider à réaliser la tâche :"
+        },
+        {
             "motivation_leaf": "8",
             "activityMode": "",
             "motivation_data": "Fait attention aux conseils suivants :"
         },
         {
             "motivation_leaf": "8",
+            "activityMode": "",
+            "motivation_data": "Des conseils pour t’aider à réaliser la tâche :"
+        },
+        {
+            "motivation_leaf": "9",
+            "activityMode": "",
+            "motivation_data": "Fait attention aux conseils suivants :"
+        },
+        {
+            "motivation_leaf": "9",
             "activityMode": "",
             "motivation_data": "Des conseils pour t’aider à réaliser la tâche :"
         },

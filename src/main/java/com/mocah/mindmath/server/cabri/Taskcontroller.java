@@ -242,7 +242,7 @@ public class Taskcontroller {
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(),
 					task.getFeedback(), "{motivation here}", "{content url here}", "image", glossaireMap);
 		} else {
-			feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
+			feedbackjson = generateFeedback("1.1.GNC.0", "11", "1", task);
 		}
 
 		// TODO set statement success and completion
@@ -290,7 +290,7 @@ public class Taskcontroller {
 		Feedbackjson feedbackjson;
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		if (sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER)) {
-			feedbackjson = generateFeedback("3.0", "6", "1", task);
+			feedbackjson = generateFeedback("3.0.0.XE", "6", "1", task);
 		} else {
 			String feedbackID_test = jsonparser.getValueforDB(jsonparser.getObject(), "feedbackID_test");
 			String motivation_leaf_test = jsonparser.getValueforDB(jsonparser.getObject(), "motivation_leaf_test");
@@ -300,7 +300,7 @@ public class Taskcontroller {
 					&& Arrays.asList(error_list).contains(erreurID_test)) {
 				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task);
 			} else {
-				feedbackjson = generateFeedback("1.1.GNC", "11", "1", task);
+				feedbackjson = generateFeedback("1.1.GNC.0", "11", "1", task);
 			}
 		}
 		boolean statement_success = true;
