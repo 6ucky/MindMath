@@ -210,49 +210,84 @@ public class LearningProcess {
 		if (task.isExpertMode()) {
 			// Choose action based on decision tree weights
 			List<IAction> actions = learning.getPossibleActions(newState);
-
 			int actionsCount = actions.size();
 
-			List<Double> actionProb = new ArrayList<>();
-			double sum = 0;
-
+			List<IAction> mostWeightedActions = new ArrayList<>();
+			// Get actions(s) with max weight
+			double bestWeight = Double.NEGATIVE_INFINITY;
 			for (int i = 0; i < actionsCount; i++) {
 				if (actions.get(i) instanceof MindMathAction) {
-					actionProb.add(((MindMathAction) actions.get(i)).getInitalWeight());
-					sum += actionProb.get(i);
+					double actionWeight = ((MindMathAction) actions.get(i)).getInitalWeight();
+
+					if (actionWeight > bestWeight) {
+						// We find a better weight, clear previous actions stored and add to list
+						mostWeightedActions.clear();
+						bestWeight = actionWeight;
+
+						mostWeightedActions.add(actions.get(i));
+					} else if (actionWeight == bestWeight) {
+						// We find another action with current best weight, add to list
+						mostWeightedActions.add(actions.get(i));
+					} else {
+						// Action have lower weight, ignore
+					}
 				}
 			}
 
-			if (sum > 0) {
-				for (int i = 0; i < actionProb.size(); i++) {
-					actionProb.set(i, actionProb.get(i) / sum);
-				}
-			}
-
-			// Begin discrete prob
 			Random rand = new Random();
-			double d = rand.nextDouble();
-
-			double[] cumprob = new double[actionProb.size() + 1];
-			cumprob[0] = 0;
-			double total = 0;
-			for (int i = 0; i < actionProb.size(); i++) {
-				total += actionProb.get(i);
-				cumprob[i + 1] = total;
-			}
-
-			for (int i = 0; i < actionProb.size(); i++) {
-				if (d > cumprob[i] && d <= cumprob[i + 1]) {
-					action = actions.get(i);
-					break;
-				}
-			}
-			// End discrete prob
+			// Take an action between most weighted actions
+			int i = rand.nextInt(mostWeightedActions.size());
+			action = mostWeightedActions.get(i);
 
 			if (action == null) {
-				int i = rand.nextInt(actionsCount);
+				// If no action chosen, choose a random action from initial list
+				i = rand.nextInt(actionsCount);
 				action = actions.get(i);
 			}
+
+//			// Begin make actions weights being probabilities sum at 1
+//			List<Double> actionProb = new ArrayList<>();
+//			double sum = 0;
+//
+//			for (int i = 0; i < actionsCount; i++) {
+//				if (actions.get(i) instanceof MindMathAction) {
+//					actionProb.add(((MindMathAction) actions.get(i)).getInitalWeight());
+//					sum += actionProb.get(i);
+//				}
+//			}
+//
+//			if (sum > 0) {
+//				for (int i = 0; i < actionProb.size(); i++) {
+//					actionProb.set(i, actionProb.get(i) / sum);
+//				}
+//			}
+//			// End
+//
+//			// Begin discrete prob
+//			Random rand = new Random();
+//			double d = rand.nextDouble();
+//
+//			double[] cumprob = new double[actionProb.size() + 1];
+//			cumprob[0] = 0;
+//			double total = 0;
+//			for (int i = 0; i < actionProb.size(); i++) {
+//				total += actionProb.get(i);
+//				cumprob[i + 1] = total;
+//			}
+//
+//			for (int i = 0; i < actionProb.size(); i++) {
+//				if (d > cumprob[i] && d <= cumprob[i + 1]) {
+//					action = actions.get(i);
+//					break;
+//				}
+//			}
+//			// End discrete prob
+//
+//			if (action == null) {
+//				//If no action chosen, choose a random action from initial list
+//				int i = rand.nextInt(actionsCount);
+//				action = actions.get(i);
+//			}
 		} else {
 			// Choose action based on policy
 			action = learning.step(newState);
