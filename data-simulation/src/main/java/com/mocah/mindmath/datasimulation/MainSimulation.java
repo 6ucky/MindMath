@@ -48,6 +48,7 @@ public class MainSimulation {
 
 		String finalQTable = null;
 
+		int learnerIteration = 1;
 		for (Entry<Class<? extends IProfile>, Integer> entry : AppConfig.learners.entrySet()) {
 			Constructor<?> ctor = entry.getKey().getConstructor();
 			AbstractProfile profile = (AbstractProfile) ctor.newInstance();
@@ -57,9 +58,9 @@ public class MainSimulation {
 				profile.generateLearnerID();
 				profile.initLearner();
 
-				SimulatedDataLearner sdLearner = new SimulatedDataLearner(currentLearnerIteration,
+				SimulatedDataLearner sdLearner = new SimulatedDataLearner(learnerIteration, profile,
 						profile.getLearnerID());
-				container.put(profile.getLearnerID(), sdLearner);
+				container.getDatasets().put(profile.getLearnerID(), sdLearner);
 
 				int currentIteration = 1;
 				FeedbackData feedbackData = null;
@@ -142,7 +143,7 @@ public class MainSimulation {
 					feedbackData = AppConfig.getGson().fromJson(feedback, FeedbackData.class);
 
 					SimulatedData simData = new SimulatedData(currentIteration, data, feedbackData);
-					sdLearner.add(simData);
+					sdLearner.getDataset().add(simData);
 
 					int fdbkInfoWeight = -1;
 					if (profile.isReadingFeedback() && feedbackData != null) {
@@ -167,6 +168,8 @@ public class MainSimulation {
 
 				currentLearnerIteration++;
 			}
+
+			learnerIteration++;
 		}
 
 		container.setFinalCSV(finalQTable);

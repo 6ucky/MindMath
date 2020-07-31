@@ -5,12 +5,14 @@ package com.mocah.mindmath.datasimulation;
 
 import java.util.Map;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mocah.mindmath.datasimulation.json.CabriDataSerializer;
 import com.mocah.mindmath.datasimulation.profiles.IProfile;
 import com.mocah.mindmath.datasimulation.profiles.ProfileA;
+import com.mocah.mindmath.datasimulation.profiles.ProfileB;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -26,18 +28,19 @@ public class AppConfig {
 	/**
 	 * Number of learners per profile
 	 */
-	public static final Map<Class<? extends IProfile>, Integer> learners = ImmutableMap.of(ProfileA.class, 5);
+	public static final Map<Class<? extends IProfile>, Integer> learners = ImmutableMap.of(ProfileA.class, 1,
+			ProfileB.class, 1);
 	public static final boolean useRandomProfileOrder = false;
 	/**
 	 * Number of iteration each learner id will be used. ie: Number of json
 	 * simulated and sent
 	 */
-	public static final int MAX_ITERATION = 20;
+	public static final int MAX_ITERATION = 10;
 	public static final String learnerBase = "Simulated_";
 
 	public static int getWeightInfo(String feedbackId) {
 		// temp
-		switch (feedbackId) {
+		switch (Strings.nullToEmpty(feedbackId)) {
 		default:
 			return 0;
 
@@ -74,12 +77,19 @@ public class AppConfig {
 	public static final double RECON_ERROR_PROB = 0.85;
 
 	private static Gson gson;
+	private static final boolean USE_PRETTY_JSON = true;
 
 	public static Gson getGson() {
 		if (gson != null)
 			return gson;
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
+
+		if (USE_PRETTY_JSON) {
+			gsonBuilder.setPrettyPrinting();
+		}
+
+		gsonBuilder.excludeFieldsWithoutExposeAnnotation();
 		gsonBuilder.registerTypeAdapter(CabriData.class, new CabriDataSerializer());
 		gson = gsonBuilder.create();
 

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.gson.annotations.Expose;
 import com.mocah.mindmath.datasimulation.AppConfig;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.ActivityModeEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.DomainEnum;
@@ -19,6 +20,9 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.in.TaskFamilyEnu
  *
  */
 public abstract class AbstractProfile implements IProfile {
+	@Expose
+	protected String profileName;
+
 	private boolean learnerInited;
 	private String learnerID;
 
@@ -79,12 +83,14 @@ public abstract class AbstractProfile implements IProfile {
 	 */
 	public AbstractProfile() {
 		this.learnerInited = false;
+		this.profileName = this.getClass().getName();
 	}
 
 	/**
 	 * @param learnerID
 	 */
 	public AbstractProfile(String learnerID) {
+		this();
 		this.learnerID = learnerID;
 		this.learnerInited = true;
 	}
