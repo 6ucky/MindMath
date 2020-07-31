@@ -57,8 +57,13 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	private boolean isTest = false;
 
+	// Cabri defines the file expert mode, if true, query decision tree, if false, qlearning.
 	private boolean expertMode = false;
+	
+	// test store for LRS
 	private boolean useTestLRS = false;
+	
+	
 	private boolean verbose = false;
 
 	// empty object

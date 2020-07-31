@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.apache.commons.lang3.BooleanUtils;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.ParserFactory;
@@ -119,7 +120,7 @@ public class JsonParserFactory implements ParserFactory<Task> {
 	@Override
 	public Task parse(String data, CabriVersion version) throws JsonParserCustomException {
 		
-		Task tasks;
+		Task tasks = new Task();
 
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		JsonParserParams paramsparser = new JsonParserParams(data);
@@ -146,9 +147,6 @@ public class JsonParserFactory implements ParserFactory<Task> {
 			tasks.setExpertMode(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_EXPERT_MODE)));
 			tasks.setUsingTestLRS(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_TEST_LRS)));
 			tasks.setVerbose(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_VERBOSE)));
-		
-		default:
-			tasks = new Task();
 		}
 		return tasks;
 	}
