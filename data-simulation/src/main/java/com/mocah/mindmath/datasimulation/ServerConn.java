@@ -72,12 +72,12 @@ public class ServerConn {
 	}
 
 	public static String postData(CabriData data) {
-		String dataJson = Config.getGson().toJson(data);
+		String dataJson = AppConfig.getGson().toJson(data);
 		return postData(dataJson);
 	}
 
 	public static String postData(String dataJson) {
-		HttpRequest request = createRequest(dataJson, Config.USE_PROD_SERV);
+		HttpRequest request = createRequest(dataJson, AppConfig.USE_PROD_SERV);
 
 		HttpResponse<String> response = sendRequest(request);
 
@@ -85,7 +85,7 @@ public class ServerConn {
 	}
 
 	public static String getQtable() {
-		HttpRequest request = createRequest(null, Config.USE_PROD_SERV);
+		HttpRequest request = createRequest(null, AppConfig.USE_PROD_SERV);
 
 		HttpResponse<String> response = sendRequest(request);
 

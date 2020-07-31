@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import com.google.gson.Gson;
-import com.mocah.mindmath.datasimulation.Config;
+import com.mocah.mindmath.datasimulation.AppConfig;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -24,7 +24,7 @@ public class DataExporter {
 	}
 
 	public void export() {
-		Gson gson = Config.getGson();
+		Gson gson = AppConfig.getGson();
 
 		String pathStr = "simulated" + File.separator + toExport.getDate().getTime() + File.separator;
 
@@ -45,6 +45,10 @@ public class DataExporter {
 	}
 
 	private void writeInFile(File f, String content) {
+		if (content == null) {
+			content = "";
+		}
+
 		BufferedWriter writer = null;
 		try {
 			if (f.getParentFile() != null) {
