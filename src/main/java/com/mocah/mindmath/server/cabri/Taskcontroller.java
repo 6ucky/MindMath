@@ -176,16 +176,21 @@ public class Taskcontroller {
 			if (prevTask != null && !prevTask.isExpertMode()) {
 				starttime = System.nanoTime();
 				IAction prevAction = prevTask.getDecisionAction();
-				IState prevState = prevAction.getState();
-				System.out.println(
-						"Time retrieve action & state : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
+				if (prevAction != null) {
+					IState prevState = prevAction.getState();
+					System.out.println("Time retrieve action & state : "
+							+ ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
-				decision = LearningProcess.makeDecision(task, prevState, prevAction);
+					decision = LearningProcess.makeDecision(task, prevState, prevAction);
 
-				if (decision.hasLearn()) {
-					// Save the prev task action's reward to the prev task
-					prevTask.setReward(decision.getReward());
-					getTaskrepository().save(prevTask);
+					if (decision.hasLearn()) {
+						// Save the prev task action's reward to the prev task
+						prevTask.setReward(decision.getReward());
+						getTaskrepository().save(prevTask);
+					}
+				} else {
+					// An error happened in previous iteration and prevAction is null
+					decision = LearningProcess.makeDecision(task);
 				}
 			} else {
 				decision = LearningProcess.makeDecision(task);
