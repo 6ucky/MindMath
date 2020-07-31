@@ -160,6 +160,9 @@ public class Taskcontroller {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, CabriVersion.v1_0);
 
+		// TODO remove or comment in production, force using test LRS
+		task.setUsingTestLRS(true);
+
 		// TODO avoid consider gaming with system tasks
 
 		long starttime = System.nanoTime();

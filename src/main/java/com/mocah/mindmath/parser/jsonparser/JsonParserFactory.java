@@ -146,9 +146,6 @@ public class JsonParserFactory implements ParserFactory<Task> {
 			tasks.setVerbose(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_VERBOSE)));
 		}
 
-		// TODO remove or comment in production, force using test LRS
-		tasks.setUsingTestLRS(true);
-
 		return tasks;
 	}
 
