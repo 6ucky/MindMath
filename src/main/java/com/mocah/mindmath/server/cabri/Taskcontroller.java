@@ -303,6 +303,7 @@ public class Taskcontroller {
 				feedbackjson = generateFeedback("1.1.GNC.0", "11", "1", task);
 			}
 		}
+
 		boolean statement_success = true;
 		boolean statement_completion = true;
 		XAPIgenerator generator = new XAPIgenerator();
