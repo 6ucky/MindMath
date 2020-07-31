@@ -1,10 +1,7 @@
 package com.mocah.mindmath.parser.jsonparser;
 
-import java.util.Arrays;
-
 import org.apache.commons.lang3.BooleanUtils;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.ParserFactory;
@@ -119,15 +116,15 @@ public class JsonParserFactory implements ParserFactory<Task> {
 
 	@Override
 	public Task parse(String data, CabriVersion version) throws JsonParserCustomException {
-		
+
 		Task tasks = new Task();
 
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		JsonParserParams paramsparser = new JsonParserParams(data);
 		JsonParserLogs logsparser = new JsonParserLogs(data);
-		
-		switch(version) {
-		
+
+		switch (version) {
+
 		case v1_0:
 			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
 					paramsparser.getParams(), logsparser.getLogs(),
@@ -137,7 +134,7 @@ public class JsonParserFactory implements ParserFactory<Task> {
 			tasks.setExpertMode(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_EXPERT_MODE)));
 			tasks.setUsingTestLRS(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_TEST_LRS)));
 			tasks.setVerbose(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_VERBOSE)));
-		
+
 		case test:
 			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
 					paramsparser.getParams(), logsparser.getLogs(),
@@ -148,6 +145,10 @@ public class JsonParserFactory implements ParserFactory<Task> {
 			tasks.setUsingTestLRS(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_TEST_LRS)));
 			tasks.setVerbose(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_VERBOSE)));
 		}
+
+		// TODO remove or comment in production, force using test LRS
+		tasks.setUsingTestLRS(true);
+
 		return tasks;
 	}
 

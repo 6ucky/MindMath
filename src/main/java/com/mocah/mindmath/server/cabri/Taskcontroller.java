@@ -257,7 +257,7 @@ public class Taskcontroller {
 		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson)
 				.generateStatement(task);
 		// TODO validate post statement to LRS
-		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(task.isUsingTestLRS());
 		ll.postStatement(statement);
 
 //		return new ResponseEntity<>("feedback:" + gson.toJson(feedbackjson) + "\nstatement:" + gson.toJson(statement),
@@ -314,7 +314,7 @@ public class Taskcontroller {
 		XAPIgenerator generator = new XAPIgenerator();
 		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson)
 				.generateStatement(task);
-		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(task.isUsingTestLRS());
 		ll.postStatement(statement);
 
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
