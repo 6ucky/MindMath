@@ -48,6 +48,7 @@ public class ProfileC extends AbstractProfile {
 		this.originDeltas = ImmutableMap.copyOf(this.deltas);
 		this.firstIncreaseProb = 1.0;
 		this.defaultDelta = 0.1;
+		this.percentMode = false;
 
 		this.iteration = 0;
 
@@ -55,8 +56,8 @@ public class ProfileC extends AbstractProfile {
 	}
 
 	@Override
-	public void calcNewSuccessProb(int fdbkInfoWeight) {
-		super.calcNewSuccessProb(fdbkInfoWeight);
+	public void learnFromExercise() {
+		super.learnFromExercise();
 
 		// Apply Verhulst's logistic function
 		// https://fr.wikipedia.org/wiki/Mod%C3%A8le_de_Verhulst#R%C3%A9solution_en_temps_continu

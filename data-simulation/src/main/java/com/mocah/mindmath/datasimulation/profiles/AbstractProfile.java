@@ -56,6 +56,7 @@ public abstract class AbstractProfile implements IProfile {
 	 * Default delta to use when there is no corresponding fdbkInfoWeight
 	 */
 	protected double defaultDelta;
+	protected boolean percentMode;
 	/**
 	 * When {@code successProb = 0}, calc of new prob will use
 	 * {@code firstIncreaseProb} instead.<br>
@@ -117,6 +118,7 @@ public abstract class AbstractProfile implements IProfile {
 		this.deltas = Maps.newHashMap(ImmutableMap.of(0, 0.01, 1, 0.02, 2, 0.04, 3, 0.08, 4, 0.16));
 		this.defaultDelta = 0.1;
 		this.firstIncreaseProb = 0.0;
+		this.percentMode = true;
 		this.exerciseDelta = 0.0;
 
 		this.askHelpProb = 0.0;
@@ -188,10 +190,14 @@ public abstract class AbstractProfile implements IProfile {
 	@Override
 	public void calcNewSuccessProb(int fdbkInfoWeight) {
 		double prob = 0.0;
-		if (successProb == 0 && firstIncreaseProb > 0) {
-			prob = firstIncreaseProb * deltas.getOrDefault(fdbkInfoWeight, defaultDelta);
+		if (this.percentMode) {
+			if (successProb == 0 && firstIncreaseProb > 0) {
+				prob = firstIncreaseProb * deltas.getOrDefault(fdbkInfoWeight, defaultDelta);
+			} else {
+				prob = successProb + successProb * deltas.getOrDefault(fdbkInfoWeight, defaultDelta);
+			}
 		} else {
-			prob = successProb + successProb * deltas.getOrDefault(fdbkInfoWeight, defaultDelta);
+			prob = successProb + deltas.getOrDefault(fdbkInfoWeight, defaultDelta);
 		}
 
 		if (prob > 1) {

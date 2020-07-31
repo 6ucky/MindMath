@@ -30,15 +30,13 @@ public class ProfileJ extends AbstractProfile {
 		super.initLearner();
 
 		// Feedback consideration
-		this.readingFeedback = true;
-		this.waitingInformative = true;
-		this.minWheightInfo = 3;
+		this.readingFeedback = false;
 
 		// Exercise Success
 		this.baseSuccessProb = 0.0;
-		this.deltas = Maps.newHashMap(ImmutableMap.of(0, 0.01, 1, 0.01, 2, 0.01, 3, 0.75, 4, 1.0));
+		this.deltas = Maps.newHashMap(ImmutableMap.of(0, 0.025, 1, 0.05, 2, 0.10, 3, 0.20, 4, 0.40));
 		this.firstIncreaseProb = 1.0;
-		this.defaultDelta = 0.0;
+		this.defaultDelta = 0.02;
 
 		this.askHelpProb = 0.0;
 	}

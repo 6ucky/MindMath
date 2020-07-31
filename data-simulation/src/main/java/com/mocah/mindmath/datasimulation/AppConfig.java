@@ -26,9 +26,11 @@ public class AppConfig {
 	/**
 	 * Number of learners per profile
 	 */
-	public static final Map<Class<? extends IProfile>, Integer> learners = ImmutableMap.of(ProfileA.class, 2);
+	public static final Map<Class<? extends IProfile>, Integer> learners = ImmutableMap.of(ProfileA.class, 5);
+	public static final boolean useRandomProfileOrder = false;
 	/**
-	 * Number of iteration each learner id will be used
+	 * Number of iteration each learner id will be used. ie: Number of json
+	 * simulated and sent
 	 */
 	public static final int MAX_ITERATION = 20;
 	public static final String learnerBase = "Simulated_";
@@ -69,7 +71,7 @@ public class AppConfig {
 	/**
 	 * Probability if learner error was recognize
 	 */
-	public static final double RECON_ERROR_PROB = 0.95;
+	public static final double RECON_ERROR_PROB = 0.85;
 
 	private static Gson gson;
 
