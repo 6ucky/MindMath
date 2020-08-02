@@ -80,6 +80,11 @@ dependencies {
 	
 	springAutoConfig 'org.springframework.boot:spring-boot-autoconfigure'
 	
+	implementation ('org.springframework.data:spring-data-redis:2.3.2.RELEASE') {
+		exclude group: 'io.lettuce'
+	}
+	implementation 'redis.clients:jedis:3.3.0'
+	
 	//implementation('org.springframework.boot:spring-boot-starter-test') {
 	//	exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	//}

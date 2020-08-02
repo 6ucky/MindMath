@@ -1,6 +1,7 @@
 package com.mocah.mindmath.server.cabri;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
@@ -14,6 +15,7 @@ import java.util.Random;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,6 +69,9 @@ public class Taskcontroller {
 
 	@Autowired
 	private Derbyrepository taskrepository;
+	
+	@Autowired
+	private RedisTemplate<String, Serializable> serializableRedisTemplate;
 
 	private static final String license_num = "mocah";
 
@@ -320,6 +325,26 @@ public class Taskcontroller {
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(task.isUsingTestLRS());
 		ll.postStatement(statement);
 
+		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/test/redis", consumes = "application/json")
+	public ResponseEntity<String> addtaskTESTRedis(@RequestHeader("Authorization") String auth, @RequestBody String data)
+			throws JsonParserCustomException, IOException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		
+		ILearning learning = LearningProcess.initLearningProcess();
+		serializableRedisTemplate.opsForValue().set("learning", learning);
+		
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		Task task = jsonparser.parse(data, CabriVersion.test);
+		serializableRedisTemplate.opsForValue().set("task", task);
+		
+		ILearning learningfromRedis = (ILearning) serializableRedisTemplate.opsForValue().get("learning");
+		Task taskfromRedis = (Task) serializableRedisTemplate.opsForValue().get("task");
+		
+		Feedbackjson feedbackjson = generateFeedback("3.0.0.XE", "6", "1", taskfromRedis);
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
 

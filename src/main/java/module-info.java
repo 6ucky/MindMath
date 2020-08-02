@@ -41,6 +41,8 @@ open module com.mocah.mindmath {
 	requires transitive jxapi;
 	requires java.annotation;
 	requires swagger.annotations;
+	requires spring.data.redis;
+	requires jedis;
 
 	// test requirements
 	requires spring.boot.test;
