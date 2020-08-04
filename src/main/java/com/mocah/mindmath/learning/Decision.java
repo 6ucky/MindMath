@@ -3,7 +3,12 @@
  */
 package com.mocah.mindmath.learning;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mocah.mindmath.learning.utils.actions.IAction;
+import com.mocah.mindmath.learning.utils.states.IState;
+import com.mocah.mindmath.learning.utils.values.IValue;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -13,6 +18,8 @@ public class Decision {
 	private IAction action;
 
 	private boolean hasLearn;
+	private IState modifiedState;
+	private ArrayList<IValue> modifiedQvalues;
 	private double reward;
 
 	public Decision() {
@@ -23,6 +30,13 @@ public class Decision {
 	public Decision(IAction action) {
 		this();
 		this.action = action;
+	}
+
+	/**
+	 * @return the action decided
+	 */
+	public IState getState() {
+		return action.getState();
 	}
 
 	/**
@@ -57,6 +71,35 @@ public class Decision {
 	}
 
 	/**
+	 * See {@code setModifiedQvalues()}
+	 *
+	 * @return the state which qvalues were modified by learning
+	 */
+	public IState getModifiedState() {
+		return modifiedState;
+	}
+
+	/**
+	 * See {@code setModifiedQvalues()}
+	 *
+	 * @return the modified qValues by learning
+	 */
+	public ArrayList<IValue> getModifiedQvalues() {
+		return modifiedQvalues;
+	}
+
+	/**
+	 * Generaly, might be called after setting the reward
+	 *
+	 * @param state   the state which qvalues were modified by learning
+	 * @param qvalues the modified qValues by learning
+	 */
+	public void setModifiedQvalues(IState state, List<IValue> qvalues) {
+		this.modifiedState = state;
+		this.modifiedQvalues = new ArrayList<>(qvalues);
+	}
+
+	/**
 	 * @return the reward calc
 	 */
 	public double getReward() {
@@ -64,6 +107,8 @@ public class Decision {
 	}
 
 	/**
+	 * Also call {@code setHasLearn(true)}
+	 *
 	 * @param reward the reward value to define
 	 */
 	public void setReward(double reward) {

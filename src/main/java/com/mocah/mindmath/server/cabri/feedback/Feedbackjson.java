@@ -5,10 +5,15 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.mocah.mindmath.learning.utils.states.IState;
+import com.mocah.mindmath.learning.utils.values.IValue;
 
 public class Feedbackjson implements Serializable {
 	private static final long serialVersionUID = -9041203134380944632L;
@@ -25,7 +30,9 @@ public class Feedbackjson implements Serializable {
 
 	// Verbose fields
 	private String mode;
-	private Double reward = null;
+	private Double reward;
+	private String modifiedState;
+	private Map<String, Double> qvalues;
 
 	// Test Feedback response
 	public Feedbackjson(String id) throws IOException {
@@ -200,5 +207,25 @@ public class Feedbackjson implements Serializable {
 	 */
 	public void setReward(Double reward) {
 		this.reward = reward;
+	}
+
+	public void setModifiedState(IState modifiedState) {
+		this.modifiedState = modifiedState.toString();
+	}
+
+	public String getModifiedState() {
+		return this.modifiedState;
+	}
+
+	public void setModifiedQvalues(List<IValue> modifiedQvalues) {
+		this.qvalues = new TreeMap<>();
+
+		for (IValue iValue : modifiedQvalues) {
+			this.qvalues.put(iValue.myAction().getId(), iValue.getValue());
+		}
+	}
+
+	public Map<String, Double> getModifiedQvalues() {
+		return this.qvalues;
 	}
 }

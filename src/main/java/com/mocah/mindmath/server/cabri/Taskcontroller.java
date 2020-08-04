@@ -69,7 +69,7 @@ public class Taskcontroller {
 
 	@Autowired
 	private Derbyrepository taskrepository;
-	
+
 	@Autowired
 	private RedisTemplate<String, Serializable> serializableRedisTemplate;
 
@@ -283,6 +283,8 @@ public class Taskcontroller {
 			// Set reward value
 			if (decision.hasLearn()) {
 				feedbackjson.setReward(decision.getReward());
+				feedbackjson.setModifiedState(decision.getModifiedState());
+				feedbackjson.setModifiedQvalues(decision.getModifiedQvalues());
 			}
 		}
 
@@ -327,23 +329,23 @@ public class Taskcontroller {
 
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
-	
+
 	@PostMapping(path = "/test/redis", consumes = "application/json")
-	public ResponseEntity<String> addtaskTESTRedis(@RequestHeader("Authorization") String auth, @RequestBody String data)
-			throws JsonParserCustomException, IOException {
+	public ResponseEntity<String> addtaskTESTRedis(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws JsonParserCustomException, IOException {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
-		
+
 		ILearning learning = LearningProcess.initLearningProcess();
 		serializableRedisTemplate.opsForValue().set("learning", learning);
-		
+
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, CabriVersion.test);
 		serializableRedisTemplate.opsForValue().set("task", task);
-		
+
 		ILearning learningfromRedis = (ILearning) serializableRedisTemplate.opsForValue().get("learning");
 		Task taskfromRedis = (Task) serializableRedisTemplate.opsForValue().get("task");
-		
+
 		Feedbackjson feedbackjson = generateFeedback("3.0.0.XE", "6", "1", taskfromRedis);
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}

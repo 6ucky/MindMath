@@ -200,6 +200,7 @@ public class LearningProcess {
 			if (learning instanceof QLearning) {
 				Map<IState, ArrayList<IValue>> trainedValues = ((QLearning) learning).getQValues();
 				ArrayList<IValue> values = trainedValues.get(prevState);
+				decision.setModifiedQvalues(prevState, values);
 				System.out.println("[Decision] qvalues for this state updated " + values);
 			}
 		}
