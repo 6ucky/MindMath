@@ -123,7 +123,7 @@
               }
             ]
           },
-          "nodeid": "mode_activite_1"
+          "nodeid": "mode_activite_A"
         },
         {
           "edge":  {
@@ -142,7 +142,7 @@
       ]
     },
     {
-      "nodeid": "mode_activite_1",
+      "nodeid": "mode_activite_A",
       "nodetype": "state",
       "valuetype": "number",
       "childs": [
@@ -193,7 +193,7 @@
               }
             ]
           },
-          "nodeid": "mode_activite_2"
+          "nodeid": "mode_activite_B"
         },
         {
           "edge": {
@@ -207,12 +207,12 @@
               }
             ]
           },
-          "nodeid": "mode_activite_3"
+          "nodeid": "mode_activite_C"
         }
       ]
     },
     {
-      "nodeid": "mode_activite_2",
+      "nodeid": "mode_activite_B",
       "nodetype": "state",
       "valuetype": "number",
       "childs": [
@@ -228,7 +228,7 @@
               }
             ]
           },
-          "nodeid": "stab_erreur_1"
+          "nodeid": "stab_erreur_A"
         },
         {
           "edge": {
@@ -242,7 +242,7 @@
               }
             ]
           },
-          "nodeid": "stab_erreur_2"
+          "nodeid": "stab_erreur_B"
         },
         {
           "edge": {
@@ -256,12 +256,12 @@
               }
             ]
           },
-          "nodeid": "stab_erreur_3"
+          "nodeid": "stab_erreur_C"
         }
       ]
     },
     {
-      "nodeid": "stab_erreur_1",
+      "nodeid": "stab_erreur_A",
       "nodetype": "state",
       "valuetype": "string",
       "childs": [
@@ -310,7 +310,7 @@
       ]
     },
     {
-      "nodeid": "stab_erreur_2",
+      "nodeid": "stab_erreur_B",
       "nodetype": "state",
       "valuetype": "string",
       "childs": [
@@ -345,14 +345,14 @@
       ]
     },
     {
-      "nodeid": "stab_erreur_3",
+      "nodeid": "stab_erreur_C",
       "nodetype": "state",
       "valuetype": "string",
       "childs": [
         {
           "edge": {
             "value": "très stable",
-            "query": "strictsup(_learnerErrorStability_, 0.75);.",
+            "query": "strictsup(_learnerErrorStability_, 0.75).",
             "vars": [
               {
                 "name": "learnerErrorStability",
@@ -399,7 +399,7 @@
               {
                 "name": "learnerErrorStability",
                 "source": "Method",
-                "key": "mostStabErrorForLearners"
+                "key": "errorStabilityForLearner"
               }
             ]
           },
@@ -408,7 +408,7 @@
       ]
     },
     {
-      "nodeid": "mode_activite_3",
+      "nodeid": "mode_activite_C",
       "nodetype": "state",
       "valuetype": "number",
       "childs": [

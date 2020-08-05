@@ -516,12 +516,18 @@ public class LearningProcess {
 							}
 
 //							System.out.println(var);
-							System.out.println(varcache);
+//							System.out.println(varcache);
 							query = query.replaceAll("_" + var.getName() + "_", replacement);
 						}
 
 //						System.out.println(query);
-						SolveInfo info = pg.solve(query);
+						SolveInfo info;
+						try {
+							info = pg.solve(query);
+						} catch (MalformedGoalException mge) {
+							System.out.println("[Decision] Malformed Goal " + query);
+							throw mge;
+						}
 
 						if (info.isSuccess()) {
 							JsonPrimitive val = e.getValue();
