@@ -16,6 +16,15 @@ public enum ActivityModeEnum implements AttributeEnum<ActivityModeEnum, Integer>
 		this.intValue = intValue;
 	}
 
+	public static ActivityModeEnum valueOf(Integer activityModeInt) {
+		for (ActivityModeEnum am : values()) {
+			if (am.intValue.equals(activityModeInt))
+				return am;
+		}
+
+		return null;
+	}
+
 	@Override
 	public ActivityModeEnum getThis() {
 		return this;

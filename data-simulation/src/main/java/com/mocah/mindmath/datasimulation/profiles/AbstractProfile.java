@@ -3,8 +3,11 @@
  */
 package com.mocah.mindmath.datasimulation.profiles;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -30,6 +33,9 @@ public abstract class AbstractProfile implements IProfile {
 	protected GeneratorEnum generator;
 	protected TaskFamilyEnum taskFamily;
 	protected ActivityModeEnum activityMode;
+	protected Map<ActivityModeEnum, Double> initialActivityModeProb;
+	protected Map<ActivityModeEnum, Double> deltaActivityModeProb;
+	protected double activityModeIncreaseProb;
 
 	/**
 	 * Does the learner car about informations in feedbacks ?
@@ -111,7 +117,13 @@ public abstract class AbstractProfile implements IProfile {
 		this.domain = DomainEnum.ALGEBRA;
 		this.generator = GeneratorEnum.RES_EQ_PERMIER_DEGRE;
 		this.taskFamily = TaskFamilyEnum.FT3_2_1;
-		this.activityMode = ActivityModeEnum.A0;
+
+		this.initialActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, (double) 1 / 3, ActivityModeEnum.A1,
+				(double) 1 / 3, ActivityModeEnum.A2, (double) 1 / 3);
+		this.activityMode = initActivityMode();
+		this.deltaActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, 0.0, ActivityModeEnum.A1, 0.0,
+				ActivityModeEnum.A2, 0.0);
+		this.activityModeIncreaseProb = this.deltaActivityModeProb.get(activityMode);
 
 		// Feedback consideration
 		this.readingFeedback = false;
@@ -161,6 +173,30 @@ public abstract class AbstractProfile implements IProfile {
 	 */
 	public ActivityModeEnum getActivityMode() {
 		return activityMode;
+	}
+
+	protected ActivityModeEnum initActivityMode() {
+		List<ActivityModeEnum> activityModes = new ArrayList<>(this.initialActivityModeProb.keySet());
+
+		double[] cumprob = new double[this.initialActivityModeProb.size() + 1];
+		cumprob[0] = 0.0;
+		double total = 0.0;
+		for (int i = 0; i < activityModes.size(); i++) {
+			total += this.initialActivityModeProb.get(activityModes.get(i));
+			cumprob[i + 1] = total;
+		}
+
+		ActivityModeEnum res = ActivityModeEnum.A0;
+
+		double d = cumprob[0] + Math.random() * (total - cumprob[0]);
+		for (int i = 0; i < activityModes.size(); i++) {
+			if (d > cumprob[i] && d <= cumprob[i + 1]) {
+				res = activityModes.get(i);
+				break;
+			}
+		}
+
+		return res;
 	}
 
 	/**
@@ -215,6 +251,14 @@ public abstract class AbstractProfile implements IProfile {
 		this.successProb = prob;
 	}
 
+	/**
+	 * @return the probability for the learner to see it's activity mode beeing
+	 *         inceased (at the end of an exercise)
+	 */
+	public double getActivityModeIncreaseProb() {
+		return this.activityModeIncreaseProb;
+	}
+
 	@Override
 	public void learnFromExercise() {
 		double prob = baseSuccessProb + successProb * exerciseDelta;
@@ -227,6 +271,21 @@ public abstract class AbstractProfile implements IProfile {
 
 		this.baseSuccessProb = prob;
 		this.successProb = this.baseSuccessProb;
+
+		// Increase activity mode
+		Random rand = new Random();
+		double d = rand.nextDouble();
+		if (d < this.activityModeIncreaseProb) {
+			ActivityModeEnum newActivityMode = ActivityModeEnum.valueOf(this.activityMode.getValue() + 1);
+
+			if (newActivityMode != null) {
+				this.activityMode = newActivityMode;
+				this.activityModeIncreaseProb = this.deltaActivityModeProb.get(this.activityMode);
+			}
+		} else {
+			this.activityModeIncreaseProb = this.activityModeIncreaseProb
+					+ this.activityModeIncreaseProb * this.deltaActivityModeProb.get(this.activityMode);
+		}
 	}
 
 	/**

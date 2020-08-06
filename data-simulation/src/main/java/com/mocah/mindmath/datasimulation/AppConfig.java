@@ -11,8 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mocah.mindmath.datasimulation.json.CabriDataSerializer;
 import com.mocah.mindmath.datasimulation.profiles.IProfile;
-import com.mocah.mindmath.datasimulation.profiles.ProfileA;
-import com.mocah.mindmath.datasimulation.profiles.ProfileB;
+import com.mocah.mindmath.datasimulation.profiles.ProfileC;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -28,14 +27,13 @@ public class AppConfig {
 	/**
 	 * Number of learners per profile
 	 */
-	public static final Map<Class<? extends IProfile>, Integer> learners = ImmutableMap.of(ProfileA.class, 1,
-			ProfileB.class, 1);
+	public static final Map<Class<? extends IProfile>, Integer> learners = ImmutableMap.of(ProfileC.class, 4);
 	public static final boolean useRandomProfileOrder = false;
 	/**
 	 * Number of iteration each learner id will be used. ie: Number of json
 	 * simulated and sent
 	 */
-	public static final int MAX_ITERATION = 10;
+	public static final int MAX_ITERATION = 30;
 	public static final String learnerBase = "Simulated_";
 
 	public static int getWeightInfo(String feedbackId) {

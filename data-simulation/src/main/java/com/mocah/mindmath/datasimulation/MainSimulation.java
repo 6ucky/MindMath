@@ -19,7 +19,8 @@ import com.mocah.mindmath.datasimulation.attributes.constraints.between.Generato
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.AnswerEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.ErrorCodeEnum;
 import com.mocah.mindmath.datasimulation.attributes.constraints.in.TriggerEnum;
-import com.mocah.mindmath.datasimulation.json.DataExporter;
+import com.mocah.mindmath.datasimulation.dataexports.DataExporter;
+import com.mocah.mindmath.datasimulation.dataexports.GraphExporter;
 import com.mocah.mindmath.datasimulation.json.SimulatedData;
 import com.mocah.mindmath.datasimulation.json.SimulatedDataContainer;
 import com.mocah.mindmath.datasimulation.json.SimulatedDataLearner;
@@ -51,10 +52,10 @@ public class MainSimulation {
 		int learnerIteration = 1;
 		for (Entry<Class<? extends IProfile>, Integer> entry : AppConfig.learners.entrySet()) {
 			Constructor<?> ctor = entry.getKey().getConstructor();
-			AbstractProfile profile = (AbstractProfile) ctor.newInstance();
 
 			int currentLearnerIteration = 1;
 			while (currentLearnerIteration <= entry.getValue()) {
+				AbstractProfile profile = (AbstractProfile) ctor.newInstance();
 				profile.generateLearnerID();
 				profile.initLearner();
 
@@ -143,9 +144,11 @@ public class MainSimulation {
 					feedbackData = AppConfig.getGson().fromJson(feedback, FeedbackData.class);
 
 					SimulatedData simData = new SimulatedData(currentIteration, data, feedbackData);
+					simData.setExerciseSuccessProb(profile.getSuccessProb());
+					simData.setActivityModeIncreaseSuccessProb(profile.getActivityModeIncreaseProb());
 					sdLearner.getDataset().add(simData);
 
-					int fdbkInfoWeight = -1;
+					int fdbkInfoWeight = 0;
 					if (profile.isReadingFeedback() && feedbackData != null) {
 						fdbkInfoWeight = AppConfig.getWeightInfo(feedbackData.getIdFeedback());
 					}
@@ -167,14 +170,15 @@ public class MainSimulation {
 				System.out.println(qtable);
 
 				currentLearnerIteration++;
+				learnerIteration++;
 			}
-
-			learnerIteration++;
 		}
 
 		container.setFinalCSV(finalQTable);
 
 		DataExporter de = new DataExporter(container);
 		de.export();
+		GraphExporter ge = new GraphExporter(container);
+		ge.export();
 	}
 }

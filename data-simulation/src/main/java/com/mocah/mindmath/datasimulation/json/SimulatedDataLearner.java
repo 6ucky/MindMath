@@ -40,6 +40,13 @@ public class SimulatedDataLearner {
 	}
 
 	/**
+	 * @return the learner profile
+	 */
+	public IProfile getProfile() {
+		return profile;
+	}
+
+	/**
 	 * @return the learner ID
 	 */
 	public String getLearnerId() {

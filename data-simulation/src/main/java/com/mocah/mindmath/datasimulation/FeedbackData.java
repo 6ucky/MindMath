@@ -3,6 +3,8 @@
  */
 package com.mocah.mindmath.datasimulation;
 
+import java.util.Map;
+
 import com.google.gson.annotations.Expose;
 
 /**
@@ -28,6 +30,11 @@ public class FeedbackData {
 	private String mode;
 	@Expose
 	private Double reward;
+	@Expose
+	private String modifiedState;
+	@Expose
+	private Map<String, Double> qvalues;
+	// TODO feedback suite à exploration ou exploitation ?
 
 	/**
 	 * @return the feedback id

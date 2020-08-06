@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.mocah.mindmath.datasimulation.attributes.constraints.in.ActivityModeEnum;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -17,7 +18,7 @@ public class ProfileC extends AbstractProfile {
 	private Map<Integer, Double> originDeltas;
 	private int iteration;
 	private double k = 1.0; // carrying capacity
-	private Map<Integer, Double> a = ImmutableMap.of(0, 0.05, 1, 0.075, 2, 0.1, 3, 0.1, 4, 0.0);
+	private Map<Integer, Double> a = ImmutableMap.of(0, 0.55, 1, 0.8, 2, 1.0, 3, 1.0, 4, 0.0);
 	private double defaultA = 0.05;
 
 	/**
@@ -42,9 +43,16 @@ public class ProfileC extends AbstractProfile {
 //		this.waitingInformative = true;
 //		this.minWheightInfo = 3;
 
+		this.initialActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, 0.75, ActivityModeEnum.A1, 0.25,
+				ActivityModeEnum.A2, 0.0);
+		this.activityMode = initActivityMode();
+		this.deltaActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, 0.30, ActivityModeEnum.A1, 0.20,
+				ActivityModeEnum.A2, 0.0);
+		this.activityModeIncreaseProb = this.deltaActivityModeProb.get(activityMode);
+
 		// Exercise Success
 		this.baseSuccessProb = 0.0;
-		this.deltas = Maps.newHashMap(ImmutableMap.of(0, 0.0, 1, 0.0, 2, 0.0, 3, 0.9, 4, 1.0));
+		this.deltas = Maps.newHashMap(ImmutableMap.of(0, 0.0, 1, 0.0, 2, 0.0, 3, 0.4, 4, 1.0));
 		this.originDeltas = ImmutableMap.copyOf(this.deltas);
 		this.firstIncreaseProb = 1.0;
 		this.defaultDelta = 0.1;
@@ -75,5 +83,7 @@ public class ProfileC extends AbstractProfile {
 
 			this.deltas.put(entry.getKey(), newDelta);
 		}
+
+		this.baseSuccessProb = this.deltas.get(0);
 	}
 }

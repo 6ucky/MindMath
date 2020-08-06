@@ -14,6 +14,10 @@ public class SimulatedData {
 	@Expose
 	private int iteration;
 	@Expose
+	private double exerciseSuccessProb;
+	@Expose
+	private double activityModeIncreaseSuccessProb;
+	@Expose
 	private CabriData generated;
 	@Expose
 	private FeedbackData feedback;
@@ -40,6 +44,36 @@ public class SimulatedData {
 	 */
 	public int getIteration() {
 		return iteration;
+	}
+
+	/**
+	 * @return the learner's exercise success probability
+	 */
+	public double getExerciseSuccessProb() {
+		return this.exerciseSuccessProb;
+	}
+
+	/**
+	 * @param exerciseSuccessProb the learner's exercise success probability to
+	 *                            define
+	 */
+	public void setExerciseSuccessProb(double exerciseSuccessProb) {
+		this.exerciseSuccessProb = exerciseSuccessProb;
+	}
+
+	/**
+	 * @return the learner's Activity Mode increase success probability
+	 */
+	public double getActivityModeIncreaseSuccessProb() {
+		return this.activityModeIncreaseSuccessProb;
+	}
+
+	/**
+	 * @param activityModeIncreaseSuccessProb the learner's Activity Mode increase
+	 *                                        success probability to define
+	 */
+	public void setActivityModeIncreaseSuccessProb(double activityModeIncreaseSuccessProb) {
+		this.activityModeIncreaseSuccessProb = activityModeIncreaseSuccessProb;
 	}
 
 	/**
