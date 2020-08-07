@@ -38,6 +38,8 @@ public class ProfileC extends AbstractProfile {
 	public void initLearner() {
 		super.initLearner();
 
+		System.out.println("yolo");
+
 		// Feedback consideration
 		this.readingFeedback = true;
 //		this.waitingInformative = true;

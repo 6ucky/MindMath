@@ -12,8 +12,6 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 import com.google.common.base.Strings;
 
@@ -38,8 +36,9 @@ public class ServerConn {
 			base_uri = TEST_SERVER_URL;
 		}
 
-		Builder builder = HttpRequest.newBuilder().timeout(Duration.of(10, ChronoUnit.SECONDS)).header("Authorization",
-				HEADER_AUTH);
+//		Builder builder = HttpRequest.newBuilder().timeout(Duration.of(10, ChronoUnit.SECONDS)).header("Authorization",
+//				HEADER_AUTH);
+		Builder builder = HttpRequest.newBuilder().header("Authorization", HEADER_AUTH);
 
 		URI uri;
 		if (!Strings.isNullOrEmpty(body)) {
