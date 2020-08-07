@@ -366,7 +366,9 @@ public class LRScontroller {
 		Statement statement2 = new Statement();
 		generator = new XAPIgenerator();
 		statement2 = generator.setVerb(Verbs.scored())
-				.setObject(task)
+				.setObject("https://" + id)
+//				.setObject(statement1)
+//				.setObject(task)
 				.setContext(getGlossary("1.1.GNC.0", "11", "1"), id, CabriVersion.test)
 				.setResult(true, true, fbjson, getMotivation("3.0.0.XE", "6"), CabriVersion.test)
 				.setAttachment()

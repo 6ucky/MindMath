@@ -275,11 +275,21 @@ public class XAPIgenerator {
 		return this;
 	}
 	
+	/**
+	 * @deprecated not working in learning locker
+	 * @param in_statement
+	 * @return
+	 */
 	public XAPIgenerator setObject(Statement in_statement) {
-		SubStatement substatement = new SubStatement();
+		SubStatementwithID substatement = new SubStatementwithID();
 		substatement.setActor(in_statement.getActor());
 		substatement.setVerb(in_statement.getVerb());
 		substatement.setObject(in_statement.getObject());
+		if(in_statement.getObject() instanceof Activity)
+		{
+			Activity activity = (Activity) in_statement.getObject();
+			substatement.setId(activity.getId() + "/substatement");
+		}
 		statement.setObject(substatement);
 		return this;
 	}
