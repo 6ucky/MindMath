@@ -211,9 +211,20 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 
 	/**
 	 * @param matchQuery
+	 * @return
 	 */
 	public LearningLockerRepositoryAggregation filterByMatcher(String matchQuery) {
 		return addPipelineStage("$match", matchQuery);
 	}
 
+	/**
+	 * @param limit
+	 * @return
+	 */
+	public LearningLockerRepositoryAggregation limitResults(Integer limit) {
+		if (limit > 0)
+			return addPipelineStage("$limit", limit + "");
+
+		return this;
+	}
 }

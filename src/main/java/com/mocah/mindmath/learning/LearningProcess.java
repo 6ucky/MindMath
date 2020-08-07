@@ -647,7 +647,7 @@ public class LearningProcess {
 		try {
 			mustache.execute(writer, scopes).flush();
 			String query = writer.toString();
-			lrs = lrs.filterByMatcher(query);
+			lrs = lrs.filterByMatcher(query).limitResults(5).addPipelineStage("$sort", "{\"timestamp\":-1}");
 		} catch (IOException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
@@ -658,7 +658,6 @@ public class LearningProcess {
 
 		for (Statement statement : statements) {
 			Result r = statement.getResult();
-			// TODO check null result content
 			if (r != null) {
 				JsonObject extensions = r.getExtensions();
 				if (extensions != null) {
