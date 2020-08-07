@@ -262,8 +262,8 @@ public class Taskcontroller {
 		boolean statement_success = true;
 		boolean statement_completion = true;
 		XAPIgenerator generator = new XAPIgenerator();
-		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson)
-				.generateStatement(task);
+		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson, null, CabriVersion.v1_0)
+				.generateStatement(task, CabriVersion.v1_0);
 		// TODO validate post statement to LRS
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(task.isUsingTestLRS());
 		ll.postStatement(statement);
@@ -322,8 +322,8 @@ public class Taskcontroller {
 		boolean statement_success = true;
 		boolean statement_completion = true;
 		XAPIgenerator generator = new XAPIgenerator();
-		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson)
-				.generateStatement(task);
+		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson, null, CabriVersion.v1_0)
+				.generateStatement(task, CabriVersion.v1_0);
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(task.isUsingTestLRS());
 		ll.postStatement(statement);
 
