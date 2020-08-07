@@ -335,7 +335,7 @@ public class LRScontroller {
 		generator = new XAPIgenerator();
 		statement2 = generator.setVerb(Verbs.scored())
 				.setObject(statement1)
-				.setContext(getGlossary("1.1.GNC.0", "11", "1"), "", CabriVersion.test)
+				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), "", CabriVersion.test)
 				.setResult(true, true, fbjson, getMotivation("3.0.0.XE", "6"), CabriVersion.test)
 				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
@@ -366,10 +366,10 @@ public class LRScontroller {
 		Statement statement2 = new Statement();
 		generator = new XAPIgenerator();
 		statement2 = generator.setVerb(Verbs.scored())
-				.setObject("https://" + id)
-//				.setObject(statement1)
+//				.setObject(id)
+				.setObject(statement1)
 //				.setObject(task)
-				.setContext(getGlossary("1.1.GNC.0", "11", "1"), id, CabriVersion.test)
+				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), id, CabriVersion.test)
 				.setResult(true, true, fbjson, getMotivation("3.0.0.XE", "6"), CabriVersion.test)
 				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
@@ -404,19 +404,24 @@ public class LRScontroller {
 		return new ResponseEntity<>(ll.postStatement(statement), HttpStatus.ACCEPTED);
 	}
 	
-	public ArrayList<Glossaire> getGlossary(String feedbackID, String leaf, String error_code)
+	public ArrayList<String> getGlossary(String feedbackID, String leaf, String error_code)
 			throws IOException {
 		// get feedbackcontent from Derby
-		ArrayList<Glossaire> lists = new ArrayList<Glossaire>();
+		ArrayList<String> lists = new ArrayList<String>();
 		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
 		if (!fb.getContentErrorType(error_code).getGlossaire().toString().equals("[]")) {
 			for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
 				String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
 				Glossaire temp = getTaskrepository().getGlossaire(mapkey);
-				lists.add(temp);
+				lists.add(temp.getGlossaire_name());
 			}
 		}
 		return lists;
+	}
+	
+	public ArrayList<Glossaire> getAllGlossary()
+	{
+		return (ArrayList<Glossaire>) getTaskrepository().getAllGlossaire();
 	}
 	
 	public List<Motivation> getMotivation(String feedbackID, String leaf)

@@ -26,6 +26,7 @@ import gov.adlnet.xapi.model.ActivityDefinition;
 import gov.adlnet.xapi.model.Attachment;
 import gov.adlnet.xapi.model.Context;
 import gov.adlnet.xapi.model.ContextActivities;
+import gov.adlnet.xapi.model.IStatementObject;
 import gov.adlnet.xapi.model.InteractionComponent;
 import gov.adlnet.xapi.model.Result;
 import gov.adlnet.xapi.model.Statement;
@@ -225,50 +226,90 @@ public class XAPIgenerator {
 		String ac_id = "https://mindmath.lip6.fr/" + task.getSensors().getTaskFamily();
 		a.setId(ac_id);
 		String key = "fr-FR";
-		ArrayList<InteractionComponent> choices = new ArrayList<InteractionComponent>();
+		ArrayList<InteractionComponent> source = new ArrayList<InteractionComponent>();
+		ArrayList<InteractionComponent> target = new ArrayList<InteractionComponent>();
 		InteractionComponent ic = new InteractionComponent();
 		HashMap<String, String> descriptionMap = new HashMap<String, String>();
-		descriptionMap.put(key, task.getSensors().getDomain());
+		descriptionMap.put(key, "Example: algebre ou geometrie.");
 		ic.setId("domain");
 		ic.setDescription(descriptionMap);
-		choices.add(ic);
+		source.add(ic);
+		
+		ic = new InteractionComponent();
+		descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, task.getSensors().getDomain());
+		ic.setId("1");
+		ic.setDescription(descriptionMap);
+		target.add(ic);
+		
+		ic = new InteractionComponent();
+		descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, "Example: resoudreEquationPremierDegre.");
+		ic.setId("generator");
+		ic.setDescription(descriptionMap);
+		source.add(ic);
 		
 		ic = new InteractionComponent();
 		descriptionMap = new HashMap<String, String>();
 		descriptionMap.put(key, task.getSensors().getGenerator());
-		ic.setId("generator");
+		ic.setId("2");
 		ic.setDescription(descriptionMap);
-		choices.add(ic);
+		target.add(ic);
+		
+		ic = new InteractionComponent();
+		descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, "ReponseJuste valeurs: true ou false.");
+		ic.setId("correctAnswer");
+		ic.setDescription(descriptionMap);
+		source.add(ic);
 		
 		ic = new InteractionComponent();
 		descriptionMap = new HashMap<String, String>();
 		descriptionMap.put(key, task.getSensors().isCorrectAnswer());
-		ic.setId("correctAnswer");
+		ic.setId("3");
 		ic.setDescription(descriptionMap);
-		choices.add(ic);
+		target.add(ic);
+		
+		ic = new InteractionComponent();
+		descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, "Example: ce_err1 ; ce_err5 ; etc.");
+		ic.setId("codeError");
+		ic.setDescription(descriptionMap);
+		source.add(ic);
 		
 		ic = new InteractionComponent();
 		descriptionMap = new HashMap<String, String>();
 		descriptionMap.put(key, task.getSensors().getCodeError());
-		ic.setId("codeError");
+		ic.setId("4");
 		ic.setDescription(descriptionMap);
-		choices.add(ic);
+		target.add(ic);
+		
+		ic = new InteractionComponent();
+		descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, "Example :0, 1 ou 2.");
+		ic.setId("activityMode");
+		ic.setDescription(descriptionMap);
+		source.add(ic);
 		
 		ic = new InteractionComponent();
 		descriptionMap = new HashMap<String, String>();
 		descriptionMap.put(key, task.getSensors().getActivityMode());
-		ic.setId("activityMode");
+		ic.setId("5");
 		ic.setDescription(descriptionMap);
-		choices.add(ic);
+		target.add(ic);
 		
 		ActivityDefinition activityDefinition = new ActivityDefinition();
-		activityDefinition.setInteractionType("sequencing");
+		activityDefinition.setInteractionType("matching");
 		
 		HashMap<String, JsonElement> extensions = new HashMap<>();
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		extensions.put("https://mindmath.lip6.fr/logs", gson.toJsonTree(task.getLog()));
 		
-		activityDefinition.setChoices(choices);
+		activityDefinition.setSource(source);
+		activityDefinition.setTarget(target);
+		ArrayList<String> correctResponsesPattern = new ArrayList<String>();
+		correctResponsesPattern.add("domain[.]1[,]generator[.]2[,]correctAnswer[.]3[,]codeError[.]4[,]activityMode[.]5");
+		activityDefinition.setCorrectResponsesPattern(correctResponsesPattern);
 		activityDefinition.setExtensions(extensions);
 		a.setDefinition(activityDefinition);
 		statement.setObject(a);
@@ -276,57 +317,66 @@ public class XAPIgenerator {
 	}
 	
 	/**
-	 * @deprecated not working in learning locker
 	 * @param in_statement
 	 * @return
 	 */
 	public XAPIgenerator setObject(Statement in_statement) {
-		SubStatementwithID substatement = new SubStatementwithID();
+		SubStatementwithObjectType substatement = new SubStatementwithObjectType();
 		substatement.setActor(in_statement.getActor());
 		substatement.setVerb(in_statement.getVerb());
 		substatement.setObject(in_statement.getObject());
-		if(in_statement.getObject() instanceof Activity)
-		{
-			Activity activity = (Activity) in_statement.getObject();
-			substatement.setId(activity.getId() + "/substatement");
-		}
 		statement.setObject(substatement);
 		return this;
 	}
 	
 	public XAPIgenerator setObject(String id) {
-		StatementReference ref = new StatementReference();
+		StatementReferencewithObjectType ref = new StatementReferencewithObjectType();
 		ref.setId(id);
 		statement.setObject(ref);
 		return this;
 	}
 	
-	public XAPIgenerator setContext(ArrayList<Glossaire> glossaryMap, String id, CabriVersion version) {
+	public XAPIgenerator setContext(ArrayList<String> glossary_choices, ArrayList<Glossaire> glossaryMap, String id, CabriVersion version) {
 		switch(version)
 		{
 		case v1_0:
 		case test:
-			ArrayList<Activity> grouping = new ArrayList<Activity>();
-			for(Glossaire glossaryName : glossaryMap)
-			{
-				Gson gson = new Gson();
-				System.out.println("++" + gson.toJson(glossaryName));
-				Activity a = new Activity();
-				String ac_id = "https://mindmath.lip6.fr/glossary/" + glossaryName.getGlossaireID();
-				a.setId(ac_id);
-				String key = "fr-FR";
-				String name = glossaryName.getGlossaire_name();
-				String description = glossaryName.getGlossaire_content();
-				HashMap<String, String> nameMap = new HashMap<>();
-				HashMap<String, String> descriptionMap = new HashMap<>();
-				nameMap.put(key, name);
-				descriptionMap.put(key, description);
-				ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
-				a.setDefinition(activityDefinition);
-				grouping.add(a);
+			ArrayList<Activity> category = new ArrayList<Activity>();
+			Activity a = new Activity();
+			String ac_id = "https://mindmath.lip6.fr/glossary";
+			a.setId(ac_id);
+			String key = "fr-FR";
+			String description = "Which of the glossaries are presented?";
+			HashMap<String, String> descriptionMap = new HashMap<>();
+			descriptionMap.put(key, description);
+			ActivityDefinition activityDefinition = new ActivityDefinition();
+			activityDefinition.setDescription(descriptionMap);
+			activityDefinition.setInteractionType("choice");
+			ArrayList<InteractionComponent> choices = new ArrayList<InteractionComponent>();
+			for(Glossaire glossary : glossaryMap)
+			{				
+				InteractionComponent ic = new InteractionComponent();
+				ic.setId(glossary.getGlossaire_name());
+				HashMap<String, String> ic_description = new HashMap<>();
+				ic_description.put(key, glossary.getGlossaire_content());
+				ic.setDescription(ic_description);
+				choices.add(ic);
 			}
+			activityDefinition.setChoices(choices);
+			ArrayList<String> correctResponsesPattern = new ArrayList<String>();
+			String correctResponsesPattern_string = "";
+			for(int i = 0; i < glossary_choices.size(); i++)
+			{
+				if(i != 0)
+					correctResponsesPattern_string += "[,]";
+				correctResponsesPattern_string += glossary_choices.get(i);
+			}
+			correctResponsesPattern.add(correctResponsesPattern_string);
+			activityDefinition.setCorrectResponsesPattern(correctResponsesPattern);
+			a.setDefinition(activityDefinition);
+			category.add(a);
 			ContextActivities ca = new ContextActivities();
-			ca.setGrouping(grouping);
+			ca.setCategory(category);
 			StatementReference statementRef = new StatementReference();
 			statementRef.setId(id);
 			Context c = new Context();
