@@ -7,8 +7,11 @@ import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +38,11 @@ import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggr
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryHttp;
 import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.repository.learninglocker.XAPItype;
+import com.mocah.mindmath.server.Derbyrepository;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
+import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
+import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
+import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
 import com.mocah.mindmath.server.entity.task.Task;
 
 import gov.adlnet.xapi.model.Account;
@@ -59,9 +66,10 @@ import gov.adlnet.xapi.model.Verbs;
 @RequestMapping("/lrs")
 public class LRScontroller {
 
-	private static final String license_num = "mocah";
+	@Autowired
+	private Derbyrepository taskrepository;
 
-	private Statement statement;
+	private static final String license_num = "mocah";
 
 	/**
 	 * check the post request based on authorization
@@ -294,18 +302,80 @@ public class LRScontroller {
 	 * @throws JsonParserCustomException
 	 * @throws URISyntaxException
 	 */
+	@PostMapping("/test/JXAPIexample/v1.0")
+	public ResponseEntity<String> testJXAPIexampleV1_0(@RequestBody String data)
+			throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException {
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		Task task = jsonparser.parse(data, CabriVersion.v1_0);
+		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
+		XAPIgenerator generator = new XAPIgenerator();
+
+		Statement statement = generator.setAttachment().setResult(true, true, fbjson, null, CabriVersion.v1_0).generateStatement(task, CabriVersion.test);
+
+		Gson gson = new Gson();
+		return new ResponseEntity<>(gson.toJson(statement), HttpStatus.ACCEPTED);
+	}
+	
 	@PostMapping("/test/JXAPIexample")
 	public ResponseEntity<String> testJXAPIexample(@RequestBody String data)
 			throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		Task task = jsonparser.parse(data, CabriVersion.test);
+		Task task = jsonparser.parse(data, CabriVersion.v1_0);
 		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
-
-		statement = generator.setAttachment().setResult(true, true, fbjson).generateStatement(task);
-
+		ArrayList<Statement> statements = new ArrayList<Statement>();
+		Statement statement1 = new Statement();
+		
+		statement1 = generator.setVerb(task)
+				.setObject(task)
+				.generateStatement(task, CabriVersion.test);
+		statements.add(statement1);
+		
+		Statement statement2 = new Statement();
+		generator = new XAPIgenerator();
+		statement2 = generator.setVerb(Verbs.scored())
+				.setObject(statement1)
+				.setContext(getGlossary("1.1.GNC.0", "11", "1"), "", CabriVersion.test)
+				.setResult(true, true, fbjson, getMotivation("3.0.0.XE", "6"), CabriVersion.test)
+				.setAttachment()
+				.generateStatement(task, CabriVersion.test);
+		statements.add(statement2);
 		Gson gson = new Gson();
-		return new ResponseEntity<>(gson.toJson(statement), HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(gson.toJson(statements), HttpStatus.ACCEPTED);
+	}
+	
+	@PostMapping("/test/JXAPIexamplePOST")
+	public ResponseEntity<String> testJXAPIexamplePOST(@RequestBody String data)
+			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		Task task = jsonparser.parse(data, CabriVersion.v1_0);
+		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		ArrayList<String> results = new ArrayList<String>();
+		XAPIgenerator generator = new XAPIgenerator();
+		ArrayList<Statement> statements = new ArrayList<Statement>();
+		Statement statement1 = new Statement();
+		
+		statement1 = generator.setVerb(task)
+				.setObject(task)
+				.generateStatement(task, CabriVersion.test);
+		statements.add(statement1);
+		String id = ll.postStatement(statement1);
+		results.add(id);
+		
+		Statement statement2 = new Statement();
+		generator = new XAPIgenerator();
+		statement2 = generator.setVerb(Verbs.scored())
+				.setObject(task)
+				.setContext(getGlossary("1.1.GNC.0", "11", "1"), id, CabriVersion.test)
+				.setResult(true, true, fbjson, getMotivation("3.0.0.XE", "6"), CabriVersion.test)
+				.setAttachment()
+				.generateStatement(task, CabriVersion.test);
+		statements.add(statement2);
+		
+		results.add(ll.postStatement(statement2));
+		Gson gson = new Gson();
+		return new ResponseEntity<>(gson.toJson(results), HttpStatus.ACCEPTED);
 	}
 
 	/**
@@ -318,17 +388,43 @@ public class LRScontroller {
 	 * @throws NoSuchAlgorithmException
 	 * @throws URISyntaxException
 	 */
-	@PostMapping("/test/JXAPIexamplePOST")
-	public ResponseEntity<String> testJXAPIexamplePOST(@RequestBody String data)
+	@PostMapping("/test/JXAPIexamplePOST/v1.0")
+	public ResponseEntity<String> testJXAPIexamplePOSTV1_0(@RequestBody String data)
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		Task task = jsonparser.parse(data, CabriVersion.test);
+		Task task = jsonparser.parse(data, CabriVersion.v1_0);
 		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
 
-		statement = generator.setAttachment().setResult(true, true, fbjson).generateStatement(task);
+		Statement statement = generator.setAttachment().setResult(true, true, fbjson, null, CabriVersion.v1_0).generateStatement(task, CabriVersion.v1_0);
 
-		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
 		return new ResponseEntity<>(ll.postStatement(statement), HttpStatus.ACCEPTED);
+	}
+	
+	public ArrayList<Glossaire> getGlossary(String feedbackID, String leaf, String error_code)
+			throws IOException {
+		// get feedbackcontent from Derby
+		ArrayList<Glossaire> lists = new ArrayList<Glossaire>();
+		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
+		if (!fb.getContentErrorType(error_code).getGlossaire().toString().equals("[]")) {
+			for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
+				String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
+				Glossaire temp = getTaskrepository().getGlossaire(mapkey);
+				lists.add(temp);
+			}
+		}
+		return lists;
+	}
+	
+	public List<Motivation> getMotivation(String feedbackID, String leaf)
+	{
+		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
+		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf());
+		return motivations;
+	}
+
+	public Derbyrepository getTaskrepository() {
+		return taskrepository;
 	}
 }

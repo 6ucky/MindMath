@@ -6,6 +6,8 @@ import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,15 +15,22 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mocah.mindmath.parser.jsonparser.CabriVersion;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
+import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
+import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
 import com.mocah.mindmath.server.entity.task.Task;
 
 import gov.adlnet.xapi.model.Activity;
 import gov.adlnet.xapi.model.ActivityDefinition;
 import gov.adlnet.xapi.model.Attachment;
 import gov.adlnet.xapi.model.Context;
+import gov.adlnet.xapi.model.ContextActivities;
+import gov.adlnet.xapi.model.InteractionComponent;
 import gov.adlnet.xapi.model.Result;
 import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.StatementReference;
+import gov.adlnet.xapi.model.SubStatement;
 import gov.adlnet.xapi.model.Verb;
 
 /**
@@ -145,7 +154,7 @@ public class XAPIgenerator {
 	 */
 	public XAPIgenerator setAttachment() throws NoSuchAlgorithmException, IOException, URISyntaxException {
 		Attachment attachment = new Attachment();
-		attachment.addAttachment("../mindmath2/src/main/resources/static/videos/ResolutionEquation.mp4",
+		attachment.addAttachment("../mindmath/src/main/resources/static/videos/ResolutionEquation.mp4",
 				"application/octet-stream");
 		ArrayList<Attachment> attachments = new ArrayList<>();
 		URI expected_type = new URI("http://lrsmocah.lip6.fr/attachments/video");
@@ -170,22 +179,151 @@ public class XAPIgenerator {
 	 * @param fbjson     feedback object
 	 * @return this generator
 	 */
-	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson) {
-		Result fdresult = new Result();
-		if (success == true && completion == true) {
-			JsonObject jo = new JsonObject();
-			jo.addProperty("idFeedback", fbjson.getIdFeedback());
-			jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
-			jo.addProperty("contentFb", fbjson.getContentFb());
-			jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
-			JsonObject root_jo = new JsonObject();
-			root_jo.add("https://mindmath.lip6.fr/feedback", jo);
-			fdresult.setExtensions(root_jo);
-		}
-		fdresult.setSuccess(success);
-		fdresult.setCompletion(completion);
+	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson, List<Motivation> motivations, CabriVersion version) {
+		switch(version)
+		{
+		case v1_0:
+			Result fdresult = new Result();
+			if (success == true && completion == true) {
+				JsonObject jo = new JsonObject();
+				jo.addProperty("idFeedback", fbjson.getIdFeedback());
+				jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
+				jo.addProperty("contentFb", fbjson.getContentFb());
+				jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
+				JsonObject root_jo = new JsonObject();
+				root_jo.add("https://mindmath.lip6.fr/feedback", jo);
+				fdresult.setExtensions(root_jo);
+			}
+			fdresult.setSuccess(success);
+			fdresult.setCompletion(completion);
 
-		statement.setResult(fdresult);
+			statement.setResult(fdresult);
+		case test:
+			fdresult = new Result();
+			fdresult.setSuccess(success);
+			fdresult.setCompletion(completion);
+			fdresult.setResponse(motivations.get(new Random().nextInt(motivations.size())).getMotivation_data());
+			statement.setResult(fdresult);
+		}
+		
+		return this;
+	}
+	
+	public XAPIgenerator setVerb(Task task) {
+		Verb verb = task.getVerb();
+		setVerb(verb);
+		return this;
+	}
+	
+	public XAPIgenerator setVerb(Verb verb) {
+		statement.setVerb(verb);
+		return this;
+	}
+	
+	public XAPIgenerator setObject(Task task) {
+		Activity a = new Activity();
+		String ac_id = "https://mindmath.lip6.fr/" + task.getSensors().getTaskFamily();
+		a.setId(ac_id);
+		String key = "fr-FR";
+		ArrayList<InteractionComponent> choices = new ArrayList<InteractionComponent>();
+		InteractionComponent ic = new InteractionComponent();
+		HashMap<String, String> descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, task.getSensors().getDomain());
+		ic.setId("domain");
+		ic.setDescription(descriptionMap);
+		choices.add(ic);
+		
+		ic = new InteractionComponent();
+		descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, task.getSensors().getGenerator());
+		ic.setId("generator");
+		ic.setDescription(descriptionMap);
+		choices.add(ic);
+		
+		ic = new InteractionComponent();
+		descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, task.getSensors().isCorrectAnswer());
+		ic.setId("correctAnswer");
+		ic.setDescription(descriptionMap);
+		choices.add(ic);
+		
+		ic = new InteractionComponent();
+		descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, task.getSensors().getCodeError());
+		ic.setId("codeError");
+		ic.setDescription(descriptionMap);
+		choices.add(ic);
+		
+		ic = new InteractionComponent();
+		descriptionMap = new HashMap<String, String>();
+		descriptionMap.put(key, task.getSensors().getActivityMode());
+		ic.setId("activityMode");
+		ic.setDescription(descriptionMap);
+		choices.add(ic);
+		
+		ActivityDefinition activityDefinition = new ActivityDefinition();
+		activityDefinition.setInteractionType("sequencing");
+		
+		HashMap<String, JsonElement> extensions = new HashMap<>();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		extensions.put("https://mindmath.lip6.fr/logs", gson.toJsonTree(task.getLog()));
+		
+		activityDefinition.setChoices(choices);
+		activityDefinition.setExtensions(extensions);
+		a.setDefinition(activityDefinition);
+		statement.setObject(a);
+		return this;
+	}
+	
+	public XAPIgenerator setObject(Statement in_statement) {
+		SubStatement substatement = new SubStatement();
+		substatement.setActor(in_statement.getActor());
+		substatement.setVerb(in_statement.getVerb());
+		substatement.setObject(in_statement.getObject());
+		statement.setObject(substatement);
+		return this;
+	}
+	
+	public XAPIgenerator setObject(String id) {
+		StatementReference ref = new StatementReference();
+		ref.setId(id);
+		statement.setObject(ref);
+		return this;
+	}
+	
+	public XAPIgenerator setContext(ArrayList<Glossaire> glossaryMap, String id, CabriVersion version) {
+		switch(version)
+		{
+		case v1_0:
+		case test:
+			ArrayList<Activity> grouping = new ArrayList<Activity>();
+			for(Glossaire glossaryName : glossaryMap)
+			{
+				Gson gson = new Gson();
+				System.out.println("++" + gson.toJson(glossaryName));
+				Activity a = new Activity();
+				String ac_id = "https://mindmath.lip6.fr/glossary/" + glossaryName.getGlossaireID();
+				a.setId(ac_id);
+				String key = "fr-FR";
+				String name = glossaryName.getGlossaire_name();
+				String description = glossaryName.getGlossaire_content();
+				HashMap<String, String> nameMap = new HashMap<>();
+				HashMap<String, String> descriptionMap = new HashMap<>();
+				nameMap.put(key, name);
+				descriptionMap.put(key, description);
+				ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
+				a.setDefinition(activityDefinition);
+				grouping.add(a);
+			}
+			ContextActivities ca = new ContextActivities();
+			ca.setGrouping(grouping);
+			StatementReference statementRef = new StatementReference();
+			statementRef.setId(id);
+			Context c = new Context();
+			c.setContextActivities(ca);
+			c.setStatement(statementRef);
+			statement.setContext(c);
+		}
 		return this;
 	}
 
@@ -196,35 +334,39 @@ public class XAPIgenerator {
 	 * @param fbjson
 	 * @return statement for xAPI
 	 */
-	public Statement generateStatement(Task task) {
+	public Statement generateStatement(Task task, CabriVersion version) {
+		switch(version)
+		{
+		case v1_0:
+			statement.setActor(task.getLearnerAsActor());
 
-		statement.setActor(task.getLearnerAsActor());
+			Verb verb = task.getVerb();
+			statement.setVerb(verb);
 
-		Verb verb = task.getVerb();
-		statement.setVerb(verb);
+			Activity a = new Activity();
+			String ac_id = "https://mindmath.lip6.fr/" + task.getSensors().getTaskFamily();
+			a.setId(ac_id);
+			String key = "fr-FR";
+			String name = "resoudreEquationPremierDegre";
+			String description = "algebre";
+			HashMap<String, String> nameMap = new HashMap<>();
+			HashMap<String, String> descriptionMap = new HashMap<>();
+			nameMap.put(key, name);
+			descriptionMap.put(key, description);
+			ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
+			a.setDefinition(activityDefinition);
+			statement.setObject(a);
 
-		Activity a = new Activity();
-		String ac_id = "https://mindmath.lip6.fr/" + task.getSensors().getTaskFamily();
-		a.setId(ac_id);
-		String key = "fr-FR";
-		String name = "resoudreEquationPremierDegre";
-		String description = "algebre";
-		HashMap<String, String> nameMap = new HashMap<>();
-		HashMap<String, String> descriptionMap = new HashMap<>();
-		nameMap.put(key, name);
-		descriptionMap.put(key, description);
-		ActivityDefinition activityDefinition = new ActivityDefinition(nameMap, descriptionMap);
-		a.setDefinition(activityDefinition);
-		statement.setObject(a);
-
-		HashMap<String, JsonElement> extensions = new HashMap<>();
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		extensions.put("https://mindmath.lip6.fr/sensors", gson.toJsonTree(task.getSensors()));
-		extensions.put("https://mindmath.lip6.fr/logs", gson.toJsonTree(task.getLog()));
-		Context c = new Context();
-		c.setExtensions(extensions);
-		statement.setContext(c);
-
+			HashMap<String, JsonElement> extensions = new HashMap<>();
+			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+			extensions.put("https://mindmath.lip6.fr/sensors", gson.toJsonTree(task.getSensors()));
+			extensions.put("https://mindmath.lip6.fr/logs", gson.toJsonTree(task.getLog()));
+			Context c = new Context();
+			c.setExtensions(extensions);
+			statement.setContext(c);
+		case test:
+			statement.setActor(task.getLearnerAsActor());
+		}
 		return statement;
 	}
 
