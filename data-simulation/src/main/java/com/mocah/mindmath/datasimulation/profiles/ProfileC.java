@@ -38,8 +38,6 @@ public class ProfileC extends AbstractProfile {
 	public void initLearner() {
 		super.initLearner();
 
-		System.out.println("yolo");
-
 		// Feedback consideration
 		this.readingFeedback = true;
 //		this.waitingInformative = true;
@@ -54,6 +52,7 @@ public class ProfileC extends AbstractProfile {
 
 		// Exercise Success
 		this.baseSuccessProb = 0.0;
+		this.successProb = this.baseSuccessProb;
 		this.deltas = Maps.newHashMap(ImmutableMap.of(0, 0.0, 1, 0.0, 2, 0.0, 3, 0.4, 4, 1.0));
 		this.originDeltas = ImmutableMap.copyOf(this.deltas);
 		this.firstIncreaseProb = 1.0;

@@ -42,6 +42,7 @@ public class ProfileJ extends AbstractProfile {
 
 		// Exercise Success
 		this.baseSuccessProb = 0.0;
+		this.successProb = this.baseSuccessProb;
 		this.deltas = Maps.newHashMap(ImmutableMap.of(0, 0.10, 1, 0.0, 2, 0.0, 3, 0.0, 4, 0.0));
 		this.firstIncreaseProb = 1.0;
 		this.defaultDelta = 0.02;
