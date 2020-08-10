@@ -26,12 +26,10 @@ import gov.adlnet.xapi.model.ActivityDefinition;
 import gov.adlnet.xapi.model.Attachment;
 import gov.adlnet.xapi.model.Context;
 import gov.adlnet.xapi.model.ContextActivities;
-import gov.adlnet.xapi.model.IStatementObject;
 import gov.adlnet.xapi.model.InteractionComponent;
 import gov.adlnet.xapi.model.Result;
 import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementReference;
-import gov.adlnet.xapi.model.SubStatement;
 import gov.adlnet.xapi.model.Verb;
 
 /**
@@ -105,6 +103,7 @@ public class XAPIgenerator {
 				+ "                    \"id\": \"http://lrsmocah.lip6.fr/mindmath/feedback\",\r\n"
 				+ "                    \"objectType\": \"Activity\"\r\n" + "                }";
 		String secondparent = null;
+
 		switch (type) {
 		case SENSORS:
 			secondparent = "{\r\n" + "                    \"definition\": {\r\n"
@@ -114,6 +113,7 @@ public class XAPIgenerator {
 					+ "                    \"id\": \"http://lrsmocah.lip6.fr/mindmath/feedback/sensors\",\r\n"
 					+ "                    \"objectType\": \"Activity\"\r\n" + "                }";
 			break;
+
 		case LOGS:
 			secondparent = "{\r\n" + "                    \"definition\": {\r\n"
 					+ "                        \"name\": {\r\n"
@@ -121,7 +121,9 @@ public class XAPIgenerator {
 					+ "                        }\r\n" + "                    },\r\n"
 					+ "                    \"id\": \"http://lrsmocah.lip6.fr/mindmath/feedback/logs\",\r\n"
 					+ "                    \"objectType\": \"Activity\"\r\n" + "                }";
+			break;
 		}
+
 		String group = "{\r\n" + "                    \"id\": \"http://lrsmocah.lip6.fr/mindmath/\",\r\n"
 				+ "                    \"objectType\": \"Activity\"\r\n" + "                }";
 		JsonArray parentArray = new JsonArray();
@@ -172,7 +174,7 @@ public class XAPIgenerator {
 
 	/**
 	 * set result for statement
-	 * 
+	 *
 	 * @param success    true if we call decision process, false if we decide the
 	 *                   cabri JSON is gaming with the system
 	 * @param completion true if decision process work, false if decision produces
@@ -180,9 +182,9 @@ public class XAPIgenerator {
 	 * @param fbjson     feedback object
 	 * @return this generator
 	 */
-	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson, List<Motivation> motivations, CabriVersion version) {
-		switch(version)
-		{
+	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson,
+			List<Motivation> motivations, CabriVersion version) {
+		switch (version) {
 		case v1_0:
 			Result fdresult = new Result();
 			if (success == true && completion == true) {
@@ -199,123 +201,127 @@ public class XAPIgenerator {
 			fdresult.setCompletion(completion);
 
 			statement.setResult(fdresult);
+			break;
+
 		case test:
 			fdresult = new Result();
 			fdresult.setSuccess(success);
 			fdresult.setCompletion(completion);
 			fdresult.setResponse(motivations.get(new Random().nextInt(motivations.size())).getMotivation_data());
 			statement.setResult(fdresult);
+			break;
 		}
-		
+
 		return this;
 	}
-	
+
 	public XAPIgenerator setVerb(Task task) {
 		Verb verb = task.getVerb();
 		setVerb(verb);
 		return this;
 	}
-	
+
 	public XAPIgenerator setVerb(Verb verb) {
 		statement.setVerb(verb);
 		return this;
 	}
-	
+
 	public XAPIgenerator setObject(Task task) {
 		Activity a = new Activity();
 		String ac_id = "https://mindmath.lip6.fr/" + task.getSensors().getTaskFamily();
 		a.setId(ac_id);
 		String key = "fr-FR";
-		ArrayList<InteractionComponent> source = new ArrayList<InteractionComponent>();
-		ArrayList<InteractionComponent> target = new ArrayList<InteractionComponent>();
+		ArrayList<InteractionComponent> source = new ArrayList<>();
+		ArrayList<InteractionComponent> target = new ArrayList<>();
 		InteractionComponent ic = new InteractionComponent();
-		HashMap<String, String> descriptionMap = new HashMap<String, String>();
+		HashMap<String, String> descriptionMap = new HashMap<>();
 		descriptionMap.put(key, "Example: algebre ou geometrie.");
 		ic.setId("domain");
 		ic.setDescription(descriptionMap);
 		source.add(ic);
-		
+
 		ic = new InteractionComponent();
-		descriptionMap = new HashMap<String, String>();
+		descriptionMap = new HashMap<>();
 		descriptionMap.put(key, task.getSensors().getDomain());
 		ic.setId("1");
 		ic.setDescription(descriptionMap);
 		target.add(ic);
-		
+
 		ic = new InteractionComponent();
-		descriptionMap = new HashMap<String, String>();
+		descriptionMap = new HashMap<>();
 		descriptionMap.put(key, "Example: resoudreEquationPremierDegre.");
 		ic.setId("generator");
 		ic.setDescription(descriptionMap);
 		source.add(ic);
-		
+
 		ic = new InteractionComponent();
-		descriptionMap = new HashMap<String, String>();
+		descriptionMap = new HashMap<>();
 		descriptionMap.put(key, task.getSensors().getGenerator());
 		ic.setId("2");
 		ic.setDescription(descriptionMap);
 		target.add(ic);
-		
+
 		ic = new InteractionComponent();
-		descriptionMap = new HashMap<String, String>();
+		descriptionMap = new HashMap<>();
 		descriptionMap.put(key, "ReponseJuste valeurs: true ou false.");
 		ic.setId("correctAnswer");
 		ic.setDescription(descriptionMap);
 		source.add(ic);
-		
+
 		ic = new InteractionComponent();
-		descriptionMap = new HashMap<String, String>();
+		descriptionMap = new HashMap<>();
 		descriptionMap.put(key, task.getSensors().isCorrectAnswer());
 		ic.setId("3");
 		ic.setDescription(descriptionMap);
 		target.add(ic);
-		
+
 		ic = new InteractionComponent();
-		descriptionMap = new HashMap<String, String>();
+		descriptionMap = new HashMap<>();
 		descriptionMap.put(key, "Example: ce_err1 ; ce_err5 ; etc.");
 		ic.setId("codeError");
 		ic.setDescription(descriptionMap);
 		source.add(ic);
-		
+
 		ic = new InteractionComponent();
-		descriptionMap = new HashMap<String, String>();
+		descriptionMap = new HashMap<>();
 		descriptionMap.put(key, task.getSensors().getCodeError());
 		ic.setId("4");
 		ic.setDescription(descriptionMap);
 		target.add(ic);
-		
+
 		ic = new InteractionComponent();
-		descriptionMap = new HashMap<String, String>();
+		descriptionMap = new HashMap<>();
 		descriptionMap.put(key, "Example :0, 1 ou 2.");
 		ic.setId("activityMode");
 		ic.setDescription(descriptionMap);
 		source.add(ic);
-		
+
 		ic = new InteractionComponent();
-		descriptionMap = new HashMap<String, String>();
+		descriptionMap = new HashMap<>();
 		descriptionMap.put(key, task.getSensors().getActivityMode());
 		ic.setId("5");
 		ic.setDescription(descriptionMap);
 		target.add(ic);
-		
+
 		ActivityDefinition activityDefinition = new ActivityDefinition();
 		activityDefinition.setInteractionType("matching");
-		
+
 		HashMap<String, JsonElement> extensions = new HashMap<>();
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		extensions.put("https://mindmath.lip6.fr/logs", gson.toJsonTree(task.getLog()));
-		
+
 		activityDefinition.setSource(source);
 		activityDefinition.setTarget(target);
-		ArrayList<String> correctResponsesPattern = new ArrayList<String>();
-		correctResponsesPattern.add("domain[.]1[,]generator[.]2[,]correctAnswer[.]3[,]codeError[.]4[,]activityMode[.]5");
+		ArrayList<String> correctResponsesPattern = new ArrayList<>();
+		correctResponsesPattern
+				.add("domain[.]1[,]generator[.]2[,]correctAnswer[.]3[,]codeError[.]4[,]activityMode[.]5");
 		activityDefinition.setCorrectResponsesPattern(correctResponsesPattern);
 		activityDefinition.setExtensions(extensions);
 		a.setDefinition(activityDefinition);
 		statement.setObject(a);
 		return this;
 	}
-	
+
 	/**
 	 * @param in_statement
 	 * @return
@@ -328,20 +334,20 @@ public class XAPIgenerator {
 		statement.setObject(substatement);
 		return this;
 	}
-	
+
 	public XAPIgenerator setObject(String id) {
 		StatementReferencewithObjectType ref = new StatementReferencewithObjectType();
 		ref.setId(id);
 		statement.setObject(ref);
 		return this;
 	}
-	
-	public XAPIgenerator setContext(ArrayList<String> glossary_choices, ArrayList<Glossaire> glossaryMap, String id, CabriVersion version) {
-		switch(version)
-		{
+
+	public XAPIgenerator setContext(ArrayList<String> glossary_choices, ArrayList<Glossaire> glossaryMap, String id,
+			CabriVersion version) {
+		switch (version) {
 		case v1_0:
 		case test:
-			ArrayList<Activity> category = new ArrayList<Activity>();
+			ArrayList<Activity> category = new ArrayList<>();
 			Activity a = new Activity();
 			String ac_id = "https://mindmath.lip6.fr/glossary";
 			a.setId(ac_id);
@@ -352,9 +358,8 @@ public class XAPIgenerator {
 			ActivityDefinition activityDefinition = new ActivityDefinition();
 			activityDefinition.setDescription(descriptionMap);
 			activityDefinition.setInteractionType("choice");
-			ArrayList<InteractionComponent> choices = new ArrayList<InteractionComponent>();
-			for(Glossaire glossary : glossaryMap)
-			{				
+			ArrayList<InteractionComponent> choices = new ArrayList<>();
+			for (Glossaire glossary : glossaryMap) {
 				InteractionComponent ic = new InteractionComponent();
 				ic.setId(glossary.getGlossaire_name());
 				HashMap<String, String> ic_description = new HashMap<>();
@@ -363,12 +368,12 @@ public class XAPIgenerator {
 				choices.add(ic);
 			}
 			activityDefinition.setChoices(choices);
-			ArrayList<String> correctResponsesPattern = new ArrayList<String>();
+			ArrayList<String> correctResponsesPattern = new ArrayList<>();
 			String correctResponsesPattern_string = "";
-			for(int i = 0; i < glossary_choices.size(); i++)
-			{
-				if(i != 0)
+			for (int i = 0; i < glossary_choices.size(); i++) {
+				if (i != 0) {
 					correctResponsesPattern_string += "[,]";
+				}
 				correctResponsesPattern_string += glossary_choices.get(i);
 			}
 			correctResponsesPattern.add(correctResponsesPattern_string);
@@ -383,7 +388,9 @@ public class XAPIgenerator {
 			c.setContextActivities(ca);
 			c.setStatement(statementRef);
 			statement.setContext(c);
+			break;
 		}
+
 		return this;
 	}
 
@@ -395,8 +402,7 @@ public class XAPIgenerator {
 	 * @return statement for xAPI
 	 */
 	public Statement generateStatement(Task task, CabriVersion version) {
-		switch(version)
-		{
+		switch (version) {
 		case v1_0:
 			statement.setActor(task.getLearnerAsActor());
 
@@ -424,9 +430,13 @@ public class XAPIgenerator {
 			Context c = new Context();
 			c.setExtensions(extensions);
 			statement.setContext(c);
+			break;
+
 		case test:
 			statement.setActor(task.getLearnerAsActor());
+			break;
 		}
+
 		return statement;
 	}
 
