@@ -607,13 +607,17 @@ public class LearningProcess {
 	 * @return
 	 */
 	private static double feedbackInfo(Task task) {
+		double minFeedbackWeight = 1;
 		double feedbackInfo = 0;
 
 		List<String> feedbacks = getFTFeedbacks(task);
 
 		double sum = 0;
+		int i = 1;
 		for (String feedbackId : feedbacks) {
-			sum += getWeightInfo(feedbackId);
+			sum += minFeedbackWeight + ((getWeightInfo(feedbackId) - minFeedbackWeight) * 1 / Math.sqrt(i));
+
+			i++;
 		}
 
 		// TODO check for case divide by 0 -> shouldn't occurs, but for security purpose
