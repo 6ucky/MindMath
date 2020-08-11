@@ -27,13 +27,14 @@ public class PostCabriJsonTest {
 	private TestRestTemplate restTemplate;
 	
 	private static String jsonfile = "{\r\n" + 
-			"    \"id\": \"100\",\r\n" + 
 			"    \"sensors\": {\r\n" + 
-			"        \"domain\": \"algebre\",\r\n" + 
+			"        \"idLearner\": \"123\",\r\n" + 
+			"        \"domain\": \"algebre123\",\r\n" + 
 			"        \"generator\": \"resoudreEquationPremierDegre\",\r\n" + 
 			"        \"taskFamily\": \"ft3.1\",\r\n" + 
-			"        \"correctAnswer\": true,\r\n" + 
-			"        \"codeError\": \"ce_err5\"\r\n" + 
+			"        \"correctAnswer\": false,\r\n" + 
+			"        \"codeError\": \"ce_err5\",\r\n" + 
+			"        \"activityMode\": 0\r\n" + 
 			"    },\r\n" + 
 			"    \"log\": [\r\n" + 
 			"        {\r\n" + 
@@ -58,8 +59,7 @@ public class PostCabriJsonTest {
 			"}";
 
 	//Expected response feedback
-	private static String responsejson = "{\"id\":\"100\",\"idF\":\"F1.1\",\"motivationalElement\":\"Bravo!\",\"solutionModel\":\"mindmath.lip6.fr/videos/ResolutionEquation.mp4\",\"glossary\":\"hypertext\"}";	
-	
+	private static String responsejson = "\"idLearner\":\"123\",\"idFbCabri\":\"\",\"idFamilytask\":\"ft3.1\"";
 	@Test
 	public void POSTjsonfilefromCabrishouldreturnFeedback() throws Exception {
 		

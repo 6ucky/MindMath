@@ -161,12 +161,15 @@ public class XAPIgenerator {
 		attachment.addAttachment("../mindmath/src/main/resources/static/videos/ResolutionEquation.mp4",
 				"application/octet-stream");
 		ArrayList<Attachment> attachments = new ArrayList<>();
-		URI expected_type = new URI("http://lrsmocah.lip6.fr/attachments/video");
+		URI expected_type = new URI("http://mindmath.lip6.fr/attachments/video");
 		attachment.setUsageType(expected_type);
 		String key = "en-US";
 		HashMap<String, String> expected_display = new HashMap<>();
 		expected_display.put(key, "Feedback Video.");
 		attachment.setDisplay(expected_display);
+		HashMap<String, String> description_map = new HashMap<>();
+		description_map.put(key, "Feedback Content.");
+		attachment.setDescription(description_map);
 		attachment.setFileUrl(new URI("https://mindmath.lip6.fr/videos/ResolutionEquation.mp4"));
 		attachments.add(attachment);
 		statement.setAttachments(attachments);
@@ -245,7 +248,7 @@ public class XAPIgenerator {
 	 */
 	public XAPIgenerator setObject(Task task) {
 		Activity a = new Activity();
-		String ac_id = "https://mindmath.lip6.fr/" + task.getSensors().getTaskFamily();
+		String ac_id = "https://mindmath.lip6.fr/TaskFamily/" + task.getSensors().getTaskFamily();
 		a.setId(ac_id);
 		String key = "fr-FR";
 		ArrayList<InteractionComponent> source = new ArrayList<InteractionComponent>();

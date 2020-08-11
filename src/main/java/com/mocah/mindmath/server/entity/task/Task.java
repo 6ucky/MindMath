@@ -180,7 +180,7 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	public Agent getLearnerAsActor() {
 		Agent agent = new Agent();
-		Account account = new Account(this.getSensors().getId_learner(), "https://www.tralalere.com/");
+		Account account = new Account("Learner:" + this.getSensors().getId_learner(), "https://www.tralalere.com/");
 		agent.setAccount(account);
 
 		return agent;
