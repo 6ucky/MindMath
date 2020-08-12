@@ -31,6 +31,13 @@ public class Filecontroller {
 		return false;
 	}
 	
+	/**
+	 * overwrite imageHTML mustache, if backup return the default value
+	 * @param auth
+	 * @param data the content of imageHTML
+	 * @return
+	 * @throws IOException
+	 */
 	@PostMapping("/mustache/imageHTML")
 	public ResponseEntity<String> replaceImageHTML(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) throws IOException {
@@ -38,7 +45,7 @@ public class Filecontroller {
 		{
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		}
-		String backup = "<img src='{{default_img_url}}' alt='Feedback'>";
+		String backup = "<a href='{{default_img_url}}' target='_blank'><img width='100%' src='{{default_img_url}}' alt='Feedback'></a>";
 		String route = "mustache_template/contentFBImage.mustache";
 		if(data.equals("backup"))
 			LocalRouteRepository.writeFile(backup, route);
@@ -47,6 +54,13 @@ public class Filecontroller {
 		return new ResponseEntity<>(LocalRouteRepository.readFileasString(route), HttpStatus.OK);
 	}
 	
+	/**
+	 * overwrite videoHTML mustache, if backup return the default value
+	 * @param auth
+	 * @param data the content of videoHTML
+	 * @return
+	 * @throws IOException
+	 */
 	@PostMapping("/mustache/videoHTML")
 	public ResponseEntity<String> replaceVideoHTML(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) throws IOException {
@@ -63,6 +77,13 @@ public class Filecontroller {
 		return new ResponseEntity<>(LocalRouteRepository.readFileasString(route), HttpStatus.OK);
 	}
 	
+	/**
+	 * overwrite generalHTML mustache, if backup return the default value
+	 * @param auth
+	 * @param data the content of generalHTML
+	 * @return
+	 * @throws IOException
+	 */
 	@PostMapping("/mustache/generalHTML")
 	public ResponseEntity<String> replaceGeneralHTML(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) throws IOException {
@@ -79,6 +100,13 @@ public class Filecontroller {
 		return new ResponseEntity<>(LocalRouteRepository.readFileasString(route), HttpStatus.OK);
 	}
 	
+	/**
+	 * overwrite glossary mustache, if backup return the default value
+	 * @param auth
+	 * @param data the content of glossary mustache
+	 * @return
+	 * @throws IOException
+	 */
 	@PostMapping("/mustache/glossaireHTML")
 	public ResponseEntity<String> replaceGlossaireHTML(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) throws IOException {
@@ -95,6 +123,13 @@ public class Filecontroller {
 		return new ResponseEntity<>(LocalRouteRepository.readFileasString(route), HttpStatus.OK);
 	}
 	
+	/**
+	 * read file from local path
+	 * @param auth
+	 * @param route	the path of the local file
+	 * @return
+	 * @throws IOException
+	 */
 	@GetMapping("")
 	public ResponseEntity<String> getFileAsString(@RequestHeader("Authorization") String auth,
 			@RequestBody String route) throws IOException {

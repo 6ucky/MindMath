@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.mocah.mindmath.server.ServerApplication;
 
+import gov.adlnet.xapi.model.Verbs;
+
 //Spring Boot Test for a post json file from Cabri
 @SpringBootTest(classes=ServerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) 
 public class PostCabriJsonTest {
@@ -69,6 +71,7 @@ public class PostCabriJsonTest {
 		headers.add("Authorization", "mocah");
 		headers.add("Version-LIP6", "1.0");
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		Verbs.commented();
 		
 		HttpEntity<String> entity = new HttpEntity<>(jsonfile, headers);
 		
