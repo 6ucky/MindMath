@@ -186,6 +186,51 @@ public class XAPIgenerator {
 	 * @param fbjson     feedback object
 	 * @return this generator
 	 */
+	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson, CabriVersion version) {
+		switch(version)
+		{
+		case v1_0:
+			Result fdresult = new Result();
+			if (success == true && completion == true) {
+				JsonObject jo = new JsonObject();
+				jo.addProperty("idFeedback", fbjson.getIdFeedback());
+				jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
+				jo.addProperty("contentFb", fbjson.getContentFb());
+				jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
+				JsonObject root_jo = new JsonObject();
+				root_jo.add("https://mindmath.lip6.fr/feedback", jo);
+				fdresult.setExtensions(root_jo);
+			}
+			fdresult.setSuccess(success);
+			fdresult.setCompletion(completion);
+
+			statement.setResult(fdresult);
+			break;
+			
+		case test:
+			fdresult = new Result();
+			fdresult.setSuccess(success);
+			fdresult.setCompletion(completion);
+			if (success == true && completion == true) {
+				JsonObject jo = new JsonObject();
+				jo.addProperty("idFeedback", fbjson.getIdFeedback());
+				jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
+				jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
+				JsonObject root_jo = new JsonObject();
+				root_jo.add("https://mindmath.lip6.fr/feedback", jo);
+				fdresult.setExtensions(root_jo);
+			}
+			fdresult.setResponse(fbjson.getContentFb());
+			statement.setResult(fdresult);
+			break;
+		}
+		
+		return this;
+	}
+	
+	/**
+	 * @deprecated use setResult without motivations
+	 */
 	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson, List<Motivation> motivations, CabriVersion version) {
 		switch(version)
 		{
@@ -343,6 +388,7 @@ public class XAPIgenerator {
 	
 	/**
 	 * set substatement as object
+	 * @deprecated use statementref instead
 	 * @param in_statement input statement
 	 * @return
 	 */
@@ -380,35 +426,25 @@ public class XAPIgenerator {
 		return this;
 	}
 	
-	public XAPIgenerator setResultExtension(ArrayList<String> glossary_choices, ArrayList<Glossaire> glossaryMap, CabriVersion version)
+	/**
+	 * set learner as actor
+	 * @param task
+	 * @return
+	 */
+	public XAPIgenerator setActor(Task task)
 	{
-		switch(version)
-		{
-		case v1_0:
-		case test:
-			if(glossary_choices.size() == 0)
-				return this;
-			Result result = statement.getResult();
-			if(result.isSuccess() == true && result.isCompletion() == true)
-			{
-				JsonObject jo = new JsonObject();
-				for(Glossaire glossary : glossaryMap)
-				{
-					if(glossary_choices.contains(glossary.getGlossaire_name()))
-					{
-						jo.addProperty(glossary.getGlossaire_name(),glossary.getGlossaire_content());
-					}
-				}
-				JsonObject root_jo = new JsonObject();
-				root_jo.add("https://mindmath.lip6.fr/glossary", jo);
-				result.setExtensions(root_jo);
-			}
-			statement.setResult(result);
-			break;
-		}
+		statement.setActor(task.getLearnerAsActor());
 		return this;
 	}
 	
+	/**
+	 * set glossary as contextactivity in context
+	 * @deprecated use result instead
+	 * @param glossary_choices the selected glossaries
+	 * @param glossaryMap all the glossaries
+	 * @param version
+	 * @return
+	 */
 	public XAPIgenerator setContext(ArrayList<String> glossary_choices, ArrayList<Glossaire> glossaryMap, CabriVersion version) {
 		switch(version)
 		{
@@ -499,8 +535,6 @@ public class XAPIgenerator {
 			statement.setContext(c);
 			break;
 		case test:
-			if(statement.getActor() == null)
-				statement.setActor(task.getLearnerAsActor());
 			break;
 		}
 		return statement;

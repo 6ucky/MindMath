@@ -302,6 +302,7 @@ public class Taskcontroller {
 
 		task = getTaskrepository().save(task);
 
+		//TODO generic method for feedback_test
 		Feedbackjson feedbackjson;
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		if (sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER)) {

@@ -326,25 +326,28 @@ public class LRScontroller {
 		ArrayList<Statement> statements = new ArrayList<Statement>();
 		Statement statement1 = new Statement();
 		
-		statement1 = generator.setVerb(Verbs.asked())
+		statement1 = generator.setActor(task)
+				.setVerb(Verbs.asked())
 				.setObject(task)
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement1);
 		
 		Statement statement2 = new Statement();
 		generator = new XAPIgenerator();
-		statement2 = generator.setVerb(Verbs.answered())
+		statement2 = generator.setActor(task)
+				.setVerb(Verbs.answered())
 				.setObject(task)
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement2);
 		
 		Statement statement3 = new Statement();
 		generator = new XAPIgenerator();
-		statement3 = generator.setVerb(Verbs.responded())
+		statement3 = generator.setActorAsLip6()
+				.setVerb(Verbs.responded())
 				.setObject(statement1)
-				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
-				.setResult(true, true, fbjson, getMotivation("3.0.0.XE", "6"), CabriVersion.test)
-				.setAttachment()
+//				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
+				.setResult(true, true, fbjson, CabriVersion.test)
+//				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement3);
 		Gson gson = new Gson();
@@ -358,17 +361,16 @@ public class LRScontroller {
 		Task task = jsonparser.parse(data, CabriVersion.v1_0);
 		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
-		ArrayList<String> results = new ArrayList<String>();
 		XAPIgenerator generator = new XAPIgenerator();
 		ArrayList<Statement> statements = new ArrayList<Statement>();
 		Statement statement1 = new Statement();
 		
-		statement1 = generator.setVerb(task)
+		statement1 = generator.setActor(task)
+				.setVerb(task)
 				.setObject(task)
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement1);
 		String id = ll.postStatement(statement1);
-		results.add(id);
 		
 		Statement statement2 = new Statement();
 		generator = new XAPIgenerator();
@@ -378,13 +380,11 @@ public class LRScontroller {
 //				.setObject(statement1)
 //				.setObject(task)
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
-				.setResult(true, true, fbjson, getMotivation("3.0.0.XE", "6"), CabriVersion.test)
-				.setResultExtension(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
-				.setAttachment()
+				.setResult(true, true, fbjson, CabriVersion.test)
+//				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement2);
 		
-		results.add(ll.postStatement(statement2));
 		Gson gson = new Gson();
 		return new ResponseEntity<>(gson.toJson(statements), HttpStatus.ACCEPTED);
 	}
