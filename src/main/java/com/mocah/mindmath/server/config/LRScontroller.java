@@ -384,6 +384,7 @@ public class LRScontroller {
 //				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement2);
+		ll.postStatement(statement2);
 		
 		Gson gson = new Gson();
 		return new ResponseEntity<>(gson.toJson(statements), HttpStatus.ACCEPTED);
