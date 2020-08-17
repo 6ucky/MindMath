@@ -49,4 +49,18 @@ public class FeedbackData {
 	public Double getReward() {
 		return reward;
 	}
+
+	/**
+	 * @return the modified state
+	 */
+	public String getModifiedState() {
+		return modifiedState;
+	}
+
+	/**
+	 * @return the qvalues for this state
+	 */
+	public Map<String, Double> getQvalues() {
+		return qvalues;
+	}
 }
