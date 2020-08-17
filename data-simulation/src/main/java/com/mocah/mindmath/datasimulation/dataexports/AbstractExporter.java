@@ -25,16 +25,29 @@ public abstract class AbstractExporter {
 
 	public abstract void export();
 
+	/**
+	 * Create all missing parent files.<br>
+	 * Calls {@code f.getParentFile().mkdirs()}
+	 *
+	 * @param f a file
+	 */
+	protected void createPath(File f) {
+		if (f.getParentFile() != null) {
+			f.getParentFile().mkdirs();
+		}
+	}
+
 	protected void writeInFile(File f, String content) {
+		if (f == null)
+			return;
+
 		if (content == null) {
 			content = "";
 		}
 
 		BufferedWriter writer = null;
 		try {
-			if (f.getParentFile() != null) {
-				f.getParentFile().mkdirs();
-			}
+			createPath(f);
 			f.createNewFile();
 
 			writer = new BufferedWriter(new FileWriter(f));
