@@ -253,27 +253,24 @@ public class XAPIgenerator {
 				qValues = ql.getQValues();
 			}
 			
-			JsonArray jsonarray = new JsonArray();
 			for(IState state : qValues.keySet())
 			{
-				JsonObject qlearning_object = new JsonObject();
+				JsonObject value_object = new JsonObject();
+				String keyname = "";
 				if(state instanceof State)
 				{
 					HashMap<String, StateParam<?>> s = ((State) state).getParams();
 					for(String key: s.keySet())
 					{
-						qlearning_object.addProperty(key, s.get(key).toString());
+						keyname += key + "=" + s.get(key).toString() + "&";
 					}
 				}
-				JsonObject value_object = new JsonObject();
 				for(IValue value : qValues.get(state))
 				{
 					value_object.addProperty(value.myAction().getId(), value.getValue());
 				}
-				qlearning_object.add("qvalue", value_object);
-				jsonarray.add(qlearning_object);
+				root_jo.add("https://mindmath.lip6.fr/qlearning?" + keyname.substring(0, keyname.length()-1), value_object);
 			}
-			root_jo.add("https://mindmath.lip6.fr/qlearning", jsonarray);
 		}
 		return this;
 	}
