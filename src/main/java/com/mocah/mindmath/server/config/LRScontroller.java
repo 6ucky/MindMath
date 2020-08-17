@@ -347,6 +347,7 @@ public class LRScontroller {
 				.setObject(statement1)
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
+				.setResultwithQvalues()
 //				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement3);
@@ -381,6 +382,7 @@ public class LRScontroller {
 //				.setObject(task)
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
+				.setResultwithQvalues()
 //				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement2);

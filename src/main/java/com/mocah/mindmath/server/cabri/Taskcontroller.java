@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -35,6 +36,8 @@ import com.mocah.mindmath.learning.algorithms.ILearning;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.actions.IAction;
 import com.mocah.mindmath.learning.utils.states.IState;
+import com.mocah.mindmath.learning.utils.states.State;
+import com.mocah.mindmath.learning.utils.states.StateParam;
 import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.parser.jsonparser.CabriVersion;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
@@ -340,15 +343,42 @@ public class Taskcontroller {
 		ILearning learning = LearningProcess.initLearningProcess();
 		serializableRedisTemplate.opsForValue().set("learning", learning);
 
-		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		Task task = jsonparser.parse(data, CabriVersion.test);
-		serializableRedisTemplate.opsForValue().set("task", task);
+//		JsonParserFactory jsonparser = new JsonParserFactory(data);
+//		Task task = jsonparser.parse(data, CabriVersion.test);
+//		serializableRedisTemplate.opsForValue().set("task", task);
 
 		ILearning learningfromRedis = (ILearning) serializableRedisTemplate.opsForValue().get("learning");
-		Task taskfromRedis = (Task) serializableRedisTemplate.opsForValue().get("task");
+//		Task taskfromRedis = (Task) serializableRedisTemplate.opsForValue().get("task");
 
-		Feedbackjson feedbackjson = generateFeedback("3.0.0.XE", "6", "1", taskfromRedis);
-		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
+//		Feedbackjson feedbackjson = generateFeedback("3.0.0.XE", "6", "1", taskfromRedis);
+//		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
+		
+		Map<IState, ArrayList<IValue>> qValues = null;
+
+		if (learningfromRedis instanceof QLearning) {
+			QLearning ql = (QLearning) learningfromRedis;
+			qValues = ql.getQValues();
+		}
+
+		StringBuilder res = new StringBuilder();
+
+		for (IState state : qValues.keySet()) {
+			StringBuilder line = new StringBuilder(state.toString());
+			line.append(";");
+
+			for (IValue value : qValues.get(state)) {
+				line.append(value.myAction());
+				line.append("→");
+				line.append(value.getValue());
+				line.append(";");
+			}
+
+			line.append("\n");
+
+			res.append(line);
+		}
+		
+		return new ResponseEntity<String>(res.toString(), HttpStatus.OK);
 	}
 
 	/**

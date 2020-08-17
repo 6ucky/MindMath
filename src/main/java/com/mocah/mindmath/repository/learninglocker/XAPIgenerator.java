@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.google.gson.Gson;
@@ -15,6 +16,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mocah.mindmath.learning.LearningProcess;
+import com.mocah.mindmath.learning.algorithms.ILearning;
+import com.mocah.mindmath.learning.algorithms.QLearning;
+import com.mocah.mindmath.learning.utils.states.IState;
+import com.mocah.mindmath.learning.utils.states.State;
+import com.mocah.mindmath.learning.utils.states.StateParam;
+import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.parser.jsonparser.CabriVersion;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
@@ -225,6 +233,48 @@ public class XAPIgenerator {
 			break;
 		}
 		
+		return this;
+	}
+	
+	/**
+	 * put qvalues from qlearing in the extension of result
+	 * @return
+	 */
+	public XAPIgenerator setResultwithQvalues()
+	{
+		if(statement.getResult() != null && statement.getResult().getExtensions() != null)
+		{
+			JsonObject root_jo = statement.getResult().getExtensions();
+			ILearning learning = LearningProcess.getLearning();
+			Map<IState, ArrayList<IValue>> qValues = null;
+
+			if (learning instanceof QLearning) {
+				QLearning ql = (QLearning) learning;
+				qValues = ql.getQValues();
+			}
+			
+			JsonArray jsonarray = new JsonArray();
+			for(IState state : qValues.keySet())
+			{
+				JsonObject qlearning_object = new JsonObject();
+				if(state instanceof State)
+				{
+					HashMap<String, StateParam<?>> s = ((State) state).getParams();
+					for(String key: s.keySet())
+					{
+						qlearning_object.addProperty(key, s.get(key).toString());
+					}
+				}
+				JsonObject value_object = new JsonObject();
+				for(IValue value : qValues.get(state))
+				{
+					value_object.addProperty(value.myAction().getId(), value.getValue());
+				}
+				qlearning_object.add("qvalue", value_object);
+				jsonarray.add(qlearning_object);
+			}
+			root_jo.add("https://mindmath.lip6.fr/qlearning", jsonarray);
+		}
 		return this;
 	}
 	
