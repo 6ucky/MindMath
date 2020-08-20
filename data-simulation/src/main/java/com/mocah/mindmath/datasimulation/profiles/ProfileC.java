@@ -46,7 +46,7 @@ public class ProfileC extends AbstractProfile {
 		this.initialActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, 0.75, ActivityModeEnum.A1, 0.25,
 				ActivityModeEnum.A2, 0.0);
 		this.activityMode = initActivityMode();
-		this.deltaActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, 0.30, ActivityModeEnum.A1, 0.20,
+		this.deltaActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, 0.15, ActivityModeEnum.A1, 0.15,
 				ActivityModeEnum.A2, 0.0);
 		this.activityModeIncreaseProb = this.deltaActivityModeProb.get(activityMode);
 
@@ -59,9 +59,10 @@ public class ProfileC extends AbstractProfile {
 		this.defaultDelta = 0.1;
 		this.percentMode = false;
 
-		this.iteration = 0;
-
 		this.askHelpProb = 0.0;
+
+		// Profile specific
+		this.iteration = 0;
 	}
 
 	@Override

@@ -35,8 +35,8 @@ public class ProfileA extends AbstractProfile {
 //		this.waitingInformative = true;
 //		this.minWheightInfo = 3;
 
-		this.initialActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, (double) 1 / 3, ActivityModeEnum.A1,
-				(double) 1 / 3, ActivityModeEnum.A2, (double) 1 / 3);
+		this.initialActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, (double) 2 / 5, ActivityModeEnum.A1,
+				(double) 2 / 5, ActivityModeEnum.A2, (double) 1 / 5);
 		this.activityMode = initActivityMode();
 		this.deltaActivityModeProb = ImmutableMap.of(ActivityModeEnum.A0, 0.0, ActivityModeEnum.A1, 0.0,
 				ActivityModeEnum.A2, 0.0);
@@ -45,9 +45,9 @@ public class ProfileA extends AbstractProfile {
 		// Exercise Success
 		this.baseSuccessProb = 0.0;
 		this.successProb = this.baseSuccessProb;
-		this.deltas = Maps.newHashMap(ImmutableMap.of(0, 0.0, 1, 0.0, 2, 0.0, 3, 0.9, 4, 1.0));
+		this.deltas = Maps.newHashMap(ImmutableMap.of(0, 0.0, 1, 0.0, 2, 0.0, 3, 0.5, 4, 1.0));
 		this.firstIncreaseProb = 1.0;
-		this.defaultDelta = 0.1;
+		this.defaultDelta = 0.0;
 
 		this.askHelpProb = 0.0;
 	}

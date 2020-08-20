@@ -78,7 +78,7 @@ public abstract class AbstractProfile implements IProfile {
 	/**
 	 * Part of success prob obtained conserved at the end of each exercise.<br>
 	 * Will be reset {@code baseSuccessProb} to
-	 * {@code baseSuccessProb + successProb * exerciseDelta}
+	 * {@code baseSuccessProb = baseSuccessProb + successProb * exerciseDelta}
 	 */
 	protected double exerciseDelta;
 
