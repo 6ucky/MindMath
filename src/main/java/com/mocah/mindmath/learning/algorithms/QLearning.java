@@ -17,6 +17,9 @@ public class QLearning extends AbstractLearning {
 	 */
 	private static final long serialVersionUID = 6844041665004157495L;
 
+	private static final double DEFAULT_ALPHA = 0.1;
+	private static final double DEFAULT_GAMMA = 0.1;
+
 	private HashMap<IState, ArrayList<IValue>> qValues;
 
 	// learning rate
@@ -26,7 +29,7 @@ public class QLearning extends AbstractLearning {
 
 	// TODO a améliorer
 	public QLearning(IPolicy policy, List<? extends IState> states, List<? extends IAction> actions) {
-		this(policy, states, actions, 0.9, 0.75);
+		this(policy, states, actions, DEFAULT_ALPHA, DEFAULT_GAMMA);
 	}
 
 	public QLearning(IPolicy policy, List<? extends IState> states, List<? extends IAction> actions, double alpha,
@@ -42,7 +45,7 @@ public class QLearning extends AbstractLearning {
 	}
 
 	public QLearning(IPolicy policy, Map<IState, ArrayList<IValue>> qValues) {
-		this(policy, qValues, 0.9, 0.75);
+		this(policy, qValues, DEFAULT_ALPHA, DEFAULT_GAMMA);
 	}
 
 	public QLearning(IPolicy policy, Map<IState, ArrayList<IValue>> qValues, double alpha, double gamma) {
