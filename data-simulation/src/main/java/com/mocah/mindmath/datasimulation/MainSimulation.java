@@ -5,6 +5,9 @@ package com.mocah.mindmath.datasimulation;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
@@ -49,129 +52,140 @@ public class MainSimulation {
 
 		String finalQTable = null;
 
-		int learnerIteration = 1;
+		List<Class<? extends IProfile>> learners = new ArrayList<>();
 		for (Entry<Class<? extends IProfile>, Integer> entry : AppConfig.learners.entrySet()) {
-			Constructor<?> ctor = entry.getKey().getConstructor();
+			int i = 1;
+			while (i <= entry.getValue()) {
+				learners.add(entry.getKey());
+				i++;
+			}
+		}
 
-			int currentLearnerIteration = 1;
-			while (currentLearnerIteration <= entry.getValue()) {
-				AbstractProfile profile = (AbstractProfile) ctor.newInstance();
-				profile.generateLearnerID();
-				profile.initLearner();
+		if (AppConfig.useRandomProfileOrder) {
+			Collections.shuffle(learners);
+		}
 
-				SimulatedDataLearner sdLearner = new SimulatedDataLearner(learnerIteration, profile,
-						profile.getLearnerID());
-				container.getDatasets().put(profile.getLearnerID(), sdLearner);
+		System.out.println("Profile generation order:");
+		System.out.println(learners);
 
-				int currentIteration = 1;
-				FeedbackData feedbackData = null;
-				while (currentIteration <= AppConfig.MAX_ITERATION) {
-					CabriData data = new CabriData();
-					data.setLearnerId(profile.getLearnerID());
-					data.setDomain(profile.getDomain());
-					data.setGenerator(profile.getGenerator());
-					data.setTaskFamily(profile.getTaskFamily());
-					data.setActivityMode(profile.getActivityMode());
+		int learnerIteration = 1;
+		for (Class<? extends IProfile> profileClass : learners) {
+			Constructor<?> ctor = profileClass.getConstructor();
 
-					// Simulate a trigger
-					Trigger trigger;
-					if (rand.nextDouble() < profile.getAskHelpProb()) {
-						// Ask help
-						trigger = new Trigger(TriggerEnum.HELP);
+			AbstractProfile profile = (AbstractProfile) ctor.newInstance();
+			profile.generateLearnerID();
+			profile.initLearner();
+
+			SimulatedDataLearner sdLearner = new SimulatedDataLearner(learnerIteration, profile,
+					profile.getLearnerID());
+			container.getDatasets().put(profile.getLearnerID(), sdLearner);
+
+			int currentIteration = 1;
+			FeedbackData feedbackData = null;
+			while (currentIteration <= AppConfig.MAX_ITERATION) {
+				CabriData data = new CabriData();
+				data.setLearnerId(profile.getLearnerID());
+				data.setDomain(profile.getDomain());
+				data.setGenerator(profile.getGenerator());
+				data.setTaskFamily(profile.getTaskFamily());
+				data.setActivityMode(profile.getActivityMode());
+
+				// Simulate a trigger
+				Trigger trigger;
+				if (rand.nextDouble() < profile.getAskHelpProb()) {
+					// Ask help
+					trigger = new Trigger(TriggerEnum.HELP);
+				} else {
+					// Validate exercise
+					trigger = new Trigger(TriggerEnum.VALIDATE);
+				}
+				data.setTrigger(trigger);
+
+				// Simulate a correct answer
+				Answer correctAnswer;
+				switch (trigger.getEnum().getThis()) {
+				case HELP:
+					correctAnswer = new Answer(AnswerEnum.NULL);
+					break;
+
+				default:
+				case VALIDATE:
+					if (rand.nextDouble() < profile.getSuccessProb()) {
+						// Learner makes a correct answer
+						correctAnswer = new Answer(AnswerEnum.TRUE);
 					} else {
-						// Validate exercise
-						trigger = new Trigger(TriggerEnum.VALIDATE);
+						// Learner makes an error
+						correctAnswer = new Answer(AnswerEnum.FALSE);
 					}
-					data.setTrigger(trigger);
+					break;
 
-					// Simulate a correct answer
-					Answer correctAnswer;
-					switch (trigger.getEnum().getThis()) {
-					case HELP:
-						correctAnswer = new Answer(AnswerEnum.NULL);
-						break;
+				}
+				data.setCorrectAnswer(correctAnswer);
 
-					default:
-					case VALIDATE:
-						if (rand.nextDouble() < profile.getSuccessProb()) {
-							// Learner makes a correct answer
-							correctAnswer = new Answer(AnswerEnum.TRUE);
-						} else {
-							// Learner makes an error
-							correctAnswer = new Answer(AnswerEnum.FALSE);
-						}
-						break;
+				// Simulate an error code
+				ErrorCode errorCode;
+				switch (correctAnswer.getEnum().getThis()) {
+				case FALSE:
+					if (rand.nextDouble() < AppConfig.RECON_ERROR_PROB) {
+						// The error was detected
 
-					}
-					data.setCorrectAnswer(correctAnswer);
+						Set<ErrorCodeEnum> answerError = AnswerConstraint.map.get(correctAnswer.getEnum().getThis());
+						Set<ErrorCodeEnum> generatorError = GeneratorConstraint.map2
+								.get(data.getGenerator().getEnum().getThis());
 
-					// Simulate an error code
-					ErrorCode errorCode;
-					switch (correctAnswer.getEnum().getThis()) {
-					case FALSE:
-						if (rand.nextDouble() < AppConfig.RECON_ERROR_PROB) {
-							// The error was detected
+						Set<ErrorCodeEnum> errors = Sets.intersection(generatorError, answerError);
 
-							Set<ErrorCodeEnum> answerError = AnswerConstraint.map
-									.get(correctAnswer.getEnum().getThis());
-							Set<ErrorCodeEnum> generatorError = GeneratorConstraint.map2
-									.get(data.getGenerator().getEnum().getThis());
+						int i = rand.nextInt(errors.size());
 
-							Set<ErrorCodeEnum> errors = Sets.intersection(generatorError, answerError);
-
-							int i = rand.nextInt(errors.size());
-
-							errorCode = new ErrorCode(Iterables.get(errors, i));
-						} else {
-							// The error wasn't detected
-							errorCode = new ErrorCode(ErrorCodeEnum.NULL);
-						}
-						break;
-
-					case TRUE:
-					case NULL:
-					default:
+						errorCode = new ErrorCode(Iterables.get(errors, i));
+					} else {
+						// The error wasn't detected
 						errorCode = new ErrorCode(ErrorCodeEnum.NULL);
-						break;
 					}
+					break;
 
-					data.setErrorCode(errorCode);
-
-					String feedback = ServerConn.postData(data);
-					System.out.println("Données envoyées : " + AppConfig.getGson().toJson(data));
-					System.out.println("Feedback reçu : " + feedback);
-
-					feedbackData = AppConfig.getGson().fromJson(feedback, FeedbackData.class);
-
-					SimulatedData simData = new SimulatedData(currentIteration, data, feedbackData);
-					simData.setExerciseSuccessProb(profile.getSuccessProb());
-					simData.setActivityModeIncreaseSuccessProb(profile.getActivityModeIncreaseProb());
-					sdLearner.getDataset().add(simData);
-
-					int fdbkInfoWeight = 0;
-					if (profile.isReadingFeedback() && feedbackData != null) {
-						fdbkInfoWeight = AppConfig.getWeightInfo(feedbackData.getIdFeedback());
-					}
-
-					profile.calcNewSuccessProb(fdbkInfoWeight);
-
-					// Learner had a correct answer, since it's a new exercise, recalc it's success
-					// probability
-					if (correctAnswer.getEnum().getThis() == AnswerEnum.TRUE) {
-						profile.learnFromExercise();
-					}
-
-					currentIteration++;
+				case TRUE:
+				case NULL:
+				default:
+					errorCode = new ErrorCode(ErrorCodeEnum.NULL);
+					break;
 				}
 
-				String qtable = ServerConn.getQtable();
-				sdLearner.setLearnerCSV(qtable);
-				finalQTable = qtable;
-				System.out.println(qtable);
+				data.setErrorCode(errorCode);
 
-				currentLearnerIteration++;
-				learnerIteration++;
+				String feedback = ServerConn.postData(data);
+				System.out.println("Données envoyées : " + AppConfig.getGson().toJson(data));
+				System.out.println("Feedback reçu : " + feedback);
+
+				feedbackData = AppConfig.getGson().fromJson(feedback, FeedbackData.class);
+
+				SimulatedData simData = new SimulatedData(currentIteration, data, feedbackData);
+				simData.setExerciseSuccessProb(profile.getSuccessProb());
+				simData.setActivityModeIncreaseSuccessProb(profile.getActivityModeIncreaseProb());
+				sdLearner.getDataset().add(simData);
+
+				int fdbkInfoWeight = 0;
+				if (profile.isReadingFeedback() && feedbackData != null) {
+					fdbkInfoWeight = AppConfig.getWeightInfo(feedbackData.getIdFeedback());
+				}
+
+				profile.calcNewSuccessProb(fdbkInfoWeight);
+
+				// Learner had a correct answer, since it's a new exercise, recalc it's success
+				// probability
+				if (correctAnswer.getEnum().getThis() == AnswerEnum.TRUE) {
+					profile.learnFromExercise();
+				}
+
+				currentIteration++;
 			}
+
+			String qtable = ServerConn.getQtable();
+			sdLearner.setLearnerCSV(qtable);
+			finalQTable = qtable;
+			System.out.println(qtable);
+
+			learnerIteration++;
 		}
 
 		container.setFinalCSV(finalQTable);
