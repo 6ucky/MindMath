@@ -82,7 +82,7 @@ public class LearningProcess {
 	 * result value of {@code base_weight*LearningProcess.BASE_QVALUE_SCORESUM_INIT}
 	 *
 	 */
-	public final static double BASE_QVALUE_SCORESUM_INIT = 10000;
+	public final static double BASE_QVALUE_SCORESUM_INIT = 100;
 
 	/**
 	 * @return
