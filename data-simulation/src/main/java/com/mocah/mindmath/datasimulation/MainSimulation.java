@@ -178,6 +178,8 @@ public class MainSimulation {
 				}
 
 				currentIteration++;
+				System.out.println("Learner " + learnerIteration + "/" + learners.size() + " iteration "
+						+ currentIteration + "/" + AppConfig.MAX_ITERATION);
 			}
 
 			String qtable = ServerConn.getQtable();

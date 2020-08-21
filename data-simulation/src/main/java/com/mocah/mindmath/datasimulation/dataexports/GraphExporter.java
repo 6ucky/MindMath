@@ -64,19 +64,19 @@ public class GraphExporter extends AbstractExporter {
 		Map<String, Map<String, List<Double>>> yStateValues = new HashMap<>();
 
 		// Per profile graph
-		Map<IProfile, Integer> profileI = new HashMap<>();
-		Map<IProfile, Double> profileCumReward = new HashMap<>();
-		Map<IProfile, List<Integer>> xProfileIteration = new HashMap<>();
-		Map<IProfile, List<Double>> xProfileIterationShift = new HashMap<>();
-		Map<IProfile, List<Double>> yProfileReward = new HashMap<>();
-		Map<IProfile, List<Double>> yProfileCumReward = new HashMap<>();
-		Map<IProfile, List<Integer>> yProfileActivityMode = new HashMap<>();
-		Map<IProfile, List<Integer>> yProfileFeedbackWeight = new HashMap<>();
-		Map<IProfile, List<Double>> yProfileSuccessProb = new HashMap<>();
-		Map<IProfile, List<Double>> yProfileIncreaseProb = new HashMap<>();
+		Map<Class<? extends IProfile>, Integer> profileI = new HashMap<>();
+		Map<Class<? extends IProfile>, Double> profileCumReward = new HashMap<>();
+		Map<Class<? extends IProfile>, List<Integer>> xProfileIteration = new HashMap<>();
+		Map<Class<? extends IProfile>, List<Double>> xProfileIterationShift = new HashMap<>();
+		Map<Class<? extends IProfile>, List<Double>> yProfileReward = new HashMap<>();
+		Map<Class<? extends IProfile>, List<Double>> yProfileCumReward = new HashMap<>();
+		Map<Class<? extends IProfile>, List<Integer>> yProfileActivityMode = new HashMap<>();
+		Map<Class<? extends IProfile>, List<Integer>> yProfileFeedbackWeight = new HashMap<>();
+		Map<Class<? extends IProfile>, List<Double>> yProfileSuccessProb = new HashMap<>();
+		Map<Class<? extends IProfile>, List<Double>> yProfileIncreaseProb = new HashMap<>();
 		while (it.hasNext()) {
 			SimulatedDataLearner learner = it.next();
-			IProfile lProfile = learner.getProfile();
+			Class<? extends IProfile> lProfile = learner.getProfile().getClass();
 
 			// Per Learner graph
 			List<Integer> xLearnerIteration = new ArrayList<>(AppConfig.MAX_ITERATION);
@@ -187,7 +187,7 @@ public class GraphExporter extends AbstractExporter {
 				// Populate activity mode increasing probability
 				double ip = learnerData.getActivityModeIncreaseSuccessProb();
 				yLearnerIncreaseProb.add(ip);
-				yProfileIncreaseProb.get(lProfile).add(sp);
+				yProfileIncreaseProb.get(lProfile).add(ip);
 				yGlobalIncreaseProb.add(ip);
 
 				learnerI += 1;
@@ -195,7 +195,7 @@ public class GraphExporter extends AbstractExporter {
 				profileI.put(lProfile, profileI.get(lProfile) + 1);
 			}
 
-			String learnerChartsTitle = lProfile.getClass().getSimpleName() + ": " + learner.getLearnerId();
+			String learnerChartsTitle = lProfile.getSimpleName() + ": " + learner.getLearnerId();
 			@SuppressWarnings("rawtypes")
 			List<Chart> learnerCharts = generateChartsFor(learnerChartsTitle, xLearnerIteration, xLearnerIterationShift,
 					yLearnerActivityMode, yLearnerIncreaseProb, yLearnerFeedbackWeight, yLearnerSuccessProb,
@@ -212,22 +212,21 @@ public class GraphExporter extends AbstractExporter {
 
 		saveCharts(new File(exportPath + "Global_Graph"), globalCharts, 3, 1);
 
-		for (IProfile profile : profileI.keySet()) {
-
-			String profileChartsTitle = "All learners: " + profile.getClass().getSimpleName();
+		for (Class<? extends IProfile> profile : profileI.keySet()) {
+			String profileChartsTitle = "All learners: " + profile.getSimpleName();
 			@SuppressWarnings("rawtypes")
 			List<Chart> profileCharts = generateChartsFor(profileChartsTitle, xProfileIteration.get(profile),
 					xProfileIterationShift.get(profile), yProfileActivityMode.get(profile),
 					yProfileIncreaseProb.get(profile), yProfileFeedbackWeight.get(profile),
 					yProfileSuccessProb.get(profile), yProfileReward.get(profile), yProfileCumReward.get(profile));
 
-			saveCharts(new File(exportPath + profile.getClass().getSimpleName() + "_Graph"), profileCharts, 3, 1);
+			saveCharts(new File(exportPath + profile.getSimpleName() + "_Graph"), profileCharts, 3, 1);
 		}
 
 		String stateGraphExportPath = exportPath + "states" + File.separator;
 		for (String state : xStateIterations.keySet()) {
 			// Create Chart
-			CategoryChart stateChart = new CategoryChartBuilder().width(800).height(600).title(state)
+			CategoryChart stateChart = new CategoryChartBuilder().width(1920).height(1080).title(state)
 					.xAxisTitle("Iteration").yAxisTitle("Qvalue").build();
 
 			// Customize Chart
@@ -245,7 +244,7 @@ public class GraphExporter extends AbstractExporter {
 	}
 
 	private XYChart buildChart(String title, String xAxisTitle, String yAxisTitle) {
-		XYChart chart = new XYChartBuilder().width(800).height(600).title(title).xAxisTitle(xAxisTitle)
+		XYChart chart = new XYChartBuilder().width(1920).height(1080).title(title).xAxisTitle(xAxisTitle)
 				.yAxisTitle(yAxisTitle).build();
 
 		return chart;
@@ -304,7 +303,7 @@ public class GraphExporter extends AbstractExporter {
 	private void saveChart(File f, Chart<? extends Styler, ? extends Series> chart) {
 		try {
 			createPath(f);
-			BitmapEncoder.saveBitmapWithDPI(chart, f.getCanonicalPath(), BitmapFormat.PNG, 300);
+			BitmapEncoder.saveBitmap(chart, f.getCanonicalPath(), BitmapFormat.PNG);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
