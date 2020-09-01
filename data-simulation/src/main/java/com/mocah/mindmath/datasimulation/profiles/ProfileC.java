@@ -80,8 +80,8 @@ public class ProfileC extends AbstractProfile {
 				originDelta = 0.001;
 			}
 
-			newDelta = k / (1 + ((k / (originDelta + 0.001)) - 1)
-					* Math.exp(-a.getOrDefault(entry.getKey(), defaultA) * iteration));
+			newDelta = k
+					/ (1 + ((k / originDelta) - 1) * Math.exp(-a.getOrDefault(entry.getKey(), defaultA) * iteration));
 
 			this.deltas.put(entry.getKey(), newDelta);
 		}
