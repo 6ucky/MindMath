@@ -311,7 +311,7 @@ public class Taskcontroller {
 		Task task = jsonparser.parse(data, CabriVersion.test);
 
 		task = getTaskrepository().save(task);
-
+		System.out.println(gson.toJson(task));
 		//TODO generic method for feedback_test
 		Feedbackjson feedbackjson;
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
@@ -331,6 +331,7 @@ public class Taskcontroller {
 				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task);
 			}
 		}
+		System.out.println(gson.toJson(feedbackjson));
 		boolean statement_success = true;
 		boolean statement_completion = true;
 		XAPIgenerator generator = new XAPIgenerator();
@@ -348,7 +349,6 @@ public class Taskcontroller {
 				.setVerb(Verbs.responded())
 				.setObject(id)
 				.setResult(statement_success, statement_completion, feedbackjson, CabriVersion.test)
-				.setResultwithQvalues()
 				.generateStatement(task, CabriVersion.test);
 		ll.postStatement(statement2);
 
