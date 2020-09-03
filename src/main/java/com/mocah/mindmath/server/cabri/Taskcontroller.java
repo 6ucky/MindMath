@@ -131,19 +131,25 @@ public class Taskcontroller {
 	 */
 	@PostMapping(path = "", consumes = "application/json")
 	public ResponseEntity<String> addtask(@RequestHeader("Authorization") String auth,
-			@RequestBody @ApiParam(value = "example:\n{\r\n" + "	\"sensors\": {\r\n"
-					+ "		\"idLearner\": \"123\",\r\n" + "		\"domain\": \"algebre123\",\r\n"
-					+ "		\"generator\": \"resoudreEquationPremierDegre\",\r\n"
-					+ "		\"taskFamily\": \"ft3.1\",\r\n" + "		\"correctAnswer\": true,\r\n"
-					+ "		\"codeError\": \"ce_err5\",\r\n" + "		\"activityMode\": 0\r\n" + "	},\r\n"
-					+ "	\"log\": [\r\n" + "		{\r\n" + "			\"time\": 4015,\r\n"
-					+ "			\"type\": \"tool\",\r\n" + "			\"name\": \"line_tool\",\r\n"
-					+ "			\"action\": \"create\"\r\n" + "		},\r\n" + "		{\r\n"
-					+ "			\"time\": 5813,\r\n" + "			\"type\": \"button\",\r\n"
-					+ "			\"name\": \"bouton-effacer\",\r\n" + "			\"action\": \"push\"\r\n"
-					+ "		},\r\n" + "		{\r\n" + "			\"time\": 7689,\r\n"
-					+ "			\"type\": \"button\",\r\n" + "			\"name\": \"bouton-valider\",\r\n"
-					+ "			\"action\": \"push\"\r\n" + "		}\r\n" + "	]\r\n" + "}") String data)
+			@RequestBody @ApiParam(value = "example:{\r\n" + 
+					"    \"sensors\": {\r\n" + 
+					"        \"idLearner\": \"123\",\r\n" + 
+					"        \"domain\": \"algebre123\",\r\n" + 
+					"        \"generator\": \"resoudreEquationPremierDegre\",\r\n" + 
+					"        \"taskFamily\": \"ft3.1\",\r\n" + 
+					"        \"correctAnswer\": true,\r\n" + 
+					"        \"codeError\": \"ce_err5\",\r\n" + 
+					"        \"activityMode\": 0\r\n" + 
+					"    },\r\n" + 
+					"    \"log\": [\r\n" + 
+					"        {\r\n" + 
+					"            \"time\": 4015,\r\n" + 
+					"            \"type\": \"tool\",\r\n" + 
+					"            \"name\": \"line_tool\",\r\n" + 
+					"            \"action\": \"create\"\r\n" + 
+					"        }\r\n" + 
+					"    ]\r\n" + 
+					"}") String data)
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 //		return addtaskv1_0(auth, data);
 		return addtaskTEST(auth, data);
