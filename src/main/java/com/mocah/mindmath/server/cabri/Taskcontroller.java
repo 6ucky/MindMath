@@ -59,6 +59,7 @@ import com.mocah.mindmath.server.entity.task.Task;
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
 import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.Verbs;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -309,50 +310,63 @@ public class Taskcontroller {
 		Feedbackjson feedbackjson;
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		if (sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER)) {
-			feedbackjson = generateFeedback("3.0.0.XE", "6", "1", task);
+			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task);
 		} else {
-			String feedbackID_test = jsonparser.getValueforDB(jsonparser.getObject(), "feedbackID_test");
-			String motivation_leaf_test = jsonparser.getValueforDB(jsonparser.getObject(), "motivation_leaf_test");
-			String erreurID_test = jsonparser.getValueforDB(jsonparser.getObject(), "erreurID_test");
+			feedbackjson = new Feedbackjson(task.getTask());
+		}
+		String feedbackID_test = jsonparser.getValueforDB(jsonparser.getObject(), "feedbackID_test");
+		String motivation_leaf_test = jsonparser.getValueforDB(jsonparser.getObject(), "motivation_leaf_test");
+		String erreurID_test = jsonparser.getValueforDB(jsonparser.getObject(), "erreurID_test");
+		if(feedbackID_test != null && motivation_leaf_test != null && erreurID_test != null)
+		{
 			String[] error_list = { "1", "2", "3", "4" };
 			if (getTaskrepository().getFeedbackContent(feedbackID_test, motivation_leaf_test) != null
 					&& Arrays.asList(error_list).contains(erreurID_test)) {
 				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task);
-			} else {
-				feedbackjson = generateFeedback("1.1.GNC.0", "11", "1", task);
 			}
 		}
-
 		boolean statement_success = true;
 		boolean statement_completion = true;
 		XAPIgenerator generator = new XAPIgenerator();
-		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson, null, CabriVersion.v1_0)
-				.generateStatement(task, CabriVersion.v1_0);
+		Statement statement1 = new Statement();
+		
+		statement1 = generator.setActor(task)
+				.setVerb(task)
+				.setObject(task)
+				.generateStatement(task, CabriVersion.test);
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(task.isUsingTestLRS());
-		ll.postStatement(statement);
+		String id = ll.postStatement(statement1);
+		Statement statement2 = new Statement();
+		generator = new XAPIgenerator();
+		statement2 = generator.setActorAsLip6()
+				.setVerb(Verbs.responded())
+				.setObject(id)
+				.setResult(statement_success, statement_completion, feedbackjson, CabriVersion.test)
+				.setResultwithQvalues()
+				.generateStatement(task, CabriVersion.test);
+		ll.postStatement(statement2);
 
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
-
+	
 	@PostMapping(path = "/test/redis", consumes = "application/json")
 	public ResponseEntity<String> addtaskTESTRedis(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) throws JsonParserCustomException, IOException {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
-		ILearning learning = LearningProcess.initLearningProcess();
+		ILearning learning = LearningProcess.getLearning();
 		serializableRedisTemplate.opsForValue().set("learning", learning);
-
-//		JsonParserFactory jsonparser = new JsonParserFactory(data);
-//		Task task = jsonparser.parse(data, CabriVersion.test);
-//		serializableRedisTemplate.opsForValue().set("task", task);
+		return new ResponseEntity<String>("Saved.", HttpStatus.OK);
+	}
+		
+	@GetMapping(path = "/test/redis", consumes = "application/json")
+	public ResponseEntity<String> gettaskTESTRedis(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws JsonParserCustomException, IOException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
 		ILearning learningfromRedis = (ILearning) serializableRedisTemplate.opsForValue().get("learning");
-//		Task taskfromRedis = (Task) serializableRedisTemplate.opsForValue().get("task");
-
-//		Feedbackjson feedbackjson = generateFeedback("3.0.0.XE", "6", "1", taskfromRedis);
-//		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
-		
 		Map<IState, ArrayList<IValue>> qValues = null;
 
 		if (learningfromRedis instanceof QLearning) {
