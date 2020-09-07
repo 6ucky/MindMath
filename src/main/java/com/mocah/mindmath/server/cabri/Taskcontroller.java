@@ -109,6 +109,14 @@ public class Taskcontroller {
 		for (Glossaire glossaire : glossaires) {
 			getTaskrepository().save(glossaire);
 		}
+		// TODO improve init system
+		// ie Save learning object in DB and add initLearning with ILearning parameter
+		// -> thus it can allow multiple learning instances (and of course backups !)
+		// Note : each time a learn decision will be call, we will need to get the
+		// correct instance from DB, pass it to makeDecision and in case it's a decision
+		// with learning -> update DB (because the instance is modified : only qValues
+		// attribute)
+		LearningProcess.initLearningProcess();
 	}
 
 	/**
@@ -137,7 +145,7 @@ public class Taskcontroller {
 					"        \"domain\": \"algebre123\",\r\n" + 
 					"        \"generator\": \"resoudreEquationPremierDegre\",\r\n" + 
 					"        \"taskFamily\": \"ft3.1\",\r\n" + 
-					"        \"correctAnswer\": true,\r\n" + 
+					"        \"correctAnswer\": false,\r\n" + 
 					"        \"codeError\": \"ce_err5\",\r\n" + 
 					"        \"activityMode\": 0\r\n" + 
 					"    },\r\n" + 
@@ -147,6 +155,18 @@ public class Taskcontroller {
 					"            \"type\": \"tool\",\r\n" + 
 					"            \"name\": \"line_tool\",\r\n" + 
 					"            \"action\": \"create\"\r\n" + 
+					"        },\r\n" + 
+					"        {\r\n" + 
+					"            \"time\": 5813,\r\n" + 
+					"            \"type\": \"button\",\r\n" + 
+					"            \"name\": \"bouton-effacer\",\r\n" + 
+					"            \"action\": \"push\"\r\n" + 
+					"        },\r\n" + 
+					"        {\r\n" + 
+					"            \"time\": 7689,\r\n" + 
+					"            \"type\": \"button\",\r\n" + 
+					"            \"name\": \"bouton-valider\",\r\n" + 
+					"            \"action\": \"push\"\r\n" + 
 					"        }\r\n" + 
 					"    ]\r\n" + 
 					"}") String data)
@@ -265,7 +285,7 @@ public class Taskcontroller {
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(),
 					task.getFeedback(), "{motivation here}", "{content url here}", "image", glossaireMap);
 		} else {
-			feedbackjson = generateFeedback("1.1.GNC.0", "11", "1", task);
+			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task);
 		}
 
 		// TODO set statement success and completion
@@ -311,14 +331,13 @@ public class Taskcontroller {
 		Task task = jsonparser.parse(data, CabriVersion.test);
 
 		task = getTaskrepository().save(task);
-		System.out.println(gson.toJson(task));
 		//TODO generic method for feedback_test
 		Feedbackjson feedbackjson;
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		if (sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER)) {
 			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task);
 		} else {
-			feedbackjson = new Feedbackjson(task.getTask());
+			feedbackjson = new Feedbackjson(task.getSensors().getId_learner());
 		}
 		String feedbackID_test = jsonparser.getValueforDB(jsonparser.getObject(), "feedbackID_test");
 		String motivation_leaf_test = jsonparser.getValueforDB(jsonparser.getObject(), "motivation_leaf_test");
@@ -331,7 +350,6 @@ public class Taskcontroller {
 				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task);
 			}
 		}
-		System.out.println(gson.toJson(feedbackjson));
 		boolean statement_success = true;
 		boolean statement_completion = true;
 		XAPIgenerator generator = new XAPIgenerator();

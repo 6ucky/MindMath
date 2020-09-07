@@ -20,9 +20,8 @@ public class JsonParserFactory implements ParserFactory<Task> {
 	}
 
 	/**
-	 *
-	 * @param Json      object
-	 * @param attribute name of Json object
+	 * @param object Json object
+	 * @param key attribute name of Json object
 	 * @return String value
 	 * @throws JsonParserCustomException
 	 */
@@ -40,8 +39,8 @@ public class JsonParserFactory implements ParserFactory<Task> {
 	 * A concern is that a String type can be parsed as a boolean for example "abc"
 	 * is parsed as false.
 	 *
-	 * @param Json      object
-	 * @param attribute name of Json object
+	 * @param object Json object
+	 * @param key attribute name of Json object
 	 * @return boolean value
 	 * @throws JsonParserCustomException
 	 */
@@ -56,9 +55,8 @@ public class JsonParserFactory implements ParserFactory<Task> {
 	}
 
 	/**
-	 *
 	 * @param Json      object
-	 * @param attribute name of Json object
+	 * @param key attribute name of Json object
 	 * @return long value
 	 * @throws JsonParserCustomException
 	 */
@@ -67,6 +65,22 @@ public class JsonParserFactory implements ParserFactory<Task> {
 			return object.has(key) ? object.get(key).getAsLong() : null;
 		} catch (Exception e) {
 			throwjsonexception(object, key, e, "Long");
+		}
+
+		return null;
+	}
+	
+	/**
+	 * @param object Json object
+	 * @param key attribute name of Json object
+	 * @return float value
+	 * @throws JsonParserCustomException
+	 */
+	public Float getValueAsFloat(JsonObject object, String key) throws JsonParserCustomException {
+		try {
+			return object.has(key) ? object.get(key).getAsFloat() : null;
+		} catch (Exception e) {
+			throwjsonexception(object, key, e, "Float");
 		}
 
 		return null;

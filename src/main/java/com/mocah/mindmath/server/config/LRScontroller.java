@@ -348,6 +348,7 @@ public class LRScontroller {
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
 				.setResultwithQvalues()
+//				.setScore(task.getSensors().getScore(), CabriVersion.test)
 //				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement3);
@@ -383,6 +384,7 @@ public class LRScontroller {
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
 				.setResultwithQvalues()
+//				.setScore(task.getSensors().getScore(), CabriVersion.test)
 //				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement2);

@@ -39,6 +39,7 @@ import gov.adlnet.xapi.model.ContextActivities;
 import gov.adlnet.xapi.model.IStatementObject;
 import gov.adlnet.xapi.model.InteractionComponent;
 import gov.adlnet.xapi.model.Result;
+import gov.adlnet.xapi.model.Score;
 import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementReference;
 import gov.adlnet.xapi.model.SubStatement;
@@ -230,6 +231,29 @@ public class XAPIgenerator {
 			}
 			fdresult.setResponse(fbjson.getContentFb());
 			statement.setResult(fdresult);
+			break;
+		}
+		
+		return this;
+	}
+	
+	/**
+	 * TODO set score in result of statement
+	 * @param score a float value
+	 * @param version
+	 * @return
+	 */
+	public XAPIgenerator setScore(String score_value, CabriVersion version)
+	{
+		switch(version)
+		{
+		case v1_0:
+			break;
+		case test:
+			Score score = new Score();
+			score.setScaled(Float.parseFloat(score_value));
+			Result result = statement.getResult();
+			result.setScore(score);
 			break;
 		}
 		
