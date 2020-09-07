@@ -467,7 +467,7 @@ public class TestLearningProcess {
 		System.out.println(readedState);
 		System.out.println("done\n");
 
-		ILearning learning = LearningProcess.initLearningProcess();
+		ILearning learning = LearningProcess.initLearningProcess(null);
 		Map<IState, ArrayList<IValue>> qstates = ((QLearning) learning).getQValues();
 		for (IState s : qstates.keySet()) {
 			if (s.equals(readedState) && readedState.equals(s)) {
