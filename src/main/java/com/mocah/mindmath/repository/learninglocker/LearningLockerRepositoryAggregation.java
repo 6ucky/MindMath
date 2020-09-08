@@ -157,6 +157,7 @@ public class LearningLockerRepositoryAggregation extends LearningLockerRepositor
 	private URI getURI() {
 		UriComponentsBuilder builder = UriComponentsBuilder
 				.fromHttpUrl(STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString());
+		System.out.println(STATEMENT_AGGREGATION_URL + InitializeQueryURL().toString());
 		URI uri = builder.build(true).toUri();
 
 		return uri;

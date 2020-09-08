@@ -1,6 +1,7 @@
 package com.mocah.mindmath.server.config;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -392,6 +396,44 @@ public class LRScontroller {
 		
 		Gson gson = new Gson();
 		return new ResponseEntity<>(gson.toJson(statements), HttpStatus.ACCEPTED);
+	}
+	
+	/**
+	 * an example to get previous score
+	 * @param data
+	 * @return
+	 * @throws IOException
+	 * @throws JsonParserCustomException
+	 */
+	@GetMapping("/test/JXAPIexample/score")
+	public ResponseEntity<String> testJXAPIexampleScore(@RequestBody String data) throws IOException, JsonParserCustomException
+	{
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(true);
+
+		HashMap<String, Object> scopes = new HashMap<>();
+		scopes.put("LIP6_actor", "MOCAH");
+		scopes.put("statement_reference", "ab3d8b36-c924-4628-b13f-06fc12524c83");
+
+		StringWriter writer = new StringWriter();
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache mustache = mf.compile("mustache_template/queryAVFt.mustache");
+
+		mustache.execute(writer, scopes).flush();
+
+		String query = writer.toString();
+
+		lrs = lrs.filterByMatcher(query);
+
+		// String resultsStr = lrs.getFilteredStatementsAsString();
+		StatementResult results = lrs.getFilteredStatements();
+		List<Statement> statements = results.getStatements();
+		Gson gson = new Gson();
+		String result = "";
+		for(Statement statement : statements)
+		{
+			result += gson.toJson(statement.getResult().getScore());
+		}
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	/**

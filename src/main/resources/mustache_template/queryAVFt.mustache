@@ -22,6 +22,18 @@
       ]
     }
     {{/learner_id}}
+    {{#LIP6_actor}}
+    ,
+    {
+      "$comment": "{\"criterionLabel\":\"B\",\"criteriaPath\":[\"statement\",\"actor\"]}",
+      "$or": [
+        {
+          "statement.actor.account.name": "LIP6 {{LIP6_actor}}",
+          "statement.actor.account.homePage": "https://mindmath.lip6.fr/"
+        }
+      ]
+    }
+    {{/LIP6_actor}}
     {{#verb_id}}
     ,
     {
@@ -33,6 +45,18 @@
       ]
     }
     {{/verb_id}}
+    {{#statement_reference}}
+    ,
+    {
+      "$comment": "{\"criterionLabel\":\"D\",\"criteriaPath\":[\"statement\",\"object\"]}",
+      "$or": [
+        {
+          "statement.object.id": "{{statement_reference}}",
+          "statement.object.objectType": "StatementRef"
+        }
+      ]
+    }
+    {{/statement_reference}}
     {{#family_task}}
     ,
     {
