@@ -2,6 +2,7 @@ package com.mocah.mindmath.server.cabri;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +29,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.mocah.mindmath.learning.Decision;
@@ -46,6 +50,7 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
+import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryHttp;
 import com.mocah.mindmath.repository.learninglocker.XAPIgenerator;
 import com.mocah.mindmath.server.Derbyrepository;
@@ -58,7 +63,9 @@ import com.mocah.mindmath.server.entity.task.Task;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
+import gov.adlnet.xapi.model.Score;
 import gov.adlnet.xapi.model.Statement;
+import gov.adlnet.xapi.model.StatementResult;
 import gov.adlnet.xapi.model.Verbs;
 import io.swagger.annotations.ApiParam;
 
@@ -567,5 +574,41 @@ public class Taskcontroller {
 		}
 
 		return (!previoustask.equals(new Task("0"))) ? previoustask : null;
+	}
+	
+	/**
+	 * a method to get previous score from LRS
+	 * @param statementRef_id the id of statement reference
+	 * @return list of scores
+	 * @throws IOException 
+	 */
+	public ArrayList<Score> getPreviousScore(String statementRef_id) throws IOException
+	{
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(true);
+
+		HashMap<String, Object> scopes = new HashMap<>();
+		scopes.put("LIP6_actor", "MOCAH");
+		scopes.put("statement_reference", statementRef_id);
+
+		StringWriter writer = new StringWriter();
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache mustache = mf.compile("mustache_template/queryAVFt.mustache");
+
+		mustache.execute(writer, scopes).flush();
+
+		String query = writer.toString();
+
+		lrs = lrs.filterByMatcher(query);
+
+		// String resultsStr = lrs.getFilteredStatementsAsString();
+		StatementResult results = lrs.getFilteredStatements();
+		List<Statement> statements = results.getStatements();
+		Gson gson = new Gson();
+		ArrayList<Score> scores = new ArrayList<Score>();
+		for(Statement statement : statements)
+		{
+			scores.add(statement.getResult().getScore());
+		}
+		return scores;
 	}
 }
