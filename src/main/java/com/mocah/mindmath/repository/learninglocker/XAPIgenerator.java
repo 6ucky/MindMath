@@ -251,7 +251,11 @@ public class XAPIgenerator {
 			break;
 		case test:
 			Score score = new Score();
-			score.setScaled(Float.parseFloat(score_value));
+			//TODO compare with the previous score
+			score.setScaled(0);
+			score.setRaw(Float.parseFloat(score_value) * 20);
+			score.setMin(0);
+			score.setMax(20);
 			Result result = statement.getResult();
 			result.setScore(score);
 			break;
