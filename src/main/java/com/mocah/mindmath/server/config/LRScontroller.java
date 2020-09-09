@@ -74,6 +74,8 @@ public class LRScontroller {
 	private Derbyrepository taskrepository;
 
 	private static final String license_num = "mocah";
+	
+	private static final String test_score_statementRef = "3b4659a4-4a63-4b80-97d9-3cd239c63c82";
 
 	/**
 	 * check the post request based on authorization
@@ -352,7 +354,7 @@ public class LRScontroller {
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
 //				.setResultwithQvalues()
-				.setScore(task.getSensors().getScore(), CabriVersion.test)
+				.setScore(task.getSensors().getScore(), "0", CabriVersion.test)
 //				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement3);
@@ -388,7 +390,7 @@ public class LRScontroller {
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
 //				.setResultwithQvalues()
-				.setScore(task.getSensors().getScore(), CabriVersion.test)
+				.setScore(task.getSensors().getScore(), "0", CabriVersion.test)
 //				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement2);
@@ -398,6 +400,25 @@ public class LRScontroller {
 		return new ResponseEntity<>(gson.toJson(statements), HttpStatus.ACCEPTED);
 	}
 	
+	@PostMapping("/test/JXAPIexample/score")
+	public ResponseEntity<String> settestJXAPIexampleScore(@RequestBody String data) throws IOException, JsonParserCustomException
+	{
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		Task task = jsonparser.parse(data, CabriVersion.v1_0);
+		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		Statement statement2 = new Statement();
+		XAPIgenerator generator = new XAPIgenerator();
+		statement2 = generator.setActorAsLip6()
+				.setVerb(Verbs.responded())
+				.setObject(test_score_statementRef)
+				.setResult(true, true, fbjson, CabriVersion.test)
+				.setScore("0.3", "4", CabriVersion.test)
+				.generateStatement(task, CabriVersion.test);
+		ll.postStatement(statement2);
+		Gson gson = new Gson();
+		return new ResponseEntity<>(gson.toJson(statement2), HttpStatus.ACCEPTED);
+	}
 	/**
 	 * an example to get previous score
 	 * @param data
@@ -412,7 +433,7 @@ public class LRScontroller {
 
 		HashMap<String, Object> scopes = new HashMap<>();
 		scopes.put("LIP6_actor", "MOCAH");
-		scopes.put("statement_reference", "ab3d8b36-c924-4628-b13f-06fc12524c83");
+		scopes.put("statement_reference", test_score_statementRef);
 
 		StringWriter writer = new StringWriter();
 		MustacheFactory mf = new DefaultMustacheFactory();

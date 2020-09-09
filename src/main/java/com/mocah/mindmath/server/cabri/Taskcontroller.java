@@ -427,6 +427,16 @@ public class Taskcontroller {
 		
 		return new ResponseEntity<String>(res.toString(), HttpStatus.OK);
 	}
+	
+	@DeleteMapping(path = "/test/redis", consumes = "application/json")
+	public ResponseEntity<String> deletetaskTESTRedis(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws JsonParserCustomException, IOException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		serializableRedisTemplate.opsForValue().set("learning", null);
+		return new ResponseEntity<String>("Deleted.", HttpStatus.OK);
+	}
 
 	/**
 	 * Handle GET request
