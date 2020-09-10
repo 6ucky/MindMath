@@ -15,7 +15,7 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
 import com.mocah.mindmath.parser.ParserFactory;
-import com.mocah.mindmath.parser.jsonparser.CabriVersion;
+import com.mocah.mindmath.server.cabri.CabriVersion;
 
 /**
  * @author	Yan Wang

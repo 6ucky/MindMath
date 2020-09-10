@@ -210,6 +210,7 @@ public class Task extends AbstractJsonData implements Serializable {
 			verb = Verbs.asked();
 			break;
 		default:
+			verb = Verbs.answered();
 			break;
 		}
 

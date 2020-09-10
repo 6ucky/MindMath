@@ -23,7 +23,7 @@ import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.states.State;
 import com.mocah.mindmath.learning.utils.states.StateParam;
 import com.mocah.mindmath.learning.utils.values.IValue;
-import com.mocah.mindmath.parser.jsonparser.CabriVersion;
+import com.mocah.mindmath.server.cabri.CabriVersion;
 import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
 import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
