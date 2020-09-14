@@ -40,9 +40,6 @@ public class Task extends AbstractJsonData implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private final Sensors sensors;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	private final Params params;
-
 	@OneToMany(cascade = CascadeType.ALL)
 	private final List<Log> logs;
 
@@ -68,26 +65,25 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	// empty object
 	public Task() {
-		this(null, new Sensors(), new Params(), new ArrayList<Log>(), null, false);
+		this(null, new Sensors(), new ArrayList<Log>(), null, false);
 	}
 
 	public Task(String task) {
-		this(task, new Sensors(), new Params(), new ArrayList<Log>(), null, false);
+		this(task, new Sensors(), new ArrayList<Log>(), null, false);
 	}
 
 	public Task(boolean isTest) {
-		this(null, new Sensors(), new Params(), new ArrayList<Log>(), null, isTest);
+		this(null, new Sensors(), new ArrayList<Log>(), null, isTest);
 	}
 
-	public Task(String task, Sensors sensors, Params params, List<Log> log, String feedback_id) {
-		this(task, sensors, params, log, feedback_id, false);
+	public Task(String task, Sensors sensors, List<Log> log, String feedback_id) {
+		this(task, sensors, log, feedback_id, false);
 	}
 
-	public Task(String task, Sensors sensors, Params params, List<Log> log, String feedback_id, boolean isTest) {
+	public Task(String task, Sensors sensors, List<Log> log, String feedback_id, boolean isTest) {
 		super();
 		this.task = task;
 		this.sensors = sensors;
-		this.params = params;
 		this.logs = log;
 		this.feedback_id = feedback_id;
 		this.isTest = isTest;
@@ -99,10 +95,6 @@ public class Task extends AbstractJsonData implements Serializable {
 
 	public Sensors getSensors() {
 		return sensors;
-	}
-
-	public Params getParams() {
-		return params;
 	}
 
 	public List<Log> getLog() {

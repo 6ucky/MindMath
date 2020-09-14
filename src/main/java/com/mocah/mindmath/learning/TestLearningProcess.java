@@ -53,7 +53,6 @@ import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
 import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
 import com.mocah.mindmath.server.entity.task.Log;
-import com.mocah.mindmath.server.entity.task.Params;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
 
@@ -250,10 +249,6 @@ public class TestLearningProcess {
 								case LOG:
 									List<Log> logs = task.getLog();
 									break;
-								case PARAM:
-									Params params = task.getParams();
-									replacement = Extractor.getFromParams(params, var.getKey());
-									break;
 								case SENSOR:
 									Sensors sensors = task.getSensors();
 									replacement = Extractor.getFromSensors(sensors, var.getKey());
@@ -396,7 +391,7 @@ public class TestLearningProcess {
 			e.printStackTrace();
 		}
 
-		Task t = new Task(null, null, null, null, null);
+		Task t = new Task(null, null, null, null);
 		try {
 			System.out.println(t.getFieldValue("id"));
 			System.out.println(t.getFieldValue("task"));

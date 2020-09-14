@@ -23,7 +23,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
-import com.mocah.mindmath.server.entity.task.Params;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
 
@@ -64,21 +63,6 @@ public class Extractor {
 		String r = null;
 
 		r = (String) sensors.getFieldValue(fieldName);
-
-		return r;
-	}
-
-	/**
-	 * @param params
-	 * @param fieldName
-	 * @return
-	 * @throws NoSuchFieldException
-	 * @throws SecurityException
-	 */
-	public static String getFromParams(Params params, String fieldName) throws NoSuchFieldException {
-		String r = null;
-
-		r = (String) params.getFieldValue(fieldName);
 
 		return r;
 	}

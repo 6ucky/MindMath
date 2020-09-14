@@ -49,7 +49,6 @@ import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
 import com.mocah.mindmath.server.entity.task.Log;
-import com.mocah.mindmath.server.entity.task.Params;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
 
@@ -498,10 +497,6 @@ public class LearningProcess {
 								switch (var.getSource()) {
 								case LOG:
 									List<Log> logs = task.getLog();
-									break;
-								case PARAM:
-									Params params = task.getParams();
-									replacement = Extractor.getFromParams(params, var.getKey());
 									break;
 								case SENSOR:
 									Sensors sensors = task.getSensors();

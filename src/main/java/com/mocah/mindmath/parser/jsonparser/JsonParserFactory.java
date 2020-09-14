@@ -135,14 +135,13 @@ public class JsonParserFactory implements ParserFactory<Task> {
 		Task tasks = new Task();
 
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
-		JsonParserParams paramsparser = new JsonParserParams(data);
 		JsonParserLogs logsparser = new JsonParserLogs(data);
 
 		switch (version) {
 
 		case v1_0:
 			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
-					paramsparser.getParams(), logsparser.getLogs(),
+					logsparser.getLogs(),
 					getValueforDB(rootObject, JsonParserKeys.TASK_FEEDBACK_ID), false);
 
 			// Optional fields
@@ -152,7 +151,7 @@ public class JsonParserFactory implements ParserFactory<Task> {
 			break;
 		case test:
 			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
-					paramsparser.getParams(), logsparser.getLogs(),
+					logsparser.getLogs(),
 					getValueforDB(rootObject, JsonParserKeys.TASK_FEEDBACK_ID), true);
 
 			// Optional fields
