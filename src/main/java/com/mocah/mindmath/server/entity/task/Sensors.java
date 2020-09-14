@@ -33,6 +33,9 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	private final String capteur_nb_aide;
 	
+	//TODO UID parcours
+//	private final String id_parcours;
+	
 	private final String id_learner;
 
 	@Expose (serialize = true) 

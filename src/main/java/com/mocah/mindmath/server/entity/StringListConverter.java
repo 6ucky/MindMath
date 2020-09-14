@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+//a string list converter for JPA
 @Converter
 public class StringListConverter implements AttributeConverter<List<String>, String> {
 
