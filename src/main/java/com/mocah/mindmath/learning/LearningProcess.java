@@ -86,14 +86,7 @@ public class LearningProcess {
 	/**
 	 * @return
 	 */
-	public static ILearning initLearningProcess(ILearning init_learning) {
-		// 1 Check/restore existing values
-		// TODO after export/import system done
-		if(init_learning != null)
-		{
-			learning = init_learning;
-			return learning;
-		}
+	public static ILearning initLearningProcess() {
 
 		// 2 Read decision tree
 		Reader reader = LocalRouteRepository.readFileasReader(LocalRoute.DecisionTreeRoute);

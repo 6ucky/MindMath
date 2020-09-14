@@ -122,9 +122,12 @@ public class Taskcontroller {
 		// correct instance from DB, pass it to makeDecision and in case it's a decision
 		// with learning -> update DB (because the instance is modified : only qValues
 		// attribute)
+		
+		// 1 Check/restore existing values
+		// TODO after export/import system done
 //		ILearning learningfromRedis = (ILearning) serializableRedisTemplate.opsForValue().get("learning");
 //		LearningProcess.initLearningProcess(learningfromRedis);
-		LearningProcess.initLearningProcess(null);
+		LearningProcess.initLearningProcess();
 	}
 
 	/**
