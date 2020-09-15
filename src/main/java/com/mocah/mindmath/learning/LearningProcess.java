@@ -35,6 +35,7 @@ import com.mocah.mindmath.decisiontree.Tree;
 import com.mocah.mindmath.decisiontree.Vars;
 import com.mocah.mindmath.decisiontree.search.BreadthFirstSearch;
 import com.mocah.mindmath.decisiontree.search.DeepFirstSearch;
+import com.mocah.mindmath.learning.algorithms.ExpertLearning;
 import com.mocah.mindmath.learning.algorithms.ILearning;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.policies.EpsilonGreedy;
@@ -48,6 +49,7 @@ import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
+import com.mocah.mindmath.server.cabri.CabriVersion;
 import com.mocah.mindmath.server.entity.task.Log;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
@@ -72,6 +74,8 @@ public class LearningProcess {
 	// TODO other way of storage -> due to an idea of using multiple Qlearning
 	// instances (ie one for each domain/generator/familly...)
 	private static ILearning learning;
+	
+	private static ILearning expertlearning;
 
 	private static Tree tree;
 
@@ -120,6 +124,14 @@ public class LearningProcess {
 				// TODO error
 			}
 		}
+		
+		//init expert learning table and fixed QValues
+		IPolicy newPolicy = new EpsilonGreedy(0.6);
+		expertlearning = new ExpertLearning(newPolicy, new HashMap<>(qvalues));
+		if(expertlearning instanceof ExpertLearning)
+		{
+			((ExpertLearning) expertlearning).sortByValues();
+		}
 
 		return learning;
 	}
@@ -129,6 +141,10 @@ public class LearningProcess {
 	 */
 	public static ILearning getLearning() {
 		return learning;
+	}
+	
+	public static ILearning getExpertlearning() {
+		return expertlearning;
 	}
 
 	/**
@@ -142,9 +158,35 @@ public class LearningProcess {
 	 * @throws NoSuchFieldException
 	 * @throws InvalidTheoryException
 	 */
-	public static Decision makeDecision(Task task) throws InvalidTheoryException, NoSuchFieldException,
+	public static Decision makeDecision(Task task, CabriVersion version) throws InvalidTheoryException, NoSuchFieldException,
 			NoSuchMethodException, InvocationTargetException, MalformedGoalException, IOException {
+		switch(version)
+		{
+		case v1_0:
+			return makeDecision(task, null, null);
+		case v1_1:
+			Decision decision = new Decision();
+			IState newState = null;
+			newState = decisionTreeBFS(tree, task);
+			IAction action = null;
+			if (task.isExpertMode()) {
+				List<IAction> actions = expertlearning.getPossibleActions(newState);
+				HashMap<IState, Integer> table = ((ExpertLearning) expertlearning).getTable();
+				int index = table.get(newState) - 1;
+				System.out.println(index);
+				action = actions.get(index);
+				if(index == 0 || index < 0)
+					table.replace(newState, ((ExpertLearning) expertlearning).getqValues().get(newState).size());
+				else
+					table.replace(newState, index);
+			}
+			decision.setAction(action);
+			return decision;
+		case test:
+			return makeDecision(task, null, null);
+		}
 		return makeDecision(task, null, null);
+		
 	}
 
 	/**
@@ -707,4 +749,5 @@ public class LearningProcess {
 			return 4;
 		}
 	}
+
 }

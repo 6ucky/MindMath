@@ -38,7 +38,7 @@ public class MindMathAction extends AbstractAction {
 	 * @return the decision leaf name
 	 */
 	public String getLeaf() {
-		return this.id;
+		return this.leaf;
 	}
 
 	/**

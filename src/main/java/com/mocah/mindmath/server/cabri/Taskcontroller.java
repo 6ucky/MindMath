@@ -39,6 +39,7 @@ import com.mocah.mindmath.learning.LearningProcess;
 import com.mocah.mindmath.learning.algorithms.ILearning;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.actions.IAction;
+import com.mocah.mindmath.learning.utils.actions.MindMathAction;
 import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.states.State;
 import com.mocah.mindmath.learning.utils.states.StateParam;
@@ -230,7 +231,7 @@ public class Taskcontroller {
 					System.out.println("Time retrieve action & state : "
 							+ ((double) (System.nanoTime() - starttime) / 1_000_000_000));
 
-					decision = LearningProcess.makeDecision(task, prevState, prevAction);
+//					decision = LearningProcess.makeDecision(task, prevState, prevAction);
 
 					if (decision.hasLearn()) {
 						// Save the prev task action's reward to the prev task
@@ -239,10 +240,10 @@ public class Taskcontroller {
 					}
 				} else {
 					// An error happened in previous iteration and prevAction is null
-					decision = LearningProcess.makeDecision(task);
+					decision = LearningProcess.makeDecision(task, CabriVersion.v1_0);
 				}
 			} else {
-				decision = LearningProcess.makeDecision(task);
+				decision = LearningProcess.makeDecision(task, CabriVersion.v1_0);
 			}
 		} catch (InvalidTheoryException e) {
 			// TODO Bloc catch généré automatiquement
@@ -303,7 +304,7 @@ public class Taskcontroller {
 		boolean statement_success = true;
 		boolean statement_completion = true;
 		XAPIgenerator generator = new XAPIgenerator();
-		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson, null, CabriVersion.v1_0)
+		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson, CabriVersion.v1_0)
 				.generateStatement(task, CabriVersion.v1_0);
 		// TODO validate post statement to LRS
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(task.isUsingTestLRS());
@@ -311,6 +312,68 @@ public class Taskcontroller {
 
 //		return new ResponseEntity<>("feedback:" + gson.toJson(feedbackjson) + "\nstatement:" + gson.toJson(statement),
 //				HttpStatus.OK);
+
+		// Add verbose fields
+		if (task.isVerbose()) {
+			// Set decision mode
+			if (task.isExpertMode()) {
+				feedbackjson.setMode("Expert");
+			} else {
+				feedbackjson.setMode("RL");
+			}
+
+			// Set reward value
+			if (decision.hasLearn()) {
+				feedbackjson.setReward(decision.getReward());
+				feedbackjson.setModifiedState(decision.getModifiedState());
+				feedbackjson.setModifiedQvalues(decision.getModifiedQvalues());
+			}
+		}
+
+		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/v1.1", consumes = "application/json")
+	public ResponseEntity<String> addtaskv1_1(@RequestHeader("Authorization") String auth, @RequestBody String data)
+			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		Task task = jsonparser.parse(data, CabriVersion.v1_0);
+
+		task.setUsingTestLRS(true);
+
+		Decision decision = null;
+		if(task.isExpertMode())
+		{
+			try {
+				decision = LearningProcess.makeDecision(task, CabriVersion.v1_1);
+			} catch (InvalidTheoryException | NoSuchFieldException | NoSuchMethodException | InvocationTargetException
+					| MalformedGoalException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		IAction action = decision.getAction();
+
+		task.setDecisionAction(action);
+		getTaskrepository().save(task);
+
+		boolean isTest = true;
+		Feedbackjson feedbackjson = new Feedbackjson(task.getSensors().getId_learner());
+		feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), "1", task);;
+
+		// TODO set statement success and completion
+		boolean statement_success = true;
+		boolean statement_completion = true;
+		XAPIgenerator generator = new XAPIgenerator();
+		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson, CabriVersion.v1_0)
+				.generateStatement(task, CabriVersion.v1_0);
+		// TODO validate post statement to LRS
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(task.isUsingTestLRS());
+		ll.postStatement(statement);
 
 		// Add verbose fields
 		if (task.isVerbose()) {

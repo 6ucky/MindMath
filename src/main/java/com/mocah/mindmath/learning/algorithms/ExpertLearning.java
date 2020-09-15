@@ -46,8 +46,14 @@ public class ExpertLearning extends AbstractLearning {
 
 	@Override
 	public List<IAction> getPossibleActions(IState state) {
-		// TODO Auto-generated method stub
-		return null;
+		List<IValue> stateValues = this.qValues.get(state);
+
+		List<IAction> actions = new ArrayList<>(stateValues.size());
+		for (IValue value : stateValues) {
+			actions.add(value.myAction());
+		}
+
+		return actions;
 	}
 	
 	/**
@@ -58,7 +64,7 @@ public class ExpertLearning extends AbstractLearning {
 		{
 			Collections.sort(qValues.get(state), ValueComparator);
 			// initialize table
-			table.put(state, qValues.get(state).size() - 1);
+			table.put(state, qValues.get(state).size());
 		}
 	}
 	
