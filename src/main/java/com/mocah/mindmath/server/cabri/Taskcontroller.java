@@ -360,6 +360,9 @@ public class Taskcontroller {
 
 		task.setDecisionAction(action);
 		getTaskrepository().save(task);
+		
+//		ILearning learning = LearningProcess.getExpertlearning();
+//		serializableRedisTemplate.opsForValue().set("expertlearning", learning);
 
 		System.out.println(action.getId() + " " + ((MindMathAction) action).getLeaf());
 		boolean isTest = true;
