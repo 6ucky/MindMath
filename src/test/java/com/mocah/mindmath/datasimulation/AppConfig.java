@@ -33,7 +33,7 @@ public class AppConfig {
 	 */
 	public static final Map<Class<? extends IProfile>, Integer> learners = ImmutableMap.of(ProfileA.class, 3,
 			ProfileB.class, 3, ProfileC.class, 3, ProfileI.class, 3, ProfileJ.class, 3);
-	public static final boolean useRandomProfileOrder = true;
+	public static final boolean useRandomProfileOrder = false;
 	/**
 	 * Number of iteration each learner id will be used. ie: Number of json
 	 * simulated and sent

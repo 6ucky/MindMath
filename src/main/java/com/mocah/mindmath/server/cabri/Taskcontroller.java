@@ -361,6 +361,7 @@ public class Taskcontroller {
 		task.setDecisionAction(action);
 		getTaskrepository().save(task);
 
+		System.out.println(action.getId() + " " + ((MindMathAction) action).getLeaf());
 		boolean isTest = true;
 		Feedbackjson feedbackjson = new Feedbackjson(task.getSensors().getId_learner());
 		feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), "1", task);;

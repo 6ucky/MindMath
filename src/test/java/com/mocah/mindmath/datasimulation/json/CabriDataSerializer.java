@@ -24,6 +24,7 @@ public class CabriDataSerializer implements JsonSerializer<CabriData>, JsonDeser
 
 		root.addProperty("useTestLRS", true);
 		root.addProperty("verbose", true);
+		root.addProperty("expertMode", true);
 
 		JsonObject sensors = new JsonObject();
 		root.add("sensors", sensors);

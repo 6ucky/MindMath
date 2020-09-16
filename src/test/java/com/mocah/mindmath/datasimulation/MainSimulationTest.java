@@ -3,17 +3,40 @@
  */
 package com.mocah.mindmath.datasimulation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+
 import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.mocah.mindmath.PostCabriJsonTest;
 import com.mocah.mindmath.datasimulation.attributes.Answer;
 import com.mocah.mindmath.datasimulation.attributes.ErrorCode;
 import com.mocah.mindmath.datasimulation.attributes.Trigger;
@@ -29,14 +52,34 @@ import com.mocah.mindmath.datasimulation.json.SimulatedDataContainer;
 import com.mocah.mindmath.datasimulation.json.SimulatedDataLearner;
 import com.mocah.mindmath.datasimulation.profiles.AbstractProfile;
 import com.mocah.mindmath.datasimulation.profiles.IProfile;
+import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
+import com.mocah.mindmath.server.ServerApplication;
+import com.mocah.mindmath.server.cabri.Taskcontroller;
+
+import gov.adlnet.xapi.model.Verbs;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
-public class MainSimulation {
+@SpringBootTest(classes=ServerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) 
+public class MainSimulationTest {
+
+	@LocalServerPort
+	private int port;
+
+	//inject restTemplate bean
+	@Autowired
+	private TestRestTemplate restTemplate;
+		
 	private static Random rand = new Random();
 
+	@Test
+	public void postCabriSimulation() throws Exception {
+		main();
+		String temp = "100";
+		assertThat(temp).contains("100");
+	}
 	/**
 	 * @param args
 	 * @throws SecurityException
@@ -46,7 +89,7 @@ public class MainSimulation {
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	public static void main(String[] args) throws NoSuchMethodException, SecurityException, InstantiationException,
+	public void main() throws NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		SimulatedDataContainer container = new SimulatedDataContainer();
 
@@ -152,8 +195,14 @@ public class MainSimulation {
 				}
 
 				data.setErrorCode(errorCode);
-
-				String feedback = ServerConn.postData(data);
+				HttpEntity<String> entity = new HttpEntity<>(AppConfig.getGson().toJson(data), getHeader());
+				ResponseEntity<String> response = restTemplate.exchange(
+						"http://localhost:" + port + "/task/v1.1", 
+						HttpMethod.POST, 
+						entity, 
+						String.class);
+				String feedback = response.getBody();
+				
 				System.out.println("Données envoyées : " + AppConfig.getGson().toJson(data));
 				System.out.println("Feedback reçu : " + feedback);
 
@@ -182,7 +231,14 @@ public class MainSimulation {
 						+ currentIteration + "/" + AppConfig.MAX_ITERATION);
 			}
 
-			String qtable = ServerConn.getQtable();
+			HttpEntity<String> entity_qvalues = new HttpEntity<>("", getHeader());
+			ResponseEntity<String> response_qvalues = restTemplate.exchange(
+					"http://localhost:" + port + "/task/qvalues", 
+					HttpMethod.GET, 
+					entity_qvalues, 
+					String.class);
+			String qtable = response_qvalues.getBody();
+			
 			sdLearner.setLearnerCSV(qtable);
 			finalQTable = qtable;
 			System.out.println(qtable);
@@ -196,5 +252,15 @@ public class MainSimulation {
 		de.export();
 		GraphExporter ge = new GraphExporter(container);
 		ge.export();
+	}
+	
+	public HttpHeaders getHeader() {
+		HttpHeaders headers = new HttpHeaders();
+		// header as chart form
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		headers.add("Authorization", "mocah");
+		headers.add("Version-LIP6", "1.0");
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		return headers;
 	}
 }

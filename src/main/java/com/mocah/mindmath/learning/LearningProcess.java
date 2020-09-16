@@ -175,10 +175,23 @@ public class LearningProcess {
 				int index = table.get(newState) - 1;
 				System.out.println(index);
 				action = actions.get(index);
+				String message = "Table:";
+				for(IState t_state: table.keySet())
+				{
+					message += table.get(t_state) + " ";
+				}
+				System.out.println(message);
 				if(index == 0 || index < 0)
-					table.replace(newState, ((ExpertLearning) expertlearning).getqValues().get(newState).size());
+					table.put(newState, ((ExpertLearning) expertlearning).getqValues().get(newState).size());
 				else
-					table.replace(newState, index);
+					table.put(newState, index);
+				((ExpertLearning) expertlearning).setTable(table);
+				message = "Table:";
+				for(IState t_state: table.keySet())
+				{
+					message += table.get(t_state) + " ";
+				}
+				System.out.println(message);
 			}
 			decision.setAction(action);
 			return decision;
