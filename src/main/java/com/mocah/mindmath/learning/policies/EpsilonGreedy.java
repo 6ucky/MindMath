@@ -48,7 +48,7 @@ public class EpsilonGreedy extends Greedy {
 			do {
 				int i = rand.nextInt(actionsCount);
 				randomAction = values.get(i).myAction();
-			} while (randomAction.equals(action));
+			} while (!randomAction.equals(action));
 
 			action = randomAction;
 		} else {

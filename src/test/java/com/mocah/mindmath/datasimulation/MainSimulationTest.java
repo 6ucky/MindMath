@@ -54,6 +54,7 @@ import com.mocah.mindmath.datasimulation.profiles.AbstractProfile;
 import com.mocah.mindmath.datasimulation.profiles.IProfile;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.server.ServerApplication;
+import com.mocah.mindmath.server.cabri.CabriVersion;
 import com.mocah.mindmath.server.cabri.Taskcontroller;
 
 import gov.adlnet.xapi.model.Verbs;
@@ -76,9 +77,8 @@ public class MainSimulationTest {
 
 	@Test
 	public void postCabriSimulation() throws Exception {
-		main();
-		String temp = "100";
-		assertThat(temp).contains("100");
+		int learnerIteration = main(CabriVersion.v1_0);
+		assertThat(learnerIteration).isEqualTo(AppConfig.learners.size()+1);
 	}
 	/**
 	 * @param args
@@ -89,10 +89,23 @@ public class MainSimulationTest {
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	public void main() throws NoSuchMethodException, SecurityException, InstantiationException,
+	public int main(CabriVersion version) throws NoSuchMethodException, SecurityException, InstantiationException,
 			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		SimulatedDataContainer container = new SimulatedDataContainer();
 
+		String posttask_url = "";
+		String getqvalue_url = "";
+		switch(version)
+		{
+		case v1_0:
+			posttask_url = "http://localhost:" + port + "/task/v1.0";
+			getqvalue_url = "http://localhost:" + port + "/task/qvalues";
+			break;
+		case v1_1:
+			posttask_url = "http://localhost:" + port + "/task/v1.1";
+			getqvalue_url = "http://localhost:" + port + "/task/qvalues";
+			break;
+		}
 		String finalQTable = null;
 
 		List<Class<? extends IProfile>> learners = new ArrayList<>();
@@ -197,7 +210,7 @@ public class MainSimulationTest {
 				data.setErrorCode(errorCode);
 				HttpEntity<String> entity = new HttpEntity<>(AppConfig.getGson().toJson(data), getHeader());
 				ResponseEntity<String> response = restTemplate.exchange(
-						"http://localhost:" + port + "/task/v1.1", 
+						posttask_url, 
 						HttpMethod.POST, 
 						entity, 
 						String.class);
@@ -233,7 +246,7 @@ public class MainSimulationTest {
 
 			HttpEntity<String> entity_qvalues = new HttpEntity<>("", getHeader());
 			ResponseEntity<String> response_qvalues = restTemplate.exchange(
-					"http://localhost:" + port + "/task/qvalues", 
+					getqvalue_url, 
 					HttpMethod.GET, 
 					entity_qvalues, 
 					String.class);
@@ -252,6 +265,7 @@ public class MainSimulationTest {
 		de.export();
 		GraphExporter ge = new GraphExporter(container);
 		ge.export();
+		return learnerIteration;
 	}
 	
 	public HttpHeaders getHeader() {
