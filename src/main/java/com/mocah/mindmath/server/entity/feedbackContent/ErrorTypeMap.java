@@ -18,6 +18,6 @@ public class ErrorTypeMap {
 			);
 	public static String getErrorNum(String content)
 	{
-		return (errorTypeMap.get(content) == null) ? "1" : errorTypeMap.get(content);
+		return (errorTypeMap.containsKey(content)) ? errorTypeMap.get(content) : "1";
 	}
 }
