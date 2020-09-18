@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.mocah.mindmath.datasimulation.AppConfig;
 import com.mocah.mindmath.datasimulation.CabriData;
 
 /**
@@ -24,7 +25,7 @@ public class CabriDataSerializer implements JsonSerializer<CabriData>, JsonDeser
 
 		root.addProperty("useTestLRS", true);
 		root.addProperty("verbose", true);
-		root.addProperty("expertMode", true);
+		root.addProperty("expertMode", AppConfig.isExpertMode);
 
 		JsonObject sensors = new JsonObject();
 		root.add("sensors", sensors);

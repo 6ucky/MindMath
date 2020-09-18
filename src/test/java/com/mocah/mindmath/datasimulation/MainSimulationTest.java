@@ -77,8 +77,13 @@ public class MainSimulationTest {
 
 	@Test
 	public void postCabriSimulation() throws Exception {
-		int learnerIteration = main(CabriVersion.v1_0);
-		assertThat(learnerIteration).isEqualTo(AppConfig.learners.size()+1);
+		int learnerIteration = main(AppConfig.version);
+		int sum = 0;
+		for(Class<? extends IProfile> profile: AppConfig.learners.keySet())
+		{
+			sum += AppConfig.learners.get(profile);
+		}
+		assertThat(learnerIteration).isEqualTo(sum+1);
 	}
 	/**
 	 * @param args

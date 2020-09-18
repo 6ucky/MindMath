@@ -299,6 +299,23 @@ public class GraphExporter extends AbstractExporter {
 
 		return learnerCharts;
 	}
+	
+	@SuppressWarnings("rawtypes")
+	private List<Chart> generateChartsForCumSuccess(String chatstitle, List<? extends Number> xIterations,
+			List<? extends Number> xIterationsShift, List<? extends Number> yActivityMode,
+			List<? extends Number> yIncreaseProb, List<? extends Number> yFeedbackWeight,
+			List<? extends Number> ySuccessProb, List<? extends Number> yReward, List<? extends Number> yCumReward,
+			List<? extends Number> yCumSuccessProb) {
+		List<Chart> learnerCharts = generateChartsFor(chatstitle, xIterations, xIterationsShift, yActivityMode,
+				yIncreaseProb, yFeedbackWeight, ySuccessProb, yReward, yCumReward);
+		
+		XYChart learnerCumSuccessChart = buildChart("Cumulative Success over time", "Iterations", "Success probability");
+		XYSeries lrcs1 = learnerCumSuccessChart.addSeries("Success probability", xIterationsShift, ySuccessProb);
+		XYSeries lrcs2 = learnerCumSuccessChart.addSeries("Cumulative Success probability", xIterationsShift, yCumSuccessProb);
+		
+		learnerCharts.add(learnerCumSuccessChart);
+		return learnerCharts;
+	}
 
 	private void saveChart(File f, Chart<? extends Styler, ? extends Series> chart) {
 		try {

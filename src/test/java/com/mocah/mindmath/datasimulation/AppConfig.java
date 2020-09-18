@@ -16,30 +16,46 @@ import com.mocah.mindmath.datasimulation.profiles.ProfileB;
 import com.mocah.mindmath.datasimulation.profiles.ProfileC;
 import com.mocah.mindmath.datasimulation.profiles.ProfileI;
 import com.mocah.mindmath.datasimulation.profiles.ProfileJ;
+import com.mocah.mindmath.server.cabri.CabriVersion;
 
 /**
  * @author Thibaut SIMON-FINE
  *
  */
 public class AppConfig {
+	/*************************Manuel Configuration for Simulator****************************/
+	/**
+	 * The version (post address) of generating feedback
+	 */
+	public static final CabriVersion version = CabriVersion.v1_1;
+	/**
+	 * The expert mode for version 1.0
+	 */
+	public static final boolean isExpertMode = true;
 	/**
 	 * Use the production server or not Will use {@code ServerConn.SERVER_URL} or
 	 * {@code ServerConn.TEST_SERVER_URL}
 	 */
 	public static final boolean USE_PROD_SERV = false;
-
 	/**
 	 * Number of learners per profile
 	 */
 	public static final Map<Class<? extends IProfile>, Integer> learners = ImmutableMap.of(ProfileA.class, 3,
 			ProfileB.class, 3, ProfileC.class, 3, ProfileI.class, 3, ProfileJ.class, 3);
+	/**
+	 * random order of profiles
+	 */
 	public static final boolean useRandomProfileOrder = false;
 	/**
 	 * Number of iteration each learner id will be used. ie: Number of json
 	 * simulated and sent
 	 */
 	public static final int MAX_ITERATION = 20;
+	/**
+	 * The head name for each learner
+	 */
 	public static final String learnerBase = "sim_";
+	/****************************************************************************************/
 
 	public static int getWeightInfo(String feedbackId) {
 		// temp
