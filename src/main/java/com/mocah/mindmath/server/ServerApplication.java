@@ -62,22 +62,6 @@ public class ServerApplication extends SpringBootServletInitializer {
 						.contact(amel).build());
 	}
 
-	// Documentation of Matrix API v1.0
-	@Bean
-	public Docket swaggerMatrixApi1_0(ServletContext servletContext) {
-		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("matrix-api-1.0")
-				.protocols(Collections.singleton("https")).host(hostbase).pathProvider(new RelativePathProvider(servletContext) {
-		              @Override
-		              public String getApplicationBasePath() {
-		                  return null;
-		              }
-		          }).select()
-				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.config"))
-				.paths(PathSelectors.regex("/matrix/v1.0.*")).build()
-				.apiInfo(new ApiInfoBuilder().version("1.0").title("Matrix API")
-						.description("Update Decision Tree Matrix Documentation v1.0").contact(amel).build());
-	}
-
 	// Documentation of Ontology API v1.0
 	@Bean
 	public Docket swaggerOntologyApi1_0(ServletContext servletContext) {

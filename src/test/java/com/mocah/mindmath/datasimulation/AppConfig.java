@@ -16,7 +16,7 @@ import com.mocah.mindmath.datasimulation.profiles.ProfileB;
 import com.mocah.mindmath.datasimulation.profiles.ProfileC;
 import com.mocah.mindmath.datasimulation.profiles.ProfileI;
 import com.mocah.mindmath.datasimulation.profiles.ProfileJ;
-import com.mocah.mindmath.server.cabri.CabriVersion;
+import com.mocah.mindmath.server.controller.cabri.CabriVersion;
 
 /**
  * @author Thibaut SIMON-FINE

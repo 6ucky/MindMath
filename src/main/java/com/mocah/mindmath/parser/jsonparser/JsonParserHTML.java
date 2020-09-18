@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mocah.mindmath.parser.ParserFactory;
-import com.mocah.mindmath.server.cabri.CabriVersion;
+import com.mocah.mindmath.server.controller.cabri.CabriVersion;
 
 /**
  *

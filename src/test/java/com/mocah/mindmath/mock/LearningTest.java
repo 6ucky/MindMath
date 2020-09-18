@@ -2,6 +2,8 @@ package com.mocah.mindmath.mock;
 
 import org.junit.jupiter.api.Test;
 
+import com.mocah.mindmath.server.entity.feedback.Feedbackjson;
+
 //import static org.hamcrest.MatcherAssert.assertThat;
 //import static org.hamcrest.Matchers.*;
 
@@ -11,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import static org.mockito.Mockito.verify;
-
-import com.mocah.mindmath.server.cabri.feedback.Feedbackjson;
 
 public class LearningTest {
 	

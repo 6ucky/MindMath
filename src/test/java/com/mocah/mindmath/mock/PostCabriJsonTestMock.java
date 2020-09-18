@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.google.gson.Gson;
 import com.mocah.mindmath.PostCabriJsonTest;
 import com.mocah.mindmath.server.ServerApplication;
-import com.mocah.mindmath.server.cabri.Taskcontroller;
+import com.mocah.mindmath.server.controller.cabri.Taskcontroller;
 
 //Mockito test inherited from spring boot test
 @WebMvcTest(PostCabriJsonTest.class)

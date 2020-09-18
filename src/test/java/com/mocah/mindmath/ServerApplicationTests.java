@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mocah.mindmath.server.ServerApplication;
-import com.mocah.mindmath.server.cabri.Taskcontroller;
+import com.mocah.mindmath.server.controller.cabri.Taskcontroller;
 
 @SpringBootTest(classes=ServerApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) 
 public class ServerApplicationTests {

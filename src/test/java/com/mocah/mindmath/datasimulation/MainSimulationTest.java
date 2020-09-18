@@ -54,8 +54,8 @@ import com.mocah.mindmath.datasimulation.profiles.AbstractProfile;
 import com.mocah.mindmath.datasimulation.profiles.IProfile;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.server.ServerApplication;
-import com.mocah.mindmath.server.cabri.CabriVersion;
-import com.mocah.mindmath.server.cabri.Taskcontroller;
+import com.mocah.mindmath.server.controller.cabri.CabriVersion;
+import com.mocah.mindmath.server.controller.cabri.Taskcontroller;
 
 import gov.adlnet.xapi.model.Verbs;
 
@@ -104,11 +104,11 @@ public class MainSimulationTest {
 		{
 		case v1_0:
 			posttask_url = "http://localhost:" + port + "/task/v1.0";
-			getqvalue_url = "http://localhost:" + port + "/task/qvalues";
+			getqvalue_url = "http://localhost:" + port + "/learning/qvalues";
 			break;
 		case v1_1:
 			posttask_url = "http://localhost:" + port + "/task/v1.1";
-			getqvalue_url = "http://localhost:" + port + "/task/qvalues";
+			getqvalue_url = "http://localhost:" + port + "/learning/qvalues";
 			break;
 		}
 		String finalQTable = null;

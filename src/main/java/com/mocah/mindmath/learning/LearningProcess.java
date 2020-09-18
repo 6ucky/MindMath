@@ -47,14 +47,15 @@ import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.states.State;
 import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.learning.utils.values.QValue;
-import com.mocah.mindmath.repository.LocalRoute;
-import com.mocah.mindmath.repository.LocalRouteRepository;
-import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
-import com.mocah.mindmath.server.cabri.CabriVersion;
+import com.mocah.mindmath.server.controller.cabri.CabriVersion;
 import com.mocah.mindmath.server.entity.feedbackContent.ErrorTypeMap;
 import com.mocah.mindmath.server.entity.task.Log;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
+import com.mocah.mindmath.server.repository.LocalRoute;
+import com.mocah.mindmath.server.repository.LocalRouteRepository;
+import com.mocah.mindmath.server.repository.derby.Derbyrepository;
+import com.mocah.mindmath.server.repository.learninglocker.LearningLockerRepositoryAggregation;
 
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
@@ -62,6 +63,7 @@ import alice.tuprolog.Prolog;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Theory;
 import gov.adlnet.xapi.model.Result;
+import gov.adlnet.xapi.model.Score;
 import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementResult;
 
@@ -80,6 +82,9 @@ public class LearningProcess {
 	private static ILearning expertlearning;
 
 	private static Tree tree;
+	
+	// the repository to Derby
+	private static Derbyrepository repo;
 
 	/**
 	 * The default value used to init all qValues for a state. Each qValue will use
@@ -752,4 +757,48 @@ public class LearningProcess {
 		}
 	}
 
+	/**
+	 * a method to get previous score from LRS
+	 * @param statementRef_id the id of statement reference
+	 * @return list of scores
+	 * @throws IOException 
+	 */
+	public ArrayList<Score> getPreviousScore(String statementRef_id) throws IOException
+	{
+		LearningLockerRepositoryAggregation lrs = new LearningLockerRepositoryAggregation(true);
+
+		HashMap<String, Object> scopes = new HashMap<>();
+		scopes.put("LIP6_actor", "MOCAH");
+		scopes.put("statement_reference", statementRef_id);
+
+		StringWriter writer = new StringWriter();
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache mustache = mf.compile("mustache_template/queryAVFt.mustache");
+
+		mustache.execute(writer, scopes).flush();
+
+		String query = writer.toString();
+
+		lrs = lrs.filterByMatcher(query);
+
+		// String resultsStr = lrs.getFilteredStatementsAsString();
+		StatementResult results = lrs.getFilteredStatements();
+		List<Statement> statements = results.getStatements();
+		Gson gson = new Gson();
+		ArrayList<Score> scores = new ArrayList<Score>();
+		for(Statement statement : statements)
+		{
+			scores.add(statement.getResult().getScore());
+		}
+		return scores;
+	}
+
+	public static Derbyrepository getRepo() {
+		return repo;
+	}
+
+	public static void setRepo(Derbyrepository repo) {
+		LearningProcess.repo = repo;
+	}
+	
 }

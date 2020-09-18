@@ -22,9 +22,9 @@ import com.github.mustachejava.MustacheFactory;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
+import com.mocah.mindmath.server.repository.learninglocker.LearningLockerRepositoryAggregation;
 
 import gov.adlnet.xapi.model.Context;
 import gov.adlnet.xapi.model.Statement;
