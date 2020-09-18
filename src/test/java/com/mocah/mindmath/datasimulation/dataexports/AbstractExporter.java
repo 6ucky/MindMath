@@ -20,7 +20,7 @@ public abstract class AbstractExporter {
 
 	public AbstractExporter(SimulatedDataContainer toExport) {
 		this.toExport = toExport;
-		this.exportPath = "simulated" + File.separator + toExport.getDate().getTime() + File.separator;
+		this.exportPath = "build/simulated" + File.separator + toExport.getDate().getTime() + File.separator;
 	}
 
 	public abstract void export();
