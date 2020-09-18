@@ -21,6 +21,7 @@ public class Decision {
 	private IState modifiedState;
 	private ArrayList<IValue> modifiedQvalues;
 	private double reward;
+	private String error_type;
 
 	public Decision() {
 		this.hasLearn = false;
@@ -30,6 +31,11 @@ public class Decision {
 	public Decision(IAction action) {
 		this();
 		this.action = action;
+	}
+	
+	public Decision(IAction action, String error_type) {
+		this(action);
+		this.error_type = error_type;
 	}
 
 	/**
@@ -114,5 +120,13 @@ public class Decision {
 	public void setReward(double reward) {
 		this.reward = reward;
 		setHasLearn(true);
+	}
+
+	public String getError_type() {
+		return error_type;
+	}
+
+	public void setError_type(String error_type) {
+		this.error_type = error_type;
 	}
 }

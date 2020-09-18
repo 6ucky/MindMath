@@ -188,8 +188,9 @@ public class Taskcontroller {
 	}
 
 	/**
-	 * Handle POST request in version 1.0
+	 * Handle POST request in version 1.0 
 	 *
+	 * @author Thibaut SF
 	 * @param data Receive JSON file as string
 	 * @param auth authorization headers
 	 * @return feedback message
@@ -333,6 +334,18 @@ public class Taskcontroller {
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
 	
+	/**
+	 * Generate feedback
+	 * @author Yan W
+	 * @since 10/2020
+	 * @param auth authoriazation
+	 * @param data Cabri json
+	 * @return feedback json
+	 * @throws JsonParserCustomException Cabri json parser exception
+	 * @throws IOException Read or write exception
+	 * @throws NoSuchAlgorithmException Algorithm exception
+	 * @throws URISyntaxException URI format exception
+	 */
 	@PostMapping(path = "/v1.1", consumes = "application/json")
 	public ResponseEntity<String> addtaskv1_1(@RequestHeader("Authorization") String auth, @RequestBody String data)
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
@@ -367,7 +380,7 @@ public class Taskcontroller {
 		System.out.println(action.getId() + " " + ((MindMathAction) action).getLeaf());
 		boolean isTest = true;
 		Feedbackjson feedbackjson = new Feedbackjson(task.getSensors().getId_learner());
-		feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), "1", task);;
+		feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task);;
 
 		// TODO set statement success and completion
 		boolean statement_success = true;
@@ -398,7 +411,16 @@ public class Taskcontroller {
 
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
-
+	
+	/**
+	 * @since 05/2020
+	 * @author Yan W
+	 * @param auth
+	 * @param data
+	 * @return
+	 * @throws JsonParserCustomException
+	 * @throws IOException
+	 */
 	@PostMapping(path = "/test", consumes = "application/json")
 	public ResponseEntity<String> addtaskTEST(@RequestHeader("Authorization") String auth, @RequestBody String data)
 			throws JsonParserCustomException, IOException {

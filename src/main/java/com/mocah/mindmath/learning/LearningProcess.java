@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -50,6 +51,7 @@ import com.mocah.mindmath.repository.LocalRoute;
 import com.mocah.mindmath.repository.LocalRouteRepository;
 import com.mocah.mindmath.repository.learninglocker.LearningLockerRepositoryAggregation;
 import com.mocah.mindmath.server.cabri.CabriVersion;
+import com.mocah.mindmath.server.entity.feedbackContent.ErrorTypeMap;
 import com.mocah.mindmath.server.entity.task.Log;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
@@ -126,13 +128,7 @@ public class LearningProcess {
 		}
 		
 		//init expert learning table and fixed QValues
-		IPolicy newPolicy = new EpsilonGreedy(0.6);
-		expertlearning = new ExpertLearning(newPolicy, new HashMap<>(qvalues));
-		if(expertlearning instanceof ExpertLearning)
-		{
-			((ExpertLearning) expertlearning).sortByValues();
-		}
-
+		expertlearning = new ExpertLearning(null, qvalues);
 		return learning;
 	}
 
@@ -166,34 +162,27 @@ public class LearningProcess {
 			return makeDecision(task, null, null);
 		case v1_1:
 			Decision decision = new Decision();
-			IState newState = null;
-			newState = decisionTreeBFS(tree, task);
-			IAction action = null;
-			if (task.isExpertMode()) {
-				List<IAction> actions = expertlearning.getPossibleActions(newState);
-				HashMap<IState, Integer> table = ((ExpertLearning) expertlearning).getTable();
-				int index = table.get(newState) - 1;
-				System.out.println(index);
-				action = actions.get(index);
-				String message = "Table:";
-				for(IState t_state: table.keySet())
-				{
-					message += table.get(t_state) + " ";
-				}
-				System.out.println(message);
-				if(index == 0 || index < 0)
-					table.put(newState, ((ExpertLearning) expertlearning).getqValues().get(newState).size());
-				else
-					table.put(newState, index);
-				((ExpertLearning) expertlearning).setTable(table);
-				message = "Table:";
-				for(IState t_state: table.keySet())
-				{
-					message += table.get(t_state) + " ";
-				}
-				System.out.println(message);
+			IState newState = decisionTreeBFS(tree, task);
+			IAction action = expertlearning.step(newState);
+			String code_error = task.getSensors().getCodeError();
+			try {
+				code_error = ((ExpertLearning) expertlearning).getErrorType(newState, ErrorTypeMap.getErrorNum(code_error));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			decision.setAction(action);
+			decision.setError_type(code_error);
+			/********print weights and selected code_error*************/
+			HashMap<IState, LinkedList<IValue>> qValues = ((ExpertLearning) expertlearning).getqValues();
+			String message = "[Expertlearning] First qvalues for every state:";
+			for(IState state : qValues.keySet())
+			{
+				message += qValues.get(state).getFirst().getValue() + " ";
+			}
+			message += "\n [Decision] selected code error:" + code_error;
+			System.out.println(message);
+			/**********************************************************/
 			return decision;
 		case test:
 			return makeDecision(task, null, null);
