@@ -473,7 +473,7 @@ public class Taskcontroller {
 	 */
 	@GetMapping("")
 	public ResponseEntity<String> getALLtask(@RequestHeader("Authorization") String auth) {
-		if (checkauth(auth))
+		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		List<Task> tasks = new ArrayList<>();
 		getTaskrepository().getAllTask().forEach(tasks::add);
@@ -491,7 +491,7 @@ public class Taskcontroller {
 	// the default get
 	@GetMapping("/v1.1")
 	public ResponseEntity<String> getALLtaskv1_1(@RequestHeader("Authorization") String auth) {
-		if (checkauth(auth))
+		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		List<TaskFeedback1_1> task_fb = new ArrayList<>();
 		getTaskrepository().getAllTaskFeedback1_1().forEach(task_fb::add);
@@ -507,7 +507,7 @@ public class Taskcontroller {
 	 */
 	@DeleteMapping(path = "")
 	public ResponseEntity<String> cleandatabase(@RequestHeader("Authorization") String auth) {
-		if (checkauth(auth))
+		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		getTaskrepository().deleteAll(getTaskrepository().getAllTask());
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
@@ -522,7 +522,7 @@ public class Taskcontroller {
 	// the default delete
 	@DeleteMapping(path = "/v1.1")
 	public ResponseEntity<String> cleandatabasev1_1(@RequestHeader("Authorization") String auth) {
-		if (checkauth(auth))
+		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		getTaskrepository().deleteAll(getTaskrepository().getAllTaskFeedback1_1());
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
