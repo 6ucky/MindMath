@@ -23,6 +23,7 @@ public class ExpertLearning extends AbstractLearning {
 	private static final long serialVersionUID = -2431512030248522237L;
 	
 	//four default error types for feedback content
+	private static final String[] error_list_ponderation_0 = {"1"};
 	private static final String[] error_list = { "1", "2", "3", "4" };
 	private HashMap<IState, List<Object>> error_table;
 	private HashMap<IState, LinkedList<IValue>> qValues;
@@ -91,7 +92,11 @@ public class ExpertLearning extends AbstractLearning {
 		{
 			IValue first_value = values.pollFirst();
 			values.addLast(first_value);
-			this.error_table.put(state, Arrays.asList(error_list));
+			//if ponderation is 0, there is only one feedback returned instead of 4 error types
+			if(values.getFirst().getValue() == 0)
+				this.error_table.put(state, Arrays.asList(error_list_ponderation_0));
+			else
+				this.error_table.put(state, Arrays.asList(error_list));
 		}
 		return values.getFirst().myAction();
 	}
