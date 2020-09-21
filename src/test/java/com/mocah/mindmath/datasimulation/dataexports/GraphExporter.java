@@ -32,6 +32,7 @@ import com.mocah.mindmath.datasimulation.json.SimulatedDataContainer;
 import com.mocah.mindmath.datasimulation.json.SimulatedDataContainerIterator;
 import com.mocah.mindmath.datasimulation.json.SimulatedDataLearner;
 import com.mocah.mindmath.datasimulation.profiles.IProfile;
+import com.mocah.mindmath.server.controller.cabri.CabriVersion;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -50,10 +51,12 @@ public class GraphExporter extends AbstractExporter {
 		// Global graph
 		int globalI = 0;
 		double globalCumReward = 0.0;
+		double globalCumSuccessProb = 0.0;
 		List<Integer> xGlobalIteration = new ArrayList<>(toExport.getDatasets().size() * AppConfig.MAX_ITERATION);
 		List<Double> xGlobalIterationShift = new ArrayList<>(toExport.getDatasets().size() * AppConfig.MAX_ITERATION);
 		List<Double> yGlobalReward = new ArrayList<>(toExport.getDatasets().size() * AppConfig.MAX_ITERATION);
 		List<Double> yGlobalCumReward = new ArrayList<>(toExport.getDatasets().size() * AppConfig.MAX_ITERATION);
+		List<Double> yGlobalCumSuccessProb = new ArrayList<>(toExport.getDatasets().size() * AppConfig.MAX_ITERATION);
 		List<Integer> yGlobalActivityMode = new ArrayList<>(toExport.getDatasets().size() * AppConfig.MAX_ITERATION);
 		List<Integer> yGlobalFeedbackWeight = new ArrayList<>(toExport.getDatasets().size() * AppConfig.MAX_ITERATION);
 		List<Double> yGlobalSuccessProb = new ArrayList<>(toExport.getDatasets().size() * AppConfig.MAX_ITERATION);
@@ -66,10 +69,12 @@ public class GraphExporter extends AbstractExporter {
 		// Per profile graph
 		Map<Class<? extends IProfile>, Integer> profileI = new HashMap<>();
 		Map<Class<? extends IProfile>, Double> profileCumReward = new HashMap<>();
+		Map<Class<? extends IProfile>, Double> profileCumSuccessProb = new HashMap<>();
 		Map<Class<? extends IProfile>, List<Integer>> xProfileIteration = new HashMap<>();
 		Map<Class<? extends IProfile>, List<Double>> xProfileIterationShift = new HashMap<>();
 		Map<Class<? extends IProfile>, List<Double>> yProfileReward = new HashMap<>();
 		Map<Class<? extends IProfile>, List<Double>> yProfileCumReward = new HashMap<>();
+		Map<Class<? extends IProfile>, List<Double>> yProfileCumSuccessProb = new HashMap<>();
 		Map<Class<? extends IProfile>, List<Integer>> yProfileActivityMode = new HashMap<>();
 		Map<Class<? extends IProfile>, List<Integer>> yProfileFeedbackWeight = new HashMap<>();
 		Map<Class<? extends IProfile>, List<Double>> yProfileSuccessProb = new HashMap<>();
@@ -86,15 +91,18 @@ public class GraphExporter extends AbstractExporter {
 			List<Integer> yLearnerActivityMode = new ArrayList<>(AppConfig.MAX_ITERATION);
 			List<Integer> yLearnerFeedbackWeight = new ArrayList<>(AppConfig.MAX_ITERATION);
 			List<Double> yLearnerSuccessProb = new ArrayList<>(AppConfig.MAX_ITERATION);
+			List<Double> yLearnerCumSuccessProb = new ArrayList<>(AppConfig.MAX_ITERATION);
 			List<Double> yLearnerIncreaseProb = new ArrayList<>(AppConfig.MAX_ITERATION);
 
 			// Init profile if first profile encounter
 			profileI.putIfAbsent(lProfile, 0);
 			profileCumReward.putIfAbsent(lProfile, 0.0);
+			profileCumSuccessProb.putIfAbsent(lProfile, 0.0);
 			xProfileIteration.putIfAbsent(lProfile, new ArrayList<>(AppConfig.MAX_ITERATION));
 			xProfileIterationShift.putIfAbsent(lProfile, new ArrayList<>(AppConfig.MAX_ITERATION));
 			yProfileReward.putIfAbsent(lProfile, new ArrayList<>(AppConfig.MAX_ITERATION));
 			yProfileCumReward.putIfAbsent(lProfile, new ArrayList<>(AppConfig.MAX_ITERATION));
+			yProfileCumSuccessProb.putIfAbsent(lProfile, new ArrayList<>(AppConfig.MAX_ITERATION));
 			yProfileActivityMode.putIfAbsent(lProfile, new ArrayList<>(AppConfig.MAX_ITERATION));
 			yProfileFeedbackWeight.putIfAbsent(lProfile, new ArrayList<>(AppConfig.MAX_ITERATION));
 			yProfileSuccessProb.putIfAbsent(lProfile, new ArrayList<>(AppConfig.MAX_ITERATION));
@@ -102,6 +110,7 @@ public class GraphExporter extends AbstractExporter {
 
 			int learnerI = 0;
 			double learnerCumReward = 0.0;
+			double learnerCumSuccessProb = 0.0;
 			for (SimulatedData learnerData : learner.getDataset()) {
 				// Populate X axis (iteration and shifted iterations)
 				xLearnerIteration.add(learnerI);
@@ -183,6 +192,17 @@ public class GraphExporter extends AbstractExporter {
 				yLearnerSuccessProb.add(sp);
 				yProfileSuccessProb.get(lProfile).add(sp);
 				yGlobalSuccessProb.add(sp);
+				
+				// Populate learner cumulative success probability
+				yLearnerCumSuccessProb.add(learnerCumSuccessProb + yLearnerSuccessProb.get(learnerI));
+				yProfileCumSuccessProb.get(lProfile)
+						.add(profileCumSuccessProb.get(lProfile) + yProfileSuccessProb.get(lProfile).get(profileI.get(lProfile)));
+				yGlobalCumSuccessProb.add(globalCumSuccessProb + yGlobalSuccessProb.get(globalI));
+
+				// Update cumulative success probability for next iteration
+				learnerCumSuccessProb = yLearnerCumSuccessProb.get(learnerI);
+				profileCumSuccessProb.put(lProfile, yProfileCumSuccessProb.get(lProfile).get(profileI.get(lProfile)));
+				globalCumSuccessProb = yGlobalCumSuccessProb.get(globalI);
 
 				// Populate activity mode increasing probability
 				double ip = learnerData.getActivityModeIncreaseSuccessProb();
@@ -199,18 +219,18 @@ public class GraphExporter extends AbstractExporter {
 			@SuppressWarnings("rawtypes")
 			List<Chart> learnerCharts = generateChartsFor(learnerChartsTitle, xLearnerIteration, xLearnerIterationShift,
 					yLearnerActivityMode, yLearnerIncreaseProb, yLearnerFeedbackWeight, yLearnerSuccessProb,
-					yLearnerReward, yLearnerCumReward);
+					yLearnerReward, yLearnerCumReward, yLearnerCumSuccessProb);
 
-			saveCharts(new File(exportPath + learner.getLearnerId() + "_Graph"), learnerCharts, 3, 1);
+			saveCharts(new File(exportPath + learner.getLearnerId() + "_Graph"), learnerCharts, learnerCharts.size(), 1);
 		}
 
 		String globalChartsTitle = "All learners: all profiles";
 		@SuppressWarnings("rawtypes")
 		List<Chart> globalCharts = generateChartsFor(globalChartsTitle, xGlobalIteration, xGlobalIterationShift,
 				yGlobalActivityMode, yGlobalIncreaseProb, yGlobalFeedbackWeight, yGlobalSuccessProb, yGlobalReward,
-				yGlobalCumReward);
+				yGlobalCumReward, yGlobalCumSuccessProb);
 
-		saveCharts(new File(exportPath + "Global_Graph"), globalCharts, 3, 1);
+		saveCharts(new File(exportPath + "Global_Graph"), globalCharts, globalCharts.size(), 1);
 
 		for (Class<? extends IProfile> profile : profileI.keySet()) {
 			String profileChartsTitle = "All learners: " + profile.getSimpleName();
@@ -218,9 +238,10 @@ public class GraphExporter extends AbstractExporter {
 			List<Chart> profileCharts = generateChartsFor(profileChartsTitle, xProfileIteration.get(profile),
 					xProfileIterationShift.get(profile), yProfileActivityMode.get(profile),
 					yProfileIncreaseProb.get(profile), yProfileFeedbackWeight.get(profile),
-					yProfileSuccessProb.get(profile), yProfileReward.get(profile), yProfileCumReward.get(profile));
+					yProfileSuccessProb.get(profile), yProfileReward.get(profile), yProfileCumReward.get(profile),
+					yProfileCumSuccessProb.get(profile));
 
-			saveCharts(new File(exportPath + profile.getSimpleName() + "_Graph"), profileCharts, 3, 1);
+			saveCharts(new File(exportPath + profile.getSimpleName() + "_Graph"), profileCharts, profileCharts.size(), 1);
 		}
 
 		String stateGraphExportPath = exportPath + "states" + File.separator;
@@ -295,13 +316,14 @@ public class GraphExporter extends AbstractExporter {
 		List<Chart> learnerCharts = new ArrayList<>();
 		learnerCharts.add(learnerDataChart);
 		learnerCharts.add(learnerExerciseChart);
-		learnerCharts.add(learnerResChart);
+		if(AppConfig.version != CabriVersion.v1_1)
+			learnerCharts.add(learnerResChart);
 
 		return learnerCharts;
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private List<Chart> generateChartsForCumSuccess(String chatstitle, List<? extends Number> xIterations,
+	private List<Chart> generateChartsFor(String chatstitle, List<? extends Number> xIterations,
 			List<? extends Number> xIterationsShift, List<? extends Number> yActivityMode,
 			List<? extends Number> yIncreaseProb, List<? extends Number> yFeedbackWeight,
 			List<? extends Number> ySuccessProb, List<? extends Number> yReward, List<? extends Number> yCumReward,
@@ -310,8 +332,8 @@ public class GraphExporter extends AbstractExporter {
 				yIncreaseProb, yFeedbackWeight, ySuccessProb, yReward, yCumReward);
 		
 		XYChart learnerCumSuccessChart = buildChart("Cumulative Success over time", "Iterations", "Success probability");
-		XYSeries lrcs1 = learnerCumSuccessChart.addSeries("Success probability", xIterationsShift, ySuccessProb);
-		XYSeries lrcs2 = learnerCumSuccessChart.addSeries("Cumulative Success probability", xIterationsShift, yCumSuccessProb);
+		learnerCumSuccessChart.addSeries("Success probability", xIterationsShift, ySuccessProb);
+		learnerCumSuccessChart.addSeries("Cumulative Success probability", xIterationsShift, yCumSuccessProb);
 		
 		learnerCharts.add(learnerCumSuccessChart);
 		return learnerCharts;
