@@ -76,6 +76,7 @@ public class Task extends AbstractJsonData implements Serializable {
 		this(null, new Sensors(), new ArrayList<Log>(), null, isTest);
 	}
 
+	//version 1.0
 	public Task(String task, Sensors sensors, List<Log> log, String feedback_id) {
 		this(task, sensors, log, feedback_id, false);
 	}

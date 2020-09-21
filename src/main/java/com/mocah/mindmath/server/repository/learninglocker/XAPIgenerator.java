@@ -215,7 +215,7 @@ public class XAPIgenerator {
 
 			statement.setResult(fdresult);
 			break;
-			
+		case v1_1:
 		case test:
 			fdresult = new Result();
 			fdresult.setSuccess(success);
@@ -608,6 +608,8 @@ public class XAPIgenerator {
 			Context c = new Context();
 			c.setExtensions(extensions);
 			statement.setContext(c);
+			break;
+		case v1_1:
 			break;
 		case test:
 			break;

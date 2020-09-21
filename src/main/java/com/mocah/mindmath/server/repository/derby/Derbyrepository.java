@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.mocah.mindmath.server.entity.AbstractJsonData;
+import com.mocah.mindmath.server.entity.feedback.TaskFeedback1_1;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
 import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
@@ -27,6 +28,9 @@ public interface Derbyrepository extends CrudRepository<AbstractJsonData, String
 
 	@Query("select t from Task t")
 	List<Task> getAllTask();
+	
+	@Query("select t from TaskFeedback1_1 t")
+	List<TaskFeedback1_1> getAllTaskFeedback1_1();
 
 	@Query("select f from FeedbackContent f")
 	List<FeedbackContent> getAllFeedbackContent();

@@ -13,6 +13,7 @@ import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,7 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.server.entity.feedback.Feedbackjson;
+import com.mocah.mindmath.server.entity.feedback.TaskFeedback1_1;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
@@ -342,59 +344,63 @@ public class Taskcontroller {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, CabriVersion.v1_0);
 
-		task.setUsingTestLRS(true);
-
 		Decision decision = null;
-		if(task.isExpertMode())
-		{
-			try {
-				decision = LearningProcess.makeDecision(task, CabriVersion.v1_1);
-			} catch (InvalidTheoryException | NoSuchFieldException | NoSuchMethodException | InvocationTargetException
-					| MalformedGoalException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			decision = LearningProcess.makeDecision(task, CabriVersion.v1_1);
+		} catch (InvalidTheoryException | NoSuchFieldException | NoSuchMethodException | InvocationTargetException
+				| MalformedGoalException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		IAction action = decision.getAction();
 
 		task.setDecisionAction(action);
-		getTaskrepository().save(task);
 		
 //		ILearning learning = LearningProcess.getExpertlearning();
 //		serializableRedisTemplate.opsForValue().set("expertlearning", learning);
 
-		System.out.println(action.getId() + " " + ((MindMathAction) action).getLeaf());
-		boolean isTest = true;
 		Feedbackjson feedbackjson = new Feedbackjson(task.getSensors().getId_learner());
 		feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task);;
 
-		// TODO set statement success and completion
+		//save task and feedback in Derby
+		TaskFeedback1_1 task_fb = new TaskFeedback1_1(task.getSensors().getId_learner(), 
+				task.getSensors().getDomain(),
+				task.getSensors().getGenerator(),
+				task.getSensors().getTaskFamily(),
+				BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer()),
+				task.getSensors().getCodeError(),
+				task.getSensors().getActivityMode(),
+				task.getLog(),
+				action.getId(),
+				((MindMathAction) action).getLeaf(),
+				decision.getError_type(),
+				feedbackjson.getMotivationalElementFb(),
+				feedbackjson.getContentFb(),
+				feedbackjson.getGlossaryFb()
+				);
+		getTaskrepository().save(task_fb);
+		
+		//generate task statement and feedback statement
 		boolean statement_success = true;
 		boolean statement_completion = true;
 		XAPIgenerator generator = new XAPIgenerator();
-		Statement statement = generator.setResult(statement_success, statement_completion, feedbackjson, CabriVersion.v1_0)
-				.generateStatement(task, CabriVersion.v1_0);
-		// TODO validate post statement to LRS
+		Statement statement1 = new Statement();
+		
+		statement1 = generator.setActor(task)
+				.setVerb(task)
+				.setObject(task)
+				.generateStatement(task, CabriVersion.v1_1);
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(task.isUsingTestLRS());
-		ll.postStatement(statement);
-
-		// Add verbose fields
-		if (task.isVerbose()) {
-			// Set decision mode
-			if (task.isExpertMode()) {
-				feedbackjson.setMode("Expert");
-			} else {
-				feedbackjson.setMode("RL");
-			}
-
-			// Set reward value
-			if (decision.hasLearn()) {
-				feedbackjson.setReward(decision.getReward());
-				feedbackjson.setModifiedState(decision.getModifiedState());
-				feedbackjson.setModifiedQvalues(decision.getModifiedQvalues());
-			}
-		}
+		String id = ll.postStatement(statement1);
+		Statement statement2 = new Statement();
+		generator = new XAPIgenerator();
+		statement2 = generator.setActorAsLip6()
+				.setVerb(Verbs.responded())
+				.setObject(id)
+				.setResult(statement_success, statement_completion, feedbackjson, CabriVersion.v1_1)
+				.generateStatement(task, CabriVersion.v1_1);
+		ll.postStatement(statement2);
 
 		return new ResponseEntity<>(gson.toJson(feedbackjson), HttpStatus.OK);
 	}
@@ -485,7 +491,13 @@ public class Taskcontroller {
 	// the default get
 	@GetMapping("/v1.1")
 	public ResponseEntity<String> getALLtaskv1_1(@RequestHeader("Authorization") String auth) {
-		return getALLtask(auth);
+		if (checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		List<TaskFeedback1_1> task_fb = new ArrayList<>();
+		getTaskrepository().getAllTaskFeedback1_1().forEach(task_fb::add);
+		if (task_fb.size() == 0)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
+		return new ResponseEntity<>(gson.toJson(task_fb), HttpStatus.FOUND);
 	}
 
 	/**
@@ -510,7 +522,10 @@ public class Taskcontroller {
 	// the default delete
 	@DeleteMapping(path = "/v1.1")
 	public ResponseEntity<String> cleandatabasev1_1(@RequestHeader("Authorization") String auth) {
-		return cleandatabase(auth);
+		if (checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		getTaskrepository().deleteAll(getTaskrepository().getAllTaskFeedback1_1());
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
 	}
 
 	/**
