@@ -167,7 +167,7 @@ public class LearningProcess {
 			return makeDecision(task, null, null);
 		case v1_1:
 			Decision decision = new Decision();
-			IState newState = decisionTreeBFS(tree, task);
+			IState newState = decisionTreeBFS(tree, task, CabriVersion.v1_1);
 			IAction action = expertlearning.step(newState);
 			String code_error = task.getSensors().getCodeError();
 			try {
@@ -216,7 +216,7 @@ public class LearningProcess {
 		long starttime = System.nanoTime();
 		// 1 generate current state
 		IState newState = null;
-		newState = decisionTreeBFS(tree, task);
+		newState = decisionTreeBFS(tree, task, CabriVersion.v1_0);
 		System.out.println("[Decision] State detected : " + newState);
 		System.out.println(
 				"Time interprete current state : " + ((double) (System.nanoTime() - starttime) / 1_000_000_000));
@@ -468,7 +468,7 @@ public class LearningProcess {
 	 * @throws InvocationTargetException
 	 * @throws MalformedGoalException
 	 */
-	private static IState decisionTreeBFS(Tree tree, Task task) throws IOException, InvalidTheoryException,
+	private static IState decisionTreeBFS(Tree tree, Task task, CabriVersion version) throws IOException, InvalidTheoryException,
 			NoSuchFieldException, NoSuchMethodException, InvocationTargetException, MalformedGoalException {
 		BreadthFirstSearch bfs = new BreadthFirstSearch(tree);
 
@@ -489,7 +489,7 @@ public class LearningProcess {
 
 		if (pg != null) {
 			Map<Vars, String> varcache = new HashMap<>();
-			stateInterprete(bfs, node, task, state, pg, varcache);
+			stateInterprete(bfs, node, task, state, pg, varcache, version);
 		}
 
 		return state;
@@ -510,7 +510,7 @@ public class LearningProcess {
 	 * @throws MalformedGoalException
 	 */
 	private static void stateInterprete(BreadthFirstSearch bfs, Node node, Task task, State state, Prolog pg,
-			Map<Vars, String> varcache)
+			Map<Vars, String> varcache, CabriVersion version)
 			throws NoSuchFieldException, NoSuchMethodException, InvocationTargetException, MalformedGoalException {
 		if (node != null) {
 			bfs.visitNode(node);
@@ -548,7 +548,7 @@ public class LearningProcess {
 									replacement = Extractor.getFromTask(task, var.getKey());
 									break;
 								case CUSTOM_METHOD:
-									replacement = Extractor.getFromMethod(task, var.getKey());
+									replacement = Extractor.getFromMethod(task, var.getKey(), version);
 									break;
 								default:
 									break;
@@ -581,7 +581,7 @@ public class LearningProcess {
 								state.putParam(node.getId(), val.getAsString());
 							}
 
-							stateInterprete(bfs, child, task, state, pg, varcache);
+							stateInterprete(bfs, child, task, state, pg, varcache, version);
 
 							break;
 						}

@@ -257,7 +257,7 @@ public class TestLearningProcess {
 									replacement = Extractor.getFromTask(task, var.getKey());
 									break;
 								case CUSTOM_METHOD:
-									replacement = Extractor.getFromMethod(task, var.getKey());
+									replacement = Extractor.getFromMethod(task, var.getKey(), CabriVersion.v1_0);
 									break;
 								default:
 									break;

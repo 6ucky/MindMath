@@ -31,6 +31,28 @@ public interface Derbyrepository extends CrudRepository<AbstractJsonData, String
 	
 	@Query("select t from TaskFeedback1_1 t")
 	List<TaskFeedback1_1> getAllTaskFeedback1_1();
+	
+	@Query("select t from TaskFeedback1_1 t where t.id_learner = :id_learner and t.taskFamily = :taskFamily and t.trigger = :trigger and t.success = :success")
+	List<TaskFeedback1_1> getTaskFeedback1_1(
+			@Param("id_learner") String id_learner,
+			@Param("taskFamily") String taskFamily,
+			@Param("trigger") String trigger,
+			@Param("success") boolean success);
+	
+	@Query("select t from TaskFeedback1_1 t where t.id_learner = :id_learner and t.taskFamily = :taskFamily and t.trigger = :trigger and t.success = :success and t.correctAnswer = :correctAnswer")
+	List<TaskFeedback1_1> getTaskFeedback1_1(
+			@Param("id_learner") String id_learner,
+			@Param("taskFamily") String taskFamily,
+			@Param("trigger") String trigger,
+			@Param("success") boolean success,
+			@Param("correctAnswer") boolean correctAnswer);
+	
+	@Query("select t from TaskFeedback1_1 t where t.taskFamily = :taskFamily and t.trigger = :trigger and t.success = :success and t.correctAnswer = :correctAnswer")
+	List<TaskFeedback1_1> getTaskFeedback1_1(
+			@Param("taskFamily") String taskFamily,
+			@Param("trigger") String trigger,
+			@Param("success") boolean success,
+			@Param("correctAnswer") boolean correctAnswer);
 
 	@Query("select f from FeedbackContent f")
 	List<FeedbackContent> getAllFeedbackContent();

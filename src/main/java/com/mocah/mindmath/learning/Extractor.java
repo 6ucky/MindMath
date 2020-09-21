@@ -22,6 +22,7 @@ import com.github.mustachejava.MustacheFactory;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mocah.mindmath.server.controller.cabri.CabriVersion;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
 import com.mocah.mindmath.server.repository.learninglocker.LearningLockerRepositoryAggregation;
@@ -84,28 +85,54 @@ public class Extractor {
 //		return r;
 //	}
 
-	public static String getFromMethod(Task task, String methodName)
+	public static String getFromMethod(Task task, String methodName, CabriVersion version)
 			throws NoSuchMethodException, InvocationTargetException {
 		Object result = null;
 
-		try {
-			Method method = Extractor.class.getDeclaredMethod(methodName, Task.class);
-			result = method.invoke(null, task);
-		} catch (NoSuchMethodException e) {
-			throw new NoSuchMethodException("Try to execute inexisting method '" + methodName + "' in class '"
-					+ Extractor.class
-					+ "'. Please write the method and also note that method require to use have Task object as parameter.");
-		} catch (InvocationTargetException e) {
-			throw new InvocationTargetException(e.getCause(),
-					"Error in execution of method '" + methodName + "' in class '" + Extractor.class + "'.");
-		} catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
-			// TODO Bloc catch généré automatiquement
-			// Note:
-			// IllegalArgumentException & IllegalAccessException & SecurityException
-			// shouldn't be thrown since we always access to an existing class and field
-			// owned by the class itself
-			e.printStackTrace();
+		switch(version)
+		{
+		case v1_0:
+			try {
+				Method method = Extractor.class.getDeclaredMethod(methodName, Task.class);
+				result = method.invoke(null, task);
+			} catch (NoSuchMethodException e) {
+				throw new NoSuchMethodException("Try to execute inexisting method '" + methodName + "' in class '"
+						+ Extractor.class
+						+ "'. Please write the method and also note that method require to use have Task object as parameter.");
+			} catch (InvocationTargetException e) {
+				throw new InvocationTargetException(e.getCause(),
+						"Error in execution of method '" + methodName + "' in class '" + Extractor.class + "'.");
+			} catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
+				// TODO Bloc catch généré automatiquement
+				// Note:
+				// IllegalArgumentException & IllegalAccessException & SecurityException
+				// shouldn't be thrown since we always access to an existing class and field
+				// owned by the class itself
+				e.printStackTrace();
+			}
+			break;
+		case v1_1:
+			try {
+				Method method = ExtractorDerby.class.getDeclaredMethod(methodName, Task.class);
+				result = method.invoke(null, task);
+			} catch (NoSuchMethodException e) {
+				throw new NoSuchMethodException("Try to execute inexisting method '" + methodName + "' in class '"
+						+ ExtractorDerby.class
+						+ "'. Please write the method and also note that method require to use have Task object as parameter.");
+			} catch (InvocationTargetException e) {
+				throw new InvocationTargetException(e.getCause(),
+						"Error in execution of method '" + methodName + "' in class '" + ExtractorDerby.class + "'.");
+			} catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
+				// TODO Bloc catch généré automatiquement
+				// Note:
+				// IllegalArgumentException & IllegalAccessException & SecurityException
+				// shouldn't be thrown since we always access to an existing class and field
+				// owned by the class itself
+				e.printStackTrace();
+			}
+			break;
 		}
+		
 
 		if (result != null)
 			return result.toString();
