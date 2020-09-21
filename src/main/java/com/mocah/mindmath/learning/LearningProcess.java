@@ -185,7 +185,7 @@ public class LearningProcess {
 			{
 				message += qValues.get(state).getFirst().getValue() + " ";
 			}
-			message += "\n [Decision] Feedback ID:" + action.getId() + " leaf:" + ((MindMathAction) action).getLeaf() + " code error:" + code_error;
+			message += "\n[Decision] Feedback ID:" + action.getId() + " leaf:" + ((MindMathAction) action).getLeaf() + " code error:" + code_error;
 			System.out.println(message);
 			/**********************************************************/
 			return decision;

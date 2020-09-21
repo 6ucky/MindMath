@@ -344,6 +344,15 @@ public class Taskcontroller {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, CabriVersion.v1_0);
 
+		/**
+		 * @param success    true if we call decision process, false if we decide the
+		 *                   cabri JSON is gaming with the system
+		 * @param completion true if decision process work, false if decision produces
+		 *                   an error
+		 */
+		boolean statement_success = false;
+		boolean statement_completion = false;
+		
 		Decision decision = null;
 		try {
 			decision = LearningProcess.makeDecision(task, CabriVersion.v1_1);
@@ -353,6 +362,11 @@ public class Taskcontroller {
 			e.printStackTrace();
 		}
 		
+		if(decision != null)
+		{
+			statement_success = true;
+			statement_completion = true;
+		}
 		IAction action = decision.getAction();
 
 		task.setDecisionAction(action);
@@ -377,13 +391,14 @@ public class Taskcontroller {
 				decision.getError_type(),
 				feedbackjson.getMotivationalElementFb(),
 				feedbackjson.getContentFb(),
-				feedbackjson.getGlossaryFb()
+				feedbackjson.getGlossaryFb(),
+				task.getVerb().getId(),
+				statement_success,
+				statement_completion
 				);
 		getTaskrepository().save(task_fb);
 		
 		//generate task statement and feedback statement
-		boolean statement_success = true;
-		boolean statement_completion = true;
 		XAPIgenerator generator = new XAPIgenerator();
 		Statement statement1 = new Statement();
 		

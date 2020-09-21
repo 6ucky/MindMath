@@ -3,6 +3,7 @@ package com.mocah.mindmath.server.controller.learning;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.mocah.mindmath.learning.LearningProcess;
+import com.mocah.mindmath.learning.algorithms.ExpertLearning;
 import com.mocah.mindmath.learning.algorithms.ILearning;
 import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.states.IState;
@@ -108,8 +110,8 @@ public class Learningcontroller {
 	 * @param auth
 	 * @return the qvalue from learning algorithm
 	 */
-	@GetMapping("/qvalues")
-	public ResponseEntity<String> getQValues(@RequestHeader("Authorization") String auth) {
+	@GetMapping("/qlearning/qvalues")
+	public ResponseEntity<String> getQlearningQValues(@RequestHeader("Authorization") String auth) {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
@@ -119,6 +121,40 @@ public class Learningcontroller {
 		if (learning instanceof QLearning) {
 			QLearning ql = (QLearning) learning;
 			qValues = ql.getQValues();
+		}
+
+		StringBuilder res = new StringBuilder();
+
+		for (IState state : qValues.keySet()) {
+			StringBuilder line = new StringBuilder(state.toString());
+			line.append(";");
+
+			for (IValue value : qValues.get(state)) {
+				line.append(value.myAction());
+				line.append("→");
+				line.append(value.getValue());
+				line.append(";");
+			}
+
+			line.append("\n");
+
+			res.append(line);
+		}
+
+		return new ResponseEntity<>(res.toString(), HttpStatus.FOUND);
+	}
+	
+	@GetMapping("/expertlearning/qvalues")
+	public ResponseEntity<String> getExpertlearningQValues(@RequestHeader("Authorization") String auth) {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		ILearning learning = LearningProcess.getExpertlearning();
+		Map<IState, LinkedList<IValue>> qValues = null;
+
+		if (learning instanceof ExpertLearning) {
+			ExpertLearning ql = (ExpertLearning) learning;
+			qValues = ql.getqValues();
 		}
 
 		StringBuilder res = new StringBuilder();

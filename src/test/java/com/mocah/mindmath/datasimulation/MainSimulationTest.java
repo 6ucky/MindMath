@@ -4,13 +4,9 @@
 package com.mocah.mindmath.datasimulation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.*;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,9 +14,7 @@ import java.util.Map.Entry;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
@@ -28,15 +22,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.mocah.mindmath.PostCabriJsonTest;
 import com.mocah.mindmath.datasimulation.attributes.Answer;
 import com.mocah.mindmath.datasimulation.attributes.ErrorCode;
 import com.mocah.mindmath.datasimulation.attributes.Trigger;
@@ -52,12 +43,8 @@ import com.mocah.mindmath.datasimulation.json.SimulatedDataContainer;
 import com.mocah.mindmath.datasimulation.json.SimulatedDataLearner;
 import com.mocah.mindmath.datasimulation.profiles.AbstractProfile;
 import com.mocah.mindmath.datasimulation.profiles.IProfile;
-import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
 import com.mocah.mindmath.server.ServerApplication;
 import com.mocah.mindmath.server.controller.cabri.CabriVersion;
-import com.mocah.mindmath.server.controller.cabri.Taskcontroller;
-
-import gov.adlnet.xapi.model.Verbs;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -104,11 +91,15 @@ public class MainSimulationTest {
 		{
 		case v1_0:
 			posttask_url = "http://localhost:" + port + "/task/v1.0";
-			getqvalue_url = "http://localhost:" + port + "/learning/qvalues";
+			getqvalue_url = "http://localhost:" + port + "/learning/qlearning/qvalues";
 			break;
 		case v1_1:
 			posttask_url = "http://localhost:" + port + "/task/v1.1";
-			getqvalue_url = "http://localhost:" + port + "/learning/qvalues";
+			getqvalue_url = "http://localhost:" + port + "/learning/expertlearning/qvalues";
+			break;
+		default:
+			posttask_url = "http://localhost:" + port + "/task/v1.1";
+			getqvalue_url = "http://localhost:" + port + "/learning/expertlearning/qvalues";
 			break;
 		}
 		String finalQTable = null;

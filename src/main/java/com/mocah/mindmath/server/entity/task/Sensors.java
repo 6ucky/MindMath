@@ -2,6 +2,7 @@ package com.mocah.mindmath.server.entity.task;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.google.gson.annotations.Expose;
@@ -17,20 +18,28 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	private static final long serialVersionUID = 7791961059918284422L;
 
+	@Column(insertable = false)
 	private final String capteur_bool_RF_CO2_1;
 
+	@Column(insertable = false)
 	private final String capteur_bool_RF_CO2_2;
 
+	@Column(insertable = false)
 	private final String capteur_bool_RF_CO2_3;
 
+	@Column(insertable = false)
 	private final String capteur_bool_RJ;
 
+	@Column(insertable = false)
 	private final String capteur_nb_temps;
 
+	@Column(insertable = false)
 	private final String capteur_nb_valider;
 
+	@Column(insertable = false)
 	private final String capteur_nb_effacer;
 
+	@Column(insertable = false)
 	private final String capteur_nb_aide;
 	
 	//TODO UID parcours

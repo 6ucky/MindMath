@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
@@ -41,20 +42,29 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 	
 	private final String error_type;
 	
+	@Column(length=1024)
 	private final String motivationalElementFb;
 	
+	@Column(length=1024)
 	private final String contentFb;
 	
+	@Column(length=10000)
 	private final String glossaryFb;
 	
+	private final String trigger;
+	
+	private final boolean success;
+	
+	private final boolean completion;
+	
 	public TaskFeedback1_1() {
-		this(null, null, null, null, false, null, null, new ArrayList<Log>(), null, null, null, null, null, null);
+		this(null, null, null, null, false, null, null, new ArrayList<Log>(), null, null, null, null, null, null, null, false, false);
 	}
 
 	public TaskFeedback1_1(String id_learner, String domain, String generator, String taskFamily,
 			boolean correctAnswer, String codeError, String activityMode, List<Log> logs,
 			String feedback_id, String leaf, String error_type, String motivationalElementFb,
-			String contentFb, String glossaryFb) {
+			String contentFb, String glossaryFb, String trigger, boolean success, boolean completion) {
 		super();
 		this.id_learner = id_learner;
 		this.domain = domain;
@@ -70,6 +80,9 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 		this.motivationalElementFb = motivationalElementFb;
 		this.contentFb = contentFb;
 		this.glossaryFb = glossaryFb;
+		this.trigger = trigger;
+		this.success = success;
+		this.completion = completion;
 	}
 
 	public String getId_learner() {
@@ -122,5 +135,17 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 
 	public String getGlossaryFb() {
 		return glossaryFb;
+	}
+
+	public String getTrigger() {
+		return trigger;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public boolean isCompletion() {
+		return completion;
 	}
 }
