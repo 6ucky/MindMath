@@ -316,7 +316,7 @@ public class GraphExporter extends AbstractExporter {
 		List<Chart> learnerCharts = new ArrayList<>();
 		learnerCharts.add(learnerDataChart);
 		learnerCharts.add(learnerExerciseChart);
-		if(AppConfig.version != CabriVersion.v1_1)
+		if(AppConfig.version == CabriVersion.v1_0 && !AppConfig.isExpertMode)
 			learnerCharts.add(learnerResChart);
 
 		return learnerCharts;
