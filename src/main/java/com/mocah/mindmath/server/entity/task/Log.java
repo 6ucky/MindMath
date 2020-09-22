@@ -31,11 +31,7 @@ public class Log extends AbstractJsonData implements Serializable {
 
 	// empty object
 	public Log() {
-		super();
-		this.time = null;
-		this.name = null;
-		this.action = null;
-		this.type = null;
+		this(null, null, null, null);
 	}
 
 	public Log(String time, String type, String name, String action) {

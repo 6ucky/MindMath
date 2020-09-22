@@ -48,19 +48,36 @@ public class ServerApplication extends SpringBootServletInitializer {
 	// Documentation of task API v1.0
 	@Bean
 	public Docket swaggerTaskApi1_0(ServletContext servletContext) {
-		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("task-api-1.0")
+		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("task-api-1.1")
 				.protocols(Collections.singleton("https")).host(hostbase).pathProvider(new RelativePathProvider(servletContext) {
 		              @Override
 		              public String getApplicationBasePath() {
 		                  return null;
 		              }
 		          }).select()
-				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.cabri"))
+				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.controller.cabri"))
 				.paths(PathSelectors.ant("/task/**")).build()
-				.apiInfo(new ApiInfoBuilder().version("1.0").title("Task API from Cabri")
-						.description("POST JSON of Cabri from Tralalere and Return Feedback Documentation v1.0")
+				.apiInfo(new ApiInfoBuilder().version("1.1").title("Task API from Cabri")
+						.description("POST JSON of Cabri from Tralalere and Return Feedback Documentation v1.1")
 						.contact(amel).build());
 	}
+	
+	// Documentation of task API v1.0
+		@Bean
+		public Docket swaggerLearningApi1_0(ServletContext servletContext) {
+			return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("learning-api-1.1")
+					.protocols(Collections.singleton("https")).host(hostbase).pathProvider(new RelativePathProvider(servletContext) {
+			              @Override
+			              public String getApplicationBasePath() {
+			                  return null;
+			              }
+			          }).select()
+					.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.controller.learning"))
+					.paths(PathSelectors.ant("/learning/**")).build()
+					.apiInfo(new ApiInfoBuilder().version("1.1").title("Learning API from Cabri")
+							.description("Backup values in learning Documentation v1.1")
+							.contact(amel).build());
+		}
 
 	// Documentation of Ontology API v1.0
 	@Bean
@@ -72,7 +89,7 @@ public class ServerApplication extends SpringBootServletInitializer {
 		                  return null;
 		              }
 		          }).select()
-				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.config"))
+				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.controller.config"))
 				.paths(PathSelectors.regex("/ontology/v1.0.*")).build()
 				.apiInfo(new ApiInfoBuilder().version("1.0").title("Ontology API")
 						.description("Update Ontology OWL file Documentation v1.0").contact(amel).build());
@@ -81,17 +98,17 @@ public class ServerApplication extends SpringBootServletInitializer {
 	// Documentation of LRS Learning Locker API
 	@Bean
 	public Docket swaggerLRSApi1_0(ServletContext servletContext) {
-		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("lrs-api-1.0")
+		return new Docket(springfox.documentation.spi.DocumentationType.SWAGGER_2).groupName("lrs-api-1.1")
 				.protocols(Collections.singleton("https")).host(hostbase).pathProvider(new RelativePathProvider(servletContext) {
 		              @Override
 		              public String getApplicationBasePath() {
 		                  return null;
 		              }
 		          }).select()
-				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.config"))
+				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.controller.config"))
 				.paths(PathSelectors.ant("/lrs/**"))
 //				.paths(Predicates.not(PathSelectors.ant("/lrs/test/**")))
-				.build().apiInfo(new ApiInfoBuilder().version("1.0").title("LRS API")
+				.build().apiInfo(new ApiInfoBuilder().version("1.1").title("LRS API")
 						.description("Connect with Learning Locker LRS Documentation").contact(amel).build());
 	}
 	
@@ -105,7 +122,7 @@ public class ServerApplication extends SpringBootServletInitializer {
 		                  return null;
 		              }
 		          }).select()
-				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.cabri.feedback")).paths(PathSelectors.any())
+				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.controller.feedback")).paths(PathSelectors.any())
 				.build().apiInfo(new ApiInfoBuilder().version("1.0").title("Feedback API")
 						.description("Feedback content in Derby Documentation").contact(amel).build());
 	}
@@ -120,7 +137,7 @@ public class ServerApplication extends SpringBootServletInitializer {
 		                  return null;
 		              }
 		          }).select()
-				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.config"))
+				.apis(RequestHandlerSelectors.basePackage("com.mocah.mindmath.server.controller.config"))
 				.paths(PathSelectors.ant("/file/**"))
 				.build().apiInfo(new ApiInfoBuilder().version("1.0").title("File API")
 						.description("Local file read/write Documentation").contact(amel).build());

@@ -21,6 +21,8 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 	
 	private final String id_learner;
 	
+	private final String id_task;
+	
 	private final String domain;
 
 	private final String generator;
@@ -57,16 +59,22 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 	
 	private final boolean completion;
 	
+	private final double successScore;
+	
+	private final boolean closeTask;
+	
 	public TaskFeedback1_1() {
-		this(null, null, null, null, false, null, null, new ArrayList<Log>(), null, null, null, null, null, null, null, false, false);
+		this("", "", null, null, null, false, null, null, new ArrayList<Log>(), null, null, null, null, null, null, null, false, false, 0, false);
 	}
 
-	public TaskFeedback1_1(String id_learner, String domain, String generator, String taskFamily,
+	public TaskFeedback1_1(String id_learner, String id_task, String domain, String generator, String taskFamily,
 			boolean correctAnswer, String codeError, String activityMode, List<Log> logs,
 			String feedback_id, String leaf, String error_type, String motivationalElementFb,
-			String contentFb, String glossaryFb, String trigger, boolean success, boolean completion) {
+			String contentFb, String glossaryFb, String trigger, boolean success, boolean completion,
+			double successScore, boolean closeTask) {
 		super();
 		this.id_learner = id_learner;
+		this.id_task = id_task;
 		this.domain = domain;
 		this.generator = generator;
 		this.taskFamily = taskFamily;
@@ -83,6 +91,8 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 		this.trigger = trigger;
 		this.success = success;
 		this.completion = completion;
+		this.successScore = successScore;
+		this.closeTask = closeTask;
 	}
 
 	public String getId_learner() {
@@ -147,5 +157,17 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 
 	public boolean isCompletion() {
 		return completion;
+	}
+
+	public String getId_task() {
+		return id_task;
+	}
+
+	public double getSuccessScore() {
+		return successScore;
+	}
+
+	public boolean isCloseTask() {
+		return closeTask;
 	}
 }

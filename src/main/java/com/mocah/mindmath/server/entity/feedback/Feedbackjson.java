@@ -19,14 +19,18 @@ public class Feedbackjson implements Serializable {
 	private static final long serialVersionUID = -9041203134380944632L;
 
 	private final String idLearner;
-	private final String idFbCabri;
+	private final String idTask;
 	// the id of the actitvity family performed by the learner
-	private final String idFamilytask;
+	private final String taskFamily;
 	// feedbackId
-	private final String idFeedback;
+	private final String idFb;
+	private final String idFbCabri;
 	private final String motivationalElementFb;
 	private final String contentFb;
 	private final String glossaryFb;
+	private final boolean correctAnswer;
+	private final double successScore;
+	private final boolean closeTask;
 
 	// Verbose fields
 	private String mode;
@@ -41,56 +45,73 @@ public class Feedbackjson implements Serializable {
 
 	public Feedbackjson(String id, String idFamilytask, String idFeedback) throws IOException {
 		this.idLearner = id;
+		this.idTask = "";
 		this.idFbCabri = "";
-		this.idFamilytask = idFamilytask;
-		this.idFeedback = idFeedback;
+		this.taskFamily = idFamilytask;
+		this.idFb = idFeedback;
 		this.motivationalElementFb = String2GeneralHTML("Bravo!");
 		this.contentFb = String2ContentFBHTML("", "https://mindmath.lip6.fr/videos/ResolutionEquation.mp4", "",
 				"video/mp4");
 		HashMap<String, String> glossaryMap = new HashMap<>();
 		glossaryMap.put("Une propriété est bla bla.", "Ceci signifie bla bla.");
 		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
-	}
-
-	// Test for Feedbackcontent Database
-	public Feedbackjson(String motivation, String content_url, String content_type, HashMap<String, String> glossaryMap)
-			throws IOException {
-		this.idLearner = "100";
-		this.idFbCabri = "";
-		this.idFamilytask = "ft3.1";
-		this.idFeedback = "0.0.0.0";
-		this.motivationalElementFb = String2GeneralHTML(motivation);
-		if (content_type.equals("video/mp4")) {
-			this.contentFb = String2ContentFBHTML("", content_url, "", content_type);
-		} else {
-			this.contentFb = String2ContentFBHTML(content_url, "", "", content_type);
-		}
-		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
+		this.correctAnswer = false;
+		this.successScore = 0.8;
+		this.closeTask = false;
 	}
 
 	// Test for Tralalere
 	public Feedbackjson(String id, boolean correctness) {
 		this.idLearner = id;
+		this.idTask = "";
 		this.idFbCabri = "";
 		this.contentFb = "";
 		this.glossaryFb = "";
-		this.idFeedback = "0.0.0.0";
+		this.idFb = "0.0.0.0";
 		if (correctness) {
-			this.idFamilytask = "F1.1";
+			this.taskFamily = "F1.1";
 			this.motivationalElementFb = "<h1>Bravo! Poursuis dans ta lancée!</h1>";
 		} else {
-			this.idFamilytask = "F2.1";
+			this.taskFamily = "F2.1";
 			this.motivationalElementFb = "<h1>Ne baisse pas les bras, prend ton temps et réessaye!</h1>";
 		}
+		this.correctAnswer = false;
+		this.successScore = 0.8;
+		this.closeTask = false;
 	}
 
+	// Test for Benjamin's table
 	public Feedbackjson(String idLearner, String idFbCabri, String idFamilytask, String idFeedback,
 			String motivationalElement, String content_url, String content_type, HashMap<String, String> glossaryMap)
 			throws IOException {
+		this(idLearner, "", idFbCabri, idFamilytask, idFeedback, motivationalElement, content_url, content_type, glossaryMap, false, 0.8, false);
+	}
+	
+	//version 1.1
+	public Feedbackjson(String idLearner, String idTask, String idFbCabri, String idFamilytask,
+			boolean correctAnswer, double successScore, boolean closeTask) throws IOException {
 		this.idLearner = idLearner;
+		this.idTask = idTask;
 		this.idFbCabri = idFbCabri;
-		this.idFamilytask = idFamilytask;
-		this.idFeedback = idFeedback;
+		this.taskFamily = idFamilytask;
+		this.idFb = "";
+		this.motivationalElementFb = "";
+		this.contentFb = "";
+		this.glossaryFb = "";
+		this.correctAnswer = correctAnswer;
+		this.successScore = successScore;
+		this.closeTask = closeTask;
+	}
+	
+	//version 1.1
+	public Feedbackjson(String idLearner, String idTask, String idFbCabri, String idFamilytask, String idFeedback,
+			String motivationalElement, String content_url, String content_type, HashMap<String, String> glossaryMap,
+			boolean correctAnswer, double successScore, boolean closeTask) throws IOException {
+		this.idLearner = idLearner;
+		this.idTask = idTask;
+		this.idFbCabri = idFbCabri;
+		this.taskFamily = idFamilytask;
+		this.idFb = idFeedback;
 		this.motivationalElementFb = String2GeneralHTML(motivationalElement);
 		if (content_type.equals("video/mp4")) {
 			this.contentFb = String2ContentFBHTML("", content_url, "", content_type);
@@ -98,6 +119,9 @@ public class Feedbackjson implements Serializable {
 			this.contentFb = String2ContentFBHTML(content_url, "", "", content_type);
 		}
 		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
+		this.correctAnswer = correctAnswer;
+		this.successScore = successScore;
+		this.closeTask = closeTask;
 	}
 
 	private String String2GeneralHTML(String content) throws IOException {
@@ -174,11 +198,11 @@ public class Feedbackjson implements Serializable {
 	}
 
 	public String getIdFamilytask() {
-		return idFamilytask;
+		return taskFamily;
 	}
 
 	public String getIdFeedback() {
-		return idFeedback;
+		return idFb;
 	}
 
 	/**
@@ -227,5 +251,21 @@ public class Feedbackjson implements Serializable {
 
 	public Map<String, Double> getModifiedQvalues() {
 		return this.qvalues;
+	}
+
+	public String getIdTask() {
+		return idTask;
+	}
+
+	public boolean isCorrectAnswer() {
+		return correctAnswer;
+	}
+
+	public double getSuccessScore() {
+		return successScore;
+	}
+
+	public boolean isCloseTask() {
+		return closeTask;
 	}
 }

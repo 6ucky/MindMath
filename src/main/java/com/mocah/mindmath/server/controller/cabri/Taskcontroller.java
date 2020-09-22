@@ -40,6 +40,7 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.server.entity.feedback.Feedbackjson;
 import com.mocah.mindmath.server.entity.feedback.TaskFeedback1_1;
+import com.mocah.mindmath.server.entity.feedbackContent.ErrorTypeMap;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
@@ -142,12 +143,13 @@ public class Taskcontroller {
 	public ResponseEntity<String> addtask(@RequestHeader("Authorization") String auth,
 			@RequestBody @ApiParam(value = "example:{\r\n" + 
 					"    \"sensors\": {\r\n" + 
-					"        \"idLearner\": \"123\",\r\n" + 
+					"        \"idLearner\": \"100\",\r\n" + 
+					"        \"idTask\": \"2020-09-22-14:00:00\",\r\n" + 
 					"        \"domain\": \"algebre123\",\r\n" + 
 					"        \"generator\": \"resoudreEquationPremierDegre\",\r\n" + 
 					"        \"taskFamily\": \"ft3.1\",\r\n" + 
 					"        \"correctAnswer\": false,\r\n" + 
-					"        \"codeError\": \"ce_err5\",\r\n" + 
+					"        \"codeError\": \"ce_oppose\",\r\n" + 
 					"        \"activityMode\": 0\r\n" + 
 					"    },\r\n" + 
 					"    \"log\": [\r\n" + 
@@ -173,7 +175,7 @@ public class Taskcontroller {
 					"}") String data)
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 //		return addtaskv1_0(auth, data);
-		return addtaskTEST(auth, data);
+		return addtaskv1_1(auth, data);
 	}
 
 	/**
@@ -352,33 +354,41 @@ public class Taskcontroller {
 		 */
 		boolean statement_success = false;
 		boolean statement_completion = false;
+		boolean correctanswer = BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer());
+		
+		if(!correctanswer)
+		{
+			statement_success = true;
+			statement_completion = true;
+		}
 		
 		Decision decision = null;
 		try {
-			decision = LearningProcess.makeDecision(task, CabriVersion.v1_1);
+			if(!correctanswer)
+				decision = LearningProcess.makeDecision(task, CabriVersion.v1_1);
 		} catch (InvalidTheoryException | NoSuchFieldException | NoSuchMethodException | InvocationTargetException
 				| MalformedGoalException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		if(decision != null)
-		{
-			statement_success = true;
-			statement_completion = true;
-		}
-		IAction action = decision.getAction();
-
-		task.setDecisionAction(action);
-		
 //		ILearning learning = LearningProcess.getExpertlearning();
 //		serializableRedisTemplate.opsForValue().set("expertlearning", learning);
 
-		Feedbackjson feedbackjson = new Feedbackjson(task.getSensors().getId_learner());
-		feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task);;
+		Feedbackjson feedbackjson;
+		IAction action = null;
+		if(correctanswer)
+			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
+					task.getSensors().getTaskFamily(), correctanswer, 0.8, correctanswer);
+		else
+		{
+			action = decision.getAction();
+			feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task);;
+		}
 
 		//save task and feedback in Derby
 		TaskFeedback1_1 task_fb = new TaskFeedback1_1(task.getSensors().getId_learner(), 
+				task.getSensors().getId_Task(),
 				task.getSensors().getDomain(),
 				task.getSensors().getGenerator(),
 				task.getSensors().getTaskFamily(),
@@ -386,15 +396,17 @@ public class Taskcontroller {
 				task.getSensors().getCodeError(),
 				task.getSensors().getActivityMode(),
 				task.getLog(),
-				action.getId(),
-				((MindMathAction) action).getLeaf(),
-				decision.getError_type(),
+				feedbackjson.getIdFeedback(),
+				correctanswer ? "" : ((MindMathAction) action).getLeaf(),
+				correctanswer ? ErrorTypeMap.getErrorNum(task.getSensors().getCodeError()) : decision.getError_type(),
 				feedbackjson.getMotivationalElementFb(),
 				feedbackjson.getContentFb(),
 				feedbackjson.getGlossaryFb(),
 				task.getVerb().getId(),
 				statement_success,
-				statement_completion
+				statement_completion,
+				feedbackjson.getSuccessScore(),
+				feedbackjson.isCloseTask()
 				);
 		getTaskrepository().save(task_fb);
 		
@@ -575,9 +587,9 @@ public class Taskcontroller {
 				glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
 			}
 		}
-		return new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(), feedbackID,
+		return new Feedbackjson(task.getSensors().getId_learner(), "", "", task.getSensors().getTaskFamily(), feedbackID,
 				motivations.get(new Random().nextInt(motivations.size())).getMotivation_data(),
 				fb.getContentErrorType(error_code).getContent_url(), fb.getContentErrorType(error_code).getFormat(),
-				glossaireMap);
+				glossaireMap, BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer()), 0.8, BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer()));
 	}
 }

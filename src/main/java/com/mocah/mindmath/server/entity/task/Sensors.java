@@ -43,7 +43,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	private final String capteur_nb_aide;
 	
 	//TODO UID parcours
-//	private final String id_parcours;
+	private final String id_Task;
 	
 	private final String id_learner;
 
@@ -67,28 +67,13 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	// empty object
 	public Sensors() {
-		super();
-		this.capteur_bool_RF_CO2_2 = null;
-		this.capteur_bool_RF_CO2_1 = null;
-		this.capteur_nb_effacer = null;
-		this.capteur_nb_temps = null;
-		this.capteur_bool_RF_CO2_3 = null;
-		this.capteur_nb_aide = null;
-		this.capteur_bool_RJ = null;
-		this.id_learner = "";
-		this.domain = null;
-		this.generator = null;
-		this.taskFamily = null;
-		this.correctAnswer = null;
-		this.codeError = null;
-		this.capteur_nb_valider = null;
-		this.activityMode = null;
+		this(null, null, null, null, null, null, null, "", "", null, null, null, null, null, null, null);
 	}
 
 	public Sensors(String capteur_bool_RF_CO2_1, String capteur_bool_RF_CO2_2, String capteur_bool_RF_CO2_3,
 			String capteur_bool_RJ, String capteur_nb_temps, String capteur_nb_valider, String capteur_nb_effacer,
-			String capteur_nb_aide, String idLearner, String domain, String generator, String taskFamily, String correctAnswer,
-			String codeError, String activityMode) {
+			String capteur_nb_aide, String id_Task, String idLearner, String domain, String generator, String taskFamily, 
+			String correctAnswer, String codeError, String activityMode) {
 		super();
 		this.capteur_bool_RF_CO2_1 = capteur_bool_RF_CO2_1;
 		this.capteur_bool_RF_CO2_2 = capteur_bool_RF_CO2_2;
@@ -98,6 +83,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		this.capteur_nb_valider = capteur_nb_valider;
 		this.capteur_nb_effacer = capteur_nb_effacer;
 		this.capteur_nb_aide = capteur_nb_aide;
+		this.id_Task = id_Task;
 		this.id_learner = idLearner;
 		this.domain = domain;
 		this.generator = generator;
@@ -165,5 +151,9 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	public String getId_learner() {
 		return id_learner;
+	}
+
+	public String getId_Task() {
+		return id_Task;
 	}
 }

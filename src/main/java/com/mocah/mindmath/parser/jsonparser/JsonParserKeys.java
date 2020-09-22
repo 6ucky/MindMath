@@ -7,7 +7,6 @@ package com.mocah.mindmath.parser.jsonparser;
 public class JsonParserKeys {
 
 	// Task id is the main key for database
-	public static String TASK_NAME = "task";
 	public static String TASK_TRIGGER = "trigger";
 	public static String TASK_FEEDBACK_ID = "feedback_id";
 	// Optionals
@@ -24,6 +23,7 @@ public class JsonParserKeys {
 
 	// Sensors object
 	public static String SENSOR = "sensors";
+	public static String TASK_NAME = "idTask";
 	public static String SENSOR_CAPTEUR_BOOL_RF_CO2_1 = "capteur-bool-RF-CO2-1";
 	public static String SENSOR_CAPTEUR_BOOL_RF_CO2_2 = "capteur-bool-RF-CO2-2";
 	public static String SENSOR_CAPTEUR_BOOL_RF_CO2_3 = "capteur-bool-RF-CO2-3";
@@ -39,7 +39,6 @@ public class JsonParserKeys {
 	public static String SENSOR_CORRECTANSWER = "correctAnswer";
 	public static String SENSOR_CODEERROR = "codeError";
 	public static String SENSOR_ACTIVITYMODE = "activityMode";
-	public static String SENSOR_SCORE = "score"; // TODO need to be confirmed
 
 	// Log object
 	public static String LOG = "log";

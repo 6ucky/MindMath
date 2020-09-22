@@ -26,6 +26,7 @@ public class Decision {
 	public Decision() {
 		this.hasLearn = false;
 		this.reward = 0.0;
+		this.error_type = "";
 	}
 
 	public Decision(IAction action) {
