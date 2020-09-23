@@ -59,7 +59,7 @@ public class PostCabriJsonTest {
 			"}";
 
 	//Expected response feedback
-	private static String responsejson = "\"idLearner\":\"123\",\"idFbCabri\":\"\",\"idFamilytask\":\"ft3.1\"";
+	private static String responsejson = "\"idLearner\":\"123\",\"idTask\":\"\",\"taskFamily\":\"ft3.1\"";
 	@Test
 	public void POSTjsonfilefromCabrishouldreturnFeedback() throws Exception {
 		

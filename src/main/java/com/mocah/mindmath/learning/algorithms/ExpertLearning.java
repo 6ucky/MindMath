@@ -10,10 +10,14 @@ import java.util.Map;
 
 import org.assertj.core.util.Arrays;
 
+import com.mocah.mindmath.learning.LearningProcess;
 import com.mocah.mindmath.learning.policies.IPolicy;
 import com.mocah.mindmath.learning.utils.actions.IAction;
+import com.mocah.mindmath.learning.utils.actions.MindMathAction;
 import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.values.IValue;
+import com.mocah.mindmath.server.entity.feedbackContent.ContentErrorType;
+import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
 
 public class ExpertLearning extends AbstractLearning {
 	
@@ -22,8 +26,8 @@ public class ExpertLearning extends AbstractLearning {
 	 */
 	private static final long serialVersionUID = -2431512030248522237L;
 	
-	//four default error types for feedback content
-	private static final String[] error_list = { "1" };
+	//four different error types for feedback content
+	private static final String[] error_list_differ = {"1", "2", "3", "4"};
 	private HashMap<IState, List<Object>> error_table;
 	private HashMap<IState, LinkedList<IValue>> qValues;
 
@@ -49,9 +53,29 @@ public class ExpertLearning extends AbstractLearning {
 			Collections.sort(new_list, ValueComparator);
 			new_qValues.put(state, new_list);
 			// initialize table
-			this.error_table.put(state, Arrays.asList(error_list));
+			this.error_table.put(state, Arrays.asList(error_list_differ));
 		}
 		this.qValues = new_qValues;
+	}
+	
+	/**
+	 * check if the different error type has the same content url
+	 * @param list
+	 * @return
+	 */
+	private boolean hasDiffErrorType(LinkedList<IValue> list)
+	{
+		IValue value = list.getFirst();
+		IAction action = value.myAction();
+		String feedbackid = action.getId();
+		String leaf = ((MindMathAction) action).getLeaf();
+		FeedbackContent feedbackcontent = LearningProcess.getRepo().getFeedbackContent(feedbackid, leaf);
+		if(feedbackcontent == null)
+			return true;
+		List<ContentErrorType> errorcontents = feedbackcontent.getContents();
+		if(errorcontents.get(0).getContent_url().equals(errorcontents.get(1).getContent_url()))
+			return false;
+		return true;
 	}
 
 	/**
@@ -64,6 +88,7 @@ public class ExpertLearning extends AbstractLearning {
 	public String getErrorType(IState state, String error) throws Exception
 	{
 		List<Object> errors = error_table.get(state); 
+		System.out.println("[Error Types]" + errors.toString());
 		if(errors.size() == 0)
 			throw new Exception("Error type not found in expert learning.");
 		
@@ -76,8 +101,11 @@ public class ExpertLearning extends AbstractLearning {
 		{
 			result = (String) errors.get(0);
 		}
-		//TODO check to remove all errors table when returning the same feedback content
-		errors.remove(result);
+		if(hasDiffErrorType(qValues.get(state)))
+			errors.remove(result);
+		else
+			errors.clear();
+		System.out.println("[Error Types]" + errors.toString());
 		error_table.put(state, errors);
 		return result;
 	}
@@ -87,11 +115,11 @@ public class ExpertLearning extends AbstractLearning {
 		LinkedList<IValue> values = qValues.get(state);
 		List<Object> errors = error_table.get(state); 
 		//if all error type are visited, put the first value to the last and return second value
-		if(errors.size() == 0)
+		if(errors.isEmpty())
 		{
 			IValue first_value = values.pollFirst();
 			values.addLast(first_value);
-			this.error_table.put(state, Arrays.asList(error_list));
+			this.error_table.put(state, Arrays.asList(error_list_differ));
 		}
 		return values.getFirst().myAction();
 	}

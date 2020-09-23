@@ -356,6 +356,8 @@ public class Taskcontroller {
 		boolean statement_completion = false;
 		boolean correctanswer = BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer());
 		
+		correctanswer = false;
+		
 		if(!correctanswer)
 		{
 			statement_success = true;
