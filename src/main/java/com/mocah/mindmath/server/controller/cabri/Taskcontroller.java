@@ -31,6 +31,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.mocah.mindmath.learning.Decision;
 import com.mocah.mindmath.learning.LearningProcess;
+import com.mocah.mindmath.learning.algorithms.ExpertLearning;
+import com.mocah.mindmath.learning.algorithms.ILearning;
+import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.actions.IAction;
 import com.mocah.mindmath.learning.utils.actions.MindMathAction;
 import com.mocah.mindmath.learning.utils.states.IState;
@@ -346,6 +349,12 @@ public class Taskcontroller {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, CabriVersion.v1_0);
 
+//		String redis_key = task.getSensors().getId_learner() + "_" + task.getSensors().getId_Task();
+//		ILearning old_learning =  (ILearning) serializableRedisTemplate.opsForValue().get(redis_key);
+//		if(old_learning == null)
+//			LearningProcess.setExpertlearning(new ExpertLearning(null, ((QLearning)LearningProcess.getLearning()).getQValues()));
+//		else
+//			LearningProcess.setExpertlearning(old_learning);
 		/**
 		 * @param success    true if we call decision process, false if we decide the
 		 *                   cabri JSON is gaming with the system
@@ -371,8 +380,7 @@ public class Taskcontroller {
 			statement_completion = true;
 		}
 		
-//		ILearning learning = LearningProcess.getExpertlearning();
-//		serializableRedisTemplate.opsForValue().set("expertlearning", learning);
+//		serializableRedisTemplate.opsForValue().set(redis_key, LearningProcess.getExpertlearning());
 
 		IAction action = decision.getAction();
 		//caculate new success score, if new, initialize 1.
@@ -390,9 +398,11 @@ public class Taskcontroller {
 			feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore);
 		//if no, return empty feedback
 		else
+		{
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
 					task.getSensors().getTaskFamily(), correctanswer, new_successScore, true);
-		
+//			serializableRedisTemplate.opsForValue().set(redis_key, null);
+		}
 		//save task and feedback in Derby
 		TaskFeedback1_1 task_fb = new TaskFeedback1_1(task.getSensors().getId_learner(), 
 				task.getSensors().getId_Task(),

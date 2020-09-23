@@ -147,7 +147,7 @@ public class LearningProcess {
 	public static ILearning getExpertlearning() {
 		return expertlearning;
 	}
-	
+
 	public static void setExpertlearning(ILearning learning) {
 		LearningProcess.expertlearning = learning;
 	}
