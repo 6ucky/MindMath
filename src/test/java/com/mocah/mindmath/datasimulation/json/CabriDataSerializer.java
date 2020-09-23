@@ -30,6 +30,7 @@ public class CabriDataSerializer implements JsonSerializer<CabriData>, JsonDeser
 		JsonObject sensors = new JsonObject();
 		root.add("sensors", sensors);
 		sensors.addProperty("idLearner", src.getLearnerId());
+		sensors.addProperty("idTask", "test");
 		sensors.addProperty("domain", src.getDomain().getValue());
 		sensors.addProperty("generator", src.getGenerator().getValue());
 		sensors.addProperty("taskFamily", src.getTaskFamily().getValue());

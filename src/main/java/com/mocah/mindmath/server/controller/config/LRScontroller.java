@@ -354,7 +354,7 @@ public class LRScontroller {
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
 //				.setResultwithQvalues()
-				.setScore("0", "0", CabriVersion.test)
+				.setScore(0, 0, CabriVersion.test)
 //				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement3);
@@ -390,7 +390,7 @@ public class LRScontroller {
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
 //				.setResultwithQvalues()
-				.setScore("0", "0", CabriVersion.test)
+				.setScore(0, 0, CabriVersion.test)
 //				.setAttachment()
 				.generateStatement(task, CabriVersion.test);
 		statements.add(statement2);
@@ -413,7 +413,7 @@ public class LRScontroller {
 				.setVerb(Verbs.responded())
 				.setObject(test_score_statementRef)
 				.setResult(true, true, fbjson, CabriVersion.test)
-				.setScore("0.3", "4", CabriVersion.test)
+				.setScore(0.3, 4, CabriVersion.test)
 				.generateStatement(task, CabriVersion.test);
 		ll.postStatement(statement2);
 		Gson gson = new Gson();

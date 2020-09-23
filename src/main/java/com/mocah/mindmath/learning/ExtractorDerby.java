@@ -35,7 +35,7 @@ public class ExtractorDerby {
 	 */
 	protected static String getNbSolveTry(Task task) {
 		
-		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getTaskFamily(), Verbs.answered().getId(), true);
+		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task(),task.getSensors().getTaskFamily(), Verbs.answered().getId(), true);
 		
 		int nbTry = 1;
 		for(TaskFeedback1_1 taskfb : TaskFBs)
@@ -78,7 +78,7 @@ public class ExtractorDerby {
 		if (StringUtils.isEmpty(currentError))
 			return "0";
 
-		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getTaskFamily(), Verbs.answered().getId(), true, false);
+		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task(), task.getSensors().getTaskFamily(), Verbs.answered().getId(), true, false);
 
 		if (TaskFBs.size() == 0)
 			return "0";
@@ -117,7 +117,7 @@ public class ExtractorDerby {
 		if (currentSensors == null)
 			return "0";
 
-		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getTaskFamily(), Verbs.answered().getId(), true, false);
+		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getTaskFamily(), task.getSensors().getId_Task(), Verbs.answered().getId(), true, false);
 
 		if (TaskFBs.size() == 0)
 			return "0";

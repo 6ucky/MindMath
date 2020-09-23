@@ -243,19 +243,25 @@ public class XAPIgenerator {
 	 * @param version
 	 * @return
 	 */
-	public XAPIgenerator setScore(String score_value, String old_value, CabriVersion version)
+	public XAPIgenerator setScore(double penalty, double successScore, CabriVersion version)
 	{
 		switch(version)
 		{
 		case v1_0:
 			break;
+		case v1_1:
 		case test:
 			Score score = new Score();
-			//TODO compare with the previous score
-			score.setScaled(Float.parseFloat(score_value));
-			score.setRaw(Float.parseFloat(score_value) * 20 + Float.parseFloat(old_value));
+			if(successScore == 1)
+				score.setScaled(0);
+			else
+				score.setScaled((float)penalty);
+			if(successScore > 0)
+				score.setRaw((float)successScore);
+			else
+				score.setRaw(0);
 			score.setMin(0);
-			score.setMax(20);
+			score.setMax(1);
 			Result result = statement.getResult();
 			result.setScore(score);
 			break;
@@ -610,7 +616,6 @@ public class XAPIgenerator {
 			statement.setContext(c);
 			break;
 		case v1_1:
-			break;
 		case test:
 			break;
 		}
