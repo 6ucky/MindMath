@@ -15,17 +15,25 @@ public class FeedbackData {
 	@Expose
 	private String idLearner;
 	@Expose
+	private String idTask;
+	@Expose
 	private String idFbCabri;
 	@Expose
 	private String idFamilytask;
 	@Expose
-	private String idFeedback;
+	private String idFb;
 	@Expose
 	private String motivationalElementFb;
 	@Expose
 	private String contentFb;
 	@Expose
 	private String glossaryFb;
+	@Expose
+	private String correctAnswer;
+	@Expose
+	private String successScore;
+	@Expose
+	private String closeTask;
 	@Expose
 	private String mode;
 	@Expose
@@ -40,7 +48,7 @@ public class FeedbackData {
 	 * @return the feedback id
 	 */
 	public String getIdFeedback() {
-		return idFeedback;
+		return idFb;
 	}
 
 	/**

@@ -88,7 +88,6 @@ public class ExpertLearning extends AbstractLearning {
 	public String getErrorType(IState state, String error) throws Exception
 	{
 		List<Object> errors = error_table.get(state); 
-		System.out.println("[Error Types]" + errors.toString());
 		if(errors.size() == 0)
 			throw new Exception("Error type not found in expert learning.");
 		
