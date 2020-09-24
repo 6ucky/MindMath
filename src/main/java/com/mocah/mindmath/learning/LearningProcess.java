@@ -749,8 +749,6 @@ public class LearningProcess {
 		case "3.0.0.XFT":
 			return 3;
 
-		case "3.2.IC.0":
-		case "3.2.INC.0":
 		case "3.2.IC.XE":
 		case "3.2.IC.XFT":
 		case "3.2.INC.XE":
@@ -794,8 +792,6 @@ public class LearningProcess {
 		case "3.0.0.XFT":
 			return 0.2;
 
-		case "3.2.IC.0":
-		case "3.2.INC.0":
 		case "3.2.IC.XE":
 			return 0.5;
 		case "3.2.IC.XFT":

@@ -702,18 +702,6 @@
             "value": 0.4
           },
           "nodeid": "3.0.0.XFT"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "3.2.IC.0"
-        },
-        {
-          "edge":{
-            "value": 0.1
-          },
-          "nodeid": "3.2.INC.0"
         }
       ]
     },
@@ -843,16 +831,6 @@
       "nodeid": "3.0.0.XFT",
       "nodetype": "feedback",
       "feedback_id": "3.0.0.XFT"
-    },
-    {
-      "nodeid": "3.2.IC.0",
-      "nodetype": "feedback",
-      "feedback_id": "3.2.IC.0"
-    },
-    {
-      "nodeid": "3.2.INC.0",
-      "nodetype": "feedback",
-      "feedback_id": "3.2.INC.0"
     },
     {
       "nodeid": "3.2.IC.XE",
