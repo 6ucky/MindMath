@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>MathJax example</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script type="text/javascript">
+        fetch('https://lrsmocah.lip6.fr/data/xAPI/about', {
+            mode: 'no-cors',
+            method: "GET",
+            headers:{
+                "Authorization": "Basic MzlhNTMwNGM1OGUxZGFlOTQ5ZmNiYjkxZWE4M2JkYjFhN2ViNzZkZjo1NjhjYzc2NzBhOTBkNjFhMTE3MDhkOTQ5MzVjYWRmNWE3YjE4M2M3",
+                "Content-Type": "application/json",
+                "X-Experience-API-Version": "1.0.3"
+            }
+        })
+        .then(function(response) {
+            console.log(response);
+        })
+  </script>
+</head>
+<body>
+<h1>
+    Une égalité
+</h1>
+<p>
+    une égalité est une expression comportant le signe « = ». Elle est composée de deux membres situés de part et d'autre du signe « = »
+</p>
+<div style="font-size: 40px;text-align: center;">
+    <span style="position: relative; display: inline-block; border-bottom: 1px dotted black;" onmouseover="document.getElementById('span1').style.visibility='visible';" onmouseout="document.getElementById('span1').style.visibility='hidden';">
+        \(3x + 4 \)
+        <span id="span1" style="font-size: 20px; visibility: hidden; width: 120px; background-color: black; color: #fff; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; top: 100%; left: 50%; margin-left: -60px;">
+            Membre de gauche
+        </span>
+    </span>
+    <span>=</span>
+    <span style="position: relative; display: inline-block; border-bottom: 1px dotted black;" onmouseover="document.getElementById('span2').style.visibility='visible';" onmouseout="document.getElementById('span2').style.visibility='hidden';">
+        \( 5x - 8\)
+        <span id="span2" style="font-size: 20px; visibility: hidden; width: 120px; background-color: black; color: #fff; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; top: 100%; left: 50%; margin-left: -60px;">
+            Membre de droite
+        </span>
+    </span>
+<p id="serverResponse"></p>
+</div>
+</body>
+</html>
