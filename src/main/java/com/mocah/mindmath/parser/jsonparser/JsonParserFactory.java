@@ -28,7 +28,7 @@ public class JsonParserFactory implements ParserFactory<Task> {
 	 */
 	public String getValueAsString(JsonObject object, String key) throws JsonParserCustomException {
 		try {
-			return object.has(key) ? object.get(key).getAsString() : null;
+			return object.get(key).getAsString();
 		} catch (Exception e) {
 			throwjsonexception(object, key, e, "String");
 		}
@@ -110,7 +110,7 @@ public class JsonParserFactory implements ParserFactory<Task> {
 	 */
 	private String throwjsonexception(JsonObject object, String key, Exception e, String type)
 			throws JsonParserCustomException {
-		String root = null;
+		String root = "";
 		root += "id:JsonParser, ";
 		root += "key:" + key + ", ";
 		if (!object.has(key)) {
@@ -140,7 +140,7 @@ public class JsonParserFactory implements ParserFactory<Task> {
 		switch (version) {
 
 		case v1_0:
-			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
+			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(CabriVersion.v1_0),
 					logsparser.getLogs(),
 					getValueforDB(rootObject, JsonParserKeys.TASK_FEEDBACK_ID), false);
 
@@ -149,8 +149,11 @@ public class JsonParserFactory implements ParserFactory<Task> {
 			tasks.setUsingTestLRS(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_TEST_LRS)));
 			tasks.setVerbose(BooleanUtils.toBoolean(getValueAsBoolean(rootObject, JsonParserKeys.TASK_VERBOSE)));
 			break;
+		case v1_1:
+			tasks = new Task(sensorparser.getSensor(CabriVersion.v1_1), logsparser.getLogs());
+			break;
 		case test:
-			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(),
+			tasks = new Task(getValueforDB(rootObject, JsonParserKeys.TASK_NAME), sensorparser.getSensor(CabriVersion.v1_0),
 					logsparser.getLogs(),
 					getValueforDB(rootObject, JsonParserKeys.TASK_FEEDBACK_ID), true);
 

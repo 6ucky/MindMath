@@ -80,6 +80,11 @@ public class Task extends AbstractJsonData implements Serializable {
 	public Task(String task, Sensors sensors, List<Log> log, String feedback_id) {
 		this(task, sensors, log, feedback_id, false);
 	}
+	
+	//version 1.1
+	public Task(Sensors sensors, List<Log> log) {
+		this(null, sensors, log, null, false);
+	}
 
 	public Task(String task, Sensors sensors, List<Log> log, String feedback_id, boolean isTest) {
 		super();

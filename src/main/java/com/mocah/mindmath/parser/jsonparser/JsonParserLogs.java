@@ -26,14 +26,14 @@ public class JsonParserLogs extends JsonParserFactory {
 		return this.logsObject;
 	}
 
-	public List<Log> getLogs() {
+	public List<Log> getLogs() throws JsonParserCustomException {
 		List<Log> logs = new ArrayList<>();
 		for (int i = 0; i < logsObject.size(); i++) {
 			JsonObject tempObject = logsObject.get(i).getAsJsonObject();
-			Log temp = new Log(getValueforDB(tempObject, JsonParserKeys.LOG_TIME),
-					getValueforDB(tempObject, JsonParserKeys.LOG_TYPE),
-					getValueforDB(tempObject, JsonParserKeys.LOG_NAME),
-					getValueforDB(tempObject, JsonParserKeys.LOG_ACTION));
+			Log temp = new Log(getValueAsString(tempObject, JsonParserKeys.LOG_TIME),
+					getValueAsString(tempObject, JsonParserKeys.LOG_TYPE),
+					getValueAsString(tempObject, JsonParserKeys.LOG_NAME),
+					getValueAsString(tempObject, JsonParserKeys.LOG_ACTION));
 			logs.add(temp);
 		}
 

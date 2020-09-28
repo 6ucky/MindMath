@@ -57,7 +57,7 @@ public interface Derbyrepository extends CrudRepository<AbstractJsonData, String
 			@Param("success") boolean success,
 			@Param("correctAnswer") boolean correctAnswer);
 	
-	@Query("select t from TaskFeedback1_1 t where t.successScore = (select min(t.successScore) from TaskFeedback1_1 t where t.id_learner = :id_learner and t.id_task = :id_task)")
+	@Query("select t from TaskFeedback1_1 t where t.successScore = (select min(t.successScore) from TaskFeedback1_1 t where t.id_learner = :id_learner and t.id_task = :id_task) and t.id_learner = :id_learner and t.id_task = :id_task")
 	TaskFeedback1_1 getPreviousTaskFeedback1_1(@Param("id_learner") String id_learner, @Param("id_task") String id_task);
 
 	@Query("select f from FeedbackContent f")

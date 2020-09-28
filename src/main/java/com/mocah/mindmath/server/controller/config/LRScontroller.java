@@ -150,7 +150,7 @@ public class LRScontroller {
 		response.add("Response from LRS",
 				JsonParser.parseString(ll.postStatementTEST(
 						parserRoot.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_LEARNER_ID),
-						parserSensor.getSensor(), parserLog.getLogs())).getAsJsonObject());
+						parserSensor.getSensor(CabriVersion.v1_0), parserLog.getLogs())).getAsJsonObject());
 
 		JsonArray statementArray = new JsonArray();
 		XAPIgenerator xapi = new XAPIgenerator();

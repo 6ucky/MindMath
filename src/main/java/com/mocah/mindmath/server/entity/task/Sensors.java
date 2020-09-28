@@ -43,7 +43,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	private final String capteur_nb_aide;
 	
 	//TODO UID parcours
-	private final String id_Task;
+	private String id_Task;
 	
 	private final String id_learner;
 
@@ -63,11 +63,17 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	private final String codeError;
 	
 	@Expose (serialize = true) 
-	private final String activityMode;
+	private String activityMode;
 
 	// empty object
 	public Sensors() {
-		this(null, null, null, null, null, null, null, "", "", null, null, null, null, null, null, null);
+		this(null, null, null, null, null, null, null, null, "", "", null, null, null, null, null, null);
+	}
+	
+	// version 1.1
+	public Sensors(String id_Task, String idLearner, String domain, String generator, String taskFamily, 
+			String correctAnswer, String codeError, String activityMode) {
+		this(null, null, null, null, null, null, null, null, id_Task, idLearner, domain, generator, taskFamily, correctAnswer, codeError, activityMode);
 	}
 
 	public Sensors(String capteur_bool_RF_CO2_1, String capteur_bool_RF_CO2_2, String capteur_bool_RF_CO2_3,
@@ -155,5 +161,13 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	public String getId_Task() {
 		return id_Task;
+	}
+	
+	public void setId_Task(String id_task) {
+		this.id_Task = id_task;
+	}
+	
+	public void setActivityMode(String activityMode) {
+		this.activityMode = activityMode;
 	}
 }

@@ -77,6 +77,8 @@ public class Taskcontroller {
 	private RedisTemplate<String, Serializable> serializableRedisTemplate;
 
 	private static final String license_num = "mocah";
+	
+	private static int nullTask_num = 1;
 
 	private Gson gson = new Gson();
 
@@ -347,14 +349,21 @@ public class Taskcontroller {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
-		Task task = jsonparser.parse(data, CabriVersion.v1_0);
+		Task task = jsonparser.parse(data, CabriVersion.v1_1);
+		
+		/******************************External Condition**************************************/
+		if(task.getSensors().getActivityMode() == null)
+			task.getSensors().setActivityMode("0");
+		if(task.getSensors().getId_Task() == null)
+			task.getSensors().setId_Task("nullTask" + nullTask_num);
+		/**************************************************************************************/
 
-//		String redis_key = task.getSensors().getId_learner() + "_" + task.getSensors().getId_Task();
-//		ILearning old_learning =  (ILearning) serializableRedisTemplate.opsForValue().get(redis_key);
-//		if(old_learning == null)
-//			LearningProcess.setExpertlearning(new ExpertLearning(null, ((QLearning)LearningProcess.getLearning()).getQValues()));
-//		else
-//			LearningProcess.setExpertlearning(old_learning);
+		String redis_key = task.getSensors().getId_learner() + "_" + task.getSensors().getId_Task();
+		ILearning old_learning =  (ILearning) serializableRedisTemplate.opsForValue().get(redis_key);
+		if(old_learning == null)
+			LearningProcess.setExpertlearning(new ExpertLearning(null, ((QLearning)LearningProcess.getLearning()).getQValues()));
+		else
+			LearningProcess.setExpertlearning(old_learning);
 		/**
 		 * @param success    true if we call decision process, false if we decide the
 		 *                   cabri JSON is gaming with the system
@@ -380,7 +389,7 @@ public class Taskcontroller {
 			statement_completion = true;
 		}
 		
-//		serializableRedisTemplate.opsForValue().set(redis_key, LearningProcess.getExpertlearning());
+		serializableRedisTemplate.opsForValue().set(redis_key, LearningProcess.getExpertlearning());
 
 		IAction action = decision.getAction();
 		//caculate new success score, if new, initialize 1.
@@ -401,7 +410,8 @@ public class Taskcontroller {
 		{
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
 					task.getSensors().getTaskFamily(), correctanswer, new_successScore, true);
-//			serializableRedisTemplate.opsForValue().set(redis_key, null);
+			serializableRedisTemplate.opsForValue().set(redis_key, null);
+			nullTask_num++;
 		}
 		//save task and feedback in Derby
 		TaskFeedback1_1 task_fb = new TaskFeedback1_1(task.getSensors().getId_learner(), 
@@ -425,6 +435,7 @@ public class Taskcontroller {
 				new_successScore,
 				feedbackjson.isCloseTask()
 				);
+		System.out.println("[TaskFeedback1_1] " + gson.toJson(task_fb));
 		getTaskrepository().save(task_fb);
 		
 		//generate task statement and feedback statement
