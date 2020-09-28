@@ -31,6 +31,7 @@ public class Feedbackjson implements Serializable {
 	private final boolean correctAnswer;
 	private final double successScore;
 	private final boolean closeTask;
+	private final String closeTaskReason;
 
 	// Verbose fields
 	private String mode;
@@ -58,6 +59,7 @@ public class Feedbackjson implements Serializable {
 		this.correctAnswer = false;
 		this.successScore = 0.8;
 		this.closeTask = false;
+		this.closeTaskReason = null;
 	}
 
 	// Test for Tralalere
@@ -78,6 +80,7 @@ public class Feedbackjson implements Serializable {
 		this.correctAnswer = false;
 		this.successScore = 0.8;
 		this.closeTask = false;
+		this.closeTaskReason = null;
 	}
 
 	// Test for Benjamin's table
@@ -101,6 +104,7 @@ public class Feedbackjson implements Serializable {
 		this.correctAnswer = correctAnswer;
 		this.successScore = successScore;
 		this.closeTask = closeTask;
+		this.closeTaskReason = closeTask ? (correctAnswer ? "sucess" : "tooMuchFB") : null;
 	}
 	
 	//version 1.1
@@ -122,6 +126,7 @@ public class Feedbackjson implements Serializable {
 		this.correctAnswer = correctAnswer;
 		this.successScore = successScore;
 		this.closeTask = closeTask;
+		this.closeTaskReason = closeTask ? (correctAnswer ? "sucess" : "tooMuchFB") : null;
 	}
 
 	private String String2GeneralHTML(String content) throws IOException {
