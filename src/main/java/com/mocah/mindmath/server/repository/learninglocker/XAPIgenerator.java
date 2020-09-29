@@ -32,6 +32,7 @@ import com.mocah.mindmath.server.entity.task.Task;
 import gov.adlnet.xapi.model.Account;
 import gov.adlnet.xapi.model.Activity;
 import gov.adlnet.xapi.model.ActivityDefinition;
+import gov.adlnet.xapi.model.Actor;
 import gov.adlnet.xapi.model.Agent;
 import gov.adlnet.xapi.model.Attachment;
 import gov.adlnet.xapi.model.Context;
@@ -184,7 +185,18 @@ public class XAPIgenerator {
 		statement.setAttachments(attachments);
 		return this;
 	}
-
+	
+	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson, String leaf, String error_type, CabriVersion version) {
+		setResult(success, completion, fbjson, version);
+		Result fdresult = statement.getResult();
+		if(fdresult.getExtensions().has("https://mindmath.lip6.fr/feedback"))
+		{
+			JsonObject jo = fdresult.getExtensions().get("https://mindmath.lip6.fr/feedback").getAsJsonObject();
+			jo.addProperty("leaf", leaf);
+			jo.addProperty("error_type", error_type);
+		}
+		return this;
+	}
 	/**
 	 * set result for statement
 	 * 
@@ -216,16 +228,32 @@ public class XAPIgenerator {
 			statement.setResult(fdresult);
 			break;
 		case v1_1:
+			/**
+			 * @param success    correct Answer
+			 * @param completion close task
+			 */
+			fdresult = new Result();
+			fdresult.setSuccess(success);
+			fdresult.setCompletion(completion);
+			JsonObject jo = new JsonObject();
+			jo.addProperty("idFeedback", fbjson.getIdFeedback());
+			jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
+			JsonObject root_jo = new JsonObject();
+			root_jo.add("https://mindmath.lip6.fr/feedback", jo);
+			fdresult.setExtensions(root_jo);
+			fdresult.setResponse(fbjson.getContentFb());
+			statement.setResult(fdresult);
+			break;
 		case test:
 			fdresult = new Result();
 			fdresult.setSuccess(success);
 			fdresult.setCompletion(completion);
 			if (success == true && completion == true) {
-				JsonObject jo = new JsonObject();
+				jo = new JsonObject();
 				jo.addProperty("idFeedback", fbjson.getIdFeedback());
 				jo.addProperty("motivationalElementFb", fbjson.getMotivationalElementFb());
 				jo.addProperty("glossaryFb", fbjson.getGlossaryFb());
-				JsonObject root_jo = new JsonObject();
+				root_jo = new JsonObject();
 				root_jo.add("https://mindmath.lip6.fr/feedback", jo);
 				fdresult.setExtensions(root_jo);
 			}
@@ -508,13 +536,29 @@ public class XAPIgenerator {
 	}
 	
 	/**
-	 * set learner as actor
-	 * @param task
+	 * set id_learner as actor
+	 * @param task id learner
 	 * @return
 	 */
 	public XAPIgenerator setActor(Task task)
 	{
 		statement.setActor(task.getLearnerAsActor());
+		return this;
+	}
+	
+	/**
+	 * set id_learner and id_task as actor
+	 * @param task id learner
+	 * @param id_task
+	 * @return
+	 */
+	public XAPIgenerator setActor(Task task, String id_task)
+	{
+		statement.setActor(task.getLearnerAsActor());
+		Actor actor = statement.getActor();
+		Account account = actor.getAccount();
+		String homepage = account.getHomePage();
+		account.setHomePage(homepage + id_task);
 		return this;
 	}
 	

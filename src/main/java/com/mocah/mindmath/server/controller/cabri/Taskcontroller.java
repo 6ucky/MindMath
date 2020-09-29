@@ -357,6 +357,17 @@ public class Taskcontroller {
 		if(task.getSensors().getId_Task() == null)
 			task.getSensors().setId_Task("nullTask" + nullTask_num);
 		/**************************************************************************************/
+		
+		//generate task statement
+		XAPIgenerator generator = new XAPIgenerator();
+		Statement statement1 = new Statement();
+				
+		statement1 = generator.setActor(task, task.getSensors().getId_Task())
+				.setVerb(task)
+				.setObject(task)
+				.generateStatement(task, CabriVersion.v1_1);
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		String id = ll.postStatement(statement1);
 
 		String redis_key = task.getSensors().getId_learner() + "_" + task.getSensors().getId_Task();
 		ILearning old_learning =  (ILearning) serializableRedisTemplate.opsForValue().get(redis_key);
@@ -364,14 +375,7 @@ public class Taskcontroller {
 			LearningProcess.setExpertlearning(new ExpertLearning(null, ((QLearning)LearningProcess.getLearning()).getQValues()));
 		else
 			LearningProcess.setExpertlearning(old_learning);
-		/**
-		 * @param success    true if we call decision process, false if we decide the
-		 *                   cabri JSON is gaming with the system
-		 * @param completion true if decision process work, false if decision produces
-		 *                   an error
-		 */
-		boolean statement_success = false;
-		boolean statement_completion = false;
+		
 		boolean correctanswer = BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer());
 		
 		Decision decision = null;
@@ -383,12 +387,6 @@ public class Taskcontroller {
 			e.printStackTrace();
 		}
 		
-		if(decision != null)
-		{
-			statement_success = true;
-			statement_completion = true;
-		}
-		
 		serializableRedisTemplate.opsForValue().set(redis_key, LearningProcess.getExpertlearning());
 
 		IAction action = decision.getAction();
@@ -397,8 +395,9 @@ public class Taskcontroller {
 		TaskFeedback1_1 previousTaskFB = getTaskrepository().getPreviousTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task());
 		
 		//caculate new success score, get minimum and reduce penalty 
+		double penalty = LearningProcess.getPenaltyInfo(action.getId());
 		if(previousTaskFB != null)
-			new_successScore = Math.round((previousTaskFB.getSuccessScore() - LearningProcess.getPenaltyInfo(action.getId()))*100)/100.0;
+			new_successScore = Math.round((previousTaskFB.getSuccessScore() - penalty)*100)/100.0;
 		System.out.println("[new_successScore] " + new_successScore);
 		
 		Feedbackjson feedbackjson;
@@ -413,6 +412,10 @@ public class Taskcontroller {
 			serializableRedisTemplate.opsForValue().set(redis_key, null);
 			nullTask_num++;
 		}
+		
+		boolean statement_success = feedbackjson.isCorrectAnswer();
+		boolean statement_completion = feedbackjson.isCloseTask();
+		
 		//save task and feedback in Derby
 		TaskFeedback1_1 task_fb = new TaskFeedback1_1(task.getSensors().getId_learner(), 
 				task.getSensors().getId_Task(),
@@ -438,23 +441,14 @@ public class Taskcontroller {
 		System.out.println("[TaskFeedback1_1] " + gson.toJson(task_fb));
 		getTaskrepository().save(task_fb);
 		
-		//generate task statement and feedback statement
-		XAPIgenerator generator = new XAPIgenerator();
-		Statement statement1 = new Statement();
-		
-		statement1 = generator.setActor(task)
-				.setVerb(task)
-				.setObject(task)
-				.generateStatement(task, CabriVersion.v1_1);
-		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
-		String id = ll.postStatement(statement1);
+		//generate feedback statement
 		Statement statement2 = new Statement();
 		generator = new XAPIgenerator();
 		statement2 = generator.setActorAsLip6()
 				.setVerb(Verbs.responded())
 				.setObject(id)
-				.setResult(statement_success, statement_completion, feedbackjson, CabriVersion.v1_1)
-				.setScore(LearningProcess.getPenaltyInfo(action.getId()), new_successScore, CabriVersion.v1_1)
+				.setResult(statement_success, statement_completion, feedbackjson, task_fb.getLeaf(), task_fb.getError_type(), CabriVersion.v1_1)
+				.setScore(penalty, new_successScore, CabriVersion.v1_1)
 				.generateStatement(task, CabriVersion.v1_1);
 		ll.postStatement(statement2);
 
