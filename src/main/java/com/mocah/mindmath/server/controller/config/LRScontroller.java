@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -479,6 +480,20 @@ public class LRScontroller {
 
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
 		return new ResponseEntity<>(ll.postStatement(statement), HttpStatus.ACCEPTED);
+	}
+	
+	@PostMapping("/feedbackExperienced")
+	public ResponseEntity<String> postFeedbackExperienced(@RequestParam String id_learner, @RequestParam String id_task,
+			@RequestParam String statementRef){
+		XAPIgenerator generator = new XAPIgenerator();
+		Statement statement = new Statement();
+		statement = generator.setActor(id_learner, id_task)
+				.setVerb()
+				.setObject(statementRef)
+				.generateStatement(new Task(), CabriVersion.v1_1);
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		ll.postStatement(statement);
+		return new ResponseEntity<>(id_learner + id_task + statementRef, HttpStatus.ACCEPTED);
 	}
 	
 	public ArrayList<String> getGlossary(String feedbackID, String leaf, String error_code)

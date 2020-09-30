@@ -45,6 +45,7 @@ import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementReference;
 import gov.adlnet.xapi.model.SubStatement;
 import gov.adlnet.xapi.model.Verb;
+import gov.adlnet.xapi.model.Verbs;
 
 /**
  * Generate statement based on xAPI
@@ -68,17 +69,13 @@ public class XAPIgenerator {
 		this.statement = new Statement();
 	}
 
-	public void setActor(String email, String name) {
-		actorObject.addProperty("mbox", "mailto:" + email);
-		actorObject.addProperty("name", name);
-		actorObject.addProperty("objectType", "Agent");
-	}
-
-	public void setVerb() {
-		JsonObject displayObject = new JsonObject();
-		displayObject.addProperty("en-US", "experienced");
-		verbObject.add("display", displayObject);
-		verbObject.addProperty("id", "http://activitystrea.ms/schema/1.0/experience");
+	/**
+	 * set verb experienced in jxapi
+	 * @return
+	 */
+	public XAPIgenerator setVerb() {
+		statement.setVerb(Verbs.experienced());
+		return this;
 	}
 
 	public void setObject(String name, String value) {
@@ -559,6 +556,21 @@ public class XAPIgenerator {
 		Account account = actor.getAccount();
 		String homepage = account.getHomePage();
 		account.setHomePage(homepage + id_task);
+		return this;
+	}
+	
+	/**
+	 * set id_learner and id_task as actor
+	 * @param task id learner
+	 * @param id_task
+	 * @return
+	 */
+	public XAPIgenerator setActor(String id_learner, String id_task)
+	{
+		Agent agent = new Agent();
+		Account account = new Account("Learner:" + id_learner, "https://www.tralalere.com/" + id_task);
+		agent.setAccount(account);
+		statement.setActor(agent);
 		return this;
 	}
 	

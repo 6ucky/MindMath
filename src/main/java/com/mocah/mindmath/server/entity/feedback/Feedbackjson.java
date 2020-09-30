@@ -3,6 +3,7 @@ package com.mocah.mindmath.server.entity.feedback;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -87,10 +88,10 @@ public class Feedbackjson implements Serializable {
 	public Feedbackjson(String idLearner, String idFbCabri, String idFamilytask, String idFeedback,
 			String motivationalElement, String content_url, String content_type, HashMap<String, String> glossaryMap)
 			throws IOException {
-		this(idLearner, "", idFbCabri, idFamilytask, idFeedback, motivationalElement, content_url, content_type, glossaryMap, false, 0.8, false);
+		this(idLearner, "", idFbCabri, idFamilytask, idFeedback, motivationalElement, content_url, content_type, glossaryMap, false, 0.8, false, "6", "1", "");
 	}
 	
-	//version 1.1
+	//version 1.1 null feedback
 	public Feedbackjson(String idLearner, String idTask, String idFbCabri, String idFamilytask,
 			boolean correctAnswer, double successScore, boolean closeTask) throws IOException {
 		this.idLearner = idLearner;
@@ -110,18 +111,16 @@ public class Feedbackjson implements Serializable {
 	//version 1.1
 	public Feedbackjson(String idLearner, String idTask, String idFbCabri, String idFamilytask, String idFeedback,
 			String motivationalElement, String content_url, String content_type, HashMap<String, String> glossaryMap,
-			boolean correctAnswer, double successScore, boolean closeTask) throws IOException {
+			boolean correctAnswer, double successScore, boolean closeTask, String leaf, String error_type,
+			String statementRef) throws IOException {
 		this.idLearner = idLearner;
 		this.idTask = idTask;
 		this.idFbCabri = idFbCabri;
 		this.taskFamily = idFamilytask;
 		this.idFb = idFeedback;
-		this.motivationalElementFb = String2GeneralHTML(motivationalElement);
-		if (content_type.equals("video/mp4")) {
-			this.contentFb = String2ContentFBHTML("", content_url, "", content_type);
-		} else {
-			this.contentFb = String2ContentFBHTML(content_url, "", "", content_type);
-		}
+		this.motivationalElementFb = String2GeneralHTML1_1(motivationalElement);
+		this.contentFb = String2ContentFBHTML(content_url, idFeedback, leaf, error_type, idLearner, idTask, statementRef)
+				+ String2GlossaryFBHTML(glossaryMap, idFeedback, leaf, error_type);
 		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
 		this.correctAnswer = correctAnswer;
 		this.successScore = successScore;
@@ -138,6 +137,19 @@ public class Feedbackjson implements Serializable {
 		// Executing the Mustache Template
 		m.execute(writer, fbhtml).flush();
 		return writer.toString();
+	}
+	
+	private String String2GeneralHTML1_1(String content) throws IOException {
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache m = mf.compile("mustache_template/contentFB1_1.mustache");
+		
+		GeneralHTML fbhtml = new GeneralHTML(content);
+		Map<String, Object> context = new HashMap<>();
+	    context.put("motivation", fbhtml);
+	    
+		StringWriter writer = new StringWriter();
+		m.execute(writer, context).flush();
+		return writer.toString().replace("\n", "");
 	}
 
 	private String String2ContentFBHTML(String default_img_url, String video_url, String video_srt_url, String type)
@@ -161,7 +173,46 @@ public class Feedbackjson implements Serializable {
 		// Executing the Mustache Template
 		return null;
 	}
+	
+	private String String2ContentFBHTML(String image_url, String feedbackID, String leaf, String error_code,
+			String id_learner, String id_task, String statementRef) throws IOException
+	{
+		if(image_url == null)
+			return "";
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache m = mf.compile("mustache_template/contentFB1_1.mustache");
+		
+		ContentFB1_1 fbhtml = new ContentFB1_1(image_url, feedbackID, leaf, error_code, id_learner, id_task, statementRef);
+		Map<String, Object> context = new HashMap<>();
+	    context.put("fb_image", fbhtml);
+	    
+		StringWriter writer = new StringWriter();
+		m.execute(writer, context).flush();
+		return writer.toString().replace("\n", "");
+	}
 
+	private String String2GlossaryFBHTML(HashMap<String, String> glossaryMap, String feedbackID, String leaf, String error_code) throws IOException {
+		if (glossaryMap.size() == 0)
+			return "";
+		// Compiling the Mustache Template
+		MustacheFactory mf = new DefaultMustacheFactory();
+		Mustache m = mf.compile("mustache_template/contentFB1_1.mustache");
+		
+		List<GlossaryFB1_1> glossary_list = new ArrayList<GlossaryFB1_1>();
+		Iterator<String> iterator = glossaryMap.keySet().iterator();
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			GlossaryFB1_1 temp = new GlossaryFB1_1(glossaryMap.get(key), key, feedbackID, leaf, error_code);
+			glossary_list.add(temp);
+		}
+		Map<String, Object> context = new HashMap<>();
+		context.put("glossary", glossary_list);
+		
+		StringWriter writer = new StringWriter();
+		m.execute(writer, context).flush();
+		return writer.toString().replace("\n", "");
+	}
+	
 	private String String2GlossaryFBHTML(HashMap<String, String> glossaryMap) throws IOException {
 		if (glossaryMap.size() == 0)
 			return "";

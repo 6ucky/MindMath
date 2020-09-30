@@ -44,10 +44,10 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 	
 	private final String error_type;
 	
-	@Column(length=1024)
+	@Column(length=10000)
 	private final String motivationalElementFb;
 	
-	@Column(length=1024)
+	@Column(length=10000)
 	private final String contentFb;
 	
 	@Column(length=10000)

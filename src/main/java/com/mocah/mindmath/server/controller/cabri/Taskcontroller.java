@@ -294,7 +294,7 @@ public class Taskcontroller {
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(),
 					task.getFeedback(), "{motivation here}", "{content url here}", "image", glossaireMap);
 		} else {
-			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task, 0.8);
+			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task, 0.8, "");
 		}
 
 		// TODO set statement success and completion
@@ -367,7 +367,7 @@ public class Taskcontroller {
 				.setObject(task)
 				.generateStatement(task, CabriVersion.v1_1);
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
-		String id = ll.postStatement(statement1);
+		String statement_id = ll.postStatement(statement1);
 
 		String redis_key = task.getSensors().getId_learner() + "_" + task.getSensors().getId_Task();
 		ILearning old_learning =  (ILearning) serializableRedisTemplate.opsForValue().get(redis_key);
@@ -403,7 +403,7 @@ public class Taskcontroller {
 		Feedbackjson feedbackjson;
 		//if answer is false and success score is bigger than 0, return learned feedback
 		if(!correctanswer && new_successScore > 0)
-			feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore);
+			feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore, statement_id);
 		//if no, return empty feedback
 		else
 		{
@@ -446,7 +446,7 @@ public class Taskcontroller {
 		generator = new XAPIgenerator();
 		statement2 = generator.setActorAsLip6()
 				.setVerb(Verbs.responded())
-				.setObject(id)
+				.setObject(statement_id)
 				.setResult(statement_success, statement_completion, feedbackjson, task_fb.getLeaf(), task_fb.getError_type(), CabriVersion.v1_1)
 				.setScore(penalty, new_successScore, CabriVersion.v1_1)
 				.generateStatement(task, CabriVersion.v1_1);
@@ -478,7 +478,7 @@ public class Taskcontroller {
 		Feedbackjson feedbackjson;
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		if (sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER)) {
-			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task, 0.8);
+			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task, 0.8, "");
 		} else {
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner());
 		}
@@ -490,7 +490,7 @@ public class Taskcontroller {
 			String[] error_list = { "1", "2", "3", "4" };
 			if (getTaskrepository().getFeedbackContent(feedbackID_test, motivation_leaf_test) != null
 					&& Arrays.asList(error_list).contains(erreurID_test)) {
-				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task, 0.8);
+				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task, 0.8, "");
 			}
 		}
 		boolean statement_success = true;
@@ -597,7 +597,7 @@ public class Taskcontroller {
 	 * @return feedback
 	 * @throws IOException
 	 */
-	public Feedbackjson generateFeedback(String feedbackID, String leaf, String error_code, Task task, double new_successScore)
+	public Feedbackjson generateFeedback(String feedbackID, String leaf, String error_code, Task task, double new_successScore, String statementRef)
 			throws IOException {
 		// get feedbackcontent from Derby
 		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
@@ -610,9 +610,10 @@ public class Taskcontroller {
 				glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
 			}
 		}
-		return new Feedbackjson(task.getSensors().getId_learner(), "", "", task.getSensors().getTaskFamily(), feedbackID,
+		return new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", task.getSensors().getTaskFamily(), feedbackID,
 				motivations.get(new Random().nextInt(motivations.size())).getMotivation_data(),
 				fb.getContentErrorType(error_code).getContent_url(), fb.getContentErrorType(error_code).getFormat(),
-				glossaireMap, BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer()), new_successScore, BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer()));
+				glossaireMap, BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer()), new_successScore, BooleanUtils.toBoolean(task.getSensors().isCorrectAnswer()),
+				leaf, error_code, statementRef);
 	}
 }

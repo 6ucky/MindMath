@@ -4,27 +4,27 @@
         {
             "glossaireID": "1",
             "glossaire_name": "Une égalité",
-            "glossaire_content": "une égalité est une expression comportant le signe « = ». Elle est composée de deux membres situés de part et d'autre du signe « = ».  Par exemple dans l’équation 3x + 4 = 2x - 7, 3x + 4 est membre de gauche et 2x - 7 est membre de droite."
+            "glossaire_content": "https://mindmath.lip6.fr/images/glossary1.html"
         },
         {
             "glossaireID": "2",
             "glossaire_name": "Terme constant",
-            "glossaire_content": "on appelle terme constant un terme qui est un nombre seul (sans x). Par exemple dans l’équation 3x + 4 = 2x - 7, 4 et 7 sont des termes constants."
+            "glossaire_content": "https://mindmath.lip6.fr/images/glossary2.html"
         },
         {
             "glossaireID": "3",
             "glossaire_name": "Terme en x",
-            "glossaire_content": "on appelle terme en x un terme qui contient x (ou x^2) et un nombre qui multiplie ce x (rappel : quand on écrit x tout seul, c’est en fait 1 X x). Par exemple dans l’équation 3x + 4 = 2x - 7, il y a deux termes en x : 3x et 2x."
+            "glossaire_content": "https://mindmath.lip6.fr/images/glossary3.html"
         },
         {
             "glossaireID": "4",
-            "glossaire_name": "L’inverse",
-            "glossaire_content": "On dit que deux nombres sont inverses si leur produit est égale à 1. D’une manière générale l’inverse d’un nombre a/b est le nombre b/a. Et en particulier l’inverse d’un nombre non nul a est 1/a. Par example: l’inverse de 4 est 1/4; l’inverse de 3/5 est 5/3."
+            "glossaire_name": "L'inverse",
+            "glossaire_content": "https://mindmath.lip6.fr/images/glossary4.html"
         },
         {
             "glossaireID": "5",
             "glossaire_name": "Nombre non nul",
-            "glossaire_content": "un nombre non nul est un nombre différent de zéro."
+            "glossaire_content": "https://mindmath.lip6.fr/images/glossary5.html"
         }
     ]
 }
