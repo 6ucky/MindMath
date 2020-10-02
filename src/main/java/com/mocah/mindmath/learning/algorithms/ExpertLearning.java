@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.assertj.core.util.Arrays;
 
@@ -150,8 +151,14 @@ public class ExpertLearning extends AbstractLearning {
 
 	       if(value1 < value2)
 	    	   return 1;
-	       else
-	    	   return -1;
+	       // add random in equation weight
+	       if(value1 == value2)
+	       {
+	    	   Random random = new Random();
+	    	   if(random.nextDouble() < 0.5)
+	    		   return 1;
+	       }
+	       return -1;
 	       }
 	    };
 
