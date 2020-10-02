@@ -108,6 +108,24 @@ public class Feedbackjson implements Serializable {
 		this.closeTaskReason = closeTask ? (correctAnswer ? "sucess" : "tooMuchFB") : null;
 	}
 	
+	//version 1.1 with null decision, no more FB
+	public Feedbackjson(String idLearner, String idTask, String idFbCabri, String idFamilytask,
+			boolean correctAnswer)
+	{
+		this.idLearner = idLearner;
+		this.idTask = idTask;
+		this.idFbCabri = idFbCabri;
+		this.taskFamily = idFamilytask;
+		this.idFb = "";
+		this.motivationalElementFb = "";
+		this.contentFb = "";
+		this.glossaryFb = "";
+		this.correctAnswer = correctAnswer;
+		this.successScore = 0;
+		this.closeTask = true;
+		this.closeTaskReason = "noMoreFB";
+	}
+	
 	//version 1.1
 	public Feedbackjson(String idLearner, String idTask, String idFbCabri, String idFamilytask, String idFeedback,
 			String motivationalElement, String content_url, String content_type, HashMap<String, String> glossaryMap,
@@ -323,5 +341,9 @@ public class Feedbackjson implements Serializable {
 
 	public boolean isCloseTask() {
 		return closeTask;
+	}
+
+	public String getCloseTaskReason() {
+		return closeTaskReason;
 	}
 }

@@ -352,10 +352,14 @@ public class Taskcontroller {
 		Task task = jsonparser.parse(data, CabriVersion.v1_1);
 		
 		/******************************External Condition**************************************/
+		boolean null_task_mode = false;
 		if(task.getSensors().getActivityMode() == null)
 			task.getSensors().setActivityMode("0");
 		if(task.getSensors().getId_Task() == null)
+		{
+			null_task_mode = true;
 			task.getSensors().setId_Task("nullTask" + nullTask_num);
+		}
 		/**************************************************************************************/
 		
 		//generate task statement
@@ -389,28 +393,43 @@ public class Taskcontroller {
 		
 		serializableRedisTemplate.opsForValue().set(redis_key, LearningProcess.getExpertlearning());
 
-		IAction action = decision.getAction();
-		//caculate new success score, if new, initialize 1.
+		Feedbackjson feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), correctanswer);
+		double penalty = 0;
 		double new_successScore = 1;
-		TaskFeedback1_1 previousTaskFB = getTaskrepository().getPreviousTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task());
-		
-		//caculate new success score, get minimum and reduce penalty 
-		double penalty = LearningProcess.getPenaltyInfo(action.getId());
-		if(previousTaskFB != null)
-			new_successScore = Math.round((previousTaskFB.getSuccessScore() - penalty)*100)/100.0;
-		System.out.println("[new_successScore] " + new_successScore);
-		
-		Feedbackjson feedbackjson;
-		//if answer is false and success score is bigger than 0, return learned feedback
-		if(!correctanswer && new_successScore > 0)
-			feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore, statement_id);
-		//if no, return empty feedback
+		IAction action = null;
+		if(decision != null)
+		{
+			action = decision.getAction();
+			//caculate new success score, if new, initialize 1.
+			TaskFeedback1_1 previousTaskFB = getTaskrepository().getPreviousTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task());
+			
+			//caculate new success score, get minimum and reduce penalty 
+			penalty = LearningProcess.getPenaltyInfo(action.getId());
+			if(previousTaskFB != null)
+				new_successScore = Math.round((previousTaskFB.getSuccessScore() - penalty)*100)/100.0;
+			System.out.println("[new_successScore] " + new_successScore);
+			
+			//if answer is false and success score is bigger than 0, return learned feedback
+			if(!correctanswer && new_successScore > 0)
+				feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore, statement_id);
+			//if no, return empty feedback
+			else
+			{
+				feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
+						task.getSensors().getTaskFamily(), correctanswer, new_successScore, true);
+				serializableRedisTemplate.opsForValue().set(redis_key, null);
+				if(null_task_mode)
+					nullTask_num++;
+			}
+		}
 		else
 		{
+			new_successScore = 0;
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
-					task.getSensors().getTaskFamily(), correctanswer, new_successScore, true);
+					task.getSensors().getTaskFamily(), correctanswer);
 			serializableRedisTemplate.opsForValue().set(redis_key, null);
-			nullTask_num++;
+			if(null_task_mode)
+				nullTask_num++;
 		}
 		
 		boolean statement_success = feedbackjson.isCorrectAnswer();
@@ -427,8 +446,8 @@ public class Taskcontroller {
 				task.getSensors().getActivityMode(),
 				task.getLog(),
 				feedbackjson.getIdFeedback(),
-				correctanswer ? "" : ((MindMathAction) action).getLeaf(),
-				correctanswer ? ErrorTypeMap.getErrorNum(task.getSensors().getCodeError()) : decision.getError_type(),
+				decision == null ? "" : (correctanswer ? "" : ((MindMathAction) action).getLeaf()),
+				decision == null ? "" : (correctanswer ? ErrorTypeMap.getErrorNum(task.getSensors().getCodeError()) : decision.getError_type()),
 				feedbackjson.getMotivationalElementFb(),
 				feedbackjson.getContentFb(),
 				feedbackjson.getGlossaryFb(),

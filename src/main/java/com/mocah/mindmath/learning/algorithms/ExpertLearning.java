@@ -88,40 +88,42 @@ public class ExpertLearning extends AbstractLearning {
 	 */
 	public String getErrorType(IState state, String error) throws Exception
 	{
+		LinkedList<IValue> values = qValues.get(state);
+		if(values.size() == 0)
+			return error;
 		List<Object> errors = error_table.get(state); 
 		if(errors.size() == 0)
 			throw new Exception("Error type not found in expert learning.");
 		
-		String result;
 		if(errors.contains(error))
 		{
-			result = error;
+			errors.remove(error);
 		}
+		//if error doesn't exist, poll qValues and return error_list_differ without error
 		else
 		{
-			result = (String) errors.get(0);
+			values.pollFirst();
+			errors = Arrays.asList(error_list_differ); 
+			errors.remove(error);
 		}
-		if(hasDiffErrorType(qValues.get(state)))
-			errors.remove(result);
-		else
-			errors.clear();
 		System.out.println("[Error Types]" + errors.toString());
 		error_table.put(state, errors);
-		return result;
+		return error;
 	}
 	
 	@Override
 	public IAction step(IState state) {
 		LinkedList<IValue> values = qValues.get(state);
-		List<Object> errors = error_table.get(state); 
-		//if all error type are visited, put the first value to the last and return second value
-		if(errors.isEmpty())
-		{
-			IValue first_value = values.pollFirst();
-			values.addLast(first_value);
-			this.error_table.put(state, Arrays.asList(error_list_differ));
-		}
-		return values.getFirst().myAction();
+		if(values.size() == 0)
+			return null;
+		IAction action = values.getFirst().myAction();
+		
+		//if there are same images, poll the qValues
+		if(!hasDiffErrorType(qValues.get(state)))
+			values.pollFirst();
+		
+		//always return the first qValue
+		return action;
 	}
 
 	@Override

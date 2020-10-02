@@ -172,7 +172,6 @@ public class LearningProcess {
 		case v1_1:
 			Decision decision = new Decision();
 			IState newState = decisionTreeBFS(tree, task, CabriVersion.v1_1);
-			IAction action = expertlearning.step(newState);
 			String code_error = task.getSensors().getCodeError();
 			try {
 				code_error = ((ExpertLearning) expertlearning).getErrorType(newState, ErrorTypeMap.getErrorNum(code_error));
@@ -180,6 +179,9 @@ public class LearningProcess {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			IAction action = expertlearning.step(newState);
+			if(action == null)
+				return null;
 			decision.setAction(action);
 			decision.setError_type(code_error);
 			/********print weights and selected code_error*************/
@@ -187,7 +189,8 @@ public class LearningProcess {
 			String message = "[Expertlearning] First qvalues for every state:";
 			for(IState state : qValues.keySet())
 			{
-				message += qValues.get(state).getFirst().getValue() + " ";
+				if(qValues.get(state).size() != 0)
+					message += qValues.get(state).getFirst().getValue() + " ";
 			}
 			message += "\n[Decision] Feedback ID:" + action.getId() + " leaf:" + ((MindMathAction) action).getLeaf() + " code error:" + code_error;
 			System.out.println(message);
