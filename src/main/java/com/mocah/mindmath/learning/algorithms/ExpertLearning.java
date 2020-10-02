@@ -113,6 +113,8 @@ public class ExpertLearning extends AbstractLearning {
 	
 	@Override
 	public IAction step(IState state) {
+		if(!qValues.containsKey(state))
+			return null;
 		LinkedList<IValue> values = qValues.get(state);
 		if(values.size() == 0)
 			return null;
