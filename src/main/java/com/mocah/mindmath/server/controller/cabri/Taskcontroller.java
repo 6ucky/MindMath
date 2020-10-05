@@ -387,7 +387,6 @@ public class Taskcontroller {
 			decision = LearningProcess.makeDecision(task, CabriVersion.v1_1);
 		} catch (InvalidTheoryException | NoSuchFieldException | NoSuchMethodException | InvocationTargetException
 				| MalformedGoalException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -620,12 +619,24 @@ public class Taskcontroller {
 			throws IOException {
 		// get feedbackcontent from Derby
 		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
+		
+		if(fb == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "FeedbackID: " + feedbackID + " and leaf:" + leaf + " NOT FOUND.");
+		
 		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf());
+		
+		if(motivations == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Motivation with leaf:" + fb.getMotivation_leaf() + " NOT FOUND.");
+		
 		HashMap<String, String> glossaireMap = new HashMap<>();
 		if (!fb.getContentErrorType(error_code).getGlossaire().toString().equals("[]")) {
 			for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
 				String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
 				Glossaire temp = getTaskrepository().getGlossaire(mapkey);
+				
+				if(temp == null)
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Glossary with key:" + mapkey + " NOT FOUND.");
+				
 				glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
 			}
 		}
