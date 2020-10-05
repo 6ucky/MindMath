@@ -120,9 +120,12 @@ public class ExpertLearning extends AbstractLearning {
 			return null;
 		IAction action = values.getFirst().myAction();
 		
-		//if there are same images, poll the qValues
+		//if there are same images, poll the qValues, set error table as default
 		if(!hasDiffErrorType(qValues.get(state)))
+		{
 			values.pollFirst();
+			error_table.put(state, Arrays.asList(error_list_differ));
+		}
 		
 		//always return the first qValue
 		return action;
