@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
+import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.server.repository.LocalRouteRepository;
 
 @RestController
@@ -120,6 +122,32 @@ public class Filecontroller {
 			LocalRouteRepository.writeFile(backup, route);
 		else
 			LocalRouteRepository.writeFile(data, route);
+		return new ResponseEntity<>(LocalRouteRepository.readFileasString(route), HttpStatus.OK);
+	}
+	
+	/**
+	 * overwrite content into file
+	 * @param auth
+	 * @param data
+	 * @return
+	 * @throws IOException
+	 * @throws JsonParserCustomException
+	 */
+	@PostMapping("")
+	public ResponseEntity<String> writeFile(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws IOException, JsonParserCustomException {
+		if(!checkauth(auth))
+		{
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		}
+		JsonParserFactory jsonparser = new JsonParserFactory(data);
+		String route = jsonparser.getValueAsString(jsonparser.getObject(), "route");
+		String content = jsonparser.getValueAsString(jsonparser.getObject(), "content");
+
+		if(Filecontroller.class.getClassLoader().getResource(route) == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no file in " + route);
+		
+		LocalRouteRepository.writeFile(content, route);
 		return new ResponseEntity<>(LocalRouteRepository.readFileasString(route), HttpStatus.OK);
 	}
 	
