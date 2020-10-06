@@ -396,39 +396,50 @@ public class Taskcontroller {
 		double penalty = 0;
 		double new_successScore = 1;
 		IAction action = null;
-		if(decision != null)
+		if(correctanswer)
 		{
-			action = decision.getAction();
-			//caculate new success score, if new, initialize 1.
-			TaskFeedback1_1 previousTaskFB = getTaskrepository().getPreviousTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task());
-			
-			//caculate new success score, get minimum and reduce penalty 
-			penalty = LearningProcess.getPenaltyInfo(action.getId());
-			if(previousTaskFB != null)
-				new_successScore = Math.round((previousTaskFB.getSuccessScore() - penalty)*100)/100.0;
-			System.out.println("[new_successScore] " + new_successScore);
-			
-			//if answer is false and success score is bigger than 0, return learned feedback
-			if(!correctanswer && new_successScore > 0)
-				feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore, statement_id);
-			//if no, return empty feedback
+			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
+					task.getSensors().getTaskFamily(), correctanswer, new_successScore, true);
+			serializableRedisTemplate.opsForValue().set(redis_key, null);
+			if(null_task_mode)
+				nullTask_num++;
+		}
+		else
+		{
+			if(decision != null)
+			{
+				action = decision.getAction();
+				//caculate new success score, if new, initialize 1.
+				TaskFeedback1_1 previousTaskFB = getTaskrepository().getPreviousTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task());
+				
+				//caculate new success score, get minimum and reduce penalty 
+				penalty = LearningProcess.getPenaltyInfo(action.getId());
+				if(previousTaskFB != null)
+					new_successScore = Math.round((previousTaskFB.getSuccessScore() - penalty)*100)/100.0;
+				System.out.println("[new_successScore] " + new_successScore);
+				
+				//success score is bigger than 0, return learned feedback
+				if(new_successScore > 0)
+					feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore, statement_id);
+				//if no, return empty feedback
+				else
+				{
+					feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
+							task.getSensors().getTaskFamily(), correctanswer, new_successScore, true);
+					serializableRedisTemplate.opsForValue().set(redis_key, null);
+					if(null_task_mode)
+						nullTask_num++;
+				}
+			}
 			else
 			{
+				new_successScore = 0;
 				feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
-						task.getSensors().getTaskFamily(), correctanswer, new_successScore, true);
+						task.getSensors().getTaskFamily(), correctanswer);
 				serializableRedisTemplate.opsForValue().set(redis_key, null);
 				if(null_task_mode)
 					nullTask_num++;
 			}
-		}
-		else
-		{
-			new_successScore = 0;
-			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
-					task.getSensors().getTaskFamily(), correctanswer);
-			serializableRedisTemplate.opsForValue().set(redis_key, null);
-			if(null_task_mode)
-				nullTask_num++;
 		}
 		
 		boolean statement_success = feedbackjson.isCorrectAnswer();

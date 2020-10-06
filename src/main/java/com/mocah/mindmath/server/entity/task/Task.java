@@ -17,6 +17,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.mocah.mindmath.learning.utils.actions.IAction;
 import com.mocah.mindmath.server.entity.AbstractJsonData;
 
@@ -194,8 +197,7 @@ public class Task extends AbstractJsonData implements Serializable {
 					return log.getName();
 			}
 		}
-
-		return null;
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trigger not found.");
 	}
 
 	public Verb getVerb() {
