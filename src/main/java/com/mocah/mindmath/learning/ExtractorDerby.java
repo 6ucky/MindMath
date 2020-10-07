@@ -146,4 +146,41 @@ public class ExtractorDerby {
 
 		return freq + "";
 	}
+	
+	protected static String StabErrorModeActivityForLearners(Task task) {
+		System.out.println("+++++++++++++++++");
+		Sensors currentSensors = task.getSensors();
+		if (currentSensors == null)
+			return "0";
+
+		String currentError = currentSensors.getCodeError();
+		if (StringUtils.isEmpty(currentError))
+			return "0";
+
+		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getTaskFamily(), 2);
+
+		if (TaskFBs.size() == 0)
+			return "0";
+
+		ListIterator<TaskFeedback1_1> listIterator = TaskFBs.listIterator(TaskFBs.size());
+
+		int countError = 0;
+		while (listIterator.hasPrevious()) {
+			TaskFeedback1_1 taskfb = listIterator.previous();
+
+			String codeError = taskfb.getCodeError();
+
+			if (StringUtils.isNotEmpty(codeError)) {
+				// Error observed
+				if (currentError.equals(codeError)) {
+					// Same errors
+					countError += 1;
+				}
+			}
+		}
+
+		double freq = (double) countError / TaskFBs.size();
+
+		return freq + "";
+	}
 }

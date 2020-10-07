@@ -60,6 +60,12 @@ public interface Derbyrepository extends CrudRepository<AbstractJsonData, String
 			@Param("trigger") String trigger,
 			@Param("correctAnswer") boolean correctAnswer);
 	
+	//StabErrorModeActivityForLearners(Task task)
+	@Query("select t from TaskFeedback1_1 t where t.taskFamily = :taskFamily and t.activityMode < :activityMode")
+	List<TaskFeedback1_1> getTaskFeedback1_1(
+			@Param("taskFamily") String taskFamily,
+			@Param("activityMode") Integer activityMode);
+	
 	@Query("select t from TaskFeedback1_1 t where t.successScore = (select min(t.successScore) from TaskFeedback1_1 t where t.id_learner = :id_learner and t.id_task = :id_task) and t.id_learner = :id_learner and t.id_task = :id_task")
 	TaskFeedback1_1 getPreviousTaskFeedback1_1(@Param("id_learner") String id_learner, @Param("id_task") String id_task);
 

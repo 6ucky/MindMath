@@ -389,4 +389,9 @@ public class Extractor {
 
 		return freq + "";
 	}
+	
+	protected static String StabErrorModeActivityForLearners(Task task) {
+		//TODO
+		return null;
+	}
 }
