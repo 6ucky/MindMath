@@ -33,7 +33,7 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 
 	private final String codeError;
 
-	private final String activityMode;
+	private final int activityMode;
 	
 	private final int maxFb;
 	
@@ -66,11 +66,11 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 	private final boolean closeTask;
 	
 	public TaskFeedback1_1() {
-		this("", "", null, null, null, false, null, null, 4, new ArrayList<Log>(), null, null, null, null, null, null, null, false, false, 0, false);
+		this("", "", null, null, null, false, null, 0, 4, new ArrayList<Log>(), null, null, null, null, null, null, null, false, false, 0, false);
 	}
 
 	public TaskFeedback1_1(String id_learner, String id_task, String domain, String generator, String taskFamily,
-			boolean correctAnswer, String codeError, String activityMode, int maxFb, List<Log> logs,
+			boolean correctAnswer, String codeError, int activityMode, int maxFb, List<Log> logs,
 			String feedback_id, String leaf, String error_type, String motivationalElementFb,
 			String contentFb, String glossaryFb, String trigger, boolean success, boolean completion,
 			double successScore, boolean closeTask) {
@@ -122,7 +122,7 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 		return codeError;
 	}
 
-	public String getActivityMode() {
+	public Integer getActivityMode() {
 		return activityMode;
 	}
 

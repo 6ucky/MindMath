@@ -91,9 +91,9 @@ public class Feedbackjson implements Serializable {
 		this(idLearner, "", idFbCabri, idFamilytask, idFeedback, motivationalElement, content_url, content_type, glossaryMap, false, 0.8, false, "6", "1", "");
 	}
 	
-	//version 1.1 null feedback
+	//version 1.1 null feedback closeTask
 	public Feedbackjson(String idLearner, String idTask, String idFbCabri, String idFamilytask,
-			boolean correctAnswer, double successScore, boolean closeTask) throws IOException {
+			boolean correctAnswer, double successScore, String closeTaskReason) throws IOException {
 		this.idLearner = idLearner;
 		this.idTask = idTask;
 		this.idFbCabri = idFbCabri;
@@ -104,26 +104,8 @@ public class Feedbackjson implements Serializable {
 		this.glossaryFb = "";
 		this.correctAnswer = correctAnswer;
 		this.successScore = successScore;
-		this.closeTask = closeTask;
-		this.closeTaskReason = closeTask ? (correctAnswer ? "sucess" : "tooMuchFB") : null;
-	}
-	
-	//version 1.1 with null decision, no more FB
-	public Feedbackjson(String idLearner, String idTask, String idFbCabri, String idFamilytask,
-			boolean correctAnswer)
-	{
-		this.idLearner = idLearner;
-		this.idTask = idTask;
-		this.idFbCabri = idFbCabri;
-		this.taskFamily = idFamilytask;
-		this.idFb = "";
-		this.motivationalElementFb = "";
-		this.contentFb = "";
-		this.glossaryFb = "";
-		this.correctAnswer = correctAnswer;
-		this.successScore = 0;
 		this.closeTask = true;
-		this.closeTaskReason = "noMoreFB";
+		this.closeTaskReason = closeTaskReason;
 	}
 	
 	//version 1.1
@@ -143,7 +125,7 @@ public class Feedbackjson implements Serializable {
 		this.correctAnswer = correctAnswer;
 		this.successScore = successScore;
 		this.closeTask = closeTask;
-		this.closeTaskReason = closeTask ? (correctAnswer ? "sucess" : "tooMuchFB") : null;
+		this.closeTaskReason = null;
 	}
 
 	private String String2GeneralHTML(String content) throws IOException {

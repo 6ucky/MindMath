@@ -397,22 +397,27 @@ public class Taskcontroller {
 		Feedbackjson feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), correctanswer);
 		double penalty = 0;
 		double new_successScore = 1;
+		//caculate new success score, if new, initialize 1.
+		TaskFeedback1_1 previousTaskFB = getTaskrepository().getPreviousTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task());
+		if(previousTaskFB != null)
+			new_successScore = previousTaskFB.getSuccessScore();
+		
 		IAction action = null;
+		// if right answer, return success
 		if(correctanswer)
 		{
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
-					task.getSensors().getTaskFamily(), correctanswer, new_successScore, true);
+					task.getSensors().getTaskFamily(), correctanswer, new_successScore, "success");
 			serializableRedisTemplate.opsForValue().set(redis_key, null);
 			if(null_task_mode)
 				nullTask_num++;
 		}
 		else
 		{
+			// if there is a decision from expert learning
 			if(decision != null)
 			{
 				action = decision.getAction();
-				//caculate new success score, if new, initialize 1.
-				TaskFeedback1_1 previousTaskFB = getTaskrepository().getPreviousTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task());
 				
 				//caculate new success score, get minimum and reduce penalty 
 				penalty = LearningProcess.getPenaltyInfo(action.getId());
@@ -422,22 +427,42 @@ public class Taskcontroller {
 				
 				//success score is bigger than 0, return learned feedback
 				if(new_successScore > 0)
-					feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore, statement_id);
-				//if no, return empty feedback
+				{
+					//get all attempts of current learner and task
+					int current_nm_FB = 0;
+					List<TaskFeedback1_1> allTFB = getTaskrepository().getTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task());
+					if(allTFB != null)
+						current_nm_FB = allTFB.size();
+					
+					// if less than maximum FB, return FB of expert learning
+					if(current_nm_FB < Integer.parseInt(task.getSensors().getMaxFb()))
+						feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore, statement_id);
+					// if no, return too much FB.
+					else
+					{
+						feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
+								task.getSensors().getTaskFamily(), correctanswer, new_successScore, "tooMuchFB");
+						serializableRedisTemplate.opsForValue().set(redis_key, null);
+						if(null_task_mode)
+							nullTask_num++;
+					}
+				}	
+				//if no, return successScoreZero
 				else
 				{
 					feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
-							task.getSensors().getTaskFamily(), correctanswer, new_successScore, true);
+							task.getSensors().getTaskFamily(), correctanswer, new_successScore, "successScoreZero");
 					serializableRedisTemplate.opsForValue().set(redis_key, null);
 					if(null_task_mode)
 						nullTask_num++;
 				}
 			}
+			//if no decision from expert learning, return no more FB
 			else
 			{
 				new_successScore = 0;
 				feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), task.getSensors().getId_Task(), "", 
-						task.getSensors().getTaskFamily(), correctanswer);
+						task.getSensors().getTaskFamily(), correctanswer, new_successScore, "noMoreFB");
 				serializableRedisTemplate.opsForValue().set(redis_key, null);
 				if(null_task_mode)
 					nullTask_num++;
@@ -455,7 +480,7 @@ public class Taskcontroller {
 				task.getSensors().getTaskFamily(),
 				correctanswer,
 				task.getSensors().getCodeError(),
-				task.getSensors().getActivityMode(),
+				Integer.parseInt(task.getSensors().getActivityMode()),
 				Integer.parseInt(task.getSensors().getMaxFb()),
 				task.getLog(),
 				feedbackjson.getIdFeedback(),
