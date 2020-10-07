@@ -360,6 +360,8 @@ public class Taskcontroller {
 			null_task_mode = true;
 			task.getSensors().setId_Task("nullTask" + nullTask_num);
 		}
+		if(task.getSensors().getMaxFb() == null)
+			task.getSensors().setMaxFb("4");
 		/**************************************************************************************/
 		
 		//generate task statement
@@ -454,6 +456,7 @@ public class Taskcontroller {
 				correctanswer,
 				task.getSensors().getCodeError(),
 				task.getSensors().getActivityMode(),
+				Integer.parseInt(task.getSensors().getMaxFb()),
 				task.getLog(),
 				feedbackjson.getIdFeedback(),
 				decision == null ? "" : (correctanswer ? "" : ((MindMathAction) action).getLeaf()),

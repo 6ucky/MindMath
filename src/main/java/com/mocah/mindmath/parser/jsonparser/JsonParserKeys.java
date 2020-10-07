@@ -39,6 +39,7 @@ public class JsonParserKeys {
 	public static String SENSOR_CORRECTANSWER = "correctAnswer";
 	public static String SENSOR_CODEERROR = "codeError";
 	public static String SENSOR_ACTIVITYMODE = "activityMode";
+	public static String SENSOR_MAXNMFB = "maxFb";
 
 	// Log object
 	public static String LOG = "log";
