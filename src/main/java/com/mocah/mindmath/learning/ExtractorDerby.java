@@ -148,7 +148,6 @@ public class ExtractorDerby {
 	}
 	
 	protected static String StabErrorModeActivityForLearners(Task task) {
-		System.out.println("+++++++++++++++++");
 		Sensors currentSensors = task.getSensors();
 		if (currentSensors == null)
 			return "0";
