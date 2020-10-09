@@ -492,7 +492,8 @@ public class LRScontroller {
 				.setObject(statementRef)
 				.setContext(type, CabriVersion.v1_1)
 				.generateStatement(new Task(), CabriVersion.v1_1);
-		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		//TODO change LRS store
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
 		ll.postStatement(statement);
 		return new ResponseEntity<>(id_learner + id_task + statementRef + type, HttpStatus.ACCEPTED);
 	}

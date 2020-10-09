@@ -372,7 +372,8 @@ public class Taskcontroller {
 				.setVerb(task)
 				.setObject(task)
 				.generateStatement(task, CabriVersion.v1_1);
-		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
+		//TODO change LRS store
+		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
 		String statement_id = ll.postStatement(statement1);
 
 		String redis_key = task.getSensors().getId_learner() + "_" + task.getSensors().getId_Task();
