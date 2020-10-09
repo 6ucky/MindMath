@@ -28,7 +28,7 @@ public class Filecontroller {
 	 * @return authorized or unauthorized
 	 */
 	private static boolean checkauth(String auth) {
-		if (auth.equals(license_num))
+		if (auth.equalsIgnoreCase(license_num))
 			return true;
 		return false;
 	}
@@ -49,7 +49,7 @@ public class Filecontroller {
 		}
 		String backup = "<a href='{{default_img_url}}' target='_blank'><img width='100%' src='{{default_img_url}}' alt='Feedback'></a>";
 		String route = "mustache_template/contentFBImage.mustache";
-		if(data.equals("backup"))
+		if(data.equalsIgnoreCase("backup"))
 			LocalRouteRepository.writeFile(backup, route);
 		else
 			LocalRouteRepository.writeFile(data, route);
@@ -72,7 +72,7 @@ public class Filecontroller {
 		}
 		String backup = "<video width='100%' controls poster='{{default_img_url}}'><source src='{{video_url}}' type='video/mp4'/><track kind='subtitles' src='{{video_srt_url}}' srclang='fr' label='FR' default></video><p>Le composant Video de HTML5 est requis pour lire cette vidéo.<a id='downloadLink' href='{{video_url}}'> Télécharger la vidéo.</a></p>";
 		String route = "mustache_template/contentFBVideo.mustache";
-		if(data.equals("backup"))
+		if(data.equalsIgnoreCase("backup"))
 			LocalRouteRepository.writeFile(backup, route);
 		else
 			LocalRouteRepository.writeFile(data, route);
@@ -95,7 +95,7 @@ public class Filecontroller {
 		}
 		String backup = "<h1>{{content}}</h1>";
 		String route = "mustache_template/generalHTML.mustache";
-		if(data.equals("backup"))
+		if(data.equalsIgnoreCase("backup"))
 			LocalRouteRepository.writeFile(backup, route);
 		else
 			LocalRouteRepository.writeFile(data, route);
@@ -118,7 +118,7 @@ public class Filecontroller {
 		}
 		String backup = "<p><b>Propriété.</b> {{content_propriete}}</p><p><b>Préservation.</b> {{content_preservation}}</p>";
 		String route = "mustache_template/glossaryFB.mustache";
-		if(data.equals("backup"))
+		if(data.equalsIgnoreCase("backup"))
 			LocalRouteRepository.writeFile(backup, route);
 		else
 			LocalRouteRepository.writeFile(data, route);

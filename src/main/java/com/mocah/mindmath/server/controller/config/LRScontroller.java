@@ -85,7 +85,7 @@ public class LRScontroller {
 	 * @return authorized or unauthorized
 	 */
 	private static boolean checkauth(String auth) {
-		if (auth.equals(license_num))
+		if (auth.equalsIgnoreCase(license_num))
 			return true;
 		return false;
 	}

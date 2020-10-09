@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,6 +27,8 @@ import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
+import com.mocah.mindmath.server.repository.LocalRoute;
+import com.mocah.mindmath.server.repository.LocalRouteRepository;
 
 @RestController
 @RequestMapping("/learning")
@@ -43,11 +46,60 @@ public class Learningcontroller {
 	 * @return authorized or unauthorized
 	 */
 	private static boolean checkauth(String auth) {
-		if (auth.equals(license_num))
+		if (auth.equalsIgnoreCase(license_num))
 			return true;
 		return false;
 	}
 	
+	/**
+	 * update decision tree and initialize decision tree
+	 * @param auth
+	 * @param data if not null, the json of decision tree
+	 * @return
+	 * @throws JsonParserCustomException
+	 * @throws IOException
+	 */
+	@PostMapping(path = "/init/decisiontree", consumes = "application/json")
+	public ResponseEntity<String> initDecisionTree(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws JsonParserCustomException, IOException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		String message = "";
+		if(!data.equalsIgnoreCase("null"))
+		{
+			LocalRouteRepository.writeFile(data, LocalRoute.DecisionTreeRoute);
+			message += "Decision Tree updated.";
+		}
+		
+		LearningProcess.initLearningProcess();
+		return new ResponseEntity<String>("QLearning initialized. " + message, HttpStatus.OK);
+	}
+	/**
+	 * initialize expert learning
+	 * @param auth
+	 * @param id_task the key name of values in expert learning in Redis
+	 * @return
+	 * @throws JsonParserCustomException
+	 * @throws IOException
+	 */
+	@PostMapping(path = "/init/expertlearning", consumes = "application/json")
+	public ResponseEntity<String> initExpertLearning(@RequestHeader("Authorization") String auth,
+			@RequestParam String id_task) throws JsonParserCustomException, IOException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		serializableRedisTemplate.opsForValue().set(id_task, null);
+		return new ResponseEntity<String>("Expert learning of id_task \"" + id_task +"\" initialized.", HttpStatus.OK);
+	}
+	
+	/**
+	 * a test to connect with Redis
+	 * @param auth
+	 * @param data
+	 * @return
+	 * @throws JsonParserCustomException
+	 * @throws IOException
+	 */
 	@PostMapping(path = "/test/redis", consumes = "application/json")
 	public ResponseEntity<String> addtaskTESTRedis(@RequestHeader("Authorization") String auth,
 			@RequestBody String data) throws JsonParserCustomException, IOException {
@@ -105,10 +157,10 @@ public class Learningcontroller {
 	}
 	
 	/**
-	 * Get actual qValues from learning
+	 * Get actual qValues from Qlearning
 	 *
 	 * @param auth
-	 * @return the qvalue from learning algorithm
+	 * @return the qvalue from Qlearning algorithm
 	 */
 	@GetMapping("/qlearning/qvalues")
 	public ResponseEntity<String> getQlearningQValues(@RequestHeader("Authorization") String auth) {
@@ -144,6 +196,12 @@ public class Learningcontroller {
 		return new ResponseEntity<>(res.toString(), HttpStatus.FOUND);
 	}
 	
+	/**
+	 * Get actual qValues from expert learning
+	 *
+	 * @param auth
+	 * @return the qvalue from expert learning algorithm
+	 */
 	@GetMapping("/expertlearning/qvalues")
 	public ResponseEntity<String> getExpertlearningQValues(@RequestHeader("Authorization") String auth) {
 		if (!checkauth(auth))
