@@ -33,7 +33,9 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 
 	private final String codeError;
 
-	private final String activityMode;
+	private final int activityMode;
+	
+	private final int maxFb;
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private final List<Log> logs;
@@ -64,11 +66,11 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 	private final boolean closeTask;
 	
 	public TaskFeedback1_1() {
-		this("", "", null, null, null, false, null, null, new ArrayList<Log>(), null, null, null, null, null, null, null, false, false, 0, false);
+		this("", "", null, null, null, false, null, 0, 4, new ArrayList<Log>(), null, null, null, null, null, null, null, false, false, 0, false);
 	}
 
 	public TaskFeedback1_1(String id_learner, String id_task, String domain, String generator, String taskFamily,
-			boolean correctAnswer, String codeError, String activityMode, List<Log> logs,
+			boolean correctAnswer, String codeError, int activityMode, int maxFb, List<Log> logs,
 			String feedback_id, String leaf, String error_type, String motivationalElementFb,
 			String contentFb, String glossaryFb, String trigger, boolean success, boolean completion,
 			double successScore, boolean closeTask) {
@@ -81,6 +83,7 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 		this.correctAnswer = correctAnswer;
 		this.codeError = codeError;
 		this.activityMode = activityMode;
+		this.maxFb = maxFb;
 		this.logs = logs;
 		this.feedback_id = feedback_id;
 		this.leaf = leaf;
@@ -119,7 +122,7 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 		return codeError;
 	}
 
-	public String getActivityMode() {
+	public Integer getActivityMode() {
 		return activityMode;
 	}
 
@@ -169,5 +172,9 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 
 	public boolean isCloseTask() {
 		return closeTask;
+	}
+
+	public Integer getMaxFb() {
+		return maxFb;
 	}
 }

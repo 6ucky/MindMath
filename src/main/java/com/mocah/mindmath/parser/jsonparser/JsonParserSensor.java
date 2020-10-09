@@ -46,7 +46,8 @@ public class JsonParserSensor extends JsonParserFactory {
 						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_TASKFAMILY),
 						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_CORRECTANSWER),
 						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_CODEERROR),
-						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_ACTIVITYMODE));
+						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_ACTIVITYMODE),
+						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_MAXNMFB));
 				break;
 			case v1_1:
 				sensorsClass = new Sensors(
@@ -59,7 +60,8 @@ public class JsonParserSensor extends JsonParserFactory {
 						getValueAsString(sensorsObject, JsonParserKeys.SENSOR_CORRECTANSWER),
 						getValueAsString(sensorsObject, JsonParserKeys.SENSOR_CODEERROR),
 						//activity mode may be null
-						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_ACTIVITYMODE));
+						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_ACTIVITYMODE),
+						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_MAXNMFB));
 				break;
 			}
 			

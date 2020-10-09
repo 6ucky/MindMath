@@ -64,22 +64,25 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	
 	@Expose (serialize = true) 
 	private String activityMode;
+	
+	@Expose (serialize = true) 
+	private String maxFb;
 
 	// empty object
 	public Sensors() {
-		this(null, null, null, null, null, null, null, null, "", "", null, null, null, null, null, null);
+		this(null, null, null, null, null, null, null, null, "", "", null, null, null, null, null, null, null);
 	}
 	
 	// version 1.1
 	public Sensors(String id_Task, String idLearner, String domain, String generator, String taskFamily, 
-			String correctAnswer, String codeError, String activityMode) {
-		this(null, null, null, null, null, null, null, null, id_Task, idLearner, domain, generator, taskFamily, correctAnswer, codeError, activityMode);
+			String correctAnswer, String codeError, String activityMode, String maxFb) {
+		this(null, null, null, null, null, null, null, null, id_Task, idLearner, domain, generator, taskFamily, correctAnswer, codeError, activityMode, maxFb);
 	}
 
 	public Sensors(String capteur_bool_RF_CO2_1, String capteur_bool_RF_CO2_2, String capteur_bool_RF_CO2_3,
 			String capteur_bool_RJ, String capteur_nb_temps, String capteur_nb_valider, String capteur_nb_effacer,
 			String capteur_nb_aide, String id_Task, String idLearner, String domain, String generator, String taskFamily, 
-			String correctAnswer, String codeError, String activityMode) {
+			String correctAnswer, String codeError, String activityMode, String maxFb) {
 		super();
 		this.capteur_bool_RF_CO2_1 = capteur_bool_RF_CO2_1;
 		this.capteur_bool_RF_CO2_2 = capteur_bool_RF_CO2_2;
@@ -97,6 +100,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		this.correctAnswer = correctAnswer;
 		this.codeError = codeError;
 		this.activityMode = activityMode;
+		this.setMaxFb(maxFb);
 	}
 
 	public String isCapteur_bool_RF_CO2_1() {
@@ -169,5 +173,13 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	
 	public void setActivityMode(String activityMode) {
 		this.activityMode = activityMode;
+	}
+
+	public String getMaxFb() {
+		return maxFb;
+	}
+
+	public void setMaxFb(String maxFb) {
+		this.maxFb = maxFb;
 	}
 }

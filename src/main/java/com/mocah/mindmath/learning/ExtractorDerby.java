@@ -35,7 +35,7 @@ public class ExtractorDerby {
 	 */
 	protected static String getNbSolveTry(Task task) {
 		
-		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task(),task.getSensors().getTaskFamily(), Verbs.answered().getId(), true);
+		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task(), Verbs.answered().getId());
 		
 		int nbTry = 1;
 		for(TaskFeedback1_1 taskfb : TaskFBs)
@@ -78,7 +78,7 @@ public class ExtractorDerby {
 		if (StringUtils.isEmpty(currentError))
 			return "0";
 
-		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getId_Task(), task.getSensors().getTaskFamily(), Verbs.answered().getId(), true, false);
+		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getId_learner(), task.getSensors().getTaskFamily(), Verbs.answered().getId(), false);
 
 		if (TaskFBs.size() == 0)
 			return "0";
@@ -117,7 +117,7 @@ public class ExtractorDerby {
 		if (currentSensors == null)
 			return "0";
 
-		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getTaskFamily(), task.getSensors().getId_Task(), Verbs.answered().getId(), true, false);
+		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getTaskFamily(), Verbs.answered().getId(), false);
 
 		if (TaskFBs.size() == 0)
 			return "0";
@@ -143,6 +143,42 @@ public class ExtractorDerby {
 		}
 
 		double freq = (double) max / TaskFBs.size();
+
+		return freq + "";
+	}
+	
+	protected static String StabErrorModeActivityForLearners(Task task) {
+		Sensors currentSensors = task.getSensors();
+		if (currentSensors == null)
+			return "0";
+
+		String currentError = currentSensors.getCodeError();
+		if (StringUtils.isEmpty(currentError))
+			return "0";
+
+		List<TaskFeedback1_1> TaskFBs = LearningProcess.getRepo().getTaskFeedback1_1(task.getSensors().getTaskFamily(), 2);
+
+		if (TaskFBs.size() == 0)
+			return "0";
+
+		ListIterator<TaskFeedback1_1> listIterator = TaskFBs.listIterator(TaskFBs.size());
+
+		int countError = 0;
+		while (listIterator.hasPrevious()) {
+			TaskFeedback1_1 taskfb = listIterator.previous();
+
+			String codeError = taskfb.getCodeError();
+
+			if (StringUtils.isNotEmpty(codeError)) {
+				// Error observed
+				if (currentError.equals(codeError)) {
+					// Same errors
+					countError += 1;
+				}
+			}
+		}
+
+		double freq = (double) countError / TaskFBs.size();
 
 		return freq + "";
 	}

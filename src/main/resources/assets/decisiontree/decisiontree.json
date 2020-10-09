@@ -450,12 +450,17 @@
         {
           "edge": {
             "value": "peu stable",
-            "query": "strictinf(_mostLearnersErrorStability_,0.5).",
+            "query": "strictinf(_modeActivityErrorStability_,0.5).",
             "vars": [
               {
                 "name": "mostLearnersErrorStability",
                 "source": "Method",
                 "key": "mostStabErrorForLearners"
+              },
+              {
+                "name": "modeActivityErrorStability",
+                "source": "Method",
+                "key": "StabErrorModeActivityForLearners"
               }
             ]
           },
@@ -464,12 +469,17 @@
         {
           "edge": {
             "value": "stable",
-            "query": "sup(_mostLearnersErrorStability_,0.5).",
+            "query": "sup(_modeActivityErrorStability_,0.5).",
             "vars": [
               {
                 "name": "mostLearnersErrorStability",
                 "source": "Method",
                 "key": "mostStabErrorForLearners"
+              },
+              {
+                "name": "modeActivityErrorStability",
+                "source": "Method",
+                "key": "StabErrorModeActivityForLearners"
               }
             ]
           },
