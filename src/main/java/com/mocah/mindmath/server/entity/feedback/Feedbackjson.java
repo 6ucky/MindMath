@@ -120,7 +120,7 @@ public class Feedbackjson implements Serializable {
 		this.idFb = idFeedback;
 		this.motivationalElementFb = String2GeneralHTML1_1(motivationalElement);
 		this.contentFb = String2ContentFBHTML(content_url, idFeedback, leaf, error_type, idLearner, idTask, statementRef)
-				+ String2GlossaryFBHTML(glossaryMap, idFeedback, leaf, error_type);
+				+ String2GlossaryFBHTML(glossaryMap, idFeedback, leaf, error_type, idLearner, idTask, statementRef);
 		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
 		this.correctAnswer = correctAnswer;
 		this.successScore = successScore;
@@ -191,7 +191,8 @@ public class Feedbackjson implements Serializable {
 		return writer.toString().replace("\n", "");
 	}
 
-	private String String2GlossaryFBHTML(HashMap<String, String> glossaryMap, String feedbackID, String leaf, String error_code) throws IOException {
+	private String String2GlossaryFBHTML(HashMap<String, String> glossaryMap, String feedbackID, String leaf, String error_code,
+			String id_learner, String id_task, String statementRef) throws IOException {
 		if (glossaryMap.size() == 0)
 			return "";
 		// Compiling the Mustache Template
@@ -202,7 +203,7 @@ public class Feedbackjson implements Serializable {
 		Iterator<String> iterator = glossaryMap.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			GlossaryFB1_1 temp = new GlossaryFB1_1(glossaryMap.get(key), key, feedbackID, leaf, error_code);
+			GlossaryFB1_1 temp = new GlossaryFB1_1(glossaryMap.get(key), key, feedbackID, leaf, error_code, id_learner, id_task, statementRef);
 			glossary_list.add(temp);
 		}
 		Map<String, Object> context = new HashMap<>();

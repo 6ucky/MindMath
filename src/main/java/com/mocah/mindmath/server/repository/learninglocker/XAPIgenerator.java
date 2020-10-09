@@ -145,6 +145,10 @@ public class XAPIgenerator {
 		contextObject.add("contextActivities", temp);
 	}
 
+	/**
+	 * @deprecated use jxapi instead
+	 * @return
+	 */
 	public JsonObject generateStatement() {
 		JsonObject rootObject = new JsonObject();
 		rootObject.add("actor", actorObject);
@@ -571,6 +575,28 @@ public class XAPIgenerator {
 		Account account = new Account("Learner:" + id_learner, "https://www.tralalere.com/" + id_task);
 		agent.setAccount(account);
 		statement.setActor(agent);
+		return this;
+	}
+	
+	/**
+	 * set url in context once learner experienced feedback
+	 * @param url
+	 * @param version
+	 * @return
+	 */
+	public XAPIgenerator setContext(String type, CabriVersion version) {
+		switch(version)
+		{
+		case v1_0:
+		case v1_1:
+		case test:
+			HashMap<String, JsonElement> extension = new HashMap<String, JsonElement>();
+			extension.put("https://mindmath.lip6.fr/" + type, new JsonObject());
+			Context c = new Context();
+			c.setExtensions(extension);
+			statement.setContext(c);
+			break;
+		}
 		return this;
 	}
 	

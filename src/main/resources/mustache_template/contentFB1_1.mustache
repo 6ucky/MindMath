@@ -1,24 +1,25 @@
 {{#motivation}}<h4>{{content}}</h4>{{/motivation}}
 {{#fb_image}}
 <span style="position: relative; display: inline-block; border-bottom: 1px dotted black;" onmouseover="document.getElementById('span-{{feedbackID}}-{{leaf}}-{{error_code}}').style.visibility='visible';" onmouseout="document.getElementById('span-{{feedbackID}}-{{leaf}}-{{error_code}}').style.visibility='hidden';">
-  <a href="{{image_url}}" id="image-{{feedbackID}}-{{leaf}}-{{error_code}}" onclick="document.getElementById('form-{{feedbackID}}-{{leaf}}-{{error_code}}').submit(); document.getElementById('image-{{feedbackID}}-{{leaf}}-{{error_code}}').removeAttribute('onclick');" target='_blank'>
+  <a href="{{image_url}}" onclick="document.getElementById('form-{{feedbackID}}-{{leaf}}-{{error_code}}-image').submit();" target='_blank'>
     <img width='100%' src="{{image_url}}" alt="feedback">
   </a>
   <span id="span-{{feedbackID}}-{{leaf}}-{{error_code}}" style="visibility: hidden; width: 120px; background-color: black; color: #fff; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; top: 100%; left: 50%; margin-left: -60px;">
     Cliquer pour l'agrandir
   </span>
 </span>
-<form style="display:none;" id="form-{{feedbackID}}-{{leaf}}-{{error_code}}" action="https://mindmath.lip6.fr/lrs/feedbackExperienced" method="POST" target="hidden-form-{{feedbackID}}-{{leaf}}-{{error_code}}">
+<form style="display:none;" id="form-{{feedbackID}}-{{leaf}}-{{error_code}}-image" action="https://mindmath.lip6.fr/lrs/feedbackExperienced" method="POST" target="hidden-form-{{feedbackID}}-{{leaf}}-{{error_code}}">
   <input name="id_learner" value="{{id_learner}}">
   <input name="id_task" value="{{id_task}}">
   <input name="statementRef" value="{{statementRef}}">
+  <input name="type" value="{{feedbackID}}-{{leaf}}-{{error_code}}">
 </form>
 <IFRAME style="display:none" name="hidden-form-{{feedbackID}}-{{leaf}}-{{error_code}}"></IFRAME>
 {{/fb_image}}
 {{#glossary}}
 <p>Glossaire:
   <span style="position: relative; display: inline-block; border-bottom: 1px dotted black;" onmouseover="document.getElementById('span-{{feedbackID}}-{{leaf}}-{{error_code}}-{{glossary_url}}').style.visibility='visible';" onmouseout="document.getElementById('span-{{feedbackID}}-{{leaf}}-{{error_code}}-{{glossary_url}}').style.visibility='hidden';">
-    <a href="{{glossary_url}}" target="_blank">
+    <a href="{{glossary_url}}" onclick="document.getElementById('form-{{feedbackID}}-{{leaf}}-{{error_code}}-{{glossary_name}}').submit();" target="_blank">
       {{glossary_name}}
     </a>
     <span id="span-{{feedbackID}}-{{leaf}}-{{error_code}}-{{glossary_url}}" style="visibility: hidden; width: 150px; background-color: black; color: #fff; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; top: 100%; left: 50%; margin-left: -60px;">
@@ -26,4 +27,10 @@
     </span>
   </span>
 </p>
+<form style="display:none;" id="form-{{feedbackID}}-{{leaf}}-{{error_code}}-{{glossary_name}}" action="https://mindmath.lip6.fr/lrs/feedbackExperienced" method="POST" target="hidden-form-{{feedbackID}}-{{leaf}}-{{error_code}}">
+  <input name="id_learner" value="{{id_learner}}">
+  <input name="id_task" value="{{id_task}}">
+  <input name="statementRef" value="{{statementRef}}">
+  <input name="type" value="{{glossary_name}}">
+</form>
 {{/glossary}}

@@ -468,6 +468,7 @@ public class Taskcontroller {
 					nullTask_num++;
 			}
 		}
+		System.out.println("[Feedback1_1_content] " + feedbackjson.getContentFb());
 		
 		boolean statement_success = feedbackjson.isCorrectAnswer();
 		boolean statement_completion = feedbackjson.isCloseTask();
