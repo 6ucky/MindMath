@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -584,14 +586,18 @@ public class XAPIgenerator {
 	 * @param version
 	 * @return
 	 */
-	public XAPIgenerator setContext(String url, CabriVersion version) {
+	public XAPIgenerator setContext(String url, String feedbackID, String leaf, String error_code, CabriVersion version) {
 		switch(version)
 		{
 		case v1_0:
 		case v1_1:
 		case test:
 			HashMap<String, JsonElement> extension = new HashMap<String, JsonElement>();
-			extension.put(url, new JsonObject());
+			JsonObject fdjs = new JsonObject();
+			fdjs.addProperty("FeedbackID", feedbackID);
+			fdjs.addProperty("Leaf", leaf);
+			fdjs.addProperty("Errer", error_code);
+			extension.put(url, fdjs);
 			Context c = new Context();
 			c.setExtensions(extension);
 			statement.setContext(c);

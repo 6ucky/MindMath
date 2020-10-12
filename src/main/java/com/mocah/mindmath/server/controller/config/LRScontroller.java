@@ -484,13 +484,14 @@ public class LRScontroller {
 	
 	@PostMapping("/feedbackExperienced")
 	public ResponseEntity<String> postFeedbackExperienced(@RequestParam String id_learner, @RequestParam String id_task,
-			@RequestParam String statementRef, @RequestParam String url){
+			@RequestParam String statementRef, @RequestParam String url, @RequestParam String feedbackID, 
+			@RequestParam String leaf, @RequestParam String error_code){
 		XAPIgenerator generator = new XAPIgenerator();
 		Statement statement = new Statement();
 		statement = generator.setActor(id_learner, id_task)
 				.setVerb()
 				.setObject(statementRef)
-				.setContext(url, CabriVersion.v1_1)
+				.setContext(url, feedbackID, leaf, error_code, CabriVersion.v1_1)
 				.generateStatement(new Task(), CabriVersion.v1_1);
 		//TODO change LRS store
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
