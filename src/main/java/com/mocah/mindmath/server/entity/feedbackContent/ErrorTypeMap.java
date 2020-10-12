@@ -11,10 +11,10 @@ public class ErrorTypeMap {
 	 */
 	private static final Map<String, String> errorTypeMap = ImmutableMap.of(
 			"ce_confusionRationnel", "1",
-			"ce_inversionNumerateurDenominateur", "2",
-			"ce_concatenation", "3",
-			"ce_nonGestionOppose", "4",
-			"ce_oppose", "4"
+			"ce_inversionNumerateurDenominateur", "3",
+			"ce_concatenation", "4",
+			"ce_nonGestionOppose", "2",
+			"ce_oppose", "2"
 			);
 	public static String getErrorNum(String content)
 	{
