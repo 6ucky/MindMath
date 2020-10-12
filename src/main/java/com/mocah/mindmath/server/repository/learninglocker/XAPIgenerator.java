@@ -584,14 +584,14 @@ public class XAPIgenerator {
 	 * @param version
 	 * @return
 	 */
-	public XAPIgenerator setContext(String type, CabriVersion version) {
+	public XAPIgenerator setContext(String url, CabriVersion version) {
 		switch(version)
 		{
 		case v1_0:
 		case v1_1:
 		case test:
 			HashMap<String, JsonElement> extension = new HashMap<String, JsonElement>();
-			extension.put("https://mindmath.lip6.fr/" + type, new JsonObject());
+			extension.put(url, new JsonObject());
 			Context c = new Context();
 			c.setExtensions(extension);
 			statement.setContext(c);
