@@ -1,14 +1,10 @@
 package com.mocah.mindmath.server.controller.feedback;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -17,14 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.mocah.mindmath.server.entity.feedback.Feedbackjson;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
 import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
-import com.mocah.mindmath.server.repository.LocalRoute;
-import com.mocah.mindmath.server.repository.LocalRouteRepository;
 import com.mocah.mindmath.server.repository.derby.Derbyrepository;
 
 @RestController
