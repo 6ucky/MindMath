@@ -86,6 +86,22 @@ public class JsonParserFactory implements ParserFactory<Task> {
 
 		return null;
 	}
+	
+	/**
+	 * @param object Json object
+	 * @param key attribute name of Json object
+	 * @return float value
+	 * @throws JsonParserCustomException
+	 */
+	public Double getValueAsDouble(JsonObject object, String key) throws JsonParserCustomException {
+		try {
+			return object.has(key) ? object.get(key).getAsDouble() : null;
+		} catch (Exception e) {
+			throwjsonexception(object, key, e, "Double");
+		}
+
+		return null;
+	}
 
 	/**
 	 * get String value for TASK object and the storage in the database

@@ -102,6 +102,9 @@ public class Taskcontroller {
 		FeedbackContentList fb_list = new FeedbackContentList(feedbacks, glossaires, motivations, "resoudreEquationPremierDegre");
 		getTaskrepository().save(fb_list);
 		
+		//initialize error code
+		ErrorTypeMap.init();
+		
 		// TODO improve init system
 		// ie Save learning object in DB and add initLearning with ILearning parameter
 		// -> thus it can allow multiple learning instances (and of course backups !)

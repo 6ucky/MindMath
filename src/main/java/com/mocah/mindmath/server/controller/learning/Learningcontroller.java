@@ -27,6 +27,7 @@ import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
+import com.mocah.mindmath.server.entity.feedbackContent.ErrorTypeMap;
 import com.mocah.mindmath.server.repository.LocalRoute;
 import com.mocah.mindmath.server.repository.LocalRouteRepository;
 
@@ -61,7 +62,7 @@ public class Learningcontroller {
 	 */
 	@PostMapping(path = "/init/decisiontree", consumes = "application/json")
 	public ResponseEntity<String> initDecisionTree(@RequestHeader("Authorization") String auth,
-			@RequestBody String data) throws JsonParserCustomException, IOException {
+			@RequestBody String data) throws IOException{
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
@@ -85,7 +86,7 @@ public class Learningcontroller {
 	 */
 	@PostMapping(path = "/init/expertlearning", consumes = "application/json")
 	public ResponseEntity<String> initExpertLearning(@RequestHeader("Authorization") String auth,
-			@RequestParam String id_task) throws JsonParserCustomException, IOException {
+			@RequestParam String id_task) {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		serializableRedisTemplate.opsForValue().set(id_task, null);
@@ -234,5 +235,39 @@ public class Learningcontroller {
 		}
 
 		return new ResponseEntity<>(res.toString(), HttpStatus.FOUND);
+	}
+	
+	/**
+	 * update code error
+	 * @param auth
+	 * @param data
+	 * @return
+	 * @throws JsonParserCustomException
+	 */
+	@PostMapping(path = "/errorcode", consumes = "application/json")
+	public ResponseEntity<String> updateErrorCode(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws JsonParserCustomException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		ErrorTypeMap.setError(data);
+		return new ResponseEntity<String>(ErrorTypeMap.toStringGson(), HttpStatus.OK);
+	}
+	
+	/**
+	 * initialize code error
+	 * @param auth
+	 * @param data
+	 * @return
+	 * @throws JsonParserCustomException
+	 */
+	@DeleteMapping(path = "/errorcode", consumes = "application/json")
+	public ResponseEntity<String> initErrorCode(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws JsonParserCustomException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		ErrorTypeMap.init();
+		return new ResponseEntity<String>(ErrorTypeMap.toStringGson(), HttpStatus.OK);
 	}
 }
