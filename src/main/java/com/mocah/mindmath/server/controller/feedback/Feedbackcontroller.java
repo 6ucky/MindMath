@@ -56,7 +56,7 @@ public class Feedbackcontroller {
 		
 		Gson gson = new Gson();
 		FeedbackContentList feedbacks = gson.fromJson(data, FeedbackContentList.class);
-		if(feedbacks == null)
+		if(feedbacks == null || feedbacks.getGenerator() == "")
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No content.");
 		
 		if(getFeedbackcontentrepository().getAllFeedbackContentList(feedbacks.getGenerator()) != null)
@@ -68,7 +68,7 @@ public class Feedbackcontroller {
 	}
 	
 	/**
-	 * Delete feedback content list based on generator
+	 * Delete feedbackcontent list based on generator
 	 * @param auth
 	 * @param generator parameter
 	 * @return
@@ -113,6 +113,7 @@ public class Feedbackcontroller {
 		if(feedbacks == null)
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No content.");
 		
+		getFeedbackcontentrepository().delete(feedbacklists);
 		feedbacklists.setFeedback_content(feedbacks);
 		getFeedbackcontentrepository().save(feedbacklists);
 		
@@ -143,7 +144,8 @@ public class Feedbackcontroller {
 		if(feedbacks == null)
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No content.");
 		
-		feedbacklists.setMotivationlist(feedbacks);;
+		getFeedbackcontentrepository().delete(feedbacklists);
+		feedbacklists.setMotivationlist(feedbacks);
 		getFeedbackcontentrepository().save(feedbacklists);
 		
 		return new ResponseEntity<>(gson.toJson(feedbacks), HttpStatus.OK);
@@ -173,7 +175,8 @@ public class Feedbackcontroller {
 		if(feedbacks == null)
 			throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "No content.");
 		
-		feedbacklists.setGlossairelist(feedbacks);;
+		getFeedbackcontentrepository().delete(feedbacklists);
+		feedbacklists.setGlossairelist(feedbacks);
 		getFeedbackcontentrepository().save(feedbacklists);
 		
 		return new ResponseEntity<>(gson.toJson(feedbacks), HttpStatus.OK);
