@@ -143,10 +143,10 @@ public class LRScontroller {
 		JsonParserFactory parserRoot = new JsonParserFactory(data);
 
 		JsonObject response = new JsonObject();
-//		response.add("Response from LRS",
-//				JsonParser.parseString(ll.postStatementTEST(
-//						parserRoot.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_LEARNER_ID),
-//						parserSensor.getSensor(CabriVersion.v1_0), parserLog.getLogs())).getAsJsonObject());
+		response.add("Response from LRS",
+				JsonParser.parseString(ll.postStatementTEST(
+						parserRoot.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_LEARNER_ID),
+						parserSensor.getSensor(CabriVersion.v1_0), parserLog.getLogs())).getAsJsonObject());
 
 		JsonArray statementArray = new JsonArray();
 		XAPIgenerator xapi = new XAPIgenerator();
@@ -157,12 +157,12 @@ public class LRScontroller {
 		xapi.setObject(JsonParserKeys.SENSOR_DOMAIN,
 				parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_DOMAIN));
 		xapi.setContext(XAPItype.SENSORS);
-//		statementArray.add(xapi.generateStatement());
+		statementArray.add(xapi.generateStatement());
 
 		xapi.setObject(JsonParserKeys.SENSOR_GENERATOR,
 				parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_GENERATOR));
 		xapi.setContext(XAPItype.SENSORS);
-//		statementArray.add(xapi.generateStatement());
+		statementArray.add(xapi.generateStatement());
 
 		for (int i = 0; i < parserLog.getArray().size(); i++) {
 			xapi = new XAPIgenerator();
@@ -173,7 +173,7 @@ public class LRScontroller {
 							JsonParserKeys.LOG_ACTION),
 					parserLog.getValueAsString(parserLog.getArray().get(i).getAsJsonObject(), JsonParserKeys.LOG_NAME));
 			xapi.setContext(XAPItype.LOGS);
-//			statementArray.add(xapi.generateStatement());
+			statementArray.add(xapi.generateStatement());
 		}
 
 		response.add("Statements Drafts", statementArray);
@@ -348,7 +348,7 @@ public class LRScontroller {
 		generator = new XAPIgenerator();
 		statement3 = generator.setActorAsLip6()
 				.setVerb(Verbs.responded())
-//				.setObject(statement1)
+				.setObject(statement1)
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
 //				.setResultwithQvalues()
@@ -481,6 +481,17 @@ public class LRScontroller {
 		return new ResponseEntity<>(ll.postStatement(statement), HttpStatus.ACCEPTED);
 	}
 	
+	/**
+	 * a small post Client for experienced statement in LRS
+	 * @param id_learner
+	 * @param id_task
+	 * @param statementRef
+	 * @param url
+	 * @param feedbackID
+	 * @param leaf
+	 * @param error_code
+	 * @return
+	 */
 	@PostMapping("/feedbackExperienced")
 	public ResponseEntity<String> postFeedbackExperienced(@RequestParam String id_learner, @RequestParam String id_task,
 			@RequestParam String statementRef, @RequestParam String url, @RequestParam String feedbackID, 

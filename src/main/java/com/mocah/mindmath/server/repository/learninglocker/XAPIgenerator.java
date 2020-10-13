@@ -148,7 +148,7 @@ public class XAPIgenerator {
 	}
 
 	/**
-	 * @deprecated use jxapi instead
+	 * @Deprecated use jxapi instead
 	 * @return
 	 */
 	public JsonObject generateStatement() {
@@ -341,7 +341,7 @@ public class XAPIgenerator {
 	}
 	
 	/**
-	 * @deprecated use setResult without motivations
+	 * @Deprecated use setResult without motivations
 	 */
 	public XAPIgenerator setResult(boolean success, boolean completion, Feedbackjson fbjson, List<Motivation> motivations, CabriVersion version) {
 		switch(version)
@@ -500,7 +500,7 @@ public class XAPIgenerator {
 	
 	/**
 	 * set substatement as object
-	 * @deprecated use statementref instead
+	 * @Deprecated use statementref instead
 	 * @param in_statement input statement
 	 * @return
 	 */
@@ -608,7 +608,7 @@ public class XAPIgenerator {
 	
 	/**
 	 * set glossary as contextactivity in context
-	 * @deprecated use result instead
+	 * @Deprecated use result instead
 	 * @param glossary_choices the selected glossaries
 	 * @param glossaryMap all the glossaries
 	 * @param version

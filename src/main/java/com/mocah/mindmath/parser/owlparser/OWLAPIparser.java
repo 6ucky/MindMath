@@ -48,7 +48,7 @@ public class OWLAPIparser implements ParserFactory <OWLparserRepo> {
 	/**
 	 * read the owl file based on object and identify resource and literal
 	 * @return the list of node information
-	 * @deprecated use listall method instead
+	 * @Deprecated use listall method instead
 	 */
 	public List<String> listallObject(){
 		List<String> results = new ArrayList<String>();

@@ -813,6 +813,11 @@ public class LearningProcess {
 		LearningProcess.repo = repo;
 	}
 	
+	/**
+	 * most stability from family task
+	 * @param task
+	 * @return error code
+	 */
 	protected static String getErrorFrommostStab(Task task) {
 		Sensors currentSensors = task.getSensors();
 		if (currentSensors == null)
