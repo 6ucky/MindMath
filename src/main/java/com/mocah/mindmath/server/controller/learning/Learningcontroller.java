@@ -27,6 +27,7 @@ import com.mocah.mindmath.learning.algorithms.QLearning;
 import com.mocah.mindmath.learning.utils.states.IState;
 import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.parser.jsonparser.JsonParserCustomException;
+import com.mocah.mindmath.server.entity.feedback.PenaltyMap;
 import com.mocah.mindmath.server.entity.feedbackContent.ErrorTypeMap;
 import com.mocah.mindmath.server.repository.LocalRoute;
 import com.mocah.mindmath.server.repository.LocalRouteRepository;
@@ -269,5 +270,39 @@ public class Learningcontroller {
 
 		ErrorTypeMap.init();
 		return new ResponseEntity<String>(ErrorTypeMap.toStringGson(), HttpStatus.OK);
+	}
+	
+	/**
+	 * update penalty
+	 * @param auth
+	 * @param data
+	 * @return
+	 * @throws JsonParserCustomException
+	 */
+	@PostMapping(path = "/penalty", consumes = "application/json")
+	public ResponseEntity<String> updatePenalty(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws JsonParserCustomException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		PenaltyMap.setPenalty(data);
+		return new ResponseEntity<String>(PenaltyMap.toStringGson(), HttpStatus.OK);
+	}
+	
+	/**
+	 * initialize penalty
+	 * @param auth
+	 * @param data
+	 * @return
+	 * @throws JsonParserCustomException
+	 */
+	@DeleteMapping(path = "/penalty", consumes = "application/json")
+	public ResponseEntity<String> initPenalty(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) throws JsonParserCustomException {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+
+		PenaltyMap.init();
+		return new ResponseEntity<String>(PenaltyMap.toStringGson(), HttpStatus.OK);
 	}
 }

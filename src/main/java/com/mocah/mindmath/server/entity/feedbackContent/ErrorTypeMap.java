@@ -16,6 +16,7 @@ public class ErrorTypeMap {
 	private static Map<String, String> errorTypeMap;
 	
 	public static void init() {
+		errorTypeMap = new HashMap<String, String>();
 		errorTypeMap = ImmutableMap.of(
 				"ce_confusionRationnel", "1",
 				"ce_inversionNumerateurDenominateur", "3",

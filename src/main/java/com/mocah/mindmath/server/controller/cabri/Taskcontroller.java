@@ -42,6 +42,7 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserFactory;
 import com.mocah.mindmath.parser.jsonparser.JsonParserKeys;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.server.entity.feedback.Feedbackjson;
+import com.mocah.mindmath.server.entity.feedback.PenaltyMap;
 import com.mocah.mindmath.server.entity.feedback.TaskFeedback1_1;
 import com.mocah.mindmath.server.entity.feedbackContent.ErrorTypeMap;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
@@ -102,8 +103,10 @@ public class Taskcontroller {
 		FeedbackContentList fb_list = new FeedbackContentList(feedbacks, glossaires, motivations, "resoudreEquationPremierDegre");
 		getTaskrepository().save(fb_list);
 		
-		//initialize error code
+		//initialize error code map
 		ErrorTypeMap.init();
+		//initialize penalty map
+		PenaltyMap.init();
 		
 		// TODO improve init system
 		// ie Save learning object in DB and add initLearning with ILearning parameter
@@ -421,7 +424,7 @@ public class Taskcontroller {
 				action = decision.getAction();
 				
 				//caculate new success score, get minimum and reduce penalty 
-				penalty = LearningProcess.getPenaltyInfo(action.getId());
+				penalty = PenaltyMap.getPenalty(action.getId());
 				
 				new_successScore = Math.round((new_successScore - penalty)*100)/100.0;
 				System.out.println("[new_successScore] " + new_successScore);
@@ -666,12 +669,12 @@ public class Taskcontroller {
 		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf, generator);
 		
 		if(fb == null)
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "FeedbackID: " + feedbackID + " and leaf:" + leaf + " NOT FOUND.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "FeedbackID: " + feedbackID + " and leaf:" + leaf + " NOT FOUND IN DERBY.");
 		
 		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf(), generator);
 		
 		if(motivations == null)
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Motivation with leaf:" + fb.getMotivation_leaf() + " NOT FOUND.");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Motivation with leaf:" + fb.getMotivation_leaf() + " NOT FOUND IN DERBY.");
 		
 		HashMap<String, String> glossaireMap = new HashMap<>();
 		if (!fb.getContentErrorType(error_code).getGlossaire().toString().equals("[]")) {
@@ -680,7 +683,7 @@ public class Taskcontroller {
 				Glossaire temp = getTaskrepository().getGlossaire(mapkey, generator);
 				
 				if(temp == null)
-					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Glossary with key:" + mapkey + " NOT FOUND.");
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Glossary with key:" + mapkey + " NOT FOUND IN DERBY.");
 				
 				glossaireMap.put(temp.getGlossaire_name(), temp.getGlossaire_content());
 			}
