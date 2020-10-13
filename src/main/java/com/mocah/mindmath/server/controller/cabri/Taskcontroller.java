@@ -495,7 +495,8 @@ public class Taskcontroller {
 				statement_success,
 				statement_completion,
 				new_successScore,
-				feedbackjson.isCloseTask()
+				feedbackjson.isCloseTask(),
+				feedbackjson.getCloseTaskReason()
 				);
 		System.out.println("[TaskFeedback1_1] " + gson.toJson(task_fb));
 		getTaskrepository().save(task_fb);

@@ -110,27 +110,27 @@ public class LearningProcess {
 		Map<IState, ArrayList<IValue>> qvalues = computeBranches(branches);
 
 		// 3 Compute
-		if (learning == null) {
+//		if (learning == null) {
 			// Instanciate learning
 			IPolicy newPolicy = new EpsilonGreedy(0.6);
 			learning = new QLearning(newPolicy, qvalues);
 			// or
 //			learning = new QLearning(newPolicy, qvalues, alpha, gamma);
-		} else {
-			// Add missing states to learning class
-			if (learning instanceof QLearning) {
-				Map<IState, ArrayList<IValue>> trainedValues = ((QLearning) learning).getQValues();
-
-				Set<IState> newStates = new HashSet<>(qvalues.keySet());
-				newStates.removeIf(trainedValues.keySet()::contains);
-
-				for (IState newState : newStates) {
-					trainedValues.put(newState, trainedValues.get(newState));
-				}
-			} else {
-				// TODO error
-			}
-		}
+//		} else {
+//			// Add missing states to learning class
+//			if (learning instanceof QLearning) {
+//				Map<IState, ArrayList<IValue>> trainedValues = ((QLearning) learning).getQValues();
+//
+//				Set<IState> newStates = new HashSet<>(qvalues.keySet());
+//				newStates.removeIf(trainedValues.keySet()::contains);
+//
+//				for (IState newState : newStates) {
+//					trainedValues.put(newState, trainedValues.get(newState));
+//				}
+//			} else {
+//				// TODO error
+//			}
+//		}
 		
 		//init expert learning table and fixed QValues
 		expertlearning = new ExpertLearning(null, qvalues);

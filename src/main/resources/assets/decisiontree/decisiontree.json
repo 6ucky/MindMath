@@ -712,6 +712,18 @@
             "value": 0.4
           },
           "nodeid": "3.0.0.XFT"
+        },
+        {
+          "edge":{
+            "value": 0.1
+          },
+          "nodeid": "3.2.IC.XFT"
+        },
+        {
+          "edge":{
+            "value": 0.05
+          },
+          "nodeid": "3.2.INC.XFT"
         }
       ]
     },

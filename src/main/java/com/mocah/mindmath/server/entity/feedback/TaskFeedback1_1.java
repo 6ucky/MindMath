@@ -65,15 +65,17 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 	
 	private final boolean closeTask;
 	
+	private final String closeTaskReason;
+	
 	public TaskFeedback1_1() {
-		this("", "", null, null, null, false, null, 0, 4, new ArrayList<Log>(), null, null, null, null, null, null, null, false, false, 0, false);
+		this("", "", null, null, null, false, null, 0, 4, new ArrayList<Log>(), null, null, null, null, null, null, null, false, false, 0, false, null);
 	}
 
 	public TaskFeedback1_1(String id_learner, String id_task, String domain, String generator, String taskFamily,
 			boolean correctAnswer, String codeError, int activityMode, int maxFb, List<Log> logs,
 			String feedback_id, String leaf, String error_type, String motivationalElementFb,
 			String contentFb, String glossaryFb, String trigger, boolean success, boolean completion,
-			double successScore, boolean closeTask) {
+			double successScore, boolean closeTask, String closeTaskReason) {
 		super();
 		this.id_learner = id_learner;
 		this.id_task = id_task;
@@ -96,6 +98,7 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 		this.completion = completion;
 		this.successScore = successScore;
 		this.closeTask = closeTask;
+		this.closeTaskReason = closeTaskReason;
 	}
 
 	public String getId_learner() {
@@ -176,5 +179,9 @@ public class TaskFeedback1_1 extends AbstractJsonData{
 
 	public Integer getMaxFb() {
 		return maxFb;
+	}
+
+	public String getCloseTaskReason() {
+		return closeTaskReason;
 	}
 }

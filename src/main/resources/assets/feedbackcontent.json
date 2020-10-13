@@ -642,6 +642,70 @@
             ]
         },
         {
+            "feedbackID": "3.2.IC.XFT",
+            "ponderation": 0.1,
+            "motivation_leaf": "9",
+            "contents":
+            [
+                {
+                    "erreurID":1,
+                    "format": "image",
+                    "glossaire": ["1", "2", "3", "4"],
+                    "content_url": "https://mindmath.lip6.fr/images/FB3.2.IC[1].png"
+                },
+                {
+                    "erreurID":2,
+                    "format": "image",
+                    "glossaire": ["1", "2", "3", "4"],
+                    "content_url": "https://mindmath.lip6.fr/images/FB3.2.IC[2].png"
+                },
+                {
+                    "erreurID":3,
+                    "format": "image",
+                    "glossaire": ["1", "2", "3", "4"],
+                    "content_url": "https://mindmath.lip6.fr/images/FB3.2.IC[3].png"
+                },
+                {
+                    "erreurID":4,
+                    "format": "image",
+                    "glossaire": ["1", "2", "3", "4"],
+                    "content_url": "https://mindmath.lip6.fr/images/FB3.2.IC[4].png"
+                }
+            ]
+        },
+        {
+            "feedbackID": "3.2.INC.XFT",
+            "ponderation": 0.05,
+            "motivation_leaf": "9",
+            "contents":
+            [
+                {
+                    "erreurID":1,
+                    "format": "image",
+                    "glossaire": ["2", "3", "4"],
+                    "content_url": "https://mindmath.lip6.fr/images/FB3.2.INC[1].png"
+                },
+                {
+                    "erreurID":2,
+                    "format": "image",
+                    "glossaire": ["1", "2", "3", "4"],
+                    "content_url": "https://mindmath.lip6.fr/images/FB3.2.INC[2].png"
+                },
+                {
+                    "erreurID":3,
+                    "format": "image",
+                    "glossaire": ["1", "2", "3", "4"],
+                    "content_url": "https://mindmath.lip6.fr/images/FB3.2.INC[3].png"
+                },
+                {
+                    "erreurID":4,
+                    "format": "image",
+                    "glossaire": ["1", "2", "3", "4"],
+                    "content_url": "https://mindmath.lip6.fr/images/FB3.2.INC[4].png"
+                }
+            ]
+        },
+        {
             "feedbackID": "3.2.IC.XE",
             "ponderation": 0.4,
             "motivation_leaf": "7",
