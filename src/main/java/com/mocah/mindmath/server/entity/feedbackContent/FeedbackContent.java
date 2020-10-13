@@ -23,7 +23,6 @@ public class FeedbackContent extends AbstractJsonData {
 	private final List<ContentErrorType> contents;
 	
 	public FeedbackContent() {
-		super();
 		this.feedbackID = "";
 		this.ponderation = 0;
 		this.motivation_leaf = "";

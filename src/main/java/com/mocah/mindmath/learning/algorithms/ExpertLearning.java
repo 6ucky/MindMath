@@ -31,6 +31,7 @@ public class ExpertLearning extends AbstractLearning {
 	private static final String[] error_list_differ = {"1", "2", "3", "4"};
 	private HashMap<IState, List<Object>> error_table;
 	private HashMap<IState, LinkedList<IValue>> qValues;
+	private String generator;
 
 	public ExpertLearning(IPolicy policy) {
 		this(policy, new HashMap<IState, ArrayList<IValue>>());
@@ -39,6 +40,7 @@ public class ExpertLearning extends AbstractLearning {
 	public ExpertLearning(IPolicy policy, Map<IState, ArrayList<IValue>> qValues) 
 	{
 		super(policy);
+		this.setGenerator("");
 		this.error_table = new HashMap<IState, List<Object>>();
 		HashMap<IState, LinkedList<IValue>> new_qValues = new HashMap<IState, LinkedList<IValue>>();
 		//sort the qValues by values
@@ -70,7 +72,7 @@ public class ExpertLearning extends AbstractLearning {
 		IAction action = value.myAction();
 		String feedbackid = action.getId();
 		String leaf = ((MindMathAction) action).getLeaf();
-		FeedbackContent feedbackcontent = LearningProcess.getRepo().getFeedbackContent(feedbackid, leaf);
+		FeedbackContent feedbackcontent = LearningProcess.getRepo().getFeedbackContent(feedbackid, leaf, generator);
 		if(feedbackcontent == null)
 			return true;
 		List<ContentErrorType> errorcontents = feedbackcontent.getContents();
@@ -175,5 +177,13 @@ public class ExpertLearning extends AbstractLearning {
 
 	public HashMap<IState, List<Object>> getErrorTable() {
 		return error_table;
+	}
+
+	public String getGenerator() {
+		return generator;
+	}
+
+	public void setGenerator(String generator) {
+		this.generator = generator;
 	}
 }

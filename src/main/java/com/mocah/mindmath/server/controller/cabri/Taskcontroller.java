@@ -85,31 +85,23 @@ public class Taskcontroller {
 	// initialize feedbackContent in Derby from local Repository
 	@PostConstruct
 	private void insertfeedbackcontentDerby() throws JsonSyntaxException, IOException {
-		getTaskrepository().deleteAll(getTaskrepository().getAllFeedbackContent());
-		getTaskrepository().deleteAll(getTaskrepository().getAllGlossaire());
-		getTaskrepository().deleteAll(getTaskrepository().getAllMotivation());
-
+		getTaskrepository().deleteAll(getTaskrepository().getAllFeedbackContentList());
 		List<FeedbackContent> feedbacks = gson
-				.fromJson(LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute),
-						FeedbackContentList.class)
-				.getFeedbackcontentlist();
-		for (FeedbackContent feedback : feedbacks) {
-			getTaskrepository().save(feedback);
-		}
+				.fromJson(LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute), FeedbackContentList.class)
+				.getFeedback_content();
 
 		List<Motivation> motivations = gson
 				.fromJson(LocalRouteRepository.readFileasString(LocalRoute.MotivationRoute), FeedbackContentList.class)
 				.getMotivationlist();
-		for (Motivation motivation : motivations) {
-			getTaskrepository().save(motivation);
-		}
 
 		List<Glossaire> glossaires = gson
 				.fromJson(LocalRouteRepository.readFileasString(LocalRoute.GlossaireRoute), FeedbackContentList.class)
 				.getGlossairelist();
-		for (Glossaire glossaire : glossaires) {
-			getTaskrepository().save(glossaire);
-		}
+
+		/**********************Currently, we have only one generator****************************/
+		FeedbackContentList fb_list = new FeedbackContentList(feedbacks, glossaires, motivations, "resoudreEquationPremierDegre");
+		getTaskrepository().save(fb_list);
+		
 		// TODO improve init system
 		// ie Save learning object in DB and add initLearning with ILearning parameter
 		// -> thus it can allow multiple learning instances (and of course backups !)
@@ -203,6 +195,9 @@ public class Taskcontroller {
 
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, CabriVersion.v1_0);
+		
+		//TODO remove if more than one generator
+		String task_generator = task.getSensors().getGenerator().equals("resoudreEquationPremierDegre") ? task.getSensors().getGenerator() : "resoudreEquationPremierDegre";
 
 		// TODO remove or comment in production, force using test LRS
 		task.setUsingTestLRS(true);
@@ -294,7 +289,7 @@ public class Taskcontroller {
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner(), "", task.getSensors().getTaskFamily(),
 					task.getFeedback(), "{motivation here}", "{content url here}", "image", glossaireMap);
 		} else {
-			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task, 0.8, "");
+			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task, 0.8, "", task_generator);
 		}
 
 		// TODO set statement success and completion
@@ -362,6 +357,8 @@ public class Taskcontroller {
 		}
 		if(task.getSensors().getMaxFb() == null)
 			task.getSensors().setMaxFb("4");
+		//TODO remove if more than one generator
+		String task_generator = task.getSensors().getGenerator().equals("resoudreEquationPremierDegre") ? task.getSensors().getGenerator() : "resoudreEquationPremierDegre";
 		/**************************************************************************************/
 		
 		//generate task statement
@@ -422,8 +419,8 @@ public class Taskcontroller {
 				
 				//caculate new success score, get minimum and reduce penalty 
 				penalty = LearningProcess.getPenaltyInfo(action.getId());
-				if(previousTaskFB != null)
-					new_successScore = Math.round((previousTaskFB.getSuccessScore() - penalty)*100)/100.0;
+				
+				new_successScore = Math.round((new_successScore - penalty)*100)/100.0;
 				System.out.println("[new_successScore] " + new_successScore);
 				
 				//success score is bigger than 0, return learned feedback
@@ -437,7 +434,7 @@ public class Taskcontroller {
 					
 					// if less than maximum FB, return FB of expert learning
 					if(current_nm_FB < Integer.parseInt(task.getSensors().getMaxFb()))
-						feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore, statement_id);
+						feedbackjson = generateFeedback(action.getId(), ((MindMathAction) action).getLeaf(), decision.getError_type(), task, new_successScore, statement_id, task_generator);
 					// if no, return too much FB.
 					else
 					{
@@ -478,7 +475,7 @@ public class Taskcontroller {
 		TaskFeedback1_1 task_fb = new TaskFeedback1_1(task.getSensors().getId_learner(), 
 				task.getSensors().getId_Task(),
 				task.getSensors().getDomain(),
-				task.getSensors().getGenerator(),
+				task_generator,
 				task.getSensors().getTaskFamily(),
 				correctanswer,
 				task.getSensors().getCodeError(),
@@ -532,13 +529,16 @@ public class Taskcontroller {
 
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, CabriVersion.test);
-
+		
+		//TODO remove if more than one generator
+		String task_generator = task.getSensors().getGenerator().equals("resoudreEquationPremierDegre") ? task.getSensors().getGenerator() : "resoudreEquationPremierDegre";
+		
 		task = getTaskrepository().save(task);
 		//TODO generic method for feedback_test
 		Feedbackjson feedbackjson;
 		JsonParserSensor sensorparser = new JsonParserSensor(data);
 		if (sensorparser.getValueAsBoolean(sensorparser.getObject(), JsonParserKeys.SENSOR_CORRECTANSWER)) {
-			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task, 0.8, "");
+			feedbackjson = generateFeedback("1.2.IC.0", "6", "1", task, 0.8, "", task_generator);
 		} else {
 			feedbackjson = new Feedbackjson(task.getSensors().getId_learner());
 		}
@@ -548,9 +548,9 @@ public class Taskcontroller {
 		if(feedbackID_test != null && motivation_leaf_test != null && erreurID_test != null)
 		{
 			String[] error_list = { "1", "2", "3", "4" };
-			if (getTaskrepository().getFeedbackContent(feedbackID_test, motivation_leaf_test) != null
+			if (getTaskrepository().getFeedbackContent(feedbackID_test, motivation_leaf_test, task_generator) != null
 					&& Arrays.asList(error_list).contains(erreurID_test)) {
-				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task, 0.8, "");
+				feedbackjson = generateFeedback(feedbackID_test, motivation_leaf_test, erreurID_test, task, 0.8, "", task_generator);
 			}
 		}
 		boolean statement_success = true;
@@ -657,15 +657,15 @@ public class Taskcontroller {
 	 * @return feedback
 	 * @throws IOException
 	 */
-	public Feedbackjson generateFeedback(String feedbackID, String leaf, String error_code, Task task, double new_successScore, String statementRef)
+	public Feedbackjson generateFeedback(String feedbackID, String leaf, String error_code, Task task, double new_successScore, String statementRef, String generator)
 			throws IOException {
 		// get feedbackcontent from Derby
-		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
+		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf, generator);
 		
 		if(fb == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "FeedbackID: " + feedbackID + " and leaf:" + leaf + " NOT FOUND.");
 		
-		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf());
+		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf(), generator);
 		
 		if(motivations == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Motivation with leaf:" + fb.getMotivation_leaf() + " NOT FOUND.");
@@ -674,7 +674,7 @@ public class Taskcontroller {
 		if (!fb.getContentErrorType(error_code).getGlossaire().toString().equals("[]")) {
 			for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
 				String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
-				Glossaire temp = getTaskrepository().getGlossaire(mapkey);
+				Glossaire temp = getTaskrepository().getGlossaire(mapkey, generator);
 				
 				if(temp == null)
 					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Glossary with key:" + mapkey + " NOT FOUND.");

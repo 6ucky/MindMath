@@ -9,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +39,6 @@ import com.mocah.mindmath.parser.jsonparser.JsonParserLogs;
 import com.mocah.mindmath.parser.jsonparser.JsonParserSensor;
 import com.mocah.mindmath.server.controller.cabri.CabriVersion;
 import com.mocah.mindmath.server.entity.feedback.Feedbackjson;
-import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
-import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
-import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
 import com.mocah.mindmath.server.entity.task.Task;
 import com.mocah.mindmath.server.repository.derby.Derbyrepository;
 import com.mocah.mindmath.server.repository.learninglocker.LearningLockerRepositoryAggregation;
@@ -131,8 +127,7 @@ public class LRScontroller {
 	}
 
 	/**
-	 * Test of post for LRS
-	 * @deprecated use jxapi instead
+	 * Test of post for LRS, use jxapi instead
 	 *
 	 * @return the added statement
 	 * @throws JsonParseCustomException
@@ -148,10 +143,10 @@ public class LRScontroller {
 		JsonParserFactory parserRoot = new JsonParserFactory(data);
 
 		JsonObject response = new JsonObject();
-		response.add("Response from LRS",
-				JsonParser.parseString(ll.postStatementTEST(
-						parserRoot.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_LEARNER_ID),
-						parserSensor.getSensor(CabriVersion.v1_0), parserLog.getLogs())).getAsJsonObject());
+//		response.add("Response from LRS",
+//				JsonParser.parseString(ll.postStatementTEST(
+//						parserRoot.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_LEARNER_ID),
+//						parserSensor.getSensor(CabriVersion.v1_0), parserLog.getLogs())).getAsJsonObject());
 
 		JsonArray statementArray = new JsonArray();
 		XAPIgenerator xapi = new XAPIgenerator();
@@ -162,12 +157,12 @@ public class LRScontroller {
 		xapi.setObject(JsonParserKeys.SENSOR_DOMAIN,
 				parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_DOMAIN));
 		xapi.setContext(XAPItype.SENSORS);
-		statementArray.add(xapi.generateStatement());
+//		statementArray.add(xapi.generateStatement());
 
 		xapi.setObject(JsonParserKeys.SENSOR_GENERATOR,
 				parserSensor.getValueAsString(parserSensor.getObject(), JsonParserKeys.SENSOR_GENERATOR));
 		xapi.setContext(XAPItype.SENSORS);
-		statementArray.add(xapi.generateStatement());
+//		statementArray.add(xapi.generateStatement());
 
 		for (int i = 0; i < parserLog.getArray().size(); i++) {
 			xapi = new XAPIgenerator();
@@ -178,7 +173,7 @@ public class LRScontroller {
 							JsonParserKeys.LOG_ACTION),
 					parserLog.getValueAsString(parserLog.getArray().get(i).getAsJsonObject(), JsonParserKeys.LOG_NAME));
 			xapi.setContext(XAPItype.LOGS);
-			statementArray.add(xapi.generateStatement());
+//			statementArray.add(xapi.generateStatement());
 		}
 
 		response.add("Statements Drafts", statementArray);
@@ -314,10 +309,12 @@ public class LRScontroller {
 			throws IOException, NoSuchAlgorithmException, JsonParserCustomException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, CabriVersion.v1_0);
-		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
+//		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
 
-		Statement statement = generator.setAttachment().setResult(true, true, fbjson, null, CabriVersion.v1_0).generateStatement(task, CabriVersion.test);
+		Statement statement = generator.setAttachment()
+//				.setResult(true, true, fbjson, null, CabriVersion.v1_0)
+				.generateStatement(task, CabriVersion.test);
 
 		Gson gson = new Gson();
 		return new ResponseEntity<>(gson.toJson(statement), HttpStatus.ACCEPTED);
@@ -351,7 +348,7 @@ public class LRScontroller {
 		generator = new XAPIgenerator();
 		statement3 = generator.setActorAsLip6()
 				.setVerb(Verbs.responded())
-				.setObject(statement1)
+//				.setObject(statement1)
 //				.setContext(getGlossary("1.1.GNC.0", "11", "1"), getAllGlossary(), CabriVersion.test)
 				.setResult(true, true, fbjson, CabriVersion.test)
 //				.setResultwithQvalues()
@@ -473,10 +470,12 @@ public class LRScontroller {
 			throws JsonParserCustomException, IOException, NoSuchAlgorithmException, URISyntaxException {
 		JsonParserFactory jsonparser = new JsonParserFactory(data);
 		Task task = jsonparser.parse(data, CabriVersion.v1_0);
-		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
+//		Feedbackjson fbjson = new Feedbackjson(task.getSensors().getId_learner());
 		XAPIgenerator generator = new XAPIgenerator();
 
-		Statement statement = generator.setAttachment().setResult(true, true, fbjson, null, CabriVersion.v1_0).generateStatement(task, CabriVersion.v1_0);
+		Statement statement = generator.setAttachment()
+//				.setResult(true, true, fbjson, null, CabriVersion.v1_0)
+				.generateStatement(task, CabriVersion.v1_0);
 
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp(true);
 		return new ResponseEntity<>(ll.postStatement(statement), HttpStatus.ACCEPTED);
@@ -497,33 +496,6 @@ public class LRScontroller {
 		LearningLockerRepositoryHttp ll = new LearningLockerRepositoryHttp();
 		ll.postStatement(statement);
 		return new ResponseEntity<>(id_learner + id_task + statementRef + url, HttpStatus.ACCEPTED);
-	}
-	
-	public ArrayList<String> getGlossary(String feedbackID, String leaf, String error_code)
-			throws IOException {
-		// get feedbackcontent from Derby
-		ArrayList<String> lists = new ArrayList<String>();
-		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
-		if (!fb.getContentErrorType(error_code).getGlossaire().toString().equals("[]")) {
-			for (int i = 0; i < fb.getContentErrorType(error_code).getGlossaire().size(); i++) {
-				String mapkey = fb.getContentErrorType(error_code).getGlossaire().get(i);
-				Glossaire temp = getTaskrepository().getGlossaire(mapkey);
-				lists.add(temp.getGlossaire_name());
-			}
-		}
-		return lists;
-	}
-	
-	public ArrayList<Glossaire> getAllGlossary()
-	{
-		return (ArrayList<Glossaire>) getTaskrepository().getAllGlossaire();
-	}
-	
-	public List<Motivation> getMotivation(String feedbackID, String leaf)
-	{
-		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf);
-		List<Motivation> motivations = getTaskrepository().getMotivation(fb.getMotivation_leaf());
-		return motivations;
 	}
 
 	public Derbyrepository getTaskrepository() {

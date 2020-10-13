@@ -168,11 +168,16 @@ public class LearningProcess {
 	 */
 	public static Decision makeDecision(Task task, CabriVersion version) throws InvalidTheoryException, NoSuchFieldException,
 			NoSuchMethodException, InvocationTargetException, MalformedGoalException, IOException {
+		
+		//TODO remove if more than one generator
+		String task_generator = task.getSensors().getGenerator().equals("resoudreEquationPremierDegre") ? task.getSensors().getGenerator() : "resoudreEquationPremierDegre";
+		
 		switch(version)
 		{
 		case v1_0:
 			return makeDecision(task, null, null);
 		case v1_1:
+			((ExpertLearning) expertlearning).setGenerator(task_generator);
 			Decision decision = new Decision();
 			IState newState = decisionTreeBFS(tree, task, CabriVersion.v1_1);
 			String code_error = task.getSensors().getCodeError();

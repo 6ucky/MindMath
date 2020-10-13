@@ -316,7 +316,7 @@ public class TestLearningProcess {
 			List<FeedbackContent> feedbacks = gson
 					.fromJson(LocalRouteRepository.readFileasString(LocalRoute.FeedbackContentRoute),
 							FeedbackContentList.class)
-					.getFeedbackcontentlist();
+					.getFeedback_content();
 			List<Motivation> motivations = gson
 					.fromJson(LocalRouteRepository.readFileasString(LocalRoute.MotivationRoute),
 							FeedbackContentList.class)

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.mocah.mindmath.server.entity.AbstractJsonData;
 import com.mocah.mindmath.server.entity.feedback.TaskFeedback1_1;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
+import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
 import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
 import com.mocah.mindmath.server.entity.task.Task;
@@ -69,22 +70,18 @@ public interface Derbyrepository extends CrudRepository<AbstractJsonData, String
 	@Query("select t from TaskFeedback1_1 t where t.successScore = (select min(t.successScore) from TaskFeedback1_1 t where t.id_learner = :id_learner and t.id_task = :id_task) and t.id_learner = :id_learner and t.id_task = :id_task")
 	TaskFeedback1_1 getPreviousTaskFeedback1_1(@Param("id_learner") String id_learner, @Param("id_task") String id_task);
 
-	@Query("select f from FeedbackContent f")
-	List<FeedbackContent> getAllFeedbackContent();
+	@Query("select f from FeedbackContentList f")
+	List<FeedbackContentList> getAllFeedbackContentList();
+	
+	@Query("select f from FeedbackContentList f where f.generator = :generator")
+	FeedbackContentList getAllFeedbackContentList(@Param("generator") String generator);
 
-	@Query("select g from Glossaire g")
-	List<Glossaire> getAllGlossaire();
+	@Query("select f from FeedbackContent f inner join FeedbackContentList l on l.generator = :generator where f.feedbackID = :feedbackID and f.motivation_leaf = :motivation_leaf")
+	FeedbackContent getFeedbackContent(@Param("feedbackID") String feedbackID, @Param("motivation_leaf") String motivation_leaf, @Param("generator") String generator);
 
-	@Query("select m from Motivation m")
-	List<Motivation> getAllMotivation();
+	@Query("select g from Glossaire g inner join FeedbackContentList l on l.generator = :generator where g.glossaireID = :glossaireID")
+	Glossaire getGlossaire(@Param("glossaireID") String glossaireID, @Param("generator") String generator);
 
-	@Query("select f from FeedbackContent f where f.feedbackID = :feedbackID and f.motivation_leaf = :motivation_leaf")
-	FeedbackContent getFeedbackContent(@Param("feedbackID") String feedbackID,
-			@Param("motivation_leaf") String motivation_leaf);
-
-	@Query("select g from Glossaire g where g.glossaireID = :glossaireID")
-	Glossaire getGlossaire(@Param("glossaireID") String glossaireID);
-
-	@Query("select m from Motivation m where m.motivation_leaf = :motivation_leaf")
-	List<Motivation> getMotivation(@Param("motivation_leaf") String motivation_leaf);
+	@Query("select m from Motivation m inner join FeedbackContentList l on l.generator = :generator where m.motivation_leaf = :motivation_leaf")
+	List<Motivation> getMotivation(@Param("motivation_leaf") String motivation_leaf, @Param("generator") String generator);
 }
