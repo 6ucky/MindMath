@@ -20,4 +20,9 @@ public class ErrorTypeMap {
 	{
 		return (errorTypeMap.containsKey(content)) ? errorTypeMap.get(content) : "1";
 	}
+	
+	public static boolean containError(String content)
+	{
+		return (errorTypeMap.containsKey(content)) ? true : false;
+	}
 }

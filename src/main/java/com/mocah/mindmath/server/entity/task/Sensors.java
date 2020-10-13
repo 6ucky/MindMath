@@ -60,7 +60,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 	private final String correctAnswer;
 
 	@Expose (serialize = true) 
-	private final String codeError;
+	private String codeError;
 	
 	@Expose (serialize = true) 
 	private String activityMode;
@@ -98,7 +98,7 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		this.generator = generator;
 		this.taskFamily = taskFamily;
 		this.correctAnswer = correctAnswer;
-		this.codeError = codeError;
+		this.setCodeError(codeError);
 		this.activityMode = activityMode;
 		this.setMaxFb(maxFb);
 	}
@@ -151,10 +151,6 @@ public class Sensors extends AbstractJsonData implements Serializable {
 		return correctAnswer;
 	}
 
-	public String getCodeError() {
-		return codeError;
-	}
-
 	public String getActivityMode() {
 		return activityMode;
 	}
@@ -181,5 +177,13 @@ public class Sensors extends AbstractJsonData implements Serializable {
 
 	public void setMaxFb(String maxFb) {
 		this.maxFb = maxFb;
+	}
+
+	public String getCodeError() {
+		return codeError;
+	}
+
+	public void setCodeError(String codeError) {
+		this.codeError = codeError;
 	}
 }

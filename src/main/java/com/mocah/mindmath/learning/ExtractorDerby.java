@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import com.mocah.mindmath.server.entity.feedback.TaskFeedback1_1;
+import com.mocah.mindmath.server.entity.feedbackContent.ErrorTypeMap;
 import com.mocah.mindmath.server.entity.task.Sensors;
 import com.mocah.mindmath.server.entity.task.Task;
 
@@ -57,7 +58,10 @@ public class ExtractorDerby {
 		String codeError = task.getSensors().getCodeError();
 
 		if (codeError != null && !codeError.equalsIgnoreCase("null"))
-			return "true";
+		{
+			if(ErrorTypeMap.containError(codeError))
+				return "true";
+		}
 
 		return "false";
 	}

@@ -58,9 +58,10 @@ public class JsonParserSensor extends JsonParserFactory {
 						getValueAsString(sensorsObject, JsonParserKeys.SENSOR_GENERATOR),
 						getValueAsString(sensorsObject, JsonParserKeys.SENSOR_TASKFAMILY),
 						getValueAsString(sensorsObject, JsonParserKeys.SENSOR_CORRECTANSWER),
-						getValueAsString(sensorsObject, JsonParserKeys.SENSOR_CODEERROR),
+						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_CODEERROR),
 						//activity mode may be null
 						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_ACTIVITYMODE),
+						//maxFB is 4 if null
 						getValueforDB(sensorsObject, JsonParserKeys.SENSOR_MAXNMFB));
 				break;
 			}

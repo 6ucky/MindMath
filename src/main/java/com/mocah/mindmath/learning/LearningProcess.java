@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +49,7 @@ import com.mocah.mindmath.learning.utils.states.State;
 import com.mocah.mindmath.learning.utils.values.IValue;
 import com.mocah.mindmath.learning.utils.values.QValue;
 import com.mocah.mindmath.server.controller.cabri.CabriVersion;
+import com.mocah.mindmath.server.entity.feedback.TaskFeedback1_1;
 import com.mocah.mindmath.server.entity.feedbackContent.ErrorTypeMap;
 import com.mocah.mindmath.server.entity.task.Log;
 import com.mocah.mindmath.server.entity.task.Sensors;
@@ -66,6 +68,7 @@ import gov.adlnet.xapi.model.Result;
 import gov.adlnet.xapi.model.Score;
 import gov.adlnet.xapi.model.Statement;
 import gov.adlnet.xapi.model.StatementResult;
+import gov.adlnet.xapi.model.Verbs;
 
 /**
  * @author Thibaut SIMON-FINE
@@ -173,8 +176,9 @@ public class LearningProcess {
 			Decision decision = new Decision();
 			IState newState = decisionTreeBFS(tree, task, CabriVersion.v1_1);
 			String code_error = task.getSensors().getCodeError();
+			String code_error_num = ErrorTypeMap.containError(code_error) ? ErrorTypeMap.getErrorNum(code_error) : ErrorTypeMap.getErrorNum(getErrorFrommostStab(task));
 			try {
-				code_error = ((ExpertLearning) expertlearning).getErrorType(newState, ErrorTypeMap.getErrorNum(code_error));
+				code_error = ((ExpertLearning) expertlearning).getErrorType(newState, code_error_num);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -848,6 +852,41 @@ public class LearningProcess {
 
 	public static void setRepo(Derbyrepository repo) {
 		LearningProcess.repo = repo;
+	}
+	
+	protected static String getErrorFrommostStab(Task task) {
+		Sensors currentSensors = task.getSensors();
+		if (currentSensors == null)
+			return "0";
+
+		List<TaskFeedback1_1> TaskFBs = getRepo().getTaskFeedback1_1(task.getSensors().getTaskFamily(), Verbs.answered().getId(), false);
+
+		if (TaskFBs.size() == 0)
+			return "0";
+
+		Map<String, Integer> countError = new HashMap<>();
+		for(TaskFeedback1_1 taskfb : TaskFBs){
+			String codeError = taskfb.getCodeError();
+			if (StringUtils.isNotEmpty(codeError)) {
+				// Error observed
+				if (countError.containsKey(codeError)) {
+					countError.put(codeError, countError.get(codeError) + 1);
+				} else {
+					countError.put(codeError, 1);
+				}
+			}
+		}
+
+		int max = 0;
+		String max_error = "";
+		for (Entry<String, Integer> error : countError.entrySet()) {
+			if (error.getValue() > max) {
+				max = error.getValue();
+				max_error = error.getKey();
+			}
+		}
+
+		return max_error;
 	}
 	
 }
