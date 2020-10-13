@@ -121,7 +121,7 @@ public class Feedbackjson implements Serializable {
 		this.motivationalElementFb = String2GeneralHTML1_1(motivationalElement);
 		this.contentFb = String2ContentFBHTML(content_url, idFeedback, leaf, error_type, idLearner, idTask, statementRef)
 				+ String2GlossaryFBHTML(glossaryMap, idFeedback, leaf, error_type, idLearner, idTask, statementRef);
-		this.glossaryFb = String2GlossaryFBHTML(glossaryMap);
+		this.glossaryFb = String2GlossaryFBHTML(glossaryMap, idFeedback, leaf, error_type, idLearner, idTask, statementRef);
 		this.correctAnswer = correctAnswer;
 		this.successScore = successScore;
 		this.closeTask = closeTask;
