@@ -364,7 +364,7 @@ public class Taskcontroller {
 		if(task.getSensors().getMaxFb() == null)
 			task.getSensors().setMaxFb("4");
 		//TODO remove if more than one generator
-		String task_generator = task.getSensors().getGenerator().equals("resoudreEquationPremierDegre") ? task.getSensors().getGenerator() : "resoudreEquationPremierDegre";
+		String task_generator = getTaskrepository().getAllFeedbackContentList(task.getSensors().getGenerator()) != null ? task.getSensors().getGenerator() : "resoudreEquationPremierDegre";
 		/**************************************************************************************/
 		
 		//generate task statement
@@ -589,6 +589,11 @@ public class Taskcontroller {
 	 */
 	@GetMapping("")
 	public ResponseEntity<String> getALLtask(@RequestHeader("Authorization") String auth) {
+		return getALLtaskv1_1(auth);
+	}
+
+	@GetMapping("/v1.0")
+	public ResponseEntity<String> getALLtaskv1_0(@RequestHeader("Authorization") String auth) {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		List<Task> tasks = new ArrayList<>();
@@ -596,12 +601,6 @@ public class Taskcontroller {
 		if (tasks.size() == 0)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
 		return new ResponseEntity<>(gson.toJson(tasks), HttpStatus.FOUND);
-	}
-
-	// the default get
-	@GetMapping("/v1.0")
-	public ResponseEntity<String> getALLtaskv1_0(@RequestHeader("Authorization") String auth) {
-		return getALLtask(auth);
 	}
 	
 	// the default get
@@ -623,16 +622,15 @@ public class Taskcontroller {
 	 */
 	@DeleteMapping(path = "")
 	public ResponseEntity<String> cleandatabase(@RequestHeader("Authorization") String auth) {
+		return cleandatabasev1_1(auth);
+	}
+
+	@DeleteMapping(path = "/v1.0")
+	public ResponseEntity<String> cleandatabasev1_0(@RequestHeader("Authorization") String auth) {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 		getTaskrepository().deleteAll(getTaskrepository().getAllTask());
 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Database is empty.");
-	}
-
-	// the default delete
-	@DeleteMapping(path = "/v1.0")
-	public ResponseEntity<String> cleandatabasev1_0(@RequestHeader("Authorization") String auth) {
-		return cleandatabase(auth);
 	}
 	
 	// the default delete
@@ -663,7 +661,7 @@ public class Taskcontroller {
 	 * @return feedback
 	 * @throws IOException
 	 */
-	public Feedbackjson generateFeedback(String feedbackID, String leaf, String error_code, Task task, double new_successScore, String statementRef, String generator)
+	private Feedbackjson generateFeedback(String feedbackID, String leaf, String error_code, Task task, double new_successScore, String statementRef, String generator)
 			throws IOException {
 		// get feedbackcontent from Derby
 		FeedbackContent fb = getTaskrepository().getFeedbackContent(feedbackID, leaf, generator);

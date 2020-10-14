@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -65,6 +66,25 @@ public class Feedbackcontroller {
 		getFeedbackcontentrepository().save(feedbacks);
 		
 		return new ResponseEntity<>(gson.toJson(feedbacks), HttpStatus.OK);
+	}
+	
+	/**
+	 * get all feedback content list
+	 * @param auth
+	 * @param data
+	 * @return
+	 */
+	@GetMapping(path = "/feedbackcontentlist", consumes = "application/json")
+	public ResponseEntity<String> getfeedbacklistrepo(@RequestHeader("Authorization") String auth,
+			@RequestBody String data) {
+		if (!checkauth(auth))
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
+		
+		Gson gson = new Gson();
+		
+		List<FeedbackContentList> feedbacklist = getFeedbackcontentrepository().getAllFeedbackContentList();
+		
+		return new ResponseEntity<>(gson.toJson(feedbacklist), HttpStatus.OK);
 	}
 	
 	/**

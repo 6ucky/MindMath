@@ -197,6 +197,8 @@ public class XAPIgenerator {
 			JsonObject jo = fdresult.getExtensions().get("https://mindmath.lip6.fr/feedback").getAsJsonObject();
 			jo.addProperty("leaf", leaf);
 			jo.addProperty("error_type", error_type);
+			if(fbjson.getCloseTaskReason() != null)
+				jo.addProperty("closeTaskReason", fbjson.getCloseTaskReason());
 		}
 		return this;
 	}

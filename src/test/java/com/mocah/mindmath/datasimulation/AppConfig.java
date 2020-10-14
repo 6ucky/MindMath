@@ -23,7 +23,7 @@ import com.mocah.mindmath.server.controller.cabri.CabriVersion;
  *
  */
 public class AppConfig {
-	/*************************Manuel Configuration for Simulator****************************/
+	/*************************Manual Configuration for Simulator****************************/
 	/**
 	 * The version (post address) of generating feedback
 	 */

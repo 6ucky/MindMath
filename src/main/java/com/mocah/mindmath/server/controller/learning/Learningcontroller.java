@@ -87,11 +87,14 @@ public class Learningcontroller {
 	 */
 	@PostMapping(path = "/init/expertlearning", consumes = "application/json")
 	public ResponseEntity<String> initExpertLearning(@RequestHeader("Authorization") String auth,
-			@RequestParam String id_task) {
+			@RequestParam String id_learner, @RequestParam String id_task) {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
-		serializableRedisTemplate.opsForValue().set(id_task, null);
-		return new ResponseEntity<String>("Expert learning of id_task \"" + id_task +"\" initialized.", HttpStatus.OK);
+		
+		String redis_key = id_learner + "_" + id_task;
+		serializableRedisTemplate.opsForValue().set(redis_key, null);
+		
+		return new ResponseEntity<String>("Expert learning of id_learner \"" + id_learner + "\" and id_task \"" + id_task +"\" initialized.", HttpStatus.OK);
 	}
 	
 	/**
@@ -199,17 +202,22 @@ public class Learningcontroller {
 	}
 	
 	/**
-	 * Get actual qValues from expert learning
-	 *
+	 * Get actual values from expert learning
 	 * @param auth
-	 * @return the qvalue from expert learning algorithm
+	 * @param id_learner
+	 * @param id_task
+	 * @return
 	 */
 	@GetMapping("/expertlearning/qvalues")
-	public ResponseEntity<String> getExpertlearningQValues(@RequestHeader("Authorization") String auth) {
+	public ResponseEntity<String> getExpertlearningQValues(@RequestHeader("Authorization") String auth,
+			@RequestParam String id_learner, @RequestParam String id_task) {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
-		ILearning learning = LearningProcess.getExpertlearning();
+		String redis_key = id_learner + "_" + id_task;
+		ILearning learning =  (ILearning) serializableRedisTemplate.opsForValue().get(redis_key);
+		if(learning == null)
+			learning = LearningProcess.getExpertlearning();
 		Map<IState, LinkedList<IValue>> qValues = null;
 
 		if (learning instanceof ExpertLearning) {
