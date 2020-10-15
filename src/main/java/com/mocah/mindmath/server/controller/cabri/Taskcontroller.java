@@ -47,6 +47,7 @@ import com.mocah.mindmath.server.entity.feedback.TaskFeedback1_1;
 import com.mocah.mindmath.server.entity.feedbackContent.ErrorTypeMap;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
+import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentListRedis;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
 import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
 import com.mocah.mindmath.server.entity.task.Task;
@@ -103,6 +104,16 @@ public class Taskcontroller {
 		FeedbackContentList fb_list = new FeedbackContentList(feedbacks, glossaires, motivations, "resoudreEquationPremierDegre");
 		getTaskrepository().save(fb_list);
 		
+		//Check the old feedback content from Redis
+		FeedbackContentListRedis feedbackLists = (FeedbackContentListRedis) serializableRedisTemplate.opsForValue().get("FeedbackContentList-10-2020");
+		if(feedbackLists != null)
+		{
+			getTaskrepository().deleteAll(getTaskrepository().getAllFeedbackContentList());
+			for(FeedbackContentList feedbackList : feedbackLists.getFeedbackcontentlists())
+			{
+				getTaskrepository().save(feedbackList);
+			}
+		}
 		//initialize error code map
 		ErrorTypeMap.init();
 		//initialize penalty map
@@ -365,6 +376,7 @@ public class Taskcontroller {
 			task.getSensors().setMaxFb("4");
 		//TODO remove if more than one generator
 		String task_generator = getTaskrepository().getAllFeedbackContentList(task.getSensors().getGenerator()) != null ? task.getSensors().getGenerator() : "resoudreEquationPremierDegre";
+		System.out.println("[Generator] " + task_generator);
 		/**************************************************************************************/
 		
 		//generate task statement

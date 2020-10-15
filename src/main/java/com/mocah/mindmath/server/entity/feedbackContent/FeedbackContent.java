@@ -1,5 +1,6 @@
 package com.mocah.mindmath.server.entity.feedbackContent;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,13 @@ import com.mocah.mindmath.server.entity.AbstractJsonData;
 
 
 @Entity
-public class FeedbackContent extends AbstractJsonData {
+public class FeedbackContent extends AbstractJsonData implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3992814914537650118L;
+
 	private final String feedbackID;
 	
 	private final double ponderation;

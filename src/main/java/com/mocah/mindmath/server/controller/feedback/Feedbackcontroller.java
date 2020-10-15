@@ -1,8 +1,10 @@
 package com.mocah.mindmath.server.controller.feedback;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.google.gson.Gson;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContent;
 import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentList;
+import com.mocah.mindmath.server.entity.feedbackContent.FeedbackContentListRedis;
 import com.mocah.mindmath.server.entity.feedbackContent.Glossaire;
 import com.mocah.mindmath.server.entity.feedbackContent.Motivation;
 import com.mocah.mindmath.server.repository.derby.Derbyrepository;
@@ -27,6 +30,9 @@ import com.mocah.mindmath.server.repository.derby.Derbyrepository;
 public class Feedbackcontroller {
 
 	private static final String license_num = "mocah";
+	
+	@Autowired
+	private RedisTemplate<String, Serializable> serializableRedisTemplate;
 
 	@Autowired
 	private Derbyrepository feedbackcontentrepository;
@@ -64,6 +70,10 @@ public class Feedbackcontroller {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Generator conflicts.");
 		
 		getFeedbackcontentrepository().save(feedbacks);
+		
+		//save persistent feedback content list in Redis
+		FeedbackContentListRedis fbRedis = new FeedbackContentListRedis(getFeedbackcontentrepository().getAllFeedbackContentList());
+		serializableRedisTemplate.opsForValue().set("FeedbackContentList-10-2020", fbRedis);
 		
 		return new ResponseEntity<>(gson.toJson(feedbacks), HttpStatus.OK);
 	}
@@ -105,6 +115,10 @@ public class Feedbackcontroller {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Generator not found.");
 
 		getFeedbackcontentrepository().delete(feedbacklists);
+		
+		//save persistent feedback content list in Redis
+		FeedbackContentListRedis fbRedis = new FeedbackContentListRedis(getFeedbackcontentrepository().getAllFeedbackContentList());
+		serializableRedisTemplate.opsForValue().set("FeedbackContentList-10-2020", fbRedis);
 		
 		return new ResponseEntity<>("Generator " + generator + " is deleted.", HttpStatus.OK);
 	}

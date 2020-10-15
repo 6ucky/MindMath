@@ -1,5 +1,6 @@
 package com.mocah.mindmath.server.entity.feedbackContent;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,12 @@ import javax.persistence.OneToMany;
 import com.mocah.mindmath.server.entity.AbstractJsonData;
 
 @Entity
-public class FeedbackContentList extends AbstractJsonData {
+public class FeedbackContentList extends AbstractJsonData implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9130085342272766453L;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<FeedbackContent> feedback_content;

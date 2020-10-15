@@ -1,13 +1,20 @@
 package com.mocah.mindmath.server.entity.feedbackContent;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import com.mocah.mindmath.server.entity.AbstractJsonData;
 
 @Entity
-public class Glossaire extends AbstractJsonData {
+public class Glossaire extends AbstractJsonData implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2094935040097986067L;
+
 	private final String glossaireID;
 	
 	private final String glossaire_name;

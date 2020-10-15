@@ -76,12 +76,12 @@ public interface Derbyrepository extends CrudRepository<AbstractJsonData, String
 	@Query("select f from FeedbackContentList f where f.generator = :generator")
 	FeedbackContentList getAllFeedbackContentList(@Param("generator") String generator);
 
-	@Query("select f from FeedbackContent f inner join FeedbackContentList l on l.generator = :generator where f.feedbackID = :feedbackID and f.motivation_leaf = :motivation_leaf")
+	@Query("select f from FeedbackContentList l join l.feedback_content f where l.generator = :generator and f.feedbackID = :feedbackID and f.motivation_leaf = :motivation_leaf")
 	FeedbackContent getFeedbackContent(@Param("feedbackID") String feedbackID, @Param("motivation_leaf") String motivation_leaf, @Param("generator") String generator);
 
-	@Query("select g from Glossaire g inner join FeedbackContentList l on l.generator = :generator where g.glossaireID = :glossaireID")
+	@Query("select g from FeedbackContentList l join l.glossairelist g where l.generator = :generator and g.glossaireID = :glossaireID")
 	Glossaire getGlossaire(@Param("glossaireID") String glossaireID, @Param("generator") String generator);
 
-	@Query("select m from Motivation m inner join FeedbackContentList l on l.generator = :generator where m.motivation_leaf = :motivation_leaf")
+	@Query("select m from FeedbackContentList l join l.motivationlist m where l.generator = :generator and m.motivation_leaf = :motivation_leaf")
 	List<Motivation> getMotivation(@Param("motivation_leaf") String motivation_leaf, @Param("generator") String generator);
 }
