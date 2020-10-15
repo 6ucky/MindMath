@@ -108,10 +108,10 @@ public class Taskcontroller {
 		FeedbackContentListRedis feedbackLists = (FeedbackContentListRedis) serializableRedisTemplate.opsForValue().get("FeedbackContentList-10-2020");
 		if(feedbackLists != null)
 		{
-			getTaskrepository().deleteAll(getTaskrepository().getAllFeedbackContentList());
 			for(FeedbackContentList feedbackList : feedbackLists.getFeedbackcontentlists())
 			{
-				getTaskrepository().save(feedbackList);
+				if(getTaskrepository().getAllFeedbackContentList(feedbackList.getGenerator()) == null)
+					getTaskrepository().save(feedbackList);
 			}
 		}
 		//initialize error code map
