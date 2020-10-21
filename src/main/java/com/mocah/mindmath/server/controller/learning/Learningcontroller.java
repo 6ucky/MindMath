@@ -255,11 +255,11 @@ public class Learningcontroller {
 	 */
 	@PostMapping(path = "/errorcode", consumes = "application/json")
 	public ResponseEntity<String> updateErrorCode(@RequestHeader("Authorization") String auth,
-			@RequestBody String data) throws JsonParserCustomException {
+			@RequestBody String data, @RequestParam String default_error_code) throws JsonParserCustomException {
 		if (!checkauth(auth))
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized connection.");
 
-		ErrorTypeMap.setError(data);
+		ErrorTypeMap.setError(data, default_error_code);
 		return new ResponseEntity<String>(ErrorTypeMap.toStringGson(), HttpStatus.OK);
 	}
 	

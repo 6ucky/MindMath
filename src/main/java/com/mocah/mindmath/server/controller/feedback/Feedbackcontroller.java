@@ -71,9 +71,7 @@ public class Feedbackcontroller {
 		
 		getFeedbackcontentrepository().save(feedbacks);
 		
-		//save persistent feedback content list in Redis
-		FeedbackContentListRedis fbRedis = new FeedbackContentListRedis(getFeedbackcontentrepository().getAllFeedbackContentList());
-		serializableRedisTemplate.opsForValue().set("FeedbackContentList-10-2020", fbRedis);
+		backupinRedis();
 		
 		return new ResponseEntity<>(gson.toJson(feedbacks), HttpStatus.OK);
 	}
@@ -116,9 +114,7 @@ public class Feedbackcontroller {
 
 		getFeedbackcontentrepository().delete(feedbacklists);
 		
-		//save persistent feedback content list in Redis
-		FeedbackContentListRedis fbRedis = new FeedbackContentListRedis(getFeedbackcontentrepository().getAllFeedbackContentList());
-		serializableRedisTemplate.opsForValue().set("FeedbackContentList-10-2020", fbRedis);
+		backupinRedis();
 		
 		return new ResponseEntity<>("Generator " + generator + " is deleted.", HttpStatus.OK);
 	}
@@ -151,6 +147,8 @@ public class Feedbackcontroller {
 		feedbacklists.setFeedback_content(feedbacks);
 		getFeedbackcontentrepository().save(feedbacklists);
 		
+		backupinRedis();
+		
 		return new ResponseEntity<>(gson.toJson(feedbacks), HttpStatus.OK);
 	}
 
@@ -181,6 +179,8 @@ public class Feedbackcontroller {
 		getFeedbackcontentrepository().delete(feedbacklists);
 		feedbacklists.setMotivationlist(feedbacks);
 		getFeedbackcontentrepository().save(feedbacklists);
+		
+		backupinRedis();
 		
 		return new ResponseEntity<>(gson.toJson(feedbacks), HttpStatus.OK);
 	}
@@ -213,12 +213,22 @@ public class Feedbackcontroller {
 		feedbacklists.setGlossairelist(feedbacks);
 		getFeedbackcontentrepository().save(feedbacklists);
 		
+		backupinRedis();
+		
 		return new ResponseEntity<>(gson.toJson(feedbacks), HttpStatus.OK);
 	}
 	
 
 	public Derbyrepository getFeedbackcontentrepository() {
 		return feedbackcontentrepository;
+	}
+	
+	/**
+	 * save persistent feedback content list in Redis
+	 */
+	private void backupinRedis() {
+		FeedbackContentListRedis fbRedis = new FeedbackContentListRedis(getFeedbackcontentrepository().getAllFeedbackContentList());
+		serializableRedisTemplate.opsForValue().set("FeedbackContentList-10-2020", fbRedis);
 	}
 
 }
