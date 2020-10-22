@@ -1,21 +1,20 @@
-version: '2'
-services:
-    spring-server:
-        container_name: spring-server
-        build:
-            context: .
-        image: spring-server:latest
-        ports:
-            - 8080:8080
-        networks:
-            - mindmath-cloud-network
-        volumes:
-            - mindmath-cloud-config-repo:/var/lib/mindmath-cloud/config-repo
-        logging:
-            driver: json-file
-networks:
-    mindmath-cloud-network:
-        driver: bridge
-volumes:
-    mindmath-cloud-config-repo:
-        external: true
+tomcat:
+  container_name: mindmath0
+  image: tomcat:9.0
+  volumes:
+         - /build/libs/:/usr/local/tomcat/webapps/
+  ports:
+        - 8098:8080
+  links:
+         - cache
+  restart: unless-stopped
+
+cache:
+   container_name: cache
+   image: redis:latest
+   volumes:
+         - /docker/mindmath/redis/:/data/
+   expose:
+         - 6379
+   entrypoint: redis-server --appendonly yes
+   restart: unless-stopped
