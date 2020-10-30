@@ -2,7 +2,7 @@ tomcat:
   container_name: mindmath0
   image: tomcat:9.0
   volumes:
-         - /build/libs/:/usr/local/tomcat/webapps/
+         - ./build/libs/:/usr/local/tomcat/webapps/
   ports:
         - 8098:8080
   links:
@@ -13,7 +13,7 @@ cache:
    container_name: cache
    image: redis:latest
    volumes:
-         - /docker/mindmath/redis/:/data/
+         - ./build/redis/:/data/
    expose:
          - 6379
    entrypoint: redis-server --appendonly yes
