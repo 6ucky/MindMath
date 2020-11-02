@@ -4,7 +4,7 @@ tomcat:
   volumes:
          - ./build/libs/:/usr/local/tomcat/webapps/
   ports:
-        - 8098:8080
+        - 8080:8080
   links:
          - cache
   restart: unless-stopped
