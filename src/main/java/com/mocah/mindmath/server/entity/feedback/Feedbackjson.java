@@ -149,7 +149,7 @@ public class Feedbackjson implements Serializable {
 	    
 		StringWriter writer = new StringWriter();
 		m.execute(writer, context).flush();
-		return writer.toString().replace("\n", "");
+		return writer.toString().replace("\n", "").replace("\r", "");
 	}
 
 	private String String2ContentFBHTML(String default_img_url, String video_url, String video_srt_url, String type)
@@ -188,7 +188,7 @@ public class Feedbackjson implements Serializable {
 	    
 		StringWriter writer = new StringWriter();
 		m.execute(writer, context).flush();
-		return writer.toString().replace("\n", "");
+		return writer.toString().replace("\n", "").replace("\r", "");
 	}
 
 	private String String2GlossaryFBHTML(HashMap<String, String> glossaryMap, String feedbackID, String leaf, String error_code,
@@ -211,7 +211,7 @@ public class Feedbackjson implements Serializable {
 		
 		StringWriter writer = new StringWriter();
 		m.execute(writer, context).flush();
-		return writer.toString().replace("\n", "");
+		return writer.toString().replace("\n", "").replace("\r", "");
 	}
 	
 	private String String2GlossaryFBHTML(HashMap<String, String> glossaryMap) throws IOException {
